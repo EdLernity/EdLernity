@@ -9,7 +9,7 @@ function App() {
       <h1 className=''>Welcome to EdLearnity...</h1>
       <h3>Coming soon...</h3>
       </div>
-      <div className="ring  " >Loading...
+      <div className="ring " >Loading...
   <span></span>
     
       </div>
