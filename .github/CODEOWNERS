@@ -1,3 +1,4 @@
-#Code Reviews for all the code change.
+# CODEOWNERS file
 
-* @NikhilRaj060 @rishuk524
+# Default reviewer for the entire repository
+*       @NikhilRaj060
