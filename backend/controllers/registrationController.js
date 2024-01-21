@@ -91,6 +91,7 @@ const loginUser = async (req, res) => {
 
         // If email and password are valid, generate a JWT token
         const token = jwt.sign({ userId: user.userId, email: user.email }, 'your-secret-key', { expiresIn: '1h' });
+        
 
         // Send the token in the response
         return res.json({ success: true, token });

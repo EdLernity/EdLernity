@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
+require('dotenv').config(); // Load environment variables from .env file
 
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect('mongodb://127.0.0.1:27017/learning', {
+        const conn = await mongoose.connect(process.env.MONGODB_URI, {
+            // No need for useNewUrlParser and useUnifiedTopology
         });
 
         console.log(`MongoDB Connected: ${conn.connection.host}`);
