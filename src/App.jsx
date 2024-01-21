@@ -10,8 +10,7 @@ function App() {
       <h3>Coming soon...</h3>
       </div>
       <div className="ring " >Loading...
-  <span></span>
-    
+      <span></span>    
       </div>
       
     </>
