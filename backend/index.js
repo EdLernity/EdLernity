@@ -1,5 +1,6 @@
 // index.js
 const express = require('express');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
@@ -12,6 +13,7 @@ connectDB();
 
 
 app.use(cors());
+app.use(bodyParser.json()); // Add this line to parse JSON data
 
 // Routes 
 app.use('/api', registrationRoutes);
