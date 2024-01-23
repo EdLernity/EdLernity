@@ -22,23 +22,29 @@ const generateUserId = async () => {
 
 const registerUser = async (req, res) => {
     try {
-        const { firstName, lastName, email, password, confirmPassword } = req.body;
+        const { firstName, lastName, email, number, password, confirmPassword } = req.body;
 
         // Check if any of the required fields are missing
-        if (!firstName || !lastName || !email || !password || !confirmPassword) {
+        if (!firstName || !lastName || !email || !number || !password || !confirmPassword) {
             return res.status(400).json({ success: false, message: 'All fields are required' });
         }
 
         // Check if passwords match
-        if (password !== confirmPassword) {
-            return res.status(400).json({ success: false, message: 'Passwords do not match' });
-        }
+        // if (password !== confirmPassword) {
+        //     return res.status(400).json({ success: false, message: 'Passwords do not match' });
+        // }
 
         // Check if the email already exists
         const existingUserByEmail = await userModel.findOne({ email });
 
         if (existingUserByEmail) {
             return res.status(400).json({ success: false, message: 'Email already exists' });
+        }
+
+        const existingUserByNumber =  await userModel.findOne({ number });
+
+        if(existingUserByNumber) {
+            return res.status(400).json({ success:false, message: 'Number already exists' });
         }
 
         // Hash the password
@@ -53,6 +59,7 @@ const registerUser = async (req, res) => {
             firstName,
             lastName,
             email,
+            number,
             password: hashedPassword,
         });
 
