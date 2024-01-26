@@ -7,15 +7,14 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { FcGoogle } from "react-icons/fc";
-import InputButton from "../Input/InputButton";
-import { Link } from "react-router-dom";
+import InputButton from "../../Input/InputButton";
 
 function Login() {
   const textColor = {
-    color: "#181FC5",
+    color: "#1539cf",
   };
   const buttonColor = {
-    background: "#181FC5",
+    background: "#1539cf",
     color: "white",
     borderRadius: '15px'
   };
@@ -42,7 +41,7 @@ function Login() {
             <InputButton fullWidth label="Password" type="password"/>
             <div className="-ml-2.5 flex">
               <Checkbox label="Remember Me" />
-              <Link className="flex items-center ml-12">Forget Password?</Link>
+              <Typography as='a' href="/auth/reset" className="flex items-center ml-12 font-bold" style={textColor}>Forget Password?</Typography>
             </div>
           </CardBody>
           <CardFooter className="pt-0 flex flex-col">
