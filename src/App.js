@@ -1,19 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Navbar from './Components/Headers/Navbar';
 import Profile from './Components/Profilepage/Profile'
-import Herosection from './Components/Herosectionpage/Herosection';
 import Home from './Components/Homepage/Home';
-import Footer from './Components/Footerpage/Footer'
+import Auth from './Components/Auth/Auth';
 function App() {
   return (
     <div className="App">
       <>
+      
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile/>} />
+            <Route path="auth/login" element={<Auth/>} />
+            <Route path="auth/signup" element={<Auth/>} />
           </Routes>
         </BrowserRouter>
       </>

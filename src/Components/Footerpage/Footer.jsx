@@ -40,7 +40,7 @@ function Footer() {
             
                     <Typography variant="h5" className="mb-6">
                     <div className="flex items-center gap-4">
-                    <img src="/Image/Logo1.svg" className="w-12"/>
+                    <img src="/Image/Logo1.svg" alt="logo" className="w-12"/>
                         EdLernity
                     </div>
                    
