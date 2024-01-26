@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Menu,
   MenuHandler,
@@ -8,7 +7,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import {Link} from "react-router-dom";
-import {LogIn, UserCircle2, LogOut} from "lucide-react";
+import {LogIn, UserCircle2} from "lucide-react";
 
 function Profile () {
   return (
@@ -34,7 +33,7 @@ function Profile () {
         <MenuItem className="flex items-center gap-3">
           <LogIn className="w-5 h-5" style={{color: "white"}} />
           <Typography variant="small" className="font-semibold">
-            <Link to="/login">
+            <Link to="/auth/login">
               <button className="text-white">Login</button>
             </Link>
           </Typography>

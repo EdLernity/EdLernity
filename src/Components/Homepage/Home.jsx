@@ -26,8 +26,6 @@ function Home() {
             <div className=''>
                 <Footer />
             </div>
-
-
         </>
     )
 }

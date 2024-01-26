@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Menu, Drawer, Button, Typography, IconButton, } from "@material-tailwind/react";
-import { AlignJustify, LineChart, User, Search, ChevronDown , Moon, Sun } from "lucide-react";
+import { Drawer, Button, Typography, IconButton, } from "@material-tailwind/react";
+import { AlignJustify, Moon, Sun } from "lucide-react";
 import Profile from '../Profilepage/Profile';
+import Auth from '../Auth/Auth';
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -128,7 +129,7 @@ function Navbar() {
           </NavLink>
         </Typography>
         <div className="flex justify-between gap-2">
-          <NavLink to="/login">
+          <NavLink to="/auth/login" element={<Auth />}>
             <Button
               className="hover:bg-[#1649FF]  hover:text-white cursor-pointer"
               variant="outlined"
