@@ -17,13 +17,12 @@
     font-size: 10px;
     background-color: #ffff;
     padding: 0px 7px;
-    border: 2px solid #181FC5;
+    border: 2px solid #1539cf;
     border-radius: 15px
   }
   
   .inputbtn.focused input {
-    border: 2px solid #181FC5;
-    /* order: 2px solid #212121; */
+    border: 2px solid #1539cf;
   }
 
   .inputbtn input {
@@ -45,10 +44,10 @@
     font-size: 10px;
     background-color: #ffff;
     padding: 0px 7px;
-    border: 2px solid #181FC5;
+    border: 2px solid #1539cf;
     border-radius: 15px
   }
 
   .inputbtn.valuecontained input {
-    border: 1px solid #181FA1;
+    border: 1px solid #1539a9;
   }

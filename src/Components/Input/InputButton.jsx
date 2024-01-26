@@ -29,8 +29,6 @@ function InputButton({
   const widthStyle = {
     width: fullWidth ? '100%' : 'auto'
   }
-
-  console.log(fullWidth)
   const [isFocused, setIsFocused] = useState(false);
   const [isValue, setIsValue] = useState(false);
 
