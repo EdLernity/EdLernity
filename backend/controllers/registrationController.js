@@ -124,18 +124,17 @@ const sendOTP = async (req, res) => {
         if (!email) {
             return res.json({ success: false, message: 'Please enter a valid email address' });
         }
-
+      
         // Check if the email exists in the UserModel
         const userExists = await userModel.findOne({ email });
 
         // If the user doesn't exist, return an error
         if (!userExists) {
             return res.json({ success: false, message: 'User with this email does not exist' });
-        }
-
+          
         // Generate new OTP
         const verificationCode = nodemailerUtils.generateVerificationCode();
-        
+
         // Save the verification code (overwrite existing if any)
         const result = await otpModel.findOneAndUpdate(
             { email },
