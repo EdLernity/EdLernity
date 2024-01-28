@@ -201,34 +201,3 @@ export default Navbar;
 
 
 
-
-
-
-// <nav className={`flex justify-between items-center border shadow-lg px-4 py-2 ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
-//         <div className="lg:hidden md:hidden">
-//           <AlignJustify
-//             className="w-8 h-8 cursor-pointer"
-//             onClick={toggleDrawer}
-//           />
-//         </div>
-//         <div>
-//           <NavLink to={"/"}>
-//             <img src="/Image/Logo1.svg" alt="Logo" className="w-10" />
-//           </NavLink>
-//         </div>
-//         <div className="hidden lg:flex ml-12 space-x-6">
-//           <Link to="/" className={`font-md text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>Home</Link>
-//           <Link to="/about" className={`font-md text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>About</Link>
-//           <Link to="/course" className={`font-md text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>Course</Link>
-//           <Link to="/blog" className={`font-md text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>Blogs</Link>
-//         </div>
-//         <div className="flex space-x-4 ml-auto">
-//           <IconButton onClick={toggleDarkMode}>
-//             {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
-//           </IconButton>
-//           <Link to="/profile" className={`font-md text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>
-//             <i className="fa fa-user"></i>
-//           </Link>
-//           <Profile />
-//         </div>
-//       </nav>

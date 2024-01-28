@@ -34,7 +34,7 @@ function Profile () {
         <MenuItem className="flex items-center gap-3">
           <LogIn className="w-5 h-5" style={{color: "white"}} />
           <Typography variant="small" className="font-semibold">
-            <Link to="/login">
+            <Link to="/auth/login">
               <button className="text-white">Login</button>
             </Link>
           </Typography>

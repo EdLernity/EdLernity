@@ -11,6 +11,7 @@ import About from './Components/Aboutpage/About';
 import Courses1 from './Components/Coursespage/Courses1';
 import Blog from './Components/Blogpage/Blog';
 import Ui from './Components/Coursespage/Ui';
+import Auth from './Components/Auth/Auth';
 function App() {
   return (
     <div className="App">
@@ -18,6 +19,9 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="auth/login" element={<Auth/>} />
+            <Route path="auth/signup" element={<Auth/>} />
+            <Route path="auth/reset" element={<Auth/>} />
             <Route path="/profile" element={<Profile/>} />
             <Route path="/about" element={<About />} />
             <Route path="/courses" element={<Courses1 />} />
