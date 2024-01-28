@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root{
+    --color-blue:"#1539cf"
+}
+
+.color {
+    color: var(--color-blue);
+}
