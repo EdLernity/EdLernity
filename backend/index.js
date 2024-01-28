@@ -8,7 +8,7 @@ const registrationRoutes = require('./routes/registrationRoutes');
 
 const app = express();
 
-// Connect to MongoDB
+// Connect to MongoDB 
 connectDB();
 
 
