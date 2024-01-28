@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Menu,
   MenuHandler,
@@ -7,7 +8,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import {Link} from "react-router-dom";
-import {LogIn, UserCircle2} from "lucide-react";
+import {LogIn, UserCircle2, LogOut} from "lucide-react";
 
 function Profile () {
   return (

@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Drawer, Button, Typography, IconButton, } from "@material-tailwind/react";
-import { AlignJustify, Moon, Sun } from "lucide-react";
+import { Menu, Drawer, Button, Typography, IconButton, } from "@material-tailwind/react";
+import { AlignJustify, LineChart, User, Search, ChevronDown, Moon, Sun } from "lucide-react";
 import Profile from '../Profilepage/Profile';
-import Auth from '../Auth/Auth';
+import cn from '../../Utils/cn';
 
-function Navbar() {
+
+
+
+function Navbar({ isDarkMode, toggleDarkMode }) {
   const [scrolled, setScrolled] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // const [isDarkMode, setIsDarkMode] = useState(false);
 
   const toggleDrawer = () => {
     setOpenDrawer(!openDrawer);
   };
 
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    // You can add logic here to toggle your dark/light mode styles or classes
-  };
+  // const toggleDarkMode = () => {
+  //   setIsDarkMode(!isDarkMode);
+  // };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,7 +45,7 @@ function Navbar() {
   };
   return (
     <>
-      <nav className="flex justify-between items-center border shadow-lg px-4 py-2 bg-white text-black">
+      <nav className="flex justify-between    items-center border shadow-lg px-4 py-2 bg-white text-black">
         <div className="lg:hidden md:hidden">
           <AlignJustify
             className="w-8 h-8 cursor-pointer"
@@ -55,23 +57,73 @@ function Navbar() {
             <img src="/Image/Logo1.svg" alt="Logo" className="w-10" />
           </NavLink>
         </div>
-        <div className="hidden lg:flex ml-12 space-x-6">
-          <Link to="/" className="text-black font-md text-lg">Home</Link>
-          <Link to="/about" className="text-black font-md text-lg">About</Link>
-          <Link to="/course" className="text-black font-md text-lg">Course</Link>
-          <Link to="/blog" className="text-black font-md text-lg">Blogs</Link>
-        </div>
-        {/* <div className="flex  space-x-4 ml-auto">
-      
-          <Link to="/profile" className="text-black font-md text-lg"><i className="fa fa-user"></i></Link>
-          <Profile/>
-        </div> */}
 
+
+        <div className="hidden lg:flex ml-12 space-x-6">
+          <NavLink
+            exact
+            to="/"
+            className={({ isActive }) =>
+              cn(
+                isActive ? "text-[#181FC5] active-link" : "text-black",
+                "hover:text-[#181FC5] font-md text-lg"
+              )
+            }
+          >
+            Home
+          </NavLink>
+
+          <NavLink
+
+            to="/about"
+            className={({ isActive }) =>
+              cn(
+                isActive ? "text-[#181FC5] active-link" : "text-black",
+                "hover:text-[#181FC5] font-md text-lg"
+              )
+            }
+          >
+            About
+          </NavLink>
+          <NavLink
+            exact
+            to="/courses"
+            className={({ isActive }) =>
+              cn(
+                isActive ? "text-[#181FC5] active-link" : "text-black",
+                "hover:text-[#181FC5] font-md text-lg"
+              )
+            }
+          >
+            Courses
+          </NavLink>
+          <NavLink
+
+            to="/blog"
+            className={({ isActive }) =>
+              cn(
+                isActive ? "text-[#181FC5] active-link" : "text-black",
+                "hover:text-[#181FC5] font-md text-lg"
+              )
+            }
+          > 
+            Blog
+          </NavLink>
+        </div>
 
         <div className="flex space-x-4 ml-auto">
-          <IconButton onClick={toggleDarkMode}>
+          {/* <IconButton onClick={toggleDarkMode}>
+            {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
+          </IconButton> */}
+
+          <IconButton
+            onClick={toggleDarkMode}
+            className={`bg-${isDarkMode ? 'white' : 'black'} text-${isDarkMode ? 'black' : 'white'} px-4 py-2 rounded`}
+          >
             {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
           </IconButton>
+
+
           <Link to="/profile" className="text-black font-md text-lg"><i className="fa fa-user"></i></Link>
           <Profile />
         </div>
@@ -111,25 +163,25 @@ function Navbar() {
             fontWeight: "400",
           }}
         >
-          <NavLink to="/" className="hover:text-orange-600  ">
+          <NavLink to="/" className="  ">
             Home
           </NavLink>
           <hr className="border border-gray-200"></hr>
-          <NavLink to="/contact-us" className="hover:text-orange-600 ">
+          <NavLink to="/About" className=" ">
             About
           </NavLink>
           <hr className="border border-gray-200"></hr>
-          <NavLink to="/about-us" className="hover:text-orange-600">
-            Course
+          <NavLink to="/Courses" className="">
+            Courses
           </NavLink>
           <hr className="border border-gray-200"></hr>
-        
-          <NavLink to="/about-us" className="hover:text-orange-600">
+
+          <NavLink to="/blog" className="">
             Blog
           </NavLink>
         </Typography>
         <div className="flex justify-between gap-2">
-          <NavLink to="/auth/login" element={<Auth />}>
+          <NavLink to="/login">
             <Button
               className="hover:bg-[#1649FF]  hover:text-white cursor-pointer"
               variant="outlined"
@@ -149,34 +201,3 @@ export default Navbar;
 
 
 
-
-
-
-// <nav className={`flex justify-between items-center border shadow-lg px-4 py-2 ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
-//         <div className="lg:hidden md:hidden">
-//           <AlignJustify
-//             className="w-8 h-8 cursor-pointer"
-//             onClick={toggleDrawer}
-//           />
-//         </div>
-//         <div>
-//           <NavLink to={"/"}>
-//             <img src="/Image/Logo1.svg" alt="Logo" className="w-10" />
-//           </NavLink>
-//         </div>
-//         <div className="hidden lg:flex ml-12 space-x-6">
-//           <Link to="/" className={`font-md text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>Home</Link>
-//           <Link to="/about" className={`font-md text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>About</Link>
-//           <Link to="/course" className={`font-md text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>Course</Link>
-//           <Link to="/blog" className={`font-md text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>Blogs</Link>
-//         </div>
-//         <div className="flex space-x-4 ml-auto">
-//           <IconButton onClick={toggleDarkMode}>
-//             {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
-//           </IconButton>
-//           <Link to="/profile" className={`font-md text-lg ${isDarkMode ? 'text-white' : 'text-black'}`}>
-//             <i className="fa fa-user"></i>
-//           </Link>
-//           <Profile />
-//         </div>
-//       </nav>

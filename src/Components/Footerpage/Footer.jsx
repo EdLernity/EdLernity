@@ -1,17 +1,3 @@
-// import React from 'react'
-
-// function Footer() {
-//   return (
-//     <div>
-
-//     </div>
-//   )
-// }
-
-// export default Footer
-
-
-
 import { Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
@@ -40,10 +26,9 @@ function Footer() {
             
                     <Typography variant="h5" className="mb-6">
                     <div className="flex items-center gap-4">
-                    <img src="/Image/Logo1.svg" alt="logo" className="w-12"/>
+                    <img src="/Image/Logo1.svg" className="w-12"/>
                         EdLernity
                     </div>
-                   
                         <h1 className="text-sm mt-4">EdLernity offers you the opportunity to learn without limits- all the Upskilling Courses, Placement Preparation and Various Certification Courses on a single platform. Our Platform includes Video based learning, Practice Exercises and a personalized learning module that empowers learners with the ability to study at their own place without any limitations. We offer 20+ Upskilling Courses, 200+ Placement Preparation materials and 20+ Certification Courses.</h1>
                     </Typography>
                     <div className="grid grid-cols-3  text-white justify-between gap-4">
@@ -52,7 +37,7 @@ function Footer() {
                                 <Typography
                                     variant="small"
                                     color="blue-gray"
-                                    className="mb-3 text-white font-medium "
+                                    className="mb-3 text-white text-lg uppercase  font-semibold "
                                 >
                                     {title}
                                 </Typography>
