@@ -12,7 +12,6 @@ import Courses1 from './Components/Coursespage/Courses1';
 import Blog from './Components/Blogpage/Blog';
 import Ui from './Components/Coursespage/Ui';
 import Auth from './Components/Auth/Auth';
-import PageNotFound from './Components/PageNotFound/PageNotFound';
 function App() {
   return (
     <div className="App">
@@ -28,7 +27,7 @@ function App() {
             <Route path="/courses" element={<Courses1 />} />
             <Route path="/ui-ux-design" element={<Ui />} />
             <Route path="/blog" element={<Blog />} />
-            <Route path='*' element={<PageNotFound />} />
+          
           </Routes>
         </BrowserRouter>
       </>
