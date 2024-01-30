@@ -11,7 +11,7 @@ function Auth() {
 
   let isLogin = location.pathname.includes("/login");
   let isForget = location.pathname.includes("/reset");
-  let isUpdatePassword = location.pathname.includes("/UpdatePassword");
+  let isUpdatePassword = location.pathname.includes("/updatePassword");
 
   return (
     <div className="image flex justify-center items-center w-screen h-screen">
