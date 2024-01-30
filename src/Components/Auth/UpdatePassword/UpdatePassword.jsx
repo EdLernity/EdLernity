@@ -2,7 +2,6 @@ import React from "react";
 import {
   CardBody,
   CardFooter,
-  Checkbox,
   Button,
 } from "@material-tailwind/react";
 import InputButton from "../../Input/InputButton";
