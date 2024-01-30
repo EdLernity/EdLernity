@@ -23,6 +23,7 @@ function App() {
             <Route path="auth/login" element={<Auth/>} />
             <Route path="auth/signup" element={<Auth/>} />
             <Route path="auth/reset" element={<Auth/>} />
+            <Route path="auth/updatePassword" element={<Auth/>} />
             <Route path="/profile" element={<Profile/>} />
             <Route path="/about" element={<About />} />
             <Route path="/courses" element={<Courses1 />} />
