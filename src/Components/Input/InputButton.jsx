@@ -15,9 +15,9 @@ function InputButton({
   disabled,
   onChange,
   text,
+  required=false,
   fullWidth = false,
 }) {
-  const [onChanges, setOnChanges] = useState(onChange);
   const [inputType, setInputType] = useState(type);
   const [icon, setIcon] = useState(eyeOff);
 
@@ -40,16 +40,19 @@ function InputButton({
     setIsFocused(false);
   };
 
-  const onChangeT = (e) => {
-    let isValueContained = e.target.value;
-    console.log(isValueContained);
-    if (isValueContained) {
-      setIsValue(true);
-    } else {
-      setIsValue(false);
-    }
-    return onChanges;
-  };
+
+const onChangeT = (e) => {
+  let isValueContained = e.target.value;
+  if (isValueContained) {
+    setIsValue(true);
+  } else {
+    setIsValue(false);
+  }
+  // You can also call the original onChange prop if needed
+  onChange(e);
+};
+
+
 
   return (
     <>
@@ -66,6 +69,7 @@ function InputButton({
             ? "valuecontained"
             : ""
         } flex`}
+        style={widthStyle}
       >
         <label htmlFor={label} className={isFocused ? "focused-label" : ""}>
           {label}
@@ -77,6 +81,7 @@ function InputButton({
           name={name}
           value={value}
           text={text}
+          required={required}
           placeholder={placeholder}
           error={error}
           disabled={disabled}

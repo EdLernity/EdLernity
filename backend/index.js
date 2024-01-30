@@ -16,7 +16,7 @@ app.use(cors());
 app.use(bodyParser.json()); // Add this line to parse JSON data
 
 // Routes 
-app.use('/api', registrationRoutes);
+app.use('/auth', registrationRoutes);
 
 const PORT = process.env.PORT || 3001;
 

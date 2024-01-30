@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Modal from "react-modal";
+import Modal from 'react-modal';
 import Navbar from '../Headers/Navbar'
 import { StarIcon } from '@heroicons/react/solid';
 import {

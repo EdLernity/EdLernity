@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   CardBody,
   CardFooter,
@@ -8,7 +8,8 @@ import {
 } from "@material-tailwind/react";
 import { FcGoogle } from "react-icons/fc";
 import InputButton from "../../Input/InputButton";
-import { Link } from "react-router-dom";
+import axios from "axios";
+
 function Signup() {
   const textColor = {
     color: "#1539cf",
@@ -17,6 +18,46 @@ function Signup() {
     background: "#1539cf",
     color: "white",
     borderRadius: "15px",
+  };
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [termsAndConditions,setTermsAndConditions] = useState(false)
+
+
+  console.log(termsAndConditions)
+  let data = {
+    firstName,
+    lastName,
+    email,
+    phone,
+    password,
+    confirmPassword
+  }
+
+  console.log(data)
+
+  const handleSignup = async () => {
+    if (password !== confirmPassword) {
+      setError("Password doesn't match");
+    } else {
+      try {
+        let res = await axios.post("http://localhost:3001/auth/register", data);
+
+        console.log(res.status);
+
+        if (res.success) {
+          console.log("Signup successful");
+        }
+      } catch (error) {
+        console.error("Error during signup:", error.message);
+      }
+    }
   };
 
   return (
@@ -41,23 +82,63 @@ function Signup() {
             </span>
           </p>
           <div className="flex flex-col md:flex-row xl:flex-row gap-3">
-            <InputButton fullWidth label="First Name" type="text" />
-            <InputButton fullWidth label="Last Name" type="text" />
+            <InputButton
+              fullWidth
+              label="First Name"
+              type="text"
+              required
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+            <InputButton
+              fullWidth
+              label="Last Name"
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
           </div>
           <div className="flex flex-col gap-3">
-            <InputButton fullWidth label="Email" type="email" />
-            <InputButton fullWidth label="Phone no." type="number" />
+            <InputButton
+              fullWidth
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <InputButton
+              fullWidth
+              label="Phone no."
+              type="number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
           </div>
           <div className="w-full flex flex-col xl:flex-row gap-3">
-            <InputButton fullWidth label="Password" type="password" />
-            <InputButton fullWidth label="Confirm password" type="password" />
+            <InputButton
+              fullWidth
+              error={error}
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <InputButton
+              fullWidth
+              label="Confirm password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
           </div>
           <div className="-ml-2.5 flex">
-            <Checkbox label="Terms and condition" />
+            <Checkbox onChange={(e) => setTermsAndConditions(e.target.checked)} label="Terms and condition" />
           </div>
         </CardBody>
         <CardFooter className="pt-0 flex flex-col">
-          <Button style={buttonColor}>Sign up</Button>
+          <Button style={buttonColor} onClick={handleSignup} disabled={!termsAndConditions}>
+            Sign up
+          </Button>
           <Typography variant="small" className="mt-6 flex justify-center">
             Already have an account?
             <Typography
