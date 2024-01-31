@@ -189,6 +189,8 @@ const resetPassword = async (req, res) => {
     // Check if the user with the provided email exists
     const user = await userModel.findOne({ email });
 
+    await resetTokenModel.deleteMany({ userId:user._id })
+
     if (!user) {
       return res
         .status(500)
@@ -218,8 +220,7 @@ const resetPassword = async (req, res) => {
     console.log(url);
 
     let subject = "Please reset your password";
-    let html = `<h2>Hello ${user.firstName}</h2><p>Your account is almost ready to use.</p> <a href="${url}">Click here to verify your account
-    </a><br/> <small>If you didn't make this request just ignore this email.</small><br/>`;
+    let html = `<h2>Hello ${user.firstName}</h2><p>Your account is almost ready to use.</p> <a href="${url}">Click here</a> to verify your account.<br/> <small>If you didn't make this request just ignore this email.</small><br/>`;
 
     let isMailSent = nodemailerUtils.sendVerificationEmail(
       email,
@@ -291,7 +292,7 @@ const updatePasswordAfterValidate = async (req, res) => {
       .min(8, "Too Short!")
       .required("Please enter a password"),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .oneOf([Yup.ref("newPassword"), null], "Passwords must match")
       .required("Please enter your password again"),
   });
 
@@ -312,66 +313,71 @@ const updatePasswordAfterValidate = async (req, res) => {
         userId: payload.userId,
         token,
         expires: { $gt: new Date() },
-        verified,
       })
       .catch((err) => console.log(err));
 
-    if (resetToken.verified) {
-      // If no such user found in the database then it will show 'No Such User Found.'
-      if (!user) {
-        return res.status(400).json({ message: "No Such User Found." });
-      } else {
-        // Checking whether the user exists or not and also checking whether the token is expired or not
-        if (!resetToken) {
-          return res.json({ sucess: false, message: "Invalid Token" });
-        }
-        // Updating the password of the user with the help of 'updatePassword' function
-        const oldPassword = user.password;
+      console.log("Reset token",resetToken)
 
-        // Compare the old password with the new password
-        const isOldPasswordValid = await bcrypt.compare(
-          newPassword,
-          oldPassword
-        );
-
-        if (isOldPasswordValid) {
-          // If old password matches new password, return an error
-          return res.json({
-            success: false,
-            message: "New password should be different from the old password.",
+    try {
+      if (resetToken.verified) {
+        // If no such user found in the database then it will show 'No Such User Found.'
+        if (!user) {
+          return res.status(400).json({ message: "No Such User Found." });
+        } else {
+          // Checking whether the user exists or not and also checking whether the token is expired or not
+          if (!resetToken) {
+            return res.json({ sucess: false, message: "Invalid Token" });
+          }
+          // Updating the password of the user with the help of 'updatePassword' function
+          const oldPassword = user.password;
+  
+          // Compare the old password with the new password
+          const isOldPasswordValid = await bcrypt.compare(
+            newPassword,
+            oldPassword
+          );
+  
+          if (isOldPasswordValid) {
+            // If old password matches new password, return an error
+            return res.json({
+              success: false,
+              message: "New password should be different from the old password.",
+            });
+          }
+  
+          // Hash the new password
+          const salt = await bcrypt.genSalt(10);
+          const hashedPassword = await bcrypt.hash(newPassword, salt);
+  
+          // Update the password in the UserModel
+          const userUpdate = await userModel.findOneAndUpdate(
+            { email },
+            { password: hashedPassword },
+            { new: true }
+          );
+  
+          if (!userUpdate) {
+            return res.status(500).json({
+              success: false,
+              message: "Error updating password.",
+            });
+          }
+  
+          // Remove the used verification code from the VerificationModel
+          await resetTokenModel.findOneAndDelete({
+            userId: payload.userId,
+            token,
+            expires: { $gt: new Date() },
+          });
+  
+          return res.status(200).json({
+            success: true,
+            message: "Password reset successfully.",
           });
         }
-
-        // Hash the new password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        // Update the password in the UserModel
-        const userUpdate = await userModel.findOneAndUpdate(
-          { email },
-          { password: hashedPassword },
-          { new: true }
-        );
-
-        if (!userUpdate) {
-          return res.status(500).json({
-            success: false,
-            message: "Error updating password.",
-          });
-        }
-
-        // Remove the used verification code from the VerificationModel
-        await resetTokenModel.findOneAndDelete({
-          userId: payload.userId,
-          token,
-          expires: { $gt: new Date() },
-        });
-
-        return res.status(500).json({
-          success: true,
-          message: "Password reset successfully.",
-        });
       }
+    } catch (error) {
+      return res.status(500).json({success:false,message: 'Jwt token is already used. Please try to generate again.'}); 
     }
   } catch (error) {
     return res.status(500).json({

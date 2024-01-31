@@ -5,7 +5,7 @@ const resetTokenSchema = new mongoose.Schema({
     email: { type: String, require: true },
     token: { type: String,  require: true },
     expires: {type: String ,required: true},
-    verified: {type:Boolean}
+    verified: {type: Boolean}
 })
 
 const ResetToken = mongoose.model("ResetToken",resetTokenSchema);

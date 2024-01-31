@@ -31,10 +31,10 @@ const sendVerificationCodeEmail = async (email, verificationCode) => {
 const sendVerificationEmail = async (email,subject,text) => {
   try {
     const mailOptions = {
-      from: process.env.EMAIL_USER, // Replace with your email
+      from: process.env.EMAIL_FROM, // Replace with your email
       to: email,
       subject: subject,
-      text: text,
+      html: text,
     };
 
     await transporter.sendMail(mailOptions);
