@@ -1,53 +1,64 @@
-import React, { useState } from "react";
-import {
-  CardBody,
-  CardFooter,
-  Typography,
-  Checkbox,
-  Button,
-} from "@material-tailwind/react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import InputButton from "../../Input/InputButton";
-import { useLocation } from 'react-router-dom'
+import { useLocation } from "react-router-dom";
 import Password from "./Password/Password";
 import ErrorPage from "../ErrorPage/ErrorPage";
+import ErrorComponent from "./ErrorComponent/ErrorComponent";
 
 function UpdatePassword() {
+  const [error, setError] = useState(false);
+  const [isValidLink, setIsValidLink] = useState(true);
   const location = useLocation();
 
   const queryParam = new URLSearchParams(location.search);
+  const token = queryParam.get("token");
 
-  console.log("queryParam",queryParam)
+  let errorMsg;
 
-  const token = queryParam.get('token')
-  // this.token = tokenData;
-  console.log("location",location);
+  let tokenPayload = {
+    token: token,
+  };
 
-    let tokenPayload = {
-      token : token
-    }
+  const divStyle = {
+    paddingBottom: "100px",
+  };
 
-  const isValidateLink = async () => {
-    if (token){
-      let response = await axios.post("http://localhost:3001/auth//verify-token",tokenPayload);
-  
-      console.log("Response ===> ",response)
-  
-      if (response.success === 200){
-        return true;
-      } else{
-        // const error =
-        console.log(response)
+  useEffect(() => {
+    const validateLink = async () => {
+      if (token) {
+        try {
+          let response = await axios.post(
+            "http://localhost:3001/auth/verify-token",
+            tokenPayload
+          );
+
+          console.log(response)
+
+          if (response.status === 200) {
+            setIsValidLink(true);
+          } else {
+            errorMsg = response.data.message
+            setIsValidLink(false)
+            setError(true);
+          }
+        } catch (error) {
+          console.error("Error during token verification:", error);
+          setError(true);
+        }
       }
-    }
-    return false;
-  }
+    };
+
+    validateLink();
+  }, [token]);
 
   return (
-    <div className="flex justify-center items-center xl:w-2/4 md:w-2/4">
-        <div className="p-6 w-full flex justify-center items-center flex-col">
-          {isValidateLink() ? <Password/> : <ErrorPage/>}
-        </div>
+    <div
+      className="flex justify-center items-center xl:w-2/4 md:w-2/4"
+      style={error ? divStyle : {}}
+    >
+      <div className="p-6 w-full flex justify-center items-center flex-col">
+        {isValidLink ? <Password /> : <ErrorComponent error={errorMsg} />}
+      </div>
     </div>
   );
 }

@@ -186,6 +186,8 @@ const resetPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
+    console.log(req)
+
     // Check if the user with the provided email exists
     const user = await userModel.findOne({ email });
 
@@ -201,7 +203,7 @@ const resetPassword = async (req, res) => {
       { userId: user._id, email: email },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "1m",
       }
     );
 
@@ -214,7 +216,7 @@ const resetPassword = async (req, res) => {
     });
 
     await resetToken.save();
-    let url = `${req.protocol}://${req.get("host")}/auth/updatePassword?token=${
+    let url = `${req.get("origin")}/auth/updatePassword?token=${
       resetToken.token
     }`;
     console.log(url);

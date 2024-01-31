@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { BiArrowBack } from "react-icons/bi";
 import { Button } from "@material-tailwind/react";
-import InputButton from "./../../Input/InputButton";
+import InputButton from "../../../Input/InputButton";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-function Forgetpassword() {
+function ForgotPasswod({onResponse}) {
   const [email,setEmail] = useState('');
   let payload = {
     email : email
@@ -20,22 +20,29 @@ function Forgetpassword() {
   };
   
   const handleForgetPassword = async () => {
-    let res = await axios.post("http://localhost:3001/auth/reset-password",payload);
-
-    console.log(res)
-
-    if (res.status === 200) {
+    try {
+      let res = await axios.post("http://localhost:3001/auth/reset-password", payload);
+      console.log(res);
+  
+      if (res.status === 200) {
+        onResponse(res);
+      } else {
+        // Handle non-200 status codes or other conditions
+        onResponse(res);
+      }
+    } catch (error) {
+      // Handle the error gracefully (e.g., show an error message to the user)
+      console.error("Error during reset password request:", error);
+      onResponse({ status: 500, errorText: "Internal Server Error" });
     }
   };
-
+  
   return (
-    <div className="flex justify-center items-center xl:w-2/5 md:w-2/4">
-      <div className="p-6 w-full flex justify-center items-center flex-col gap-6">
-        <InputButton type="email" fullWidth="true" label="email" value={email} onChange={(e) =>  setEmail(e.target.value)} />
+    <>
+      <InputButton type="email" fullWidth="true" label="email" value={email} onChange={(e) =>  setEmail(e.target.value)} />
         <Button
           fullWidth={true}
-          rounded={true}
-          color="transparent"
+          rounded="true"
           onClick={handleForgetPassword}
           style={buttonColor}
         >
@@ -51,9 +58,8 @@ function Forgetpassword() {
             </p>
           </Link>
         </div>
-      </div>
-    </div>
-  );
+    </>
+  )
 }
 
-export default Forgetpassword;
+export default ForgotPasswod
