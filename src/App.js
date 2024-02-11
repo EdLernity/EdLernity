@@ -13,7 +13,9 @@ import Blog from './Components/Blogpage/Blog';
 import Ui from './Components/Coursespage/Ui';
 import Auth from './Components/Auth/Auth';
 import BaseLayout from './Layout/BaseLayout';
-
+import PageNotFound from './Components/PageNotFound/PageNotFound';
+import UploadFolder from './Components/CourseUploader/UploadFolder.jsx'
+import VideoPlayer from './Components/Video/VideoPlayer.jsx';
 function App() {
   return (
     <div className="App">
@@ -24,12 +26,15 @@ function App() {
             <Route path="auth/login" element={<Auth/>} />
             <Route path="auth/signup" element={<Auth/>} />
             <Route path="auth/reset" element={<Auth/>} />
+            <Route path="auth/updatePassword" element={<Auth/>} />
             <Route path="/profile" element={<Profile/>} />
             <Route path="/about" element={<About />} />
             <Route path="/courses" element={<Courses1 />} />
             <Route path="/ui-ux-design" element={<Ui />} />
             <Route path="/blog" element={<Blog />} />
-          
+            <Route path='*' element={<PageNotFound />} />
+            <Route path='/upload' element={<UploadFolder />} />
+            <Route path='/video' element={<VideoPlayer />} />
           </Routes>
         </BrowserRouter>
       </>

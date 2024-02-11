@@ -20,7 +20,7 @@ function Courses() {
             <div className="relative">
                 <img
                     src="/Image/Intern2.png"  // Replace with your actual image URL
-                    alt="Course Image"
+                    alt="Course"
                     className="w-96 h-64 rounded-lg"
                 />
                 <div className="absolute top-5 left-0 w-full h-full flex flex-col ">
@@ -36,7 +36,7 @@ function Courses() {
             <div className="relative">
                 <img
                     src="/Image/Intern2.png"  // Replace with your actual image URL
-                    alt="Course Image"
+                    alt="Course"
                     className="w-96 h-64 rounded-lg"
                 />
                 <div className="absolute top-5 left-0 w-full h-full flex flex-col ">
@@ -74,7 +74,7 @@ function Courses() {
             <div className="relative">
                 <img
                     src="/Image/Intern2.png"  // Replace with your actual image URL
-                    alt="Course Image"
+                    alt="Course"
                     className="w-96 h-64 rounded-lg"
                 />
                 <div className="absolute top-5 left-0 w-full h-full flex flex-col ">

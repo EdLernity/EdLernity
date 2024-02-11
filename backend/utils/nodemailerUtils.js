@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Function to send a verification email 
-const sendVerificationEmail = async (email, verificationCode) => {
+const sendVerificationCodeEmail = async (email, verificationCode) => {
   try {
     const mailOptions = {
       from: process.env.EMAIL_USER, // Replace with your email
@@ -27,6 +27,24 @@ const sendVerificationEmail = async (email, verificationCode) => {
   }
 };
 
+
+const sendVerificationEmail = async (email,subject,text) => {
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_FROM, // Replace with your email
+      to: email,
+      subject: subject,
+      html: text,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return 'Verification email sent';
+  } catch (error) {
+    console.error('Error sending verification email:', error);
+    return 'Failed to send verification email';
+  }
+};
+
 // Function to generate a random six-digit verification code
 const generateVerificationCode = () => {
   const min = 100000; // Minimum value for a six-digit number
@@ -34,4 +52,4 @@ const generateVerificationCode = () => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-module.exports = {  sendVerificationEmail,  generateVerificationCode,};
+module.exports = { sendVerificationCodeEmail , sendVerificationEmail,  generateVerificationCode,};

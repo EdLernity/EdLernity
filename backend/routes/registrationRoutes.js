@@ -13,7 +13,10 @@ router.post('/login', registrationController.loginUser);
 
 //forget Password
 router.post('/send-otp', registrationController.sendOTP);
-router.post('/reset-password', registrationController.resetPassword); 
+router.post('/reset-password', registrationController.resetPassword);
+router.post('/verify-token', registrationController.verifyUserAndToken);
+router.post('/update-password', registrationController.updatePasswordAfterValidate);
+
 
 //user Details
 router.get('/user-details', jwtMiddleware, userController.getUserDetails);

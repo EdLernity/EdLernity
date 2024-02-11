@@ -2,10 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 :root{
     --color-blue:"#1539cf"
 }
 
 .color {
     color: var(--color-blue);
+}
+
+svg {
+    display: block !important;
 }
