@@ -12,6 +12,8 @@ import Courses1 from './Components/Coursespage/Courses1';
 import Blog from './Components/Blogpage/Blog';
 import Ui from './Components/Coursespage/Ui';
 import Auth from './Components/Auth/Auth';
+import BaseLayout from './Layout/BaseLayout';
+
 function App() {
   return (
     <div className="App">

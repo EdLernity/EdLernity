@@ -2,6 +2,7 @@ import React from 'react'
 import Navbar from '../Headers/Navbar'
 import { NavLink } from 'react-router-dom';
 import Footer from '../Footerpage/Footer';
+import BaseLayout from '../../Layout/BaseLayout';
 function Courses1() {
 
   const cardContainerStyle = {
@@ -38,8 +39,7 @@ function Courses1() {
     textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)', // Optional text shadow for better readability
   };
   return (
-    <div>
-      <Navbar />
+    <BaseLayout>
       <h1 className='text-3xl mt-10 lg:ml-10 font-bold ' style={{ color: "#181FC5" }}>Explore Courses</h1>
       <div className=''>
 
@@ -123,11 +123,10 @@ function Courses1() {
           <h1 className='text-3xl mt-10 lg:ml-10 font-bold ' style={{ color: "#181FC5" }}>About Price & Subscription</h1>
         </div>
       </div>
-      <div className='mt-32'>
-      <Footer/>
-      </div>
+     
    
-    </div>
+   
+    </BaseLayout>
   )
 }
 

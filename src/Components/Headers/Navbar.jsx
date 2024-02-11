@@ -116,12 +116,20 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
           </IconButton> */}
 
-          <IconButton
+          {/* <IconButton
             onClick={toggleDarkMode}
             className={`bg-${isDarkMode ? 'white' : 'black'} text-${isDarkMode ? 'black' : 'white'} px-4 py-2 rounded`}
           >
             {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
-          </IconButton>
+          </IconButton> */}
+
+          <IconButton
+  onClick={toggleDarkMode}
+  className={`bg-${isDarkMode ? 'white' : 'black'} text-${isDarkMode ? 'black' : 'white'} px-4 py-2 rounded`}
+>
+  {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
+</IconButton>
+
 
 
           <Link to="/profile" className="text-black font-md text-lg"><i className="fa fa-user"></i></Link>

@@ -1,4 +1,5 @@
 import React from 'react';
+import BaseLayout from '../../Layout/BaseLayout';
 
 function Courses() {
     return (
