@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Modal from "react-modal";
+import Modal from 'react-modal';
 import Navbar from '../Headers/Navbar'
 import { StarIcon } from '@heroicons/react/solid';
 import {
@@ -248,7 +248,7 @@ function Ui() {
                             Share it on social media and in your performance review.
                         </p>
                     </div>
-                    <img src='/Image/Certificate.png' alt='Certificate Image' className='w-24 sm:w-48 md:w-64 lg:w-96 h-auto' />
+                    <img src='/Image/Certificate.png' alt='Certificate' className='w-24 sm:w-48 md:w-64 lg:w-96 h-auto' />
                 </div>
             </div>
 
