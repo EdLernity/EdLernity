@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 
 function SucessPage({req}) {
-  console.log(req)
   const [isPath,setIsPath] = useState(false)
   if (req.path && !isPath) {
     setIsPath(true);

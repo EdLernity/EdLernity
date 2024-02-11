@@ -97,25 +97,25 @@ function Courses1() {
             </div>
 
             <div>
-              <img src='/Image/Ui.png' className='w-24' />
+              <img src='/Image/Ui.png'alt='' className='w-24' />
             </div>
           </div>
-          <div className='bg-[#282D99] flex items-center justify-between px-12 ml-12 mr-12 mt-8  rounded-2xl py-4 flex  px-8 '>
+          <div className='bg-[#282D99] flex items-center justify-between px-12 ml-12 mr-12 mt-8  rounded-2xl py-4  px-8 '>
             <div>
               <h1 className='text-xl text-white'>Web Development</h1>
             </div>
 
             <div>
-              <img src='/Image/Web.png' className='w-24' />
+              <img src='/Image/Web.png' alt='' className='w-24' />
             </div>
           </div>
-          <div className='bg-[#282D99] flex items-center justify-between px-12 ml-12 mr-12 mt-8  rounded-2xl py-4 flex  px-8 '>
+          <div className='bg-[#282D99] items-center justify-between px-12 ml-12 mr-12 mt-8  rounded-2xl py-4 flex  px-8 '>
             <div>
               <h1 className='text-xl text-white'>Other</h1>
             </div>
 
             <div>
-              <img src='/Image/Ui.png' className='w-24' />
+              <img src='/Image/Ui.png' alt='' className='w-24' />
             </div>
           </div>
         </div>

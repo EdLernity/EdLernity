@@ -30,10 +30,10 @@ const generateUserId = async () => {
 
 const registerUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, confirmPassword } = req.body;
+    const { firstName, lastName, email, phone, password, confirmPassword } = req.body;
 
     // Check if any of the required fields are missing
-    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+    if (!firstName || !lastName || !email || !phone || !password || !confirmPassword) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
@@ -47,11 +47,11 @@ const registerUser = async (req, res) => {
     }
 
     // Verify the email
-    const emailVerificationResult = await verifyEmail(email);
+    // const emailVerificationResult = await verifyEmail(email);
 
-    if (!emailVerificationResult.success) {
-      return res.status(400).json(emailVerificationResult);
-    }
+    // if (!emailVerificationResult.success) {
+    //   return res.status(400).json(emailVerificationResult);
+    // }
 
     // Check if the email already exists
     const existingUserByEmail = await userModel.findOne({ email });
@@ -59,7 +59,15 @@ const registerUser = async (req, res) => {
     if (existingUserByEmail) {
       return res
         .status(400)
-        .json({ success: false, message: "Email already exists" });
+        .json({ success: false, message: "Email already exists." });
+    }
+
+    const existingUserByPhone = await userModel.findOne({ phone });
+
+    if (existingUserByPhone) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Phone number is already exists with diffrent account." });
     }
 
     // Hash the password
@@ -74,12 +82,13 @@ const registerUser = async (req, res) => {
       firstName,
       lastName,
       email,
+      phone,
       password: hashedPassword,
     });
 
     await newUser.save();
 
-    return res.json({ success: true, message: "Registration successful" });
+    return res.json({ success: true, message: "Thank you for registering with edlernity. ", redirectTo: "/" });
   } catch (error) {
     console.error("Error:", error);
     return res
@@ -121,17 +130,15 @@ const loginUser = async (req, res) => {
     // If email and password are valid, generate a JWT token
     const token = jwt.sign(
       { userId: user.userId, email: user.email },
-      process.env.SECRET_KEY,
+      process.env.JWT_SECRET,
       { expiresIn: "5m" }
     );
 
     // Send the token in the response
-    return res.json({ success: true, token });
+    return res.json({ success: true, token , redirectTo: "/" });
   } catch (error) {
     console.error("Error:", error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Internal server error" });
+    return res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -186,8 +193,6 @@ const resetPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
-    console.log(req)
-
     // Check if the user with the provided email exists
     const user = await userModel.findOne({ email });
 
@@ -203,11 +208,9 @@ const resetPassword = async (req, res) => {
       { userId: user._id, email: email },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1m",
+        expiresIn: "5m",
       }
     );
-
-    console.log(token);
 
     const resetToken = new ResetToken({
       userId: user._id,
@@ -219,7 +222,6 @@ const resetPassword = async (req, res) => {
     let url = `${req.get("origin")}/auth/updatePassword?token=${
       resetToken.token
     }`;
-    console.log(url);
 
     let subject = "Please reset your password";
     let html = `<h2>Hello ${user.firstName}</h2><p>Your account is almost ready to use.</p> <a href="${url}">Click here</a> to verify your account.<br/> <small>If you didn't make this request just ignore this email.</small><br/>`;
@@ -242,8 +244,7 @@ const resetPassword = async (req, res) => {
       message: `Verification email has been send to your email : ${email}, please check.`,
     });
   } catch (e) {
-    console.log("ERROR", e);
-    return res.status(400).json({ message: e });
+    return res.status(400).json({ sucess:false, message: e });
   }
 };
 
@@ -253,19 +254,13 @@ const verifyUserAndToken = async (req, res) => {
 
     let decodeToken = jwt.verify(token, process.env.JWT_SECRET);
 
-    console.log(token);
-
-    console.log(decodeToken);
-
     const resetToken = await resetTokenModel
       .findOne({
         userId: decodeToken.userId,
         token,
         expires: { $gt: new Date() },
       })
-      .catch((err) => console.log(err));
-
-    console.log(resetToken);
+      .catch((err) => console.error(err));
 
     // Checking whether the user exists or not and also checking whether the token is expired or not
     if (!resetToken) {
@@ -286,8 +281,6 @@ const verifyUserAndToken = async (req, res) => {
 const updatePasswordAfterValidate = async (req, res) => {
   const { newPassword, confirmPassword, token } = req.body;
 
-  console.log(newPassword, confirmPassword, token);
-
   // Validation of Password & Confirm Password fields
   const createUserSchema = Yup.object().shape({
     newPassword: Yup.string()
@@ -304,7 +297,6 @@ const updatePasswordAfterValidate = async (req, res) => {
     await createUserSchema.validateSync(req.body);
 
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(payload);
     const email = payload.email;
 
     // Finding the User from the database using the 'email' field
@@ -316,9 +308,7 @@ const updatePasswordAfterValidate = async (req, res) => {
         token,
         expires: { $gt: new Date() },
       })
-      .catch((err) => console.log(err));
-
-      console.log("Reset token",resetToken)
+      .catch((err) => console.error(err));
 
     try {
       if (resetToken.verified) {
@@ -379,7 +369,7 @@ const updatePasswordAfterValidate = async (req, res) => {
         }
       }
     } catch (error) {
-      return res.status(500).json({success:false,message: 'Jwt token is already used. Please try to generate again.'}); 
+      return res.status(500).json({success:false,message: 'Your link has already used. Please try to generate again.'}); 
     }
   } catch (error) {
     return res.status(500).json({

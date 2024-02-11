@@ -46,24 +46,22 @@ function Password() {
 
     if (res.status === 200) {
       console.log("Success");
-      alert("Your password has been updated successfully!");
-      location.reload()
     }
   };
 
 
 return (
   <>
-      <CardBody className="flex flex-col gap-4 w-full">
-          <InputButton fullWidth label="New Password" type="password" value={newPassword} onChange={(e) =>  setNewPaasword(e.target.value)}/>
-          <InputButton fullWidth label="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
-          <div className="-ml-2.5 flex ">
-            <Checkbox label="Remember Me" />
-          </div>
-      </CardBody>
-      <CardFooter className="pt-0 flex flex-col w-[80%]">
-          <Button style={buttonColor} onClick={updatePassword}>Submit</Button>
-      </CardFooter>
+    <CardBody className="flex flex-col gap-4 w-full">
+      <InputButton fullWidth label="New Password" type="password" value={newPassword} onChange={(e) =>  setNewPaasword(e.target.value)}/>
+      <InputButton fullWidth label="Confirm Password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
+      <div className="-ml-2.5 flex ">
+        <Checkbox label="Remember Me" />
+      </div>
+    </CardBody>
+    <CardFooter className="pt-0 flex flex-col w-[80%]">
+      <Button style={buttonColor} onClick={updatePassword}>Submit</Button>
+    </CardFooter>
   </>
 )
 }
