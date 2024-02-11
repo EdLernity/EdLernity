@@ -8,7 +8,12 @@ import {
     AccordionBody,
 } from "@material-tailwind/react";
 
+import { Rating } from "@material-tailwind/react";
 import Footer from '../Footerpage/Footer';
+import BaseLayout from '../../Layout/BaseLayout';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 function Ui() {
     const [isOpen, setIsOpen] = useState(false);
     const openModal = () => setIsOpen(true);
@@ -32,10 +37,54 @@ function Ui() {
     const [open, setOpen] = React.useState(0);
 
     const handleOpen = (value) => setOpen(open === value ? 0 : value);
+
+
+
+
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        afterChange: (index) => setCurrentSlide(index),
+    };
+
+
+    const cardData = [
+        {
+            name: 'John Doe',
+            image: 'https://via.placeholder.com/150', // Replace with the actual image URL
+            comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        },
+
+        {
+            name: 'John Doe',
+            image: 'https://via.placeholder.com/150',
+            comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        },
+
+
+        {
+            name: 'John Doe',
+            image: 'https://via.placeholder.com/150',
+            comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        },
+
+        {
+            name: 'John Doe',
+            image: 'https://via.placeholder.com/150',
+            comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        },
+        
+        // Add more data objects for each card
+    ];
     return (
 
-        <div>
-            <Navbar />
+        <BaseLayout>
+
             <h1 className='text-3xl mt-10 lg:ml-10 font-bold ' style={{ color: "#181FC5" }}>UI/UX Designing </h1>
 
             <div>
@@ -257,25 +306,25 @@ function Ui() {
                 <h4 className='text-3xl mt-10 lg:ml-10 font-bold ' style={{ color: "#181FC5" }}>UI/UX Design Training Syllabus</h4>
                 <div className='mt-12 items-center justify-center px-12'>
                     <Accordion open={open === 1} icon={<Icon id={1} open={open} />}>
-                        <AccordionHeader onClick={() => handleOpen(1)} style={{color:"#181FC5"}}> What is the primary goal of UI/UX design?</AccordionHeader>
+                        <AccordionHeader onClick={() => handleOpen(1)} style={{ color: "#181FC5" }}> What is the primary goal of UI/UX design?</AccordionHeader>
                         <AccordionBody>
-                        The primary goal of UI/UX design is to create a seamless and enjoyable user experience by focusing on the user's needs, preferences, and behaviors. UI design (User Interface) deals with the visual elements and interactive aspects of a product, while UX design (User Experience) encompasses the overall feel and functionality of the product, ensuring it meets the user's expectations and provides a positive interaction.
+                            The primary goal of UI/UX design is to create a seamless and enjoyable user experience by focusing on the user's needs, preferences, and behaviors. UI design (User Interface) deals with the visual elements and interactive aspects of a product, while UX design (User Experience) encompasses the overall feel and functionality of the product, ensuring it meets the user's expectations and provides a positive interaction.
                         </AccordionBody>
                     </Accordion>
                     <Accordion open={open === 2} icon={<Icon id={2} open={open} />}>
-                        <AccordionHeader onClick={() => handleOpen(2)} style={{color:"#181FC5"}}>
-                        How can responsive design contribute to a better user experience?
+                        <AccordionHeader onClick={() => handleOpen(2)} style={{ color: "#181FC5" }}>
+                            How can responsive design contribute to a better user experience?
                         </AccordionHeader>
                         <AccordionBody>
-                        Responsive design is crucial for a better user experience as it ensures that a website or application adapts and functions well across various devices and screen sizes. By employing responsive design principles, UI/UX designers can create a consistent and user-friendly experience, reducing the need for zooming or horizontal scrolling. This approach enhances accessibility and usability, contributing to a more enjoyable and efficient interaction with the product.
+                            Responsive design is crucial for a better user experience as it ensures that a website or application adapts and functions well across various devices and screen sizes. By employing responsive design principles, UI/UX designers can create a consistent and user-friendly experience, reducing the need for zooming or horizontal scrolling. This approach enhances accessibility and usability, contributing to a more enjoyable and efficient interaction with the product.
                         </AccordionBody>
                     </Accordion>
                     <Accordion open={open === 3} icon={<Icon id={3} open={open} />}>
-                        <AccordionHeader onClick={() => handleOpen(3)} style={{color:"#181FC5"}}>
-                        Explain the importance of user testing in the UI/UX design process.
+                        <AccordionHeader onClick={() => handleOpen(3)} style={{ color: "#181FC5" }}>
+                            Explain the importance of user testing in the UI/UX design process.
                         </AccordionHeader>
                         <AccordionBody>
-                        User testing is a critical phase in the UI/UX design process as it allows designers to gather valuable feedback from real users. By observing how users interact with a prototype or a live product, designers can identify pain points, usability issues, and areas for improvement. This iterative process helps refine the design, ensuring that the final product aligns with user expectations and provides a satisfying and intuitive experience. Regular user testing is essential for creating user-centric designs and continuously enhancing the overall UI/UX.
+                            User testing is a critical phase in the UI/UX design process as it allows designers to gather valuable feedback from real users. By observing how users interact with a prototype or a live product, designers can identify pain points, usability issues, and areas for improvement. This iterative process helps refine the design, ensuring that the final product aligns with user expectations and provides a satisfying and intuitive experience. Regular user testing is essential for creating user-centric designs and continuously enhancing the overall UI/UX.
 
 
                         </AccordionBody>
@@ -283,9 +332,60 @@ function Ui() {
                 </div>
             </div>
 
-            <Footer/>
-        </div>
-        
+            <div className='mt-12'>
+                <h1 className='text-center font-bold text-3xl' style={{ color: "#181FC5" }}>Review from Learners</h1>
+                <div className="flex flex-col gap-4">
+
+                    <div className="flex mt-5 justify-center items-center">
+
+                        <Rating readonly value={4} ratedColor="blue" />
+                        <span className="text-gray-600 ml-2">4.3 Reviews</span>
+                    </div>
+
+
+                </div>
+
+                <div className="max-w-screen-lg mx-auto mt-10">
+                    <div className="flex items-center justify-center">
+                        {cardData.map((item, index) => (
+                            <div key={index} className="w-1/4 p-4">
+                                <div className="rounded-md bg-[#D9D9D9]">
+                                    <div className="w-full h-24 mx-auto bg-blue-500 rounded-t-md overflow-hidden">
+                                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="p-4">
+                                        <h2 className="text-xl font-bold mb-2">{item.name}</h2>
+                                        <p>{item.comment}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex justify-center mt-4">
+                        {[0, 1, 2, 3].map((index) => (
+                            <input
+                                key={index}
+                                type="radio"
+                                id={`radio${index}`}
+                                name="carousel"
+                                checked={currentSlide === index}
+                                onChange={() => setCurrentSlide(index)}
+                                className="hidden"
+                            />
+                        ))}
+                        {[0, 1, 2, 3].map((index) => (
+                            <label
+                                key={index}
+                                htmlFor={`radio${index}`}
+                                className={`w-4 h-4 mx-1 rounded-full cursor-pointer ${currentSlide === index ? 'bg-blue-700' : 'bg-gray-300'
+                                    }`}
+                            ></label>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </BaseLayout>
+
     )
 }
 

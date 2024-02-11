@@ -1,11 +1,11 @@
 import React from 'react'
 import Navbar from '../Headers/Navbar'
+import BaseLayout from '../../Layout/BaseLayout'
 function Blog() {
   return (
-    <div>
-      <Navbar/>
-      <h1>Blog</h1>
-    </div>
+   <BaseLayout>
+    <h1>Blog Page</h1>
+   </BaseLayout>
   )
 }
 

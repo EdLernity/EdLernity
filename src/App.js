@@ -12,6 +12,7 @@ import Courses1 from './Components/Coursespage/Courses1';
 import Blog from './Components/Blogpage/Blog';
 import Ui from './Components/Coursespage/Ui';
 import Auth from './Components/Auth/Auth';
+import BaseLayout from './Layout/BaseLayout';
 import PageNotFound from './Components/PageNotFound/PageNotFound';
 import UploadFolder from './Components/CourseUploader/UploadFolder.jsx'
 import VideoPlayer from './Components/Video/VideoPlayer.jsx';

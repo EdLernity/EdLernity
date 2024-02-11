@@ -1,4 +1,4 @@
-import React ,{useState} from 'react'
+import React, { useState } from 'react'
 import Navbar from '../Headers/Navbar'
 import Herosection from '../Herosectionpage/Herosection'
 import Internship from '../Internship/Internship'
@@ -6,19 +6,21 @@ import Sucess from '../Sucesspage/Sucess'
 import Footer from '../Footerpage/Footer'
 import Offer from '../Offerpage.jsx/Offer'
 import Courses from '../Courses/Courses'
+import BaseLayout from '../../Layout/BaseLayout'
 function Home() {
-    const [isDarkMode, setIsDarkMode] = useState(false);
-  
+    // const [isDarkMode, setIsDarkMode] = useState(false);
 
-    const toggleDarkMode = () => {
-        setIsDarkMode(!isDarkMode);
-    };
+
+    // const toggleDarkMode = () => {
+    //     setIsDarkMode(!isDarkMode);
+    // };
     return (
         <>
-            <div className={`${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
+            {/* <div className={`${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
                 <div>
                     <Navbar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-                </div>
+                </div> */}
+            <BaseLayout>
                 <div className=''>
                     <Herosection />
                 </div>
@@ -34,11 +36,9 @@ function Home() {
                 <div className=''>
                     <Courses />
                 </div>
-                <div className=''>
-                    <Footer />
-                </div>
-            </div>
 
+                {/* </div> */}
+            </BaseLayout>
         </>
     )
 }
