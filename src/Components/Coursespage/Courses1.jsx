@@ -3,6 +3,7 @@ import Navbar from '../Headers/Navbar'
 import { NavLink } from 'react-router-dom';
 import Footer from '../Footerpage/Footer';
 import BaseLayout from '../../Layout/BaseLayout';
+import { Helmet } from "react-helmet";
 function Courses1() {
 
   const cardContainerStyle = {
@@ -40,6 +41,11 @@ function Courses1() {
   };
   return (
     <BaseLayout>
+     <Helmet>
+        <meta charSet="utf-c" />
+        <title>EdLernity | Courses</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <h1 className='text-3xl mt-10 lg:ml-10 font-bold ' style={{ color: "#181FC5" }}>Explore Courses</h1>
       <div className=''>
 

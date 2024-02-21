@@ -7,6 +7,7 @@ import Footer from '../Footerpage/Footer'
 import Offer from '../Offerpage.jsx/Offer'
 import Courses from '../Courses/Courses'
 import BaseLayout from '../../Layout/BaseLayout'
+import { Helmet } from "react-helmet";
 function Home() {
     // const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -21,6 +22,11 @@ function Home() {
                     <Navbar isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
                 </div> */}
             <BaseLayout>
+            <Helmet>
+        <meta charSet="utf-8" />
+        <title>EdLernity | Home </title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
                 <div className=''>
                     <Herosection />
                 </div>

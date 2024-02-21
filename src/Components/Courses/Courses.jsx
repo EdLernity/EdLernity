@@ -35,7 +35,7 @@ function Courses() {
 
             <div className="relative">
                 <img
-                    src="/Image/Intern2.png"  // Replace with your actual image URL
+                    src="/Image/Graph.png"  // Replace with your actual image URL
                     alt="Course"
                     className="w-96 h-64 rounded-lg"
                 />
@@ -73,14 +73,14 @@ function Courses() {
             {/* Right side with image and text overlay */}
             <div className="relative">
                 <img
-                    src="/Image/Intern2.png"  // Replace with your actual image URL
+                    src="/Image/Frame.png"  // Replace with your actual image URL
                     alt="Course"
                     className="w-96 h-64 rounded-lg"
                 />
-                <div className="absolute top-5 left-0 w-full h-full flex flex-col ">
+                {/* <div className="absolute top-5 left-0 w-full h-full flex flex-col ">
                     <p className="text-white text-center font-bold">Our Courses</p>
                     <p className="text-white text-center">Featured Courses</p>
-                </div>
+                </div> */}
             </div>
         </div>
 </>

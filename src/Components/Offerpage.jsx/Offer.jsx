@@ -46,7 +46,7 @@ function Offer() {
 
                 {/* Card 3 */}
                 <div className="max-w-sm rounded overflow-hidden border shadow-lg m-4">
-                    {/* ... (similar structure for Card 3) */}
+                  
                     <div className="px-6 py-4">
                         <div className="font-bold text-xl mb-2">Live Classes</div>
                         <p className="text-gray-700 text-base">
@@ -63,7 +63,6 @@ function Offer() {
                     </div>
                 </div>
                 <div className="max-w-sm rounded overflow-hidden border shadow-lg m-4">
-                    {/* ... (similar structure for Card 3) */}
                     <div className="px-6 py-4">
                         <div className="font-bold text-xl mb-2">Self Placed Courses</div>
                         <p className="text-gray-700 text-base">
