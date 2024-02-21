@@ -1,0 +1,47 @@
+/* PrivacyPolicy.css */
+
+.privacy-policy-container {
+    /* max-width: 800px; */
+    margin: 0 auto;
+    padding: 30px;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .privacy-policy-container {
+      padding: 10px;
+    }
+  }
+  
+
+
+
+  /* TermAndCondition.css */
+
+.term-and-condition-container {
+    /* max-width: 800px; */
+    margin: 0 auto;
+    padding: 30px;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .term-and-condition-container {
+      padding: 10px;
+    }
+  }
+  
+
+
+  /* CancellationAndRefundPolicy.css */
+
+.cancellation-refund-policy-container {
+    /* max-width: 800px; */
+    margin: 0 auto;
+    padding: 30px;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .cancellation-refund-policy-container {
+      padding: 10px;
+    }
+  }
+  

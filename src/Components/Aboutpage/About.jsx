@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-
 import BaseLayout from '../../Layout/BaseLayout';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid';
 import { Typography } from "@material-tailwind/react";
+import { Helmet } from "react-helmet";
 
 function About() {
   const heroSectionStyle = {
@@ -174,6 +174,11 @@ function About() {
 
   return (
     <BaseLayout>
+     <Helmet>
+        <meta charSet="utf-8" />
+        <title>EdLernity | About Us</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <div
         style={{
           ...heroSectionStyle,
@@ -228,10 +233,11 @@ function About() {
               "Our commitment is to lead the way in technological advancements, promoting sustainability, inclusivity, and ethical practices. Together, we strive to build a better future where technology serves as a catalyst for positive social and economic transformation."
             </p>
           </div>
-
-
         </div>
       </div>
+
+
+
 
       <div className='mt-12'>
         <h4 className='text-center font-bold text-3xl' style={{ color: "#181FC5" }}>MEET OUR TEAM</h4>
@@ -336,6 +342,8 @@ function About() {
           ))}
         </div>
       </div>
+
+
     </BaseLayout >
   );
 }

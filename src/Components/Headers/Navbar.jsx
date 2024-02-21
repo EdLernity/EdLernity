@@ -45,7 +45,8 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
   };
   return (
     <>
-      <nav className="flex justify-between    items-center border shadow-lg px-4 py-2 bg-white text-black">
+      {/* <nav className="flex justify-between    items-center border shadow-lg px-4 py-2 bg-white text-black"> */}
+      <nav className={`flex justify-between items-center border shadow-lg px-4 py-2 ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'}`}>
         <div className="lg:hidden md:hidden">
           <AlignJustify
             className="w-8 h-8 cursor-pointer"
@@ -60,56 +61,57 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
 
 
         <div className="hidden lg:flex ml-12 space-x-6">
-          <NavLink
-            exact
-            to="/"
-            className={({ isActive }) =>
-              cn(
-                isActive ? "text-[#181FC5] active-link" : "text-black",
-                "hover:text-[#181FC5] font-md text-lg"
-              )
-            }
-          >
-            Home
-          </NavLink>
+  <NavLink
+    exact
+    to="/"
+    className={({ isActive }) =>
+      cn(
+        isActive ? "text-[#181FC5] active-link" : (isDarkMode ? "text-white" : "text-black"),
+        "hover:text-[#181FC5] font-md text-lg"
+      )
+    }
+  >
+    Home
+  </NavLink>
 
-          <NavLink
+  <NavLink
+    to="/about"
+    className={({ isActive }) =>
+      cn(
+        isActive ? "text-[#181FC5] active-link" : (isDarkMode ? "text-white" : "text-black"),
+        "hover:text-[#181FC5] font-md text-lg"
+      )
+    }
+  >
+    About
+  </NavLink>
 
-            to="/about"
-            className={({ isActive }) =>
-              cn(
-                isActive ? "text-[#181FC5] active-link" : "text-black",
-                "hover:text-[#181FC5] font-md text-lg"
-              )
-            }
-          >
-            About
-          </NavLink>
-          <NavLink
-            exact
-            to="/courses"
-            className={({ isActive }) =>
-              cn(
-                isActive ? "text-[#181FC5] active-link" : "text-black",
-                "hover:text-[#181FC5] font-md text-lg"
-              )
-            }
-          >
-            Courses
-          </NavLink>
-          <NavLink
+  <NavLink
+    exact
+    to="/courses"
+    className={({ isActive }) =>
+      cn(
+        isActive ? "text-[#181FC5] active-link" : (isDarkMode ? "text-white" : "text-black"),
+        "hover:text-[#181FC5] font-md text-lg"
+      )
+    }
+  >
+    Courses
+  </NavLink>
 
-            to="/blog"
-            className={({ isActive }) =>
-              cn(
-                isActive ? "text-[#181FC5] active-link" : "text-black",
-                "hover:text-[#181FC5] font-md text-lg"
-              )
-            }
-          > 
-            Blog
-          </NavLink>
-        </div>
+  <NavLink
+    to="/blog"
+    className={({ isActive }) =>
+      cn(
+        isActive ? "text-[#181FC5] active-link" : (isDarkMode ? "text-white" : "text-black"),
+        "hover:text-[#181FC5] font-md text-lg"
+      )
+    }
+  >
+    Blog
+  </NavLink>
+</div>
+
 
         <div className="flex space-x-4 ml-auto">
           {/* <IconButton onClick={toggleDarkMode}>
@@ -124,11 +126,11 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
           </IconButton> */}
 
           <IconButton
-  onClick={toggleDarkMode}
-  className={`bg-${isDarkMode ? 'white' : 'black'} text-${isDarkMode ? 'black' : 'white'} px-4 py-2 rounded`}
->
-  {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
-</IconButton>
+            onClick={toggleDarkMode}
+            className={`bg-${isDarkMode ? 'white' : 'black'} text-${isDarkMode ? 'black' : 'white'} px-4 py-2 rounded`}
+          >
+            {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
+          </IconButton>
 
 
 

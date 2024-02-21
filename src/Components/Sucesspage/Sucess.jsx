@@ -152,8 +152,8 @@ function Success() {
         {/* Carousel Content */}
         {successStories.map((story, index) => (
           index >= currentSlide && index < currentSlide + visibleCards && (
-            <div key={story.id} className={`slide w-full  mx-auto`} style={{width:"15rem"}}>
-              <div className="card p-4 border">
+            <div key={story.id} className={`slide w-full mx-auto`} style={{ width: "15rem", marginLeft:"2rem" , marginRight: "4rem" }}>
+      <div className="card p-4 border gap-4">
                 <Avatar
                   variant="circular"
                   alt={`user ${story.id}`}
