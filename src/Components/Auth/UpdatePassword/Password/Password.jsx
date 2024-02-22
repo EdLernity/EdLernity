@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   CardBody,
   CardFooter,
-  Typography,
   Checkbox,
   Button,
 } from "@material-tailwind/react";
@@ -27,9 +26,6 @@ function Password() {
     token:token
   }
 
-  const textColor = {
-    color: "#1539cf",
-  };
   const buttonColor = {
     background: "#1539cf",
     color: "white",

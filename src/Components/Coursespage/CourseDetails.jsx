@@ -4,7 +4,7 @@ import React from 'react';
 function CourseDetails({ badges, description }) {
   return (
     <div className="lg:w-2/3 lg:pl-4 mt-4 lg:mt-0">
-      <div className='flex items-center mt-5 lg:justify-start justify-center lg:justify-between flex-wrap'>
+      <div className='flex items-center justify-center lg:justify-between flex-wrap'>
         {badges.map((badge, index) => (
           <div key={index} className='badge bg-[#181FC5] flex items-center px-4 p-1 gap-2 mb-2 lg:mb-0 lg:mr-2 w-full lg:w-auto'>
             <img src={badge.image} alt={badge.alt} className='w-6 h-6' />

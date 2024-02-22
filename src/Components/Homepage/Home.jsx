@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import Navbar from '../Headers/Navbar'
+import React from 'react'
 import Herosection from '../Herosectionpage/Herosection'
 import Internship from '../Internship/Internship'
 import Sucess from '../Sucesspage/Sucess'
 import Footer from '../Footerpage/Footer'
 import Offer from '../Offerpage.jsx/Offer'
-import Courses from '../Courses/Courses'
+import CoursesOffered from '../CoursesOffered/CoursesOffered'
 import BaseLayout from '../../Layout/BaseLayout'
 import { Helmet } from "react-helmet";
 function Home() {
@@ -40,7 +39,7 @@ function Home() {
                     <Offer />
                 </div>
                 <div className=''>
-                    <Courses />
+                    <CoursesOffered />
                 </div>
 
                 {/* </div> */}

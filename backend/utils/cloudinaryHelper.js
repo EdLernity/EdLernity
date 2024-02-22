@@ -1,48 +1,37 @@
-// const cloudinary = require("cloudinary").v2;
-// cloudinary.config({
-//   cloud_name: process.env.CLOUD_NAME,
-//   api_key: process.env.API_KEY,
-//   api_secret: process.env.API_SECRET,
-// });
-
-// export async function handleUpload(file) {
-//   const res = await cloudinary.uploader.upload(file, {
-//     resource_type: "auto",
-//   });
-//   return res;
-// }
-
-
-const cloudinary = require("cloudinary").v2;
-const { log } = console;
 const fs = require("fs");
+const { Storage } = require('@google-cloud/storage');
+const path = require("path")
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
+const storage = new Storage({
+  keyFilename :  path.join(__dirname, '../corded-photon-414013-b0c4f099a614.json'),
+  projectId:'corded-photon-414013'
 });
 
-const uploadOnCloudinary  = async (path,publicId) => {
-  try{
-    if(!path)  throw new Error('No file provided');
-    const res = await cloudinary.uploader.upload(path,{
-      resource_type: 'auto',
-      public_id: publicId
-    })
-    // file uploded sucessfuly
-    console.log("Uploded sucessfully");
-    log("Logging the uploaded image details...")
-    log(`Public ID : ${res.public_id}`);
-    log(`URL       : ${res.secure_url}`)
-    console.log(res)
-    return res;
-  }catch(err){
-    fs.unlinkSync(path)
-    console.error(err);
-    log(err);
-    return null
-  }
-};
+const bucketName = process.env.bucketName; // Replace with your bucket name
 
-module.exports = uploadOnCloudinary;
+async function uploadToGCS(folderName, files) {
+  try {
+
+    const bucket = storage.bucket(bucketName);
+
+    for (const file of files) {
+      const filePath = `${folderName}/${file.originalname}`;
+      await bucket.upload(file.path, {
+        destination: filePath
+      });
+      fs.unlinkSync(file.path);
+    }
+
+    console.log('Files uploaded to Google Cloud Storage successfully.');
+    return true;
+  } catch (error) {
+    console.error('Error uploading files to GCS:', error);
+    return false;
+  }
+}
+
+
+module.exports = uploadToGCS;
+
+
+

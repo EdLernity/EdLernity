@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import CourseCard from './CourseCard';
-import VideoModal from './VideoModal';
+import CourseCard from '../Coursespage/CourseCard';
+import VideoModal from '../Coursespage/VideoModal';
 import BaseLayout from '../../Layout/BaseLayout';
-import CourseDetails from './CourseDetails';
+import CourseDetails from '../Coursespage/CourseDetails';
 import { StarIcon } from '@heroicons/react/solid';
 import { Accordion, AccordionHeader, AccordionBody } from "@material-tailwind/react";
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid';
@@ -339,19 +339,3 @@ function Ui() {
 }
 
 export default Ui;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

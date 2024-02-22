@@ -1,17 +1,9 @@
 import React from 'react'
-import Navbar from '../Headers/Navbar'
-import { NavLink } from 'react-router-dom';
-import Footer from '../Footerpage/Footer';
+import { NavLink , useNavigate } from 'react-router-dom';
 import BaseLayout from '../../Layout/BaseLayout';
-import { Helmet } from "react-helmet";
 function Courses1() {
 
-  const cardContainerStyle = {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    padding: '20px',
-  };
+  const navigate = useNavigate();
 
   const cardStyle = {
     position: 'relative',
@@ -39,13 +31,14 @@ function Courses1() {
     fontWeight: 'bold',
     textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)', // Optional text shadow for better readability
   };
+
+  const handleClick = async () =>{
+    // localStorage.setItem("current_course", "Chat_GPT_Course_EdLernity");
+    localStorage.setItem("current_course", "Angular Framework");
+    navigate(window.location.pathname + '/angular')
+  }
   return (
     <BaseLayout>
-     <Helmet>
-        <meta charSet="utf-c" />
-        <title>EdLernity | Courses</title>
-        <link rel="canonical" href="http://mysite.com/example" />
-      </Helmet>
       <h1 className='text-3xl mt-10 lg:ml-10 font-bold ' style={{ color: "#181FC5" }}>Explore Courses</h1>
       <div className=''>
 
@@ -56,20 +49,18 @@ function Courses1() {
               UI/UX Design
             </div>
             <div className="absolute bottom-5 left-0 right-0 text-center">
-              <NavLink to="/ui-ux-design">
-                <button className='text-black bg-gray-200 px-6 text-center py-2  rounded-3xl justify-center '>Explore</button>
-              </NavLink>
+                <button className='text-black bg-gray-200 px-6 text-center py-2  rounded-3xl justify-center ' onClick={handleClick}>Explore</button>
             </div>
           </div>
           <div style={cardStyle} className="relative w-300 m-10 text-center shadow-lg rounded-2xl overflow-hidden">
             <img src='/Image/Intern1.png' alt='Internship 1' style={imageStyle} className="w-full h-auto rounded-2xl" />
             <div style={textStyle} className="absolute top-25 left-50 transform -translate-x-50 -translate-y-50 text-white font-bold text-2xl">
-              Web Development
+              Angular Framework (MEAN STACK)
             </div>
             <div className="absolute bottom-5 left-0 right-0 text-center">
-              <NavLink to="#">
-                <button className='text-black bg-gray-200 px-6 text-center py-2  rounded-3xl justify-center '>Explore</button>
-              </NavLink>
+              <div>
+                <button className='text-black bg-gray-200 px-6 text-center py-2  rounded-3xl justify-center' onClick={handleClick}>Explore</button>
+              </div>
             </div>
           </div>
           <div style={cardStyle} className="relative w-300 m-10 text-center shadow-lg rounded-2xl overflow-hidden">
