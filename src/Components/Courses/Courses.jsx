@@ -1,93 +1,118 @@
-import React from 'react';
-import BaseLayout from '../../Layout/BaseLayout';
+import React, { useState, useEffect } from "react";
+import VideoPlayer from "./Video/VideoPlayer";
+import CourseContent from "./Coursecontent/Coursecontent";
+import Certificate from "../Certificate/Certificate";
+import axios from "axios";
 
 function Courses() {
-    return (
-        <>
-        <div className="container mx-auto gap-32 p-4 md:flex md:items-start">
-            {/* Left side with text */}
-            <div className="">
-                <h1 className="text-2xl font-bold mb-4">Our Courses</h1>
-                <p className="text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac ligula eu lacus dictum fermentum. Duis ut quam vel risus congue iaculis. Proin rhoncus commodo enim, eu sollicitudin orci convallis eu. Vivamus non justo vel tortor fringilla iaculis.
-                </p>
-                <p className="text-gray-700">
-                    Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed dapibus, libero at ultrices feugiat, quam ex fringilla dolor, in tincidunt orci ex id sapien. Quisque vehicula purus non ligula scelerisque, eu hendrerit mauris eleifend.
-                </p>
-            </div>
+  const [folderName, setFolderName] = useState("");
+  const [courses, setCourses] = useState([]);
+  let [count, setCount] = useState(1);
+  const [courseTitle, setCourseTitle] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [fileName, setFileName] = useState("");
 
-            {/* Right side with image and text overlay */}
-            <div className="relative">
-                <img
-                    src="/Image/Intern2.png"  // Replace with your actual image URL
-                    alt="Course"
-                    className="w-96 h-64 rounded-lg"
-                />
-                <div className="absolute top-5 left-0 w-full h-full flex flex-col ">
-                    <p className="text-white text-center font-bold">Our Courses</p>
-                    <p className="text-white text-center">Featured Courses</p>
-                </div>
+  // Get all courses in a specific folder on server side.
+  useEffect(() => {
+    const folderName = localStorage.getItem("current_course");
+    setFolderName(folderName);
+    axios
+      .get(`http://localhost:3001/api/courses/${folderName}`)
+      .then((res) => {
+        const extractedTitles = res.data.videos
+          .map((item, index) => {
+            let match = item.match(/\d+\s*-\s*(.*)\.mp4/);
+            let currentCount = count + index; // Add index to count
+
+            let formattedCount = currentCount.toString().padStart(2, "0");
+
+            match = `${formattedCount}. ${match[1]}`;
+
+            if (match && match[1]) {
+              return match;
+            } else {
+              console.log("Title not found in the file path.");
+              return null;
+            }
+          })
+          .filter((title) => title !== null); // Filter out null values
+
+        setCourses(extractedTitles);
+        setCourseTitle(extractedTitles[0]);
+
+        axios
+          .get(
+            `http://localhost:3001/api/courses/${folderName}/${"01 - Introduction to the Tutorial Masterclass.mp4"}`
+          )
+          .then((res) => {
+            setVideoUrl(res.data.videoUrl);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching courses:", error);
+      });
+  }, []);
+
+  const setUrl = (event) => {
+    let video;
+    let fileNameForVideo;
+    video = event.target.textContent;
+    setCourseTitle(video);
+    const parts = video.split("."); // Split the video name by dot
+    if (parts.length === 2) {
+      let index = parts[0].trim();
+      if (index.length === 1) {
+        index = `0${index}`; // Pad single-digit index with leading zero
+      }
+      fileNameForVideo = `${index} - ${parts[1].trim()}.mp4`; // Combine index and file
+      setFileName(fileNameForVideo); // Update the fileName state
+    } else {
+      return null; // Invalid format, return null or handle accordingly
+    }
+    axios
+      .get(
+        `http://localhost:3001/api/courses/${folderName}/${encodeURIComponent(fileNameForVideo)}`
+      )
+      .then((res) => {
+        setVideoUrl(res.data.videoUrl);
+      });
+  };
+
+  const course = {
+    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
+    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullam
+    colaboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in 
+    voluptate velit esse cillum dolore.`,
+  };
+
+  return (
+    <>
+      <div className="px-24 mt-10">
+        <div className="flex w-full">
+          <div className="flex flex-col w-4/6">
+            <div className="mt-4">
+              <VideoPlayer videoUrl={videoUrl} />
             </div>
+            <div className="pl-4 pr-24 py-4">
+              <h1 className="text-xl font-bold">{courseTitle}</h1>
+              <div className="mt-4">
+                <p>{course.description}</p>
+              </div>
+            </div>
+          </div>
+          <div className="w-2/6">
+            <CourseContent
+              setUrl={setUrl}
+              courseTitle="New Text"
+              videos={courses}
+            />
+          </div>
         </div>
-
-        <div className="container mx-auto gap-32 p-4 md:flex md:items-start">
-            {/* Left side with text */}
-
-            <div className="relative">
-                <img
-                    src="/Image/Graph.png"  // Replace with your actual image URL
-                    alt="Course"
-                    className="w-96 h-64 rounded-lg"
-                />
-                <div className="absolute top-5 left-0 w-full h-full flex flex-col ">
-                    <p className="text-white text-center font-bold">Our Courses</p>
-                    <p className="text-white text-center">Featured Courses</p>
-                </div>
-            </div>
-            <div className="">
-                <h1 className="text-2xl font-bold mb-4">Our Courses</h1>
-                <p className="text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac ligula eu lacus dictum fermentum. Duis ut quam vel risus congue iaculis. Proin rhoncus commodo enim, eu sollicitudin orci convallis eu. Vivamus non justo vel tortor fringilla iaculis.
-                </p>
-                <p className="text-gray-700">
-                    Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed dapibus, libero at ultrices feugiat, quam ex fringilla dolor, in tincidunt orci ex id sapien. Quisque vehicula purus non ligula scelerisque, eu hendrerit mauris eleifend.
-                </p>
-            </div>
-
-            {/* Right side with image and text overlay */}
-          
-        </div>
-
-        <div className="container mx-auto gap-32 p-4 md:flex md:items-start">
-            {/* Left side with text */}
-            <div className="">
-                <h1 className="text-2xl font-bold mb-4">Our Courses</h1>
-                <p className="text-gray-700">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ac ligula eu lacus dictum fermentum. Duis ut quam vel risus congue iaculis. Proin rhoncus commodo enim, eu sollicitudin orci convallis eu. Vivamus non justo vel tortor fringilla iaculis.
-                </p>
-                <p className="text-gray-700">
-                    Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed dapibus, libero at ultrices feugiat, quam ex fringilla dolor, in tincidunt orci ex id sapien. Quisque vehicula purus non ligula scelerisque, eu hendrerit mauris eleifend.
-                </p>
-            </div>
-
-            {/* Right side with image and text overlay */}
-            <div className="relative">
-                <img
-                    src="/Image/Frame.png"  // Replace with your actual image URL
-                    alt="Course"
-                    className="w-96 h-64 rounded-lg"
-                />
-                {/* <div className="absolute top-5 left-0 w-full h-full flex flex-col ">
-                    <p className="text-white text-center font-bold">Our Courses</p>
-                    <p className="text-white text-center">Featured Courses</p>
-                </div> */}
-            </div>
-        </div>
-</>
-    );
+        <hr className="h-[1px] border-0 text-gray-800 bg-gray-800 mt-1" />
+        <Certificate />
+      </div>
+    </>
+  );
 }
 
 export default Courses;
-
-
-

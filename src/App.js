@@ -1,29 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Navbar from './Components/Headers/Navbar';
-import Profile from './Components/Profilepage/Profile'
-import Herosection from './Components/Herosectionpage/Herosection';
+import { BrowserRouter, Route, Routes  } from 'react-router-dom';
+import Profile from './Components/Profilepage/Profile';
 import Home from './Components/Homepage/Home';
-import Footer from './Components/Footerpage/Footer'
-import Courses from './Components/Courses/Courses';
 import About from './Components/Aboutpage/About';
-import Courses1 from './Components/Coursespage/Courses1';
+import Courses1 from './Components/CoursesOverview/Courses1.jsx';
 import Blog from './Components/Blogpage/Blog';
-import Ui from './Components/Coursespage/Ui';
+import Ui from './Components/CoursesOverview/Ui.jsx';
 import Auth from './Components/Auth/Auth';
 import BaseLayout from './Layout/BaseLayout';
 import PageNotFound from './Components/PageNotFound/PageNotFound';
 import UploadFolder from './Components/CourseUploader/UploadFolder.jsx'
-import VideoPlayer from './Components/Video/VideoPlayer.jsx';
-import ChatBot from './Components/Footerpage/ChatBot.jsx';
-import whatsapp from './Components/Footerpage/Whatsapp.jsx';
+import VideoPlayer from './Components/Courses/Video/VideoPlayer.jsx';
 import  Payment from  './Components/Paymentpage/Payment.jsx'
 import Contactus from './Components/Contactpage/Contactus.jsx';
 import ScrollToTop from './Utils/ScrollToTop.jsx';
 import PrivacyPolicy from './Components/Legal/PrivacyPolicy.jsx';
 import TermAndCondition from './Components/Legal/TermAndCondition.jsx'
 import CancellationandRefundPolicy from './Components/Legal/CancellationandRefundPolicy.jsx'
+import Courses from './Components/Courses/Courses.jsx';
 function App() {
   return (
     <div className="App">
@@ -38,11 +32,13 @@ function App() {
             <Route path="auth/updatePassword" element={<Auth/>} />
             <Route path="/profile" element={<Profile/>} />
             <Route path="/about" element={<About />} />
-            <Route path="/courses" element={<Courses1 />} />
-            <Route path="/ui-ux-design" element={<Ui />} />
+            <Route path="/courses/overview/" element={<Courses1 />} />
+            <Route path="/courses/overview/:dynamicValue" element={<Ui />} />
+            {/* <Route path="/courses/overview/ui-ux-design" element={<Ui />} /> */}
+            <Route path="/courses/:id" element={ <BaseLayout ><Courses /></BaseLayout>} />
             <Route path="/blog" element={<Blog />} />
             <Route path='*' element={<PageNotFound />} />
-            <Route path='/upload' element={<UploadFolder />} />
+            <Route path='/upload' element={<BaseLayout ><UploadFolder /></BaseLayout>} />
             <Route path='/video' element={<VideoPlayer />} />
             <Route path='/Payment-method' element={<Payment />} />
             <Route path='/Contact-us' element={<Contactus />} />

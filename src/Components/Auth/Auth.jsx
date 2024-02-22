@@ -2,7 +2,6 @@ import React from "react";
 import Login from "./Login/Login";
 import { useLocation } from 'react-router-dom'
 import Signup from "./Signup/Signup";
-import Forgetpassword from "./Forget/ForgetPasswordComponent";
 import UpdatePassword from "./UpdatePassword/UpdatePassword";
 import ForgetPasswordComponent from "./Forget/ForgetPasswordComponent";
 
