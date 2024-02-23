@@ -45,6 +45,7 @@ function App() {
             <Route path='/privacy-policy' element={<PrivacyPolicy />} />
             <Route path='/terms-and-conditions' element={<TermAndCondition />} />
             <Route path='/cancellation-and-refund-policy' element={<CancellationandRefundPolicy />} />
+        
           </Routes>
         </BrowserRouter>
       </>
