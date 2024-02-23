@@ -18,7 +18,7 @@ function CourseCard({ course, openModal }) {
           <img
             src="/Image/Polygon 1.svg"
             alt="Play"
-            className="bg-blue-600 rounded-3xl w-12 h-12 px-4 cursor-pointer"
+            className="bg-[#181FC5] rounded-3xl w-12 h-12 px-4 cursor-pointer"
             style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
           />
         </button>

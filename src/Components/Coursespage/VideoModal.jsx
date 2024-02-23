@@ -1,6 +1,6 @@
-// VideoModal.js
 import React from 'react';
 import Modal from 'react-modal';
+
 
 function VideoModal({ isOpen, closeModal, videoUrl }) {
   return (
@@ -42,7 +42,7 @@ function VideoModal({ isOpen, closeModal, videoUrl }) {
         className="absolute top-4 right-4 cursor-pointer bg-white"
         onClick={closeModal}
       >
-        {/* Cross Icon */}
+       
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
