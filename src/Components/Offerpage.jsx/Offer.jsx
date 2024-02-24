@@ -17,7 +17,7 @@ function Offer() {
                             Learn & Up skill via online Courses.
                         </p>
                     </div>
-                    <div className="px-6 py-4 flex items-center  justify-between justify-end">
+                    <div className="px-6 py-4 flex items-center  justify-between">
                         <button className="flex items-center gap-3 text-white font-bold py-2 px-4 rounded" style={{ color: "#1649FF" }}>
                             Take a look
                             <span className=""><FaArrowRight /></span>
@@ -36,7 +36,7 @@ function Offer() {
                             Coding Experience
                         </p>
                     </div>
-                    <div className="px-6 py-4 flex items-center  justify-between justify-end">
+                    <div className="px-6 py-4 flex items-center  justify-between">
                         <button className="flex items-center gap-3 text-white font-bold py-2 px-4 rounded" style={{ color: "#1649FF" }}>
                             Take a look
                             <span className=""><FaArrowRight /></span>
@@ -55,7 +55,7 @@ function Offer() {
 
                         </p>
                     </div>
-                    <div className="px-6 py-4 flex items-center  justify-between justify-end">
+                    <div className="px-6 py-4 flex items-center  justify-between">
                         <button className="flex items-center gap-3 text-white font-bold py-2 px-4 rounded" style={{ color: "#1649FF" }}>
                             Take a look
                             <span className=""><FaArrowRight /></span>
@@ -69,7 +69,7 @@ function Offer() {
                             Learn & Up skill via online Courses.
                         </p>
                     </div>
-                    <div className="px-6 py-4 flex items-center  justify-between justify-end">
+                    <div className="px-6 py-4 flex items-center  justify-between">
                         <button className="flex items-center gap-3 text-white font-bold py-2 px-4 rounded" style={{ color: "#1649FF" }}>
                             Take a look
                             <span className=""><FaArrowRight /></span>

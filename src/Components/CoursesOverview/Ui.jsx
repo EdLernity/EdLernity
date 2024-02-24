@@ -9,6 +9,7 @@ import { Accordion, AccordionHeader, AccordionBody } from "@material-tailwind/re
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid';
 import { Rating } from "@material-tailwind/react";
 import { NavLink } from 'react-router-dom';
+
 function Ui() {
     const [isOpen, setIsOpen] = useState(false);
     const [currentVideo, setCurrentVideo] = useState('');
@@ -23,6 +24,8 @@ function Ui() {
         setCurrentVideo('');
     };
 
+    
+
     const cardData = [
         {
             image: '/Image/Rectangle.png',
@@ -34,7 +37,6 @@ function Ui() {
         { image: '/Image/Badge.png', alt: 'Top Choice Badge', text: 'Top Choice' },
         { image: '/Image/Fire.png', alt: 'Most Popular Badge', text: 'Most Popular' },
         { image: '/Image/Fire.png', alt: 'Best ROI Badge', text: 'Best ROI' },
-
     ];
 
     const description = "Creating UX/UI designs using Figma is a highly effective process. Figma, a robust web-based application, offers unparalleled versatility as it transcends platform limitations. Whether you prefer designing within a web browser or through their dedicated desktop applications for Windows and Mac, Figma provides seamless functionality. While it shares similarities with Sketch and Adobe XD, Figma distinguishes itself by excelling in team collaboration and facilitating agile, responsive design processes.";
@@ -89,28 +91,28 @@ function Ui() {
 
     const topPicksData = [
         {
-            courseName: 'Course 1',
+            courseTitle: 'Course 1',
             rating: 5,
             duration: '5.2 hours',
             language: 'English',
             price: '$19.99',
         },
         {
-            courseName: 'Course 1',
+            courseTitle: 'Course 1',
             rating: 5,
             duration: '5.2 hours',
             language: 'English',
             price: '$19.99',
         },
         {
-            courseName: 'Course 1',
+            courseTitle: 'Course 1',
             rating: 5,
             duration: '5.2 hours',
             language: 'English',
             price: '$19.99',
         },
         {
-            courseName: 'Course 1',
+            courseTitle: 'Course 1',
             rating: 5,
             duration: '5.2 hours',
             language: 'English',
@@ -315,7 +317,7 @@ function Ui() {
                     <div className="flex space-x-4">
                         {topPicksData.map((item, index) => (
                             <div key={index} className="bg-blue-700 rounded-2xl p-8">
-                                <h5 className="text-white text-center py-10 text-lg font-semibold">{item.courseName}</h5>
+                                <h5 className="text-white text-center py-10 text-lg font-semibold">{item.courseTitle}</h5>
                                 <div className="flex items-center justify-between mt-2">
                                     <div className='flex items-center'>
                                         <StarIcon className="w-5 h-5 text-white mr-1" /><span className='text-white'>4.5</span>
