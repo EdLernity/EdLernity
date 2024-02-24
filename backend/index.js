@@ -7,6 +7,7 @@ const connectDB = require('./config/db');
 const registrationRoutes = require('./routes/registrationRoutes');
 const cloudinaryRoutes = require('./routes/cloudinaryRoutes');
 const gcsRoutes  = require('./routes/gcsRoutes');
+const courseRoutes =  require('./routes/courseRoutes')
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(bodyParser.json()); // Add this line to parse JSON data
 app.use('/auth', registrationRoutes);
 app.use('/api', cloudinaryRoutes);
 app.use('/api', gcsRoutes);
+app.use('/api', courseRoutes);
 
 const PORT = process.env.PORT || 3002;
 
