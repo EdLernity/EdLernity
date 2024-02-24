@@ -141,8 +141,12 @@ const UploadFolder = () => {
       }
 
     } catch (error) {
-      setMessage(error.response.data.message);
       console.error("Error uploading folder:", error);
+      if(error.response.data.message){
+        setMessage(error.response.data.message);
+      } else {
+        setMessage("Error uploading course details. Please check your internet connection and retry");
+      }
     }
   };
 

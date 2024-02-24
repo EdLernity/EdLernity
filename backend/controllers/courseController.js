@@ -22,7 +22,6 @@ const saveCourseDetails = async(req,res) => {
         }
 
         let discountInPercentage =Math.round(100- ((offeredPrice / initialPrice ) * 100));
-        console.log(discountInPercentage)
 
         discountInPercentage  = parseInt(discountInPercentage);
 
