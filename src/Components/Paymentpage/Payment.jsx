@@ -1,7 +1,8 @@
 import React from "react";
 import { Button, Input, Checkbox } from "@material-tailwind/react";
-import { NavLink } from "react-router-dom";
 import { ChevronLeftCircle } from "lucide-react";
+import { NavLink } from 'react-router-dom';
+import InputButton from "../Input/InputButton";
 function Payment() {
     function goBack() {
         window.history.back();
@@ -105,23 +106,42 @@ function Payment() {
                            
                         </div>
                         <div>
-                            <label>Card Number</label>
-                            <Input type="text" placeholder="Card Number" fullWidth />
+                            
+                            <InputButton
+                             type="text"
+                             id="cardNumber"
+                             label="Card Number"
+                             fullWidth
+                            />
                         </div>
 
                         <div className="flex gap-4">
                             <div>
-                                <label>Expiry Date</label>
-                                <Input type="text" placeholder="MM/YY" />
+                                
+                                <InputButton
+                                type="text"
+                                id="expiryDate"
+                                label="Expiry Date"
+                                fullWidth
+                            />
                             </div>
                             <div>
-                                <label>CVV</label>
-                                <Input type="text" placeholder="CVV" />
+                                <InputButton
+                                 type="text"
+                                 id="cvv"
+                                 label="CVV"
+                                 fullWidth
+                            />
                             </div>
                         </div>
                         <div>
-                            <label>Card Holder’s Name</label>
-                            <Input type="text" placeholder="Card Holder’s Name" fullWidth />
+                            <InputButton
+                             type="text"
+                             id="Card Holder's Name"
+                             label="Card Holder's Name"
+                             fullWidth
+                            />
+
                         </div>
                         <div
                             className="flex justify-center items-center "
@@ -171,7 +191,9 @@ function Payment() {
                             <p>Order Amount: INR 699</p>
                             <hr className="border-gray-800 py-1"></hr>
                             <p>Total Amount: INR 699</p>
-                            <hr className="border-gray-800 py-1"></hr>
+                            <hr className='border-gray-800 py-1'></hr>
+                          
+
                         </div>
                     </div>
                 </div>

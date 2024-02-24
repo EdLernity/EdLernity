@@ -5,7 +5,7 @@ function Offer() {
     return (
         <>
             <div className='px-8'>
-                <h1 className='mt-12 text-2xl' style={{ color: "#1649FF" }}>What EdLernity offers you?</h1>
+                <h1 className='md:mt-12 ml-8 text-2xl' style={{ color: "#1649FF" }}>What EdLernity offers you?</h1>
             </div>
 
             <div className="flex flex-wrap justify-around p-8">

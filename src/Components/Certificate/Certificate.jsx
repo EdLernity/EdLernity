@@ -16,12 +16,12 @@ function Certificate() {
         </p>
       </div>
       <div className="flex mt-12">
-        <img className="w-1/2" src="/image/Certificate.png" alt="cerificate" />
+        <img className="w-1/2 relative " src="/image/Certificate.png" alt="cerificate" />
         <div className="flex flex-col w-1/2 justify-center items-center gap-8">
           <div className="relative cursor-pointer">
             <img className="absolute right-[86px] bottom-[86px]" src="/image/Arrow.png" alt="arrow" />
             <img
-              className="w-[250px] h-[250px]"
+              className="w-[250px] h-[250px] "
               src="/image/Ellipse 65.png"
               alt="ellips"
             />

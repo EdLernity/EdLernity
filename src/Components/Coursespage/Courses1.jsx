@@ -53,7 +53,7 @@ function Courses1() {
           <div style={cardStyle} className="relative w-300 m-10 text-center shadow-lg rounded-2xl overflow-hidden">
             <img src='/Image/Intern1.png' alt='Internship 1' style={imageStyle} className="w-full h-auto rounded-2xl" />
             <div style={textStyle} className="absolute top-25 left-50 transform -translate-x-50 -translate-y-50 text-white font-bold text-2xl">
-              UI/UX Design
+              UI/UX Design 
             </div>
             <div className="absolute bottom-5 left-0 right-0 text-center">
               <NavLink to="/ui-ux-design">
