@@ -145,7 +145,7 @@ function Success() {
 
       {/* Success Stories Carousel */}
       <div className="flex justify-center mt-8 -space-x-4 items-center relative overflow-x-auto">
-        <button className="absolute left-0 top-1/2 transform -translate-y-1/2" onClick={prevSlide}>
+        <button className="absolute left-[56px] top-1/2 transform -translate-y-1/2" onClick={prevSlide}>
           <ChevronLeftIcon className="w-12 h-12 text-gray-600" />
         </button>
 
@@ -172,7 +172,7 @@ function Success() {
           )
         ))}
 
-        <button className="absolute right-0 top-1/2 transform -translate-y-1/2" onClick={nextSlide}>
+        <button className="absolute right-[56px] top-1/2 transform -translate-y-1/2" onClick={nextSlide}>
           <ChevronRightIcon className="w-12 h-12 text-gray-600" />
         </button>
       </div>

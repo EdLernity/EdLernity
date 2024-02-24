@@ -9,7 +9,7 @@ const Whatsapp = ({ onOpenChatBot }) => {
   return (
     <div
       id="whatsapp-chat-widget"
-      className="fixed bottom-32 right-8 bg-green-500 text-white px-4 py-2 rounded-full flex items-center cursor-pointer"
+      className="fixed bottom-32 right-8 bg-green-500 text-white px-4 py-2 rounded-full flex items-center cursor-pointer z-[999]"
       onClick={openWhatsAppChat}
     >
       <div className="flex items-center">

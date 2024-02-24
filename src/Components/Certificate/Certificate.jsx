@@ -21,7 +21,7 @@ function Certificate() {
           <div className="relative cursor-pointer">
             <img className="absolute right-[86px] bottom-[86px]" src="/image/Arrow.png" alt="arrow" />
             <img
-              className="w-[250px] h-[250px]"
+              className="w-[250px] h-[250px] "
               src="/image/Ellipse 65.png"
               alt="ellips"
             />
