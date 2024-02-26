@@ -21,19 +21,6 @@ const UploadFolder = () => {
     imagePath: "",
   });
 
-  const data = {
-    courseTitle : formsData.courseTitle,
-    initialPrice :  formsData.initialPrice,
-    offeredPrice : formsData.offeredPrice ,
-    courseDesc : formsData.courseDesc,
-    courseOverviewDesc : formsData.courseOverviewDesc,
-    folderName : formsData.folderName,
-    isPopular : formsData.isPopular ? true : false,
-    courseContentDescription : courseContentDescription,
-    imagePath  : formsData.imagePath,
-    videoNames : videoNames
-  }
-
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
     const newValue = type === "checkbox" ? checked : type === "file" ? files : value;
@@ -43,6 +30,7 @@ const UploadFolder = () => {
   const handleFileChange = (e) => {
     const { files } = e.target;
     setFormsData((prevData) => ({ ...prevData, selectedFiles: files }));
+    console.log(formsData.selectedFiles)
   };
 
   const addQuestion = () => {
@@ -98,6 +86,21 @@ const UploadFolder = () => {
       videoNames.push(file.name)
       console.log(videoNames)
     }
+
+    const data = {
+      courseTitle : formsData.courseTitle,
+      initialPrice :  formsData.initialPrice,
+      offeredPrice : formsData.offeredPrice ,
+      courseDesc : formsData.courseDesc,
+      courseOverviewDesc : formsData.courseOverviewDesc,
+      folderName : formsData.folderName,
+      isPopular : formsData.isPopular ? true : false,
+      courseContentDescription : courseContentDescription,
+      imagePath  : formsData.imagePath,
+      videoNames : videoNames
+    }
+
+    console.log(data)
 
     try {
       setFormsData({...formsData, message : "Uploading Course details...,Please do not refresh the page"});
