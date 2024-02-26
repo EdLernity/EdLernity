@@ -7,7 +7,7 @@ import ErrorComponent from "./ErrorComponent/ErrorComponent";
 function UpdatePassword() {
   const [error, setError] = useState(false);
   const [isValidLink, setIsValidLink] = useState(true);
-  const [errorMsg,setErrorMsg] = useState("")
+  const [responseData, setResponseData] = useState({});
   const location = useLocation();
 
   const queryParam = new URLSearchParams(location.search);
@@ -30,16 +30,17 @@ function UpdatePassword() {
           );
 
           if (response.status === 200) {
+            setResponseData(response.data);
             setIsValidLink(true);
           } else {
-            setErrorMsg(response.data.message);
+            setResponseData(response.data.message);
             setIsValidLink(false)
             setError(true);
           }
         } catch (error) {
-          console.log("Your link has been expired");
+          console.log(error);
           setIsValidLink(false)
-          setErrorMsg("Your link has been expired");
+          setResponseData(error.response.data);
           setError(true);
         }
       }
@@ -48,13 +49,24 @@ function UpdatePassword() {
     validateLink();
   }, [token]);
 
+  console.log(responseData)
+  const req ={ 
+    message : responseData.message,
+    path : responseData.redirectTo,
+    text : responseData.text
+  }
+
+  const setErrorValue = (val) => {
+    setError(val)
+  }
+
   return (
     <div
       className="flex justify-center items-center xl:w-2/4 md:w-2/4"
       style={error ? divStyle : {}}
     >
       <div className="p-6 w-full flex justify-center items-center flex-col">
-        {isValidLink ? <Password /> : <ErrorComponent error={errorMsg} />}
+        {isValidLink ? <Password /> : <ErrorComponent setErrorValue={setErrorValue} req={req} />}
       </div>
     </div>
   );

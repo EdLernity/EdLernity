@@ -38,6 +38,17 @@ function Signup() {
   const [lastNameError, setLastNameError] = useState("");
   const [isError,setIsError] = useState(false);
 
+  const resetForm = () => {
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPhone("");
+    setPassword("");
+    setConfirmPassword("");
+    setTermsAndConditions(false);
+    setError(""); // Clear any error message
+  };
+
   const handleFirstNameChange = (event) => {
     if (event && event.target) {
       const inputValue = event.target.value;
@@ -109,6 +120,7 @@ function Signup() {
         console.error("Error during signup:", error.message);
         setIsError(true);
         setError(error.response.data.message)
+        setResponseData(error.response.data);
       }
     }
   };
@@ -116,8 +128,9 @@ function Signup() {
   useEffect(() => {}, [responseData]);
 
   const req = {
-    success: responseData.message,
+    message: responseData.message,
     path: responseData.redirectTo,
+    text : responseData.text
   };
 
   let data = {
@@ -129,6 +142,10 @@ function Signup() {
     confirmPassword,
   };
 
+  const setErrorValue = (val) => {
+    resetForm();
+    setIsError(val)
+  }
 
   return (
     <div className="block md:flex xl:flex justify-center items-center xl:w-2/4 md:w-2/4">
@@ -136,7 +153,7 @@ function Signup() {
         {isResgisterSucess ? (
           <SucessPage req={req} />
         ) :  isError ? (
-          <ErrorComponent error={error} />
+          <ErrorComponent setErrorValue={setErrorValue} req={req} />
         ) : (
           <>
             <CardBody className="flex flex-col gap-4">

@@ -9,14 +9,15 @@ const ForgetPasswordComponent = () => {
   const [error, setError] = useState(false);
   const [responseData, setResponseData] = useState({});
 
-  const handleChildResponse = async (response) => {
-    const {data} = response
-    setResponseData(data);
-    if (response.status === 200) {
-      console.log(response);
+  const handleChildResponse = async (data) => {
+    console.log(data)
+    if (data.status === 200) {
       setShowUi(!showUi);
       setSuccess(true);
+      setResponseData(data.data);
     } else {
+      setResponseData(data);
+      setShowUi(!showUi);
       setError(true);
     }
   };
@@ -25,23 +26,27 @@ const ForgetPasswordComponent = () => {
     console.log(responseData);
   }, [responseData]);
 
-  console.log(responseData)
-
   const req = {
-    success: responseData.message,
-    path: "",
+    message: responseData.message,
+    path: responseData.redirectTo, 
+    text: responseData.text,
   };
+
+  const setErrorValue = (val) => {
+    setError(val)
+    setShowUi(!showUi);
+  }
 
   return (
     <div className="flex justify-center items-center xl:w-2/5 md:w-2/4">
       <div className="p-6 w-full flex justify-center items-center flex-col gap-6">
         {showUi ? (
           <ForgotPasswod onResponse={handleChildResponse} />
+        ) : error ?(
+          <ErrorComponent setErrorValue={setErrorValue} req={req} />
         ) : success ? (
           <SucessPage req={req} />
-        ) : (
-          <ErrorComponent error={"error"} />
-        )}
+        ) : ""}
       </div>
     </div>
   );

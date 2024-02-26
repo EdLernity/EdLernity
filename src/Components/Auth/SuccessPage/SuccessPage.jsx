@@ -8,7 +8,7 @@ function SucessPage({req}) {
   }
   return (
     <div className='font-bold md:text-2xl'>
-       {req.success}
+       {req.message}
        <br/>
         {isPath ? <div><Link to={req.path} className='text-[#1539cf]' >Click here </Link>{req.text}</div> : ""}
       </div>

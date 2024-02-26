@@ -4,31 +4,46 @@ import InputButton from "../Input/InputButton";
 import CourseContentDescription from "./CourseContentDescription";
 
 const UploadFolder = () => {
-  const [courseTitle, setCourseName] = useState("");
-  const [folderName, setFolderName] = useState("");
-  const [courseDesc, setCourseDesc] = useState("");
-  const [courseOverviewDesc, setCourseOverviewDesc] = useState("");
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [message, setMessage] = useState("");
+  let videoNames = [];
   const [questions, setQuestions] = useState([""]);
   const [answers, setAnswers] = useState([""]);
   const [courseContentDescription, setCourseContentDescription] = useState([{ question: "", answer: "" }]);
-  const [isPopular, setIsPopular] = useState(false);
-  const [initialPrice, setInitialPrice] = useState("");
-  const [offeredPrice, setOfferedPrice] = useState("");
+  const [formsData, setFormsData] = useState({
+    courseTitle: "",
+    folderName: "",
+    courseDesc: "",
+    courseOverviewDesc: "",
+    selectedFiles: [],
+    message: "",
+    isPopular: false,
+    initialPrice: "",
+    offeredPrice: "",
+    imagePath: "",
+  });
 
   const data = {
-    courseTitle : courseTitle,
-    initialPrice :  initialPrice,
-    offeredPrice : offeredPrice ,
-    courseDesc : courseDesc,
-    courseOverviewDesc : courseOverviewDesc,
-    folderName : folderName,
-    isPopular : isPopular,
-    courseContentDescription : courseContentDescription
+    courseTitle : formsData.courseTitle,
+    initialPrice :  formsData.initialPrice,
+    offeredPrice : formsData.offeredPrice ,
+    courseDesc : formsData.courseDesc,
+    courseOverviewDesc : formsData.courseOverviewDesc,
+    folderName : formsData.folderName,
+    isPopular : formsData.isPopular ? true : false,
+    courseContentDescription : courseContentDescription,
+    imagePath  : formsData.imagePath,
+    videoNames : videoNames
   }
 
-  console.log(data)
+  const handleChange = (e) => {
+    const { name, value, type, checked, files } = e.target;
+    const newValue = type === "checkbox" ? checked : type === "file" ? files : value;
+    setFormsData((prevData) => ({ ...prevData, [name]: newValue }));
+  };
+
+  const handleFileChange = (e) => {
+    const { files } = e.target;
+    setFormsData((prevData) => ({ ...prevData, selectedFiles: files }));
+  };
 
   const addQuestion = () => {
     setQuestions([...questions, ""]);
@@ -50,48 +65,16 @@ const UploadFolder = () => {
     setCourseContentDescription(updatedCourseContentDescription);
   };
 
-  const handleFolderNameChange = (e) => {
-    setFolderName(e.target.value);
-  };
-
-  const handleFileChange = (e) => {
-    setSelectedFiles(e.target.files);
-  };
-
-  const handleCourseName = (e) => {
-    setCourseName(e.target.value);
-  };
-
-  const handleCourseDesc = (e) => {
-    setCourseDesc(e.target.value);
-  };
-
-  const handlePopularCourseChange = (e) => {
-    setIsPopular(e.target.checked);
-  };
-
-  const handleInitialPriceChange = (e) => {
-    setInitialPrice(e.target.value);
-  };
-
-  const handleOfferedPriceChange = (e) => {
-    setOfferedPrice(e.target.value);
-  };
-
-  const handleCourseOverviewDesc = (e) => {
-    setCourseOverviewDesc(e.target.value);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!folderName || selectedFiles.length === 0) {
-      setMessage("Please enter folder name and select files");
+    if (!formsData.folderName || formsData.selectedFiles.length === 0) {
+      setFormsData({...formsData, message : "Please enter folder name and select files"});
       return;
     }
 
     // Sort selected files by name
-    const sortedFiles = Array.from(selectedFiles).sort((a, b) => {
+    const sortedFiles = Array.from(formsData.selectedFiles).sort((a, b) => {
       // Extract numeric part of the filename
       const numA = parseInt(a.name.match(/\d+/)[0]);
       const numB = parseInt(b.name.match(/\d+/)[0]);
@@ -106,48 +89,48 @@ const UploadFolder = () => {
     });
 
     const formData = new FormData();
-    formData.append("folderName", folderName);
+    formData.append("folderName", formsData.folderName);
 
     // const courseFormData = new FormData(data);
 
     for (const file of sortedFiles) {
       formData.append("files", file);
+      videoNames.push(file.name)
+      console.log(videoNames)
     }
 
     try {
-      setMessage(
-        "Uploading Course details...,Please do not refresh the page"
-      );
+      setFormsData({...formsData, message : "Uploading Course details...,Please do not refresh the page"});
       const courseResponse = await axios.post(
         "http://localhost:3001/api/save-course",
         data,
       );
-      
-      console.log(courseResponse);
 
-      setMessage(courseResponse.data.message);
+      setFormsData({...formsData, message : courseResponse.data.message});
 
       if(courseResponse.status === 200){
         setTimeout(()=>{
-          setMessage(
-            "Uploading videos...,Please do not refresh the page. It may take some time depending on the number of files."
-          );
+          setFormsData({...formsData, message : "Uploading videos...,Please do not refresh the page. It may take some time depending on the number of files."});
         },2000);
         const response = await axios.post(
           "http://localhost:3001/api/upload-folder",
           formData);
-  
-        setMessage(response.data.message);
+
+        setFormsData({...formsData, message : response.data.message});
       }
 
     } catch (error) {
-      console.error("Error uploading folder:", error);
-      if(error.response.data.message){
-        setMessage(error.response.data.message);
-      } else {
-        setMessage("Error uploading course details. Please check your internet connection and retry");
-      }
+      handleError(error)
     }
+  };
+
+  const handleError = (error) => {
+    console.error("Error uploading folder:", error);
+    let errorMessage = "Error uploading course details. Please check your internet connection and retry";
+    if (error.response && error.response.data) {
+      errorMessage = error.response.data.message || error.response.data.error || errorMessage;
+    }
+    setFormsData({ ...formsData, message: errorMessage });
   };
 
   return (
@@ -163,8 +146,8 @@ const UploadFolder = () => {
               id="courseTitle"
               label="Course Name"
               fullWidth
-              value={courseTitle}
-              onChange={handleCourseName}
+              name="courseTitle"
+              onChange={handleChange}
               className="mt-1 p-2 border rounded-md w-full"
             />
           </div>
@@ -174,8 +157,8 @@ const UploadFolder = () => {
               id="initialPrice"
               label="Initial Price"
               fullWidth
-              value={initialPrice}
-              onChange={handleInitialPriceChange}
+              name="initialPrice"
+              onChange={handleChange}
               className="mt-1 p-2 border rounded-md w-full"
             />
           </div>
@@ -185,8 +168,8 @@ const UploadFolder = () => {
               id="offeredPrice"
               label="Offered Price"
               fullWidth
-              value={offeredPrice}
-              onChange={handleOfferedPriceChange}
+              name="offeredPrice"
+              onChange={handleChange}
               className="mt-1 p-2 border rounded-md w-full"
             />
           </div>
@@ -196,8 +179,8 @@ const UploadFolder = () => {
               id="courseDesc"
               label="Course Description"
               fullWidth
-              value={courseDesc}
-              onChange={handleCourseDesc}
+              name="courseDesc"
+              onChange={handleChange}
               className="mt-1 p-2 border rounded-md w-full"
             />
           </div>
@@ -207,8 +190,8 @@ const UploadFolder = () => {
               id="courseOverviewDesc"
               label="Course Overview Description"
               fullWidth
-              value={courseOverviewDesc}
-              onChange={handleCourseOverviewDesc}
+              name="courseOverviewDesc"
+              onChange={handleChange}
               className="mt-1 p-2 border rounded-md w-full"
             />
           </div>
@@ -216,10 +199,21 @@ const UploadFolder = () => {
             <InputButton
               type="text"
               id="folderName"
-              label="folder Name"
+              label="Folder Name"
               fullWidth
-              value={folderName}
-              onChange={handleFolderNameChange}
+              name="folderName"
+              onChange={handleChange}
+              className="mt-1 p-2 border rounded-md w-full"
+            />
+          </div>
+          <div className="mb-4">
+            <InputButton
+              type="text"
+              id="imagePath"
+              label="Image Path"
+              fullWidth
+              name="imagePath"
+              onChange={handleChange}
               className="mt-1 p-2 border rounded-md w-full"
             />
           </div>
@@ -241,8 +235,8 @@ const UploadFolder = () => {
               type="checkbox"
               label="Popular"
               id="popular"
-              value={isPopular}
-              onChange={handlePopularCourseChange}
+              name="isPopular"
+              onChange={handleChange}
             />
           </div>
           <div className="mb-4">
@@ -262,7 +256,7 @@ const UploadFolder = () => {
             Upload
           </button>
         </form>
-        {message && <div className="mt-4 text-green-600">{message}</div>}
+        {formsData.message && <div className="mt-4 text-green-600">{formsData.message}</div>}
       </div>
     </div>
   );

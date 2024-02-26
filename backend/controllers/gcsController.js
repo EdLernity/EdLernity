@@ -17,7 +17,6 @@ async function getVideoUrl(req, res) {
     try {
     const bucketName = process.env.bucketName;
     const decodedFileName = decodeURIComponent(fileName);
-    console.log(decodedFileName);
     if (!decodedFileName || !decodedFileName ) throw new Error("Missing parameters");
       const videoUrl = await getVideoPublicUrl(bucketName, folderName, decodedFileName);
       if (videoUrl) {

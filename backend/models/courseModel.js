@@ -13,6 +13,8 @@ const courseSchema =  new mongoose.Schema({
         answer : {type : String, required: true},
     }],
     isPopular : { type : Boolean,  required:true},
+    image : { type : String,  required:true},
+    videoNames : { type : [String] ,required:true},
 })
 
 const courseModel = mongoose.model("Course",courseSchema)

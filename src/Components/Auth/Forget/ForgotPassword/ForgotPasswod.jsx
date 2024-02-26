@@ -33,7 +33,7 @@ function ForgotPasswod({onResponse}) {
     } catch (error) {
       // Handle the error gracefully (e.g., show an error message to the user)
       console.error("Error during reset password request:", error);
-      onResponse({ status: 500, errorText: "Internal Server Error" });
+      onResponse(error.response.data);
     }
   };
   

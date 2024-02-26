@@ -3,23 +3,22 @@ import VideoPlayer from "./Video/VideoPlayer";
 import CourseContent from "./Coursecontent/Coursecontent";
 import Certificate from "../Certificate/Certificate";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 function Courses() {
+  const location = useLocation();
+  const { course } = location.state;
   const [folderName, setFolderName] = useState("");
   const [courses, setCourses] = useState([]);
   let [count, setCount] = useState(1);
   const [courseTitle, setCourseTitle] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
-  const [fileName, setFileName] = useState("");
 
   // Get all courses in a specific folder on server side.
   useEffect(() => {
     const folderName = localStorage.getItem("current_course");
     setFolderName(folderName);
-    axios
-      .get(`http://localhost:3001/api/courses/${folderName}`)
-      .then((res) => {
-        const extractedTitles = res.data.videos
+        const extractedTitles = course.videoNames
           .map((item, index) => {
             let match = item.match(/\d+\s*-\s*(.*)\.mp4/);
             let currentCount = count + index; // Add index to count
@@ -39,33 +38,28 @@ function Courses() {
 
         setCourses(extractedTitles);
         setCourseTitle(extractedTitles[0]);
-
         axios
           .get(
-            `http://localhost:3001/api/courses/${folderName}/${"01 - Introduction to the Tutorial Masterclass.mp4"}`
+            `http://localhost:3001/api/courses/${folderName}/${encodeURIComponent(course.videoNames[0])}`
           )
           .then((res) => {
             setVideoUrl(res.data.videoUrl);
           });
-      })
-      .catch((error) => {
-        console.error("Error fetching courses:", error);
-      });
   }, []);
 
   const setUrl = (event) => {
     let video;
     let fileNameForVideo;
     video = event.target.textContent;
+    console.log(event)
     setCourseTitle(video);
     const parts = video.split("."); // Split the video name by dot
     if (parts.length === 2) {
       let index = parts[0].trim();
-      if (index.length === 1) {
-        index = `0${index}`; // Pad single-digit index with leading zero
+      if (index > 10) {
+        index = `0${index}`;
       }
       fileNameForVideo = `${index} - ${parts[1].trim()}.mp4`; // Combine index and file
-      setFileName(fileNameForVideo); // Update the fileName state
     } else {
       return null; // Invalid format, return null or handle accordingly
     }
@@ -76,13 +70,6 @@ function Courses() {
       .then((res) => {
         setVideoUrl(res.data.videoUrl);
       });
-  };
-
-  const course = {
-    description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
-    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullam
-    colaboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in 
-    voluptate velit esse cillum dolore.`,
   };
 
   return (
@@ -96,14 +83,14 @@ function Courses() {
             <div className="pl-4 pr-24 py-4">
               <h1 className="text-xl font-bold">{courseTitle}</h1>
               <div className="mt-4">
-                <p>{course.description}</p>
+                <p>{course.courseDesc}</p>
               </div>
             </div>
           </div>
           <div className="w-2/6">
             <CourseContent
               setUrl={setUrl}
-              courseTitle="New Text"
+              courseTitle={course.courseTitle}
               videos={courses}
             />
           </div>
