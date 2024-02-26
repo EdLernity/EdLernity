@@ -13,7 +13,10 @@ import axios from "axios";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
+
 function Courses1() {
+  const [isLoading, setIsLoading] = useState(true)
+
   const cardStyle = {
     position: "relative",
     width: "300px",
@@ -40,7 +43,7 @@ function Courses1() {
     fontWeight: "bold",
     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
   };
-
+    
   const [data, setData] = useState({
     allCoursesData: [],
     popularCoursesData: [],
@@ -56,10 +59,10 @@ function Courses1() {
     } else {
       pathName = course.courseTitle.toLowerCase();
     }
-    navigate(`${window.location.pathname}/${pathName.toLowerCase().replace(/\s/g, '-')}`, { state: { course } });
-    // navigate(`/courses/${pathName.toLowerCase().replace(/\s/g, "-")}`, {
-    //   state: { course },
-    // });
+    // navigate(`${window.location.pathname}/${pathName.toLowerCase().replace(/\s/g, '-')}`, { state: { course } });
+    navigate(`/courses/${pathName.toLowerCase().replace(/\s/g, "-")}`, {
+      state: { course },
+     });
   };
 
   useEffect(() => {
@@ -69,6 +72,9 @@ function Courses1() {
           "http://localhost:3001/api/get-all-course-details"
         );
         console.log(response);
+        if(response.status==200){
+          setIsLoading(false)
+        }
         const { data } = response.data;
         console.log(data);
         const updatedAllCoursesData = data.map((course) => ({
@@ -123,8 +129,9 @@ function Courses1() {
         Explore Course{" "}
       </h1>
       <div className="flex flex-wrap justify-around p-20">
-        {!data.coursesData ? (
-          <Skeleton />
+        {isLoading ?  (
+          
+          <Skeleton count={4} width={300} height={300} style={{ margin: "10px" }} />
         ) : (
           data.coursesData.map((course, index) => (
             <div
