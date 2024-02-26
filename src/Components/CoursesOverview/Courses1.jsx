@@ -1,74 +1,111 @@
-import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import BaseLayout from '../../Layout/BaseLayout';
+import React, { useState, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import BaseLayout from "../../Layout/BaseLayout";
 import {
-  Button, Dialog, DialogHeader, DialogBody, DialogFooter, IconButton,
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  IconButton,
 } from "@material-tailwind/react";
-const coursesData = [
-  { courseTitle: 'UI/UX Design', image: '/Image/Intern1.png', buttonText: 'Explore', description: 'Learn UI/UX Design' },
-  { courseTitle: 'Angular Framework (MEAN STACK)', image: '/Image/Intern1.png', buttonText: 'Explore', description: 'Explore Angular Framework' },
-  { courseTitle: 'Python', image: '/Image/Intern1.png', buttonText: 'Explore', description: 'Discover Python' },
-  { courseTitle: 'Other', image: '/Image/Intern1.png', buttonText: 'Explore', description: 'Explore other courses' },
-];
-
-const popularCoursesData = [
-  { courseTitle: 'UI/UX Designing', image: '/Image/Ui.png' },
-  { courseTitle: 'Web Development', image: '/Image/Web.png' },
-  { courseTitle: 'Other', image: '/Image/Ui.png' },
-];
-
-
-const allCoursesData = [
-  { courseTitle: 'UI / UX', image: '/Image/Ui.png', buttonText: 'Overview', description: 'This course covers fundamental principles of UI/UX design, including user research, wireframing, prototyping, and usability testing. Students will learn industry-standard tools and techniques to create engaging and intuitive user experiences.' },
-  { courseTitle: 'Web Development', image: '/Image/Web.png', buttonText: 'Overview', description: 'This course covers the foundations of web development, including HTML, CSS, and JavaScript. Students will learn to build responsive and interactive websites using modern web technologies and frameworks.' },
-  { courseTitle: 'Python', image: '/Image/Ui.png', buttonText: 'Overview', description: 'This course provides an introduction to Python programming language. Students will learn basic syntax, data structures, and control flow, as well as how to write scripts and work with modules.' },
-  { courseTitle: 'Open AI', image: '/Image/Web.png', buttonText: 'Overview', description: 'This course explores the field of artificial intelligence with a focus on OpenAI technologies. Students will learn about machine learning algorithms, natural language processing, and reinforcement learning.' },
-  { courseTitle: 'AI & ML', image: '/Image/Ui.png', buttonText: 'Overview', description: 'This course delves into the concepts and applications of artificial intelligence and machine learning. Students will study algorithms for classification, regression, clustering, and neural networks.' },
-  { courseTitle: 'Angular', image: '/Image/Web.png', buttonText: 'Overview', description: 'This course covers Angular framework for building single-page web applications. Students will learn about components, services, routing, and state management in Angular.' },
-  { courseTitle: 'React', image: '/Image/Web.png', buttonText: 'Overview', description: 'This course introduces React library for building user interfaces. Students will learn about components, JSX, state management, and hooks, as well as how to integrate React with other libraries and frameworks.' }
-];
-
-
+import axios from "axios";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function Courses1() {
-  const navigate = useNavigate();
-
-  const handleClick = (course) => {
-    localStorage.setItem('current_course', course.courseTitle);
-    navigate(`${window.location.pathname}/${course.courseTitle.toLowerCase().replace(/\s/g, '-')}`);
-  };
   const cardStyle = {
-    position: 'relative',
-    width: '300px',
-    margin: '10px',
-    textAlign: 'center',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    borderRadius: '8px',
-    overflow: 'hidden',
+    position: "relative",
+    width: "300px",
+    margin: "10px",
+    textAlign: "center",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    borderRadius: "8px",
+    overflow: "hidden",
   };
 
   const imageStyle = {
-    width: '100%',
-    height: 'auto',
-    borderRadius: '8px',
+    width: "100%",
+    height: "auto",
+    borderRadius: "8px",
   };
 
   const textStyle = {
-    position: 'absolute',
-    top: '25%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    color: '#fff',
-    fontSize: '2.0rem',
-    fontWeight: 'bold',
-    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+    position: "absolute",
+    top: "25%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    color: "#fff",
+    fontSize: "2.0rem",
+    fontWeight: "bold",
+    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
   };
 
+  const [data, setData] = useState({
+    allCoursesData: [],
+    popularCoursesData: [],
+    coursesData: [],
+  });
+  let pathName;
+  const navigate = useNavigate();
+
+  const handleClick = (course) => {
+    localStorage.setItem("current_course", course.folderName);
+    if (course.courseTitle.toLowerCase().includes("/")) {
+      pathName = course.courseTitle.toLowerCase().replace(/\//g, "-");
+    } else {
+      pathName = course.courseTitle.toLowerCase();
+    }
+    navigate(`${window.location.pathname}/${pathName.toLowerCase().replace(/\s/g, '-')}`, { state: { course } });
+    // navigate(`/courses/${pathName.toLowerCase().replace(/\s/g, "-")}`, {
+    //   state: { course },
+    // });
+  };
+
+  useEffect(() => {
+    const fetchAllCourses = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/api/get-all-course-details"
+        );
+        console.log(response);
+        const { data } = response.data;
+        console.log(data);
+        const updatedAllCoursesData = data.map((course) => ({
+          ...course,
+          buttonText: "Overview",
+        }));
+
+        let updatedCoursesData = data.map((course) => ({
+          ...course,
+          buttonText: "Explore",
+        }));
+
+        updatedCoursesData = updatedCoursesData.slice(0, 4);
+
+        const popularCourses = data.filter((d) => {
+          return d.isPopular === true;
+        });
+
+        setData({
+          ...data,
+          allCoursesData: updatedAllCoursesData,
+          coursesData: updatedCoursesData,
+          popularCoursesData: popularCourses,
+        });
+      } catch (error) {
+        console.error("Error fetching all course details:", error);
+      }
+    };
+
+    fetchAllCourses();
+  }, []);
 
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState([]);
 
   const handleOpen = (course) => {
+    console.log(course);
     setSelectedCourse(course);
     setOpenDialog(true);
   };
@@ -79,50 +116,99 @@ function Courses1() {
 
   return (
     <BaseLayout>
-      <h1 className='text-3xl mt-10 lg:ml-24 sm:ml-4 text-center lg:text-left font-bold' style={{ color: "#181FC5" }}>Explore Course </h1>
-      <div className='flex flex-wrap justify-around p-20'>
-        {coursesData.map((course, index) => (
-          <div key={index} className='relative w-300 m-10 text-center shadow-lg rounded-2xl overflow-hidden' style={cardStyle}>
-            <img src={course.image} alt={course.courseTitle} style={imageStyle} />
-            <div className='absolute top-25 left-50 transform -translate-x-50 -translate-y-50 text-white font-bold text-2xl' style={textStyle}>
-              {course.courseTitle}
-            </div>
-            <div className='absolute bottom-5 left-0 right-0 text-center'>
-              <button
-                className='text-black bg-gray-200 px-6 text-center py-2 rounded-3xl justify-center'
-                onClick={() => handleClick(course)}
+      <h1
+        className="text-3xl mt-10 lg:ml-24 sm:ml-4 text-center lg:text-left font-bold"
+        style={{ color: "#181FC5" }}
+      >
+        Explore Course{" "}
+      </h1>
+      <div className="flex flex-wrap justify-around p-20">
+        {!data.coursesData ? (
+          <Skeleton />
+        ) : (
+          data.coursesData.map((course, index) => (
+            <div
+              key={index}
+              className="relative w-300 m-10 text-center shadow-lg rounded-2xl overflow-hidden"
+              style={cardStyle}
+            >
+              <img
+                src={`/Image/${course.image}`}
+                alt={course.courseTitle}
+                style={{ filter: "blur(2px)", ...imageStyle }}
+              />
+              <div
+                className="absolute top-25 left-50 transform -translate-x-50 -translate-y-50 text-white font-bold text-2xl"
+                style={textStyle}
               >
-                {course.buttonText}
-              </button>
+                {course.courseTitle}
+              </div>
+              <div className="absolute bottom-5 left-0 right-0 text-center">
+                <button
+                  className="text-black bg-gray-200 px-6 text-center py-2 rounded-3xl justify-center"
+                  onClick={() => handleClick(course)}
+                >
+                  {course.buttonText}
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
       <div>
-        <h1 className='text-3xl mt-10 lg:ml-24 sm:ml-4 text-center lg:text-left font-bold' style={{ color: "#181FC5" }}>Popular Courses</h1>
-        {popularCoursesData.map((popularCourse, index) => (
-          <div key={index} className='bg-[#282D99] items-center justify-between mx-4 md:mx-24 mt-8 rounded-2xl py-4 flex md:flex-row px-4 md:px-8'>
-            <div className='mb-2 md:mb-0 md:mr-4'>
-              <h1 className='text-xl text-nowrap text-white'>{popularCourse.courseTitle}</h1>
+        <h1
+          className="text-3xl mt-10 lg:ml-24 sm:ml-4 text-center lg:text-left font-bold"
+          style={{ color: "#181FC5" }}
+        >
+          Popular Courses
+        </h1>
+        {data.popularCoursesData.map((popularCourse, index) => (
+          <div
+            key={index}
+            className="bg-[#282D99] items-center justify-between mx-4 md:mx-24 mt-8 rounded-2xl py-4 flex md:flex-row px-4 md:px-8"
+          >
+            <div className="mb-2 md:mb-0 md:mr-4">
+              <h1 className="text-xl text-nowrap text-white">
+                {popularCourse.courseTitle}
+              </h1>
             </div>
             <div>
-              <img src={popularCourse.image} alt='' className='w-24 md:ml-2' />
+              <img
+                src={`/Image/${popularCourse.image}`}
+                alt=""
+                className="w-24 md:ml-2"
+              />
             </div>
           </div>
         ))}
-
       </div>
       <div>
-        <h1 className='text-3xl mt-10 lg:ml-24 sm:ml-4 text-center lg:text-left font-bold' style={{ color: "#181FC5" }}>All Courses </h1>
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:mx-24 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4'>
-          {allCoursesData.map((course, index) => (
-            <div key={index} className='bg-[#181FC5] p-4 rounded-lg shadow-lg'>
-              <img src={course.image} alt={course.courseTitle} className='w-24 h-24 object-cover mb-4 rounded-lg' />
-              <h2 className='text-xl text-white font-bold mb-2'>{course.courseTitle}</h2>
-              <p className='text-gray-200 whitespace-nowrap' style={{ overflow: "hidden", textOverflow: "ellipsis", }}>{course.description}</p>
-              <div className='mt-4'>
+        <h1
+          className="text-3xl mt-10 lg:ml-24 sm:ml-4 text-center lg:text-left font-bold"
+          style={{ color: "#181FC5" }}
+        >
+          All Courses{" "}
+        </h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:mx-24 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4">
+          {data.allCoursesData.map((course, index) => (
+            <div key={index} className="bg-[#181FC5] p-4 rounded-lg shadow-lg">
+              <img
+                src={`/Image/${course.image}`}
+                alt={course.courseTitle}
+                className="w-24 h-24 object-cover mb-4 rounded-lg"
+              />
+              <h2 className="text-xl text-white font-bold mb-2">
+                {course.courseTitle}
+              </h2>
+              <p
+                className="text-gray-200 whitespace-nowrap"
+                style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+              >
+                {course.courseDesc}
+              </p>
+              <div className="mt-4">
                 <button
-                  className='text-white bg-blue-500 px-4 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue'
+                  className="text-white bg-blue-500 px-4 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue"
                   onClick={() => handleOpen(course)}
                 >
                   {course.buttonText}
@@ -134,7 +220,11 @@ function Courses1() {
 
         {/* Dialog */}
         {selectedCourse && (
-          <Dialog className='bg-[#181FC5]' open={openDialog} handler={handleClose}>
+          <Dialog
+            className="bg-[#181FC5]"
+            open={openDialog}
+            handler={handleClose}
+          >
             <DialogHeader className="justify-between text-white">
               {selectedCourse.courseTitle}
               <IconButton
@@ -161,26 +251,34 @@ function Courses1() {
             </DialogHeader>
             <DialogBody>
               <img
-                src={selectedCourse.image}
-                alt={selectedCourse.courseTitle}
-                className='w-32 h-32 text-white object-cover mb-4 rounded-lg'
+                src={`/Image/${selectedCourse?.image}`}
+                alt={selectedCourse?.courseTitle}
+                className="w-32 h-32 text-white object-cover mb-4 rounded-lg"
               />
-              <p className='text-gray-200'>{selectedCourse.description}</p>
+              <p className="text-gray-200">{selectedCourse?.courseDesc}</p>
             </DialogBody>
-            <DialogFooter>
-              <Button
-                variant="text"
-                color="red"
-                onClick={handleClose}
-                className="mr-1"
+            <DialogFooter className="flex justify-between">
+              <div>
+                <div>
+                  <span className="text-red-500">
+                    - {selectedCourse?.discountInPercentage} %
+                  </span>{" "}
+                  <span className="ml-1 text-xs font-semibold sm:text-sm text-white">
+                    ₹{selectedCourse?.offeredPrice}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-white">Price :</span>
+                  <span className="ml-1 text-xl sm:text-sm line-through text-gray-400">
+                    ₹{selectedCourse?.initialPrice}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => handleClick(selectedCourse)}
+                className="text-white bg-blue-500 px-8 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue mr-1"
               >
-                <span>Cancel</span>
-              </Button>
-              <button onClick={handleClose} className='text-white bg-blue-500 px-8 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue'>
-                <NavLink to="/courses/overview/angular-framework-(mean-stack)">
-                  <span>Enroll</span>
-                </NavLink>
-
+                <span>Explore</span>
               </button>
             </DialogFooter>
           </Dialog>
@@ -191,4 +289,3 @@ function Courses1() {
 }
 
 export default Courses1;
-

@@ -1,12 +1,6 @@
 import React from 'react';
 
 function Internship() {
-    const cardContainerStyle = {
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
-        padding: '20px',
-    };
 
     const cardStyle = {
         position: 'relative',

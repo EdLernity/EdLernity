@@ -18,7 +18,8 @@ function InputButton({
   text,
   required=false,
   fullWidth = false,
-  multiple = false
+  multiple = false,
+  hint
 }) {
   const [inputType, setInputType] = useState(type);
   const [icon, setIcon] = useState(eyeOff);
@@ -121,6 +122,7 @@ const onChangeT = (e) => {
             className: "min-w-0",
           }}
         />
+        {hint ? <span className="text-[#808080] ml-1">{hint}</span> : null}
         {type === "password" && label !== "Confirm password" ? (<span className="flex justify-around items-center" onClick={handleToggle}>
         <Icon className="block absolute mr-10" icon={icon} size={20} /> </span> ) : ( <span className="hidden"></span> )}
       </div>

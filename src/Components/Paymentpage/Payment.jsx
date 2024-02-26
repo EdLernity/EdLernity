@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Input, Checkbox } from "@material-tailwind/react";
+import { Button, Checkbox } from "@material-tailwind/react";
 import { ChevronLeftCircle } from "lucide-react";
 import { NavLink } from 'react-router-dom';
 import InputButton from "../Input/InputButton";
