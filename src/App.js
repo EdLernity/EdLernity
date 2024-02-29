@@ -18,6 +18,8 @@ import PrivacyPolicy from './Components/Legal/PrivacyPolicy.jsx';
 import TermAndCondition from './Components/Legal/TermAndCondition.jsx'
 import CancellationandRefundPolicy from './Components/Legal/CancellationandRefundPolicy.jsx'
 import Courses from './Components/Courses/Courses.jsx';
+import SucessPage from './Components/Auth/SuccessPage/SuccessPage.jsx';
+import Paytm from './Components/paytm/paytm.jsx'
 function App() {
   return (
     <div className="App">
@@ -45,6 +47,8 @@ function App() {
             <Route path='/privacy-policy' element={<PrivacyPolicy />} />
             <Route path='/terms-and-conditions' element={<TermAndCondition />} />
             <Route path='/cancellation-and-refund-policy' element={<CancellationandRefundPolicy />} />
+            <Route path='/success' element={<SucessPage />} />
+            <Route path='/paytm' element={<Paytm />} />
         
           </Routes>
         </BrowserRouter>

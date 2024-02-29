@@ -8,7 +8,7 @@ function Offer() {
                 <h1 className='md:mt-12 ml-8 text-2xl' style={{ color: "#1649FF" }}>What EdLernity offers you?</h1>
             </div>
 
-            <div className="flex flex-wrap justify-around p-8">
+            <div className="flex flex-wrap p-8">
                 {/* Card 1 */}
                 <div className="max-w-sm rounded overflow-hidden border shadow-lg m-4">
                     <div className="px-6 py-4">
@@ -46,7 +46,6 @@ function Offer() {
 
                 {/* Card 3 */}
                 <div className="max-w-sm rounded overflow-hidden border shadow-lg m-4">
-                  
                     <div className="px-6 py-4">
                         <div className="font-bold text-xl mb-2">Live Classes</div>
                         <p className="text-gray-700 text-base">
@@ -62,6 +61,8 @@ function Offer() {
                         </button>
                     </div>
                 </div>
+
+                {/* Card 4 */}
                 <div className="max-w-sm rounded overflow-hidden border shadow-lg m-4">
                     <div className="px-6 py-4">
                         <div className="font-bold text-xl mb-2">Self Placed Courses</div>
