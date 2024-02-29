@@ -5,6 +5,7 @@ import Certificate from "../Certificate/Certificate";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 
+
 function Courses() {
   const location = useLocation();
   const { course } = location.state;
@@ -13,6 +14,7 @@ function Courses() {
   let [count, setCount] = useState(1);
   const [courseTitle, setCourseTitle] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   // Get all courses in a specific folder on server side.
   useEffect(() => {
@@ -35,16 +37,20 @@ function Courses() {
             }
           })
           .filter((title) => title !== null); // Filter out null values
-
         setCourses(extractedTitles);
         setCourseTitle(extractedTitles[0]);
-        axios
+        try {
+          axios
           .get(
             `http://localhost:3001/api/courses/${folderName}/${encodeURIComponent(course.videoNames[0])}`
           )
           .then((res) => {
             setVideoUrl(res.data.videoUrl);
+            setIsLoading(false);
           });
+        } catch (err) {
+          console.error(`Error getting video URL for`, err);
+        }
   }, []);
 
   const setUrl = (event) => {
@@ -63,39 +69,46 @@ function Courses() {
     } else {
       return null; // Invalid format, return null or handle accordingly
     }
-    axios
+    try {
+      axios
       .get(
         `http://localhost:3001/api/courses/${folderName}/${encodeURIComponent(fileNameForVideo)}`
       )
       .then((res) => {
         setVideoUrl(res.data.videoUrl);
+        setIsLoading(false);
       });
+    } catch (error) {
+      console.error("Error getting courses ",error)
+    }
   };
 
   return (
     <>
-      <div className="px-24 mt-10">
-        <div className="flex w-full">
-          <div className="flex flex-col w-4/6">
+      <div className="px-4 md:px-12 md:mt-10 xl:px-24 xl:mt-6">
+        <h1 className="text-center pb-4 font-bold text-2xl text-[#1539cf] leading-6 md:hidden xl:hidden mt-8 md:mt-0 xl:mt-0">{courseTitle}</h1>
+        <div className="flex w-full flex-col md:flex-row xl:flex-row">
+          <div className="flex flex-col md:w-4/6 xl:w-4/6">
             <div className="mt-4">
-              <VideoPlayer videoUrl={videoUrl} />
+              <VideoPlayer isLoading={isLoading} videoUrl={videoUrl} />
             </div>
-            <div className="pl-4 pr-24 py-4">
+            <div className="pl-4 pr-4 md:pr-24 xl:pr-24 py-4">
               <h1 className="text-xl font-bold">{courseTitle}</h1>
               <div className="mt-4">
                 <p>{course.courseDesc}</p>
               </div>
             </div>
           </div>
-          <div className="w-2/6">
+          <div className="md:w-2/6 mx-2 md:ml-8 xl:ml-8 sm:ml-4">
             <CourseContent
+              isLoading={isLoading}
               setUrl={setUrl}
               courseTitle={course.courseTitle}
               videos={courses}
             />
           </div>
         </div>
-        <hr className="h-[1px] border-0 text-gray-800 bg-gray-800 mt-1" />
+        <hr className="h-[1px] border-0 text-gray-800 bg-gray-800 mt-4 md:mt-1 sm:mt-4 xl:mt-1" />
         <Certificate />
       </div>
     </>

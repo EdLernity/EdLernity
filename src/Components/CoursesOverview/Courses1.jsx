@@ -10,10 +10,12 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import axios from "axios";
-import Skeleton from "react-loading-skeleton";
+import Skeleton , {SkeletonTheme} from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 function Courses1() {
+  const [isLoading, setIsLoading] = useState(true);
+
   const cardStyle = {
     position: "relative",
     width: "300px",
@@ -56,10 +58,10 @@ function Courses1() {
     } else {
       pathName = course.courseTitle.toLowerCase();
     }
-    navigate(`${window.location.pathname}/${pathName.toLowerCase().replace(/\s/g, '-')}`, { state: { course } });
-    // navigate(`/courses/${pathName.toLowerCase().replace(/\s/g, "-")}`, {
-    //   state: { course },
-    // });
+    // navigate(`${window.location.pathname}/${pathName.toLowerCase().replace(/\s/g, '-')}`, { state: { course } });
+    navigate(`/courses/${pathName.toLowerCase().replace(/\s/g, "-")}`, {
+      state: { course },
+    });
   };
 
   useEffect(() => {
@@ -68,7 +70,9 @@ function Courses1() {
         const response = await axios.get(
           "http://localhost:3001/api/get-all-course-details"
         );
-        console.log(response);
+        if (response.status === 200) {
+          setIsLoading(false);
+        }
         const { data } = response.data;
         console.log(data);
         const updatedAllCoursesData = data.map((course) => ({
@@ -114,6 +118,8 @@ function Courses1() {
     setOpenDialog(false);
   };
 
+  console.log(isLoading);
+
   return (
     <BaseLayout>
       <h1
@@ -123,9 +129,13 @@ function Courses1() {
         Explore Course{" "}
       </h1>
       <div className="flex flex-wrap justify-around p-20">
-        {!data.coursesData ? (
-          <Skeleton />
-        ) : (
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, index) => (
+            <div key={index}>
+              <Skeleton width={300} height={300} style={{ marginBottom: "10px" }} />
+            </div>
+          ))
+          ) : (
           data.coursesData.map((course, index) => (
             <div
               key={index}
@@ -162,7 +172,14 @@ function Courses1() {
         >
           Popular Courses
         </h1>
-        {data.popularCoursesData.map((popularCourse, index) => (
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className="mx-4 md:mx-24 mt-8">
+              <Skeleton className="items-center justify-between py-4 flex md:flex-row px-4 md:px-8 h-32" style={{ marginBottom: "10px" , borderRadius : "16px"}} />
+            </div>
+          ))
+          ) : (
+          data.popularCoursesData.map((popularCourse, index) => (
           <div
             key={index}
             className="bg-[#282D99] items-center justify-between mx-4 md:mx-24 mt-8 rounded-2xl py-4 flex md:flex-row px-4 md:px-8"
@@ -180,7 +197,7 @@ function Courses1() {
               />
             </div>
           </div>
-        ))}
+        )))}
       </div>
       <div>
         <h1
@@ -190,7 +207,14 @@ function Courses1() {
           All Courses{" "}
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:mx-24 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4">
-          {data.allCoursesData.map((course, index) => (
+          {isLoading ? (
+          Array.from({ length: 4 }).map((_, index) => (
+            <div key={index}>
+              <Skeleton className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" height={260} style={{ marginBottom: "10px" }} />
+            </div>
+          ))
+          ) : (
+          data.allCoursesData.map((course, index) => (
             <div key={index} className="bg-[#181FC5] p-4 rounded-lg shadow-lg">
               <img
                 src={`/Image/${course.image}`}
@@ -215,7 +239,7 @@ function Courses1() {
                 </button>
               </div>
             </div>
-          ))}
+          )))}
         </div>
 
         {/* Dialog */}

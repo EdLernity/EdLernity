@@ -18,7 +18,6 @@ import axios from "axios";
 function Ui() {
   const location = useLocation();
   const { course } = location.state;
-  console.log(course);
   const [isOpen, setIsOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState("");
   const [open, setOpen] = useState("");
@@ -40,6 +39,7 @@ function Ui() {
         {
             image: '/Image/Rectangle.png',
             video: 'https://www.youtube.com/embed/udMeRUz-7WY?autoplay=1&mute=1',
+            // video: firstVideoUrl,
         },
     ];
 
