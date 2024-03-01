@@ -49,6 +49,7 @@ function App() {
             <Route path='/cancellation-and-refund-policy' element={<CancellationandRefundPolicy />} />
             <Route path='/success' element={<SucessPage />} />
             <Route path='/paytm' element={<Paytm />} />
+
         
           </Routes>
         </BrowserRouter>

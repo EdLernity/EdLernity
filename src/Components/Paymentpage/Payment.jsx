@@ -1,7 +1,10 @@
 import React from "react";
-import { Button, Checkbox } from "@material-tailwind/react";
+
+import { Button, Input, Checkbox } from "@material-tailwind/react";
+import { NavLink } from "react-router-dom";
 import { ChevronLeftCircle } from "lucide-react";
-import { NavLink } from 'react-router-dom';
+
+
 import InputButton from "../Input/InputButton";
 function Payment() {
     function goBack() {
@@ -12,7 +15,8 @@ function Payment() {
             <div className="">
                 <div className="flex justify-center gap-3 p-3 bg-[#D4D4D4] items-center">
                     <NavLink to="/" style={{ display: "contents" }}>
-                        <img alt="logo" src="Image/Logo1.svg" className="w-8 h-8" />
+
+                        <img src="Image/Logo1.svg" className="w-8 h-8"
                         <h4 className="text-3xl font-bold" style={{ color: "#1539CF" }}>
                             EdLernity
                         </h4>
@@ -135,12 +139,15 @@ function Payment() {
                             </div>
                         </div>
                         <div>
+         
+
                             <InputButton
                              type="text"
                              id="Card Holder's Name"
                              label="Card Holder's Name"
                              fullWidth
                             />
+
 
                         </div>
                         <div
@@ -191,8 +198,12 @@ function Payment() {
                             <p>Order Amount: INR 699</p>
                             <hr className="border-gray-800 py-1"></hr>
                             <p>Total Amount: INR 699</p>
-                            <hr className='border-gray-800 py-1'></hr>
+
+                            <hr className="border-gray-800 py-1"></hr>
+
+                           
                           
+
 
                         </div>
                     </div>

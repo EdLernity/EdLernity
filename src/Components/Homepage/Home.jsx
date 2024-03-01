@@ -41,8 +41,6 @@ function Home() {
                 <div className=''>
                     <CoursesOffered />
                 </div>
-
-                {/* </div> */}
             </BaseLayout>
         </>
     )

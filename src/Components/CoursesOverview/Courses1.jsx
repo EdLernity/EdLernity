@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import BaseLayout from "../../Layout/BaseLayout";
@@ -16,6 +17,11 @@ import "react-loading-skeleton/dist/skeleton.css";
 function Courses1() {
   const [isLoading, setIsLoading] = useState(true);
 
+
+  const handleClick = (course) => {
+    localStorage.setItem('current_course', course.title);
+    navigate(`${window.location.pathname}/${course.title.toLowerCase().replace(/\s/g, '-')}`);
+  };
   const cardStyle = {
     position: "relative",
     width: "300px",
@@ -233,6 +239,7 @@ function Courses1() {
               <div className="mt-4">
                 <button
                   className="text-white bg-blue-500 px-4 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue"
+
                   onClick={() => handleOpen(course)}
                 >
                   {course.buttonText}
@@ -275,6 +282,7 @@ function Courses1() {
             </DialogHeader>
             <DialogBody>
               <img
+
                 src={`/Image/${selectedCourse?.image}`}
                 alt={selectedCourse?.courseTitle}
                 className="w-32 h-32 text-white object-cover mb-4 rounded-lg"
@@ -303,6 +311,7 @@ function Courses1() {
                 className="text-white bg-blue-500 px-8 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue mr-1"
               >
                 <span>Explore</span>
+
               </button>
             </DialogFooter>
           </Dialog>
@@ -313,3 +322,4 @@ function Courses1() {
 }
 
 export default Courses1;
+
