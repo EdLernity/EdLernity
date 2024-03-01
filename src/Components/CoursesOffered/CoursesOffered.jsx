@@ -1,7 +1,20 @@
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import BaseLayout from '../../Layout/BaseLayout';
-
+import axios from 'axios'
 function CoursesOffered() {
+    const navigate = useNavigate();
+
+    const handleClick = async () => {
+        try {
+            let res = await axios.get("http://localhost:3001/api/payment/status/1");
+            console.log(res);
+            navigate(res.data.url)
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
     return (
         <>
         <div className="container mx-auto gap-32 p-4 md:flex md:items-start">
@@ -83,6 +96,8 @@ function CoursesOffered() {
                 </div> */}
             </div>
         </div>
+
+        <div onClick={handleClick}> Hello Test </div>
 </>
     );
 }

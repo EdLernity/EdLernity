@@ -59,7 +59,7 @@ const registerUser = async (req, res) => {
     if (existingUserByEmail) {
       return res
         .status(400)
-        .json({ success: false, message: "Email already exists." });
+        .json({ success: false, message: "Email already exists." , redirectTo: "/auth/signup" , text: "to sign up again." });
     }
 
     const existingUserByPhone = await userModel.findOne({ phone });
@@ -67,7 +67,7 @@ const registerUser = async (req, res) => {
     if (existingUserByPhone) {
       return res
         .status(400)
-        .json({ success: false, message: "Phone number is already exists with diffrent account." });
+        .json({ success: false, message: "Phone number is already exists with diffrent account." , redirectTo: "/auth/signup" , text: "to sign up again." });
     }
 
     // Hash the password
@@ -88,12 +88,12 @@ const registerUser = async (req, res) => {
 
     await newUser.save();
 
-    return res.json({ success: true, message: "Thank you for registering with edlernity. ", redirectTo: "/" });
+    return res.json({ success: true, message: "Thank you for registering with edlernity. ", redirectTo: "/" ,text : ""});
   } catch (error) {
     console.error("Error:", error);
     return res
       .status(500)
-      .json({ success: false, message: "Error registering user" });
+      .json({ success: false, message: "Error registering user" , redirectTo: "/auth/signup" , text: "to sign up again."});
   }
 };
 
@@ -105,7 +105,7 @@ const loginUser = async (req, res) => {
     if (!email || !password) {
       return res
         .status(400)
-        .json({ success: false, message: "Email and password are required" });
+        .json({ success: false, message: "Email and password are required" , redirectTo: "/auth/login" , text: "to login again." });
     }
 
     // Find the user by email
@@ -115,7 +115,7 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res
         .status(401)
-        .json({ success: false, message: "Email is not registered" });
+        .json({ success: false, message: "Email is not registered" , redirectTo: "/auth/login" , text: "to login again." });
     }
 
     // Check if the password matches
@@ -124,7 +124,7 @@ const loginUser = async (req, res) => {
     if (!isPasswordValid) {
       return res
         .status(401)
-        .json({ success: false, message: "Incorrect password" });
+        .json({ success: false, message: "Incorrect password" , redirectTo: "/auth/login" , text: "to login again." });
     }
 
     // If email and password are valid, generate a JWT token
@@ -135,10 +135,10 @@ const loginUser = async (req, res) => {
     );
 
     // Send the token in the response
-    return res.json({ success: true, token , redirectTo: "/" });
+    return res.json({ success: true, token , redirectTo: "/" , text : "" });
   } catch (error) {
     console.error("Error:", error);
-    return res.status(500).json({ success: false, message: "Internal server error" });
+    return res.status(500).json({ success: false, message: "Internal server error" , redirectTo: "/auth/login" , text: "to login again." });
   }
 };
 
@@ -201,7 +201,7 @@ const resetPassword = async (req, res) => {
     if (!user) {
       return res
         .status(500)
-        .json({ success: false, message: "Email is not registered." });
+        .json({ success: false, message: "Email is not registered." , redirectTo: "/auth/reset" , text: "to reset again."});
     }
 
     const token = jwt.sign(
@@ -236,6 +236,8 @@ const resetPassword = async (req, res) => {
       return res.json({
         success: false,
         message: "Failed to send  verification email.",
+        redirectTo: "/auth/reset" , 
+        text: "to reset again."
       });
     }
 
@@ -244,7 +246,9 @@ const resetPassword = async (req, res) => {
       message: `Verification email has been send to your email : ${email}, please check.`,
     });
   } catch (e) {
-    return res.status(400).json({ sucess:false, message: e });
+    return res.status(400).json({ sucess:false, message: "Error resetting password.",
+    redirectTo: "/auth/reset" , 
+    text: "to reset again." });
   }
 };
 
@@ -264,7 +268,7 @@ const verifyUserAndToken = async (req, res) => {
 
     // Checking whether the user exists or not and also checking whether the token is expired or not
     if (!resetToken) {
-      return res.status(500).json({ sucess: false, message: "Invalid Token" });
+      return res.status(500).json({ sucess: false, message: "Invalid Token" , redirectTo: "/auth/reset" , text: "to reset again."});
     } else {
       // Updating the password of the user with the new one provided by the user in the request body
       await resetTokenModel.updateOne({ verified: true });
@@ -274,7 +278,7 @@ const verifyUserAndToken = async (req, res) => {
       });
     }
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    return res.status(400).json({ sucess : false, error : error.message,  message: "Your link has been expired" , redirectTo: "/auth/reset" , text: "to reset again."});
   }
 };
 // Function for updating password after validating the token
@@ -314,11 +318,11 @@ const updatePasswordAfterValidate = async (req, res) => {
       if (resetToken.verified) {
         // If no such user found in the database then it will show 'No Such User Found.'
         if (!user) {
-          return res.status(400).json({ message: "No Such User Found." });
+          return res.status(400).json({ message: "No Such User Found." , redirectTo: "/auth/reset" , text: "to reset again."});
         } else {
           // Checking whether the user exists or not and also checking whether the token is expired or not
           if (!resetToken) {
-            return res.json({ sucess: false, message: "Invalid Token" });
+            return res.json({ sucess: false, message: "Invalid Token" , redirectTo: "/auth/reset" , text: "to reset again."});
           }
           // Updating the password of the user with the help of 'updatePassword' function
           const oldPassword = user.password;
@@ -331,9 +335,11 @@ const updatePasswordAfterValidate = async (req, res) => {
   
           if (isOldPasswordValid) {
             // If old password matches new password, return an error
-            return res.json({
+            return res.status(404).json({
               success: false,
               message: "New password should be different from the old password.",
+              redirectTo: "/auth/reset" ,
+              text: "to reset again."
             });
           }
   
@@ -352,6 +358,7 @@ const updatePasswordAfterValidate = async (req, res) => {
             return res.status(500).json({
               success: false,
               message: "Error updating password.",
+              redirectTo: "/auth/reset" , text: "to reset again."
             });
           }
   
@@ -364,17 +371,20 @@ const updatePasswordAfterValidate = async (req, res) => {
   
           return res.status(200).json({
             success: true,
-            message: "Password reset successfully.",
+            message: "Password reset successfully.", 
+            redirectTo: "/auth/login" , 
+            text: "to login again."
           });
         }
       }
     } catch (error) {
-      return res.status(500).json({success:false,message: 'Your link has already used. Please try to generate again.'}); 
+      return res.status(500).json({success:false,message: 'Your link has already used. Please try to generate again.' , redirectTo: "/auth/reset" , text: "to reset again."}); 
     }
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: `Error resetting password. ${error.message}`,
+      message: `Error resetting password.`,
+      redirectTo: "/auth/reset" , text: "to reset again."
     });
   }
 };

@@ -8,6 +8,7 @@ import TeleDropdown from "./TeleDropdown"
 function InputButton({
   type,
   label,
+  id,
   value,
   name,
   placeholder,
@@ -17,6 +18,8 @@ function InputButton({
   text,
   required=false,
   fullWidth = false,
+  multiple = false,
+  hint
 }) {
   const [inputType, setInputType] = useState(type);
   const [icon, setIcon] = useState(eyeOff);
@@ -32,6 +35,12 @@ function InputButton({
 
   const widthStyle = {
     width: fullWidth ? '100%' : 'auto'
+  }
+
+  const checkboxStyle = {
+    borderShadow : "none",
+    left : "20px",
+    top: "-4px"
   }
 
   const phoneStyle = {
@@ -79,7 +88,7 @@ const onChangeT = (e) => {
       )}
       <div
         className={`inputbtn ${
-          (isFocused && isValue) || isFocused
+          (((isFocused && isValue) || isFocused) && type !== "checkbox") || type === "file"
             ? "focused"
             : isValue
             ? "valuecontained"
@@ -87,18 +96,19 @@ const onChangeT = (e) => {
         } flex`}
         style={widthStyle}
       >
-        <label htmlFor={label} style={type === "tel" ? phoneStyle : {}}>
+        <label htmlFor={id} style={type === "tel" ? phoneStyle : type === "checkbox" ? {...checkboxStyle} : {}}>
           {label}
         </label>
         {type === "tel" ? <TeleDropdown isFocused={isTeleDropdownFocused} isValue={isTeleDropdownValue} /> : ""}
         <input
           style={type === "tel" ? { ...phoneInputStyle, ...widthStyle } : widthStyle}
           type={inputType}
-          id={label}
+          id={id}
           name={name}
           value={value}
           text={text}
           required={required}
+          multiple={multiple}
           placeholder={placeholder}
           error={error}
           disabled={disabled}
@@ -112,6 +122,7 @@ const onChangeT = (e) => {
             className: "min-w-0",
           }}
         />
+        {hint ? <span className="text-[#808080] ml-1">{hint}</span> : null}
         {type === "password" && label !== "Confirm password" ? (<span className="flex justify-around items-center" onClick={handleToggle}>
         <Icon className="block absolute mr-10" icon={icon} size={20} /> </span> ) : ( <span className="hidden"></span> )}
       </div>
