@@ -4,15 +4,6 @@ const axios =  require('axios');
 const saveCourseDetails = async(req,res) => {
     try{
         let {courseTitle , initialPrice , offeredPrice , courseDesc , courseOverviewDesc , folderName , courseContentDescription , isPopular , imagePath , videoNames} = req.body;
-        console.log(courseTitle)
-        console.log(initialPrice)
-        console.log(offeredPrice)
-        console.log(courseDesc)
-        console.log(courseOverviewDesc)
-        console.log(courseContentDescription)
-        console.log(isPopular)
-        console.log(imagePath)
-        console.log(videoNames)
 
         if (!courseTitle || !initialPrice || !offeredPrice || !courseDesc || !courseOverviewDesc || !folderName || !courseContentDescription || !imagePath || !videoNames) {
             return res.status(400).json({ success: false, message: "All fields are required" });

@@ -101,7 +101,7 @@ function Footer() {
             {isChatBotOpen && <ChatBot onClose={closeChatBot} />}
           </div>
 
-          <div className="mt-12 flex flex-col items-center justify-center border-t border-blue-gray-50 py-4 md:flex-row md:justify-between">
+          <div className="mt-8 flex flex-col items-center justify-center border-t border-blue-gray-50 py-4 md:flex-row md:justify-between">
             <Typography
               variant="small"
               className="mb-4 text-center text-white font-normal md:mb-0"
