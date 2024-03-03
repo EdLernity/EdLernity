@@ -1,10 +1,7 @@
 import React from "react";
-
 import { Button, Input, Checkbox } from "@material-tailwind/react";
 import { NavLink } from "react-router-dom";
 import { ChevronLeftCircle } from "lucide-react";
-
-
 import InputButton from "../Input/InputButton";
 function Payment() {
     function goBack() {
@@ -16,7 +13,7 @@ function Payment() {
                 <div className="flex justify-center gap-3 p-3 bg-[#D4D4D4] items-center">
                     <NavLink to="/" style={{ display: "contents" }}>
 
-                        <img src="Image/Logo1.svg" className="w-8 h-8"
+                        <img src="Image/Logo1.svg" className="w-8 h-8"></img>
                         <h4 className="text-3xl font-bold" style={{ color: "#1539CF" }}>
                             EdLernity
                         </h4>

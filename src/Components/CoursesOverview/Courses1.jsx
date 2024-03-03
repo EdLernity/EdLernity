@@ -18,10 +18,10 @@ function Courses1() {
   const [isLoading, setIsLoading] = useState(true);
 
 
-  const handleClick = (course) => {
-    localStorage.setItem('current_course', course.title);
-    navigate(`${window.location.pathname}/${course.title.toLowerCase().replace(/\s/g, '-')}`);
-  };
+  // const handleClick = (course) => {
+  //   localStorage.setItem('current_course', course.title);
+  //   navigate(`${window.location.pathname}/${course.title.toLowerCase().replace(/\s/g, '-')}`);
+  // };
   const cardStyle = {
     position: "relative",
     width: "300px",

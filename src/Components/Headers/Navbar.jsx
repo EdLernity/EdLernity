@@ -134,20 +134,24 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
           >
             Blog
           </NavLink>
+          <NavLink
+            to="/contact-us"
+            className={({ isActive }) =>
+              cn(
+                isActive
+                  ? "text-[#181FC5] active-link"
+                  : isDarkMode
+                  ? "text-white"
+                  : "text-black",
+                "hover:text-[#181FC5] font-md text-lg"
+              )
+            }
+          >
+            Contact us
+          </NavLink>
         </div>
 
         <div className="flex space-x-4 ml-auto">
-          {/* <IconButton onClick={toggleDarkMode}>
-            {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
-          </IconButton> */}
-
-          {/* <IconButton
-            onClick={toggleDarkMode}
-            className={`bg-${isDarkMode ? 'white' : 'black'} text-${isDarkMode ? 'black' : 'white'} px-4 py-2 rounded`}
-          >
-            {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
-          </IconButton> */}
-
           <IconButton
             onClick={toggleDarkMode}
             className={`bg-${isDarkMode ? "white" : "black"} text-${
@@ -214,6 +218,10 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
 
           <NavLink to="/blog" className="">
             Blog
+          </NavLink>
+          <hr className="border border-gray-200"></hr>
+          <NavLink to="/contact-us" className="">
+            Contact Us
           </NavLink>
         </Typography>
         <div className="flex justify-between gap-2">
