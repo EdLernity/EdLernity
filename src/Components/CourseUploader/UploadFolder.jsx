@@ -56,10 +56,10 @@ const UploadFolder = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formsData.folderName || formsData.selectedFiles.length === 0) {
-      setFormsData({...formsData, message : "Please enter folder name and select files"});
-      return;
-    }
+    // if (!formsData.folderName || formsData.selectedFiles.length === 0) {
+    //   setFormsData({...formsData, message : "Please enter folder name and select files"});
+    //   return;
+    // }
 
     // Sort selected files by name
     const sortedFiles = Array.from(formsData.selectedFiles).sort((a, b) => {
@@ -97,7 +97,7 @@ const UploadFolder = () => {
       isPopular : formsData.isPopular ? true : false,
       courseContentDescription : courseContentDescription,
       imagePath  : formsData.imagePath,
-      videoNames : videoNames
+      // videoNames : videoNames
     }
 
     console.log(data)
@@ -111,16 +111,16 @@ const UploadFolder = () => {
 
       setFormsData({...formsData, message : courseResponse.data.message});
 
-      if(courseResponse.status === 200){
-        setTimeout(()=>{
-          setFormsData({...formsData, message : "Uploading videos...,Please do not refresh the page. It may take some time depending on the number of files."});
-        },2000);
-        const response = await axios.post(
-          "http://localhost:3001/api/upload-folder",
-          formData);
+      // if(courseResponse.status === 200){
+      //   setTimeout(()=>{
+      //     setFormsData({...formsData, message : "Uploading videos...,Please do not refresh the page. It may take some time depending on the number of files."});
+      //   },2000);
+      //   const response = await axios.post(
+      //     "http://localhost:3001/api/upload-folder",
+      //     formData);
 
-        setFormsData({...formsData, message : response.data.message});
-      }
+      //   setFormsData({...formsData, message : response.data.message});
+      // }
 
     } catch (error) {
       handleError(error)
