@@ -17,7 +17,7 @@ import axios from "axios";
 
 function Ui() {
   const location = useLocation();
-  const { course } = location.state;
+  const { course } = location?.state;
   const [isOpen, setIsOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState("");
   const [open, setOpen] = useState("");
@@ -55,13 +55,15 @@ function Ui() {
 
   useEffect(() => {
     const folderName = localStorage.getItem("current_course");
-    axios.get(`http://localhost:3001/api/courses/${folderName}/${course.videoNames[0]}`)
+    try {
+      axios.get(`http://localhost:3001/api/courses/${folderName}/${course?.videoNames[0]}`)
       .then((res) => {
-        setFirstVideoUrl(res.data.videoUrl);
+        setFirstVideoUrl(res?.data?.videoUrl);
       });
-  }, []);
-
-  console.log(firstVideoUrl);
+    } catch (error) {
+      console.log("Error getting the video url from server." , error);
+    }
+  }, [course?.videoNames]);
 
   function Icon({ id, open }) {
     return (
@@ -185,18 +187,18 @@ function Ui() {
           className="text-3xl mt-10 lg:ml-24 sm:ml-4 text-center lg:text-left font-bold"
           style={{ color: "#181FC5" }}
         >
-          {course.courseTitle}
+          {course?.courseTitle}
         </h1>
 
         <div className="mt-10">
           <div className="flex flex-col lg:flex-row mx-2 lg:mx-24">
-            {cardData.map((course, index) => (
+            {cardData?.map((course, index) => (
               <CourseCard key={index} course={course} openModal={openModal} />
             ))}
 
             <CourseDetails
               badges={badges}
-              description={course.courseOverviewDesc}
+              description={course?.courseOverviewDesc}
             />
           </div>
 
@@ -273,16 +275,16 @@ function Ui() {
           </div>
           <div>
             <span className="text-red-500">
-              - {course.discountInPercentage} %
+              - {course?.discountInPercentage} %
             </span>{" "}
             <span className="ml-1 text-xs font-semibold sm:text-sm">
-              ₹{course.offeredPrice}
+              ₹{course?.offeredPrice}
             </span>
           </div>
           <div>
             <span className="text-[#353BCC]">Price :</span>
             <span className="ml-1 text-xl sm:text-sm line-through text-gray-600">
-              ₹{course.initialPrice}
+              ₹{course?.initialPrice}
             </span>
           </div>
         </div>
@@ -310,9 +312,9 @@ function Ui() {
             className="text-3xl  mt-10  text-center font-bold "
             style={{ color: "#181FC5" }}
           >
-            {course.courseTitle} Training Syllabus
+            {course?.courseTitle} Training Syllabus
           </h1>
-          {course.courseContentDescription.map((c, index) => (
+          {course?.courseContentDescription.map((c, index) => (
             <div key={index} className="mt-4 items-center justify-center px-12">
               <Accordion
                 open={open === index}
@@ -363,16 +365,16 @@ function Ui() {
                         <div className="rounded-md bg-[#D9D9D9]">
                           <div className="w-full h-48 sm:h-32 mx-auto bg-blue-500 rounded-t-md overflow-hidden">
                             <img
-                              src={item.image}
-                              alt={item.name}
+                              src={item?.image}
+                              alt={item?.name}
                               className="w-full h-full object-cover"
                             />
                           </div>
                           <div className="p-4">
                             <h2 className="text-xl font-bold mb-2">
-                              {item.name}
+                              {item?.name}
                             </h2>
-                            <p>{item.comment}</p>
+                            <p>{item?.comment}</p>
                           </div>
                         </div>
                       </div>

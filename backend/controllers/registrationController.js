@@ -129,13 +129,13 @@ const loginUser = async (req, res) => {
 
     // If email and password are valid, generate a JWT token
     const token = jwt.sign(
-      { userId: user.userId, email: user.email },
+      { userId: user._id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: "5m" }
+      { expiresIn: "50m" }
     );
 
     // Send the token in the response
-    return res.json({ success: true, token , redirectTo: "/" , text : "" });
+    return res.json({ success: true, token , redirectTo: "/" , text : "" , token});
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).json({ success: false, message: "Internal server error" , redirectTo: "/auth/login" , text: "to login again." });
