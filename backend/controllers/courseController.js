@@ -3,18 +3,9 @@ const axios =  require('axios');
 
 const saveCourseDetails = async(req,res) => {
     try{
-        let {courseTitle , initialPrice , offeredPrice , courseDesc , courseOverviewDesc , folderName , courseContentDescription , isPopular , imagePath } = req.body;
-        console.log(courseTitle)
-        console.log(initialPrice)
-        console.log(offeredPrice)
-        console.log(courseDesc)
-        console.log(courseOverviewDesc)
-        console.log(courseContentDescription)
-        console.log(isPopular)
-        console.log(imagePath)
-        // console.log(videoNames)
+        let {courseTitle , initialPrice , offeredPrice , courseDesc , courseOverviewDesc , folderName , courseContentDescription , isPopular , imagePath , videoNames} = req.body;
 
-        if (!courseTitle || !initialPrice || !offeredPrice || !courseDesc || !courseOverviewDesc || !folderName || !courseContentDescription || !imagePath) {
+        if (!courseTitle || !initialPrice || !offeredPrice || !courseDesc || !courseOverviewDesc || !folderName || !courseContentDescription || !imagePath || !videoNames) {
             return res.status(400).json({ success: false, message: "All fields are required" });
         }
 
@@ -53,7 +44,7 @@ const saveCourseDetails = async(req,res) => {
             folderName ,  
             courseContentDescription,
             isPopular,
-            // videoNames,
+            videoNames,
             image
         });
         await newCourse.save();
@@ -88,38 +79,38 @@ const getAllCourseDetails = (req, res) => {
     }
 };
 
-const saveVideoName = async (req,res) => {
-    const updateVideoNames = async (courseId, newVideoNames) => {
-        try {
-            // Find the course by its ID and update the videoNames field
-            const result = await courseModel.findByIdAndUpdate(courseId, { videoNames: newVideoNames });
+// const saveVideoName = async (req,res) => {
+//     const updateVideoNames = async (courseId, newVideoNames) => {
+//         try {
+//             // Find the course by its ID and update the videoNames field
+//             const result = await courseModel.findByIdAndUpdate(courseId, { videoNames: newVideoNames });
     
-            if (!result) {
-                throw new Error("Course not found");
-            }
+//             if (!result) {
+//                 throw new Error("Course not found");
+//             }
     
-            return { success: true, message: "Video names updated successfully" };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    };
+//             return { success: true, message: "Video names updated successfully" };
+//         } catch (error) {
+//             return { success: false, error: error.message };
+//         }
+//     };
     
-    // Example usage:
-    const courseId = req.body.id; // ID of the course to update
-    let videoNames = []
-    const courseResponse = await axios.get("http://localhost:3001/api/courses/Javascript_EdLernity");
-    courseResponse?.data?.videos?.forEach(element=>{
-            videoNames.push(element)
-    })
+//     // Example usage:
+//     const courseId = req.body.id; // ID of the course to update
+//     let videoNames = []
+//     const courseResponse = await axios.get("http://localhost:3001/api/courses/Coding_Interview_Prepration_EdLernity");
+//     courseResponse.data.videos.forEach(element=>{
+//             videoNames.push(element)
+//     })
     
-    updateVideoNames(courseId, videoNames)
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+//     updateVideoNames(courseId, videoNames)
+//         .then((response) => {
+//             console.log(response);
+//         })
+//         .catch((error) => {
+//             console.error(error);
+//         });
     
-}
+// }
 
-module.exports = {saveCourseDetails,getAllCourseDetails,saveVideoName};
+module.exports = {saveCourseDetails,getAllCourseDetails}
