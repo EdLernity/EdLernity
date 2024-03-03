@@ -61,10 +61,10 @@ function Login() {
       handlePassord(data.password);
       try {
         let res = await axios.post("http://localhost:3001/auth/login", data);
-        if (res.data.success) {
-          localStorage.setItem("jwt_token", res.data.token);
+        if (res?.data?.success) {
+          localStorage.setItem("jwt_token", res?.data?.token);
           alert("login sucess")
-          navigate(res.data.redirectTo)
+          navigate(res?.data?.redirectTo)
         }
       } catch (error) {
         console.error("Error during signup:", error.message);

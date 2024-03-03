@@ -15,7 +15,6 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 function Courses1() {
   const [isLoading, setIsLoading] = useState(true);
-
   const cardStyle = {
     position: "relative",
     width: "300px",
@@ -55,12 +54,7 @@ function Courses1() {
     localStorage.setItem("current_course", course.folderName);
     localStorage.setItem("courseName", course.courseTitle);
     localStorage.setItem("userName", "Nikhil Raj");
-    if (course.courseTitle.toLowerCase().includes("/")) {
-      pathName = course.courseTitle.toLowerCase().replace(/\//g, "-");
-    } else {
-      pathName = course.courseTitle.toLowerCase();
-    }
-    // navigate(`${window.location.pathname}/${pathName.toLowerCase().replace(/\s/g, '-')}`, { state: { course } });
+    // navigate(`${window.location.pathname}/${course._id}`, { state: { course } });
     navigate(`/courses/${course._id}`, {
       state: { course },
     });

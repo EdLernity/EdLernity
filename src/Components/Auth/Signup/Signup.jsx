@@ -113,14 +113,14 @@ function Signup() {
       try {
         let res = await axios.post("http://localhost:3001/auth/register", data);
         setResponseData(res.data);
-        if (res.data.success) {
+        if (res?.data?.success) {
           setIsResgisterSucess(true);
         }
       } catch (error) {
         console.error("Error during signup:", error.message);
         setIsError(true);
-        setError(error.response.data.message)
-        setResponseData(error.response.data);
+        setError(error?.response?.data?.message)
+        setResponseData(error?.response?.data);
       }
     }
   };
@@ -128,9 +128,9 @@ function Signup() {
   useEffect(() => {}, [responseData]);
 
   const req = {
-    message: responseData.message,
-    path: responseData.redirectTo,
-    text : responseData.text
+    message: responseData?.message,
+    path: responseData?.redirectTo,
+    text : responseData?.text
   };
 
   let data = {
