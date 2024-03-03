@@ -50,7 +50,7 @@ function Footer() {
 
   return (
     <>
-      <footer className="relative w-full bg-black py-12 text-white mt-24">
+      <footer className="relative w-full bg-black pt-8 pb-6 text-white mt-24">
         <div className="mx-auto w-full px-8 ">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-sm:px-8">
             <Typography variant="h5" className="mb-6">
@@ -101,7 +101,7 @@ function Footer() {
             {isChatBotOpen && <ChatBot onClose={closeChatBot} />}
           </div>
 
-          <div className="mt-12 flex flex-col items-center justify-center border-t border-blue-gray-50 py-4 md:flex-row md:justify-between">
+          <div className="mt-8 flex flex-col items-center justify-center border-t border-blue-gray-50 py-4 md:flex-row md:justify-between">
             <Typography
               variant="small"
               className="mb-4 text-center text-white font-normal md:mb-0"

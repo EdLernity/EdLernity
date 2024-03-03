@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import BaseLayout from "../../Layout/BaseLayout";
@@ -11,17 +10,12 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import axios from "axios";
-import Skeleton , {SkeletonTheme} from "react-loading-skeleton";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 function Courses1() {
   const [isLoading, setIsLoading] = useState(true);
 
-
-  const handleClick = (course) => {
-    localStorage.setItem('current_course', course.title);
-    navigate(`${window.location.pathname}/${course.title.toLowerCase().replace(/\s/g, '-')}`);
-  };
   const cardStyle = {
     position: "relative",
     width: "300px",
@@ -59,13 +53,15 @@ function Courses1() {
 
   const handleClick = (course) => {
     localStorage.setItem("current_course", course.folderName);
+    localStorage.setItem("courseName", course.courseTitle);
+    localStorage.setItem("userName", "Nikhil Raj");
     if (course.courseTitle.toLowerCase().includes("/")) {
       pathName = course.courseTitle.toLowerCase().replace(/\//g, "-");
     } else {
       pathName = course.courseTitle.toLowerCase();
     }
     // navigate(`${window.location.pathname}/${pathName.toLowerCase().replace(/\s/g, '-')}`, { state: { course } });
-    navigate(`/courses/${pathName.toLowerCase().replace(/\s/g, "-")}`, {
+    navigate(`/courses/${course._id}`, {
       state: { course },
     });
   };
@@ -135,41 +131,43 @@ function Courses1() {
         Explore Course{" "}
       </h1>
       <div className="flex flex-wrap justify-around p-20">
-        {isLoading ? (
-          Array.from({ length: 4 }).map((_, index) => (
-            <div key={index}>
-              <Skeleton width={300} height={300} style={{ marginBottom: "10px" }} />
-            </div>
-          ))
-          ) : (
-          data.coursesData.map((course, index) => (
-            <div
-              key={index}
-              className="relative w-300 m-10 text-center shadow-lg rounded-2xl overflow-hidden"
-              style={cardStyle}
-            >
-              <img
-                src={`/Image/${course.image}`}
-                alt={course.courseTitle}
-                style={{ filter: "blur(2px)", ...imageStyle }}
-              />
+        {isLoading
+          ? Array.from({ length: 4 }).map((_, index) => (
+              <div key={index}>
+                <Skeleton
+                  width={300}
+                  height={300}
+                  style={{ marginBottom: "10px" }}
+                />
+              </div>
+            ))
+          : data.coursesData.map((course, index) => (
               <div
-                className="absolute top-25 left-50 transform -translate-x-50 -translate-y-50 text-white font-bold text-2xl"
-                style={textStyle}
+                key={index}
+                className="relative w-300 m-10 text-center shadow-lg rounded-2xl overflow-hidden"
+                style={cardStyle}
               >
-                {course.courseTitle}
-              </div>
-              <div className="absolute bottom-5 left-0 right-0 text-center">
-                <button
-                  className="text-black bg-gray-200 px-6 text-center py-2 rounded-3xl justify-center"
-                  onClick={() => handleClick(course)}
+                <img
+                  src={`/Image/${course.image}`}
+                  alt={course.courseTitle}
+                  style={{ filter: "blur(2px)", ...imageStyle }}
+                />
+                <div
+                  className="absolute top-25 left-50 transform -translate-x-50 -translate-y-50 text-white font-bold text-2xl"
+                  style={textStyle}
                 >
-                  {course.buttonText}
-                </button>
+                  {course.courseTitle}
+                </div>
+                <div className="absolute bottom-5 left-0 right-0 text-center">
+                  <button
+                    className="text-black bg-gray-200 px-6 text-center py-2 rounded-3xl justify-center"
+                    onClick={() => handleClick(course)}
+                  >
+                    {course.buttonText}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))
-        )}
+            ))}
       </div>
       <div>
         <h1
@@ -178,32 +176,35 @@ function Courses1() {
         >
           Popular Courses
         </h1>
-        {isLoading ? (
-          Array.from({ length: 5 }).map((_, index) => (
-            <div key={index} className="mx-4 md:mx-24 mt-8">
-              <Skeleton className="items-center justify-between py-4 flex md:flex-row px-4 md:px-8 h-32" style={{ marginBottom: "10px" , borderRadius : "16px"}} />
-            </div>
-          ))
-          ) : (
-          data.popularCoursesData.map((popularCourse, index) => (
-          <div
-            key={index}
-            className="bg-[#282D99] items-center justify-between mx-4 md:mx-24 mt-8 rounded-2xl py-4 flex md:flex-row px-4 md:px-8"
-          >
-            <div className="mb-2 md:mb-0 md:mr-4">
-              <h1 className="text-xl text-nowrap text-white">
-                {popularCourse.courseTitle}
-              </h1>
-            </div>
-            <div>
-              <img
-                src={`/Image/${popularCourse.image}`}
-                alt=""
-                className="w-24 md:ml-2"
-              />
-            </div>
-          </div>
-        )))}
+        {isLoading
+          ? Array.from({ length: 5 }).map((_, index) => (
+              <div key={index} className="mx-4 md:mx-24 mt-8">
+                <Skeleton
+                  className="items-center justify-between py-4 flex md:flex-row px-4 md:px-8 h-32"
+                  style={{ marginBottom: "10px", borderRadius: "16px" }}
+                />
+              </div>
+            ))
+          : data.popularCoursesData.map((popularCourse, index) => (
+              <div
+                key={index}
+                className="bg-[#181FC5] items-center justify-between mx-4 md:mx-24 mt-8 rounded-2xl py-4 flex md:flex-row px-4 md:px-8 cursor-pointer"
+                onClick={() => handleClick(popularCourse)}
+              >
+                <div className="mb-2 md:mb-0 md:mr-4">
+                  <h1 className="text-xl text-nowrap text-white">
+                    {popularCourse.courseTitle}
+                  </h1>
+                </div>
+                <div>
+                  <img
+                    src={`/Image/${popularCourse.image}`}
+                    alt=""
+                    className="w-24 md:ml-2"
+                  />
+                </div>
+              </div>
+            ))}
       </div>
       <div>
         <h1
@@ -213,40 +214,47 @@ function Courses1() {
           All Courses{" "}
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:mx-24 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4">
-          {isLoading ? (
-          Array.from({ length: 4 }).map((_, index) => (
-            <div key={index}>
-              <Skeleton className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" height={260} style={{ marginBottom: "10px" }} />
-            </div>
-          ))
-          ) : (
-          data.allCoursesData.map((course, index) => (
-            <div key={index} className="bg-[#181FC5] p-4 rounded-lg shadow-lg">
-              <img
-                src={`/Image/${course.image}`}
-                alt={course.courseTitle}
-                className="w-24 h-24 object-cover mb-4 rounded-lg"
-              />
-              <h2 className="text-xl text-white font-bold mb-2">
-                {course.courseTitle}
-              </h2>
-              <p
-                className="text-gray-200 whitespace-nowrap"
-                style={{ overflow: "hidden", textOverflow: "ellipsis" }}
-              >
-                {course.courseDesc}
-              </p>
-              <div className="mt-4">
-                <button
-                  className="text-white bg-blue-500 px-4 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue"
-
-                  onClick={() => handleOpen(course)}
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <div key={index}>
+                  <Skeleton
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+                    height={260}
+                    style={{ marginBottom: "10px" }}
+                  />
+                </div>
+              ))
+            : data.allCoursesData.map((course, index) => (
+                <div
+                  key={index}
+                  className="bg-[#181FC5] p-4 rounded-lg shadow-lg flex flex-col justify-between"
                 >
-                  {course.buttonText}
-                </button>
-              </div>
-            </div>
-          )))}
+                  <div>
+                    <img
+                      src={`/Image/${course.image}`}
+                      alt={course.courseTitle}
+                      className="w-24 h-24 object-cover mb-4 rounded-lg"
+                    />
+                    <h2 className="text-xl text-white font-bold mb-2">
+                      {course.courseTitle}
+                    </h2>
+                    <p
+                      className="text-gray-200 whitespace-nowrap"
+                      style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+                    >
+                      {course.courseDesc}
+                    </p>
+                  </div>
+                  <div className="mt-4">
+                    <button
+                      className="text-white bg-blue-500 px-4 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue"
+                      onClick={() => handleOpen(course)}
+                    >
+                      {course.buttonText}
+                    </button>
+                  </div>
+                </div>
+              ))}
         </div>
 
         {/* Dialog */}
@@ -282,7 +290,6 @@ function Courses1() {
             </DialogHeader>
             <DialogBody>
               <img
-
                 src={`/Image/${selectedCourse?.image}`}
                 alt={selectedCourse?.courseTitle}
                 className="w-32 h-32 text-white object-cover mb-4 rounded-lg"
@@ -311,7 +318,6 @@ function Courses1() {
                 className="text-white bg-blue-500 px-8 py-2 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue mr-1"
               >
                 <span>Explore</span>
-
               </button>
             </DialogFooter>
           </Dialog>
@@ -322,4 +328,3 @@ function Courses1() {
 }
 
 export default Courses1;
-

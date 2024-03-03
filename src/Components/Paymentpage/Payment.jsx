@@ -16,7 +16,7 @@ function Payment() {
                 <div className="flex justify-center gap-3 p-3 bg-[#D4D4D4] items-center">
                     <NavLink to="/" style={{ display: "contents" }}>
 
-                        <img src="Image/Logo1.svg" className="w-8 h-8"
+                        <img src="Image/Logo1.svg" className="w-8 h-8"/>
                         <h4 className="text-3xl font-bold" style={{ color: "#1539CF" }}>
                             EdLernity
                         </h4>
@@ -200,10 +200,6 @@ function Payment() {
                             <p>Total Amount: INR 699</p>
 
                             <hr className="border-gray-800 py-1"></hr>
-
-                           
-                          
-
 
                         </div>
                     </div>
