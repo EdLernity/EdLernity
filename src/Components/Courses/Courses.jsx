@@ -11,7 +11,7 @@ function Courses() {
   const { course } = location.state;
   const [folderName, setFolderName] = useState("");
   const [courses, setCourses] = useState([]);
-  let [count, setCount] = useState(1);
+  let [count] = useState(1);
   const [courseTitle, setCourseTitle] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);

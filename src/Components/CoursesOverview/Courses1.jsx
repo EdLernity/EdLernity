@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BaseLayout from "../../Layout/BaseLayout";
 import {
-  Button,
   Dialog,
   DialogHeader,
   DialogBody,
@@ -10,7 +9,7 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import axios from "axios";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 function Courses1() {
@@ -52,17 +51,16 @@ function Courses1() {
     popularCoursesData: [],
     coursesData: [],
   });
-  let pathName;
   const navigate = useNavigate();
 
   const handleClick = (course) => {
     localStorage.setItem("current_course", course.folderName);
     localStorage.setItem("courseName", course.courseTitle);
     localStorage.setItem("userName", "Nikhil Raj");
-    // navigate(`${window.location.pathname}/${course._id}`, { state: { course } });
-    navigate(`/courses/${course._id}`, {
-      state: { course },
-    });
+    navigate(`${window.location.pathname}/${course._id}`, { state: { course } });
+    // navigate(`/courses/${course._id}`, {
+    //   state: { course },
+    // });
   };
 
   useEffect(() => {
@@ -191,15 +189,15 @@ function Courses1() {
                 onClick={() => handleClick(popularCourse)}
               >
                 <div className="mb-2 md:mb-0 md:mr-4">
-                  <h1 className="text-xl text-nowrap text-white">
+                  <h1 className="text-xl text-nowrap text-white animate-pulse">
                     {popularCourse.courseTitle}
                   </h1>
                 </div>
                 <div>
                   <img
                     src={`/Image/${popularCourse.image}`}
-                    alt=""
-                    className="w-24 md:ml-2"
+                    alt="polular course"
+                    className="w-24 md:ml-2 animate-pulse"
                   />
                 </div>
               </div>

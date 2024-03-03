@@ -17,15 +17,10 @@ import cn from "../../Utils/cn";
 function Navbar({ isDarkMode, toggleDarkMode }) {
   const [scrolled, setScrolled] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
-  // const [isDarkMode, setIsDarkMode] = useState(false);
 
   const toggleDrawer = () => {
     setOpenDrawer(!openDrawer);
   };
-
-  // const toggleDarkMode = () => {
-  //   setIsDarkMode(!isDarkMode);
-  // };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,11 +38,6 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
     };
   }, []);
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
   return (
     <>
       {/* <nav className="flex justify-between    items-center border shadow-lg px-4 py-2 bg-white text-black"> */}
