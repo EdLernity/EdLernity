@@ -1,18 +1,18 @@
-import React from 'react'
-import Navbar from '../Headers/Navbar'
-import BaseLayout from '../../Layout/BaseLayout'
+import React from "react";
+import Navbar from "../Headers/Navbar";
+import BaseLayout from "../../Layout/BaseLayout";
 import { Helmet } from "react-helmet";
 function Blog() {
   return (
-   <BaseLayout>
- <Helmet>
+    <BaseLayout>
+      <Helmet>
         <meta charSet="utf-8" />
         <title>EdLernity | Blog </title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
-    <h1>Blog Page</h1>
-   </BaseLayout>
-  )
+      <h1 className="mt-24 text-3xl text-center mb-48">Coming Soon</h1>
+    </BaseLayout>
+  );
 }
 
-export default Blog
+export default Blog;

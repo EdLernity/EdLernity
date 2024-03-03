@@ -76,7 +76,6 @@ function Contact() {
           {/* Contact Form */}
           <div className="w-1/2 px-12">
             <form>
-              {/* ... (Your form fields) ... */}
               <div className="mb-5">
                 <InputButton
                   fullWidth
@@ -133,7 +132,7 @@ function Contact() {
           </div>
         </div>
 
-        <div className="px-52">
+        <div className="px-52 mb-32">
           <iframe
             title="Google Maps"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15544.484040192685!2d77.53183771738283!3d13.091516500000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae23759f6e8a79%3A0xbeb8ddec4f82f2f0!2sSai%20Orchard%20Layout!5e0!3m2!1sen!2sin!4v1707893715831!5m2!1sen!2sin"
