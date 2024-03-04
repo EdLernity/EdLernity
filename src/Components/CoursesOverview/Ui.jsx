@@ -179,7 +179,7 @@ function Ui() {
       <BaseLayout>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>EdLernity | UI / UX</title>
+          <title>EdLernity | {course?.courseTitle}</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
 

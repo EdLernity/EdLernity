@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { animateScroll as scroll } from "react-scroll";
+import { useInView } from "react-intersection-observer";
 
 const heroSectionContent = [
   {
@@ -28,8 +30,22 @@ const heroSectionContent = [
 ];
 
 function Herosection2() {
+  const { ref, inView } = useInView({
+    triggerOnce: true, // Only trigger once
+    threshold: 0.5, // Trigger when 50% of the component is in view
+  });
+
+  useEffect(() => {
+    if (inView) {
+      // Scroll to the top of the page
+      scroll.scrollToTop({
+        duration: 800, // Animation duration in milliseconds
+      });
+    }
+  }, [inView]);
+
   return (
-    <div className="flex mt-16 p-14">
+    <div className="flex mt-16 p-14" ref={ref}>
       <div className="text-center flex-col min-h-[450px] justify-between relative w-[40%]">
         <div className="animate__animated animate__backInLeft flex-col justify-between max-w-full z-[10]">
           <h1 className="text-5xl text-left font-bold max-sm:text-xl pt-5">

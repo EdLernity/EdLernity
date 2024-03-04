@@ -11,10 +11,11 @@ import {
 import axios from "axios";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { Helmet } from "react-helmet";
 
 function Courses1() {
   const [isLoading, setIsLoading] = useState(true);
-  
+
   const cardStyle = {
     position: "relative",
     width: "300px",
@@ -53,7 +54,9 @@ function Courses1() {
     localStorage.setItem("current_course", course.folderName);
     localStorage.setItem("courseName", course.courseTitle);
     localStorage.setItem("userName", "Nikhil Raj");
-    navigate(`${window.location.pathname}/${course._id}`, { state: { course } });
+    navigate(`${window.location.pathname}/${course._id}`, {
+      state: { course },
+    });
     // navigate(`/courses/${course._id}`, {
     //   state: { course },
     // });
@@ -117,6 +120,11 @@ function Courses1() {
 
   return (
     <BaseLayout>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>EdLernity | Courses </title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <h1
         className="text-3xl mt-10 lg:ml-24 sm:ml-4 text-center lg:text-left font-bold"
         style={{ color: "#181FC5" }}

@@ -2,7 +2,10 @@ import React from "react";
 import BaseLayout from "../../Layout/BaseLayout";
 import { Helmet } from "react-helmet";
 import InputButton from "../Input/InputButton";
-import { IoLocationOutline } from "react-icons/io5";
+import { IoLocationOutline} from "react-icons/io5";
+import { IoMailOpenOutline } from "react-icons/io5";
+import { BsGlobe } from "react-icons/bs";
+import { RiHeadphoneLine } from "react-icons/ri";
 
 function Contact() {
   const data = {
@@ -10,21 +13,28 @@ function Contact() {
       icon: "",
       title: "Our Website",
       text: "www.edlernity.com",
+      bgColor : "rgba(82, 95, 225, 0.1)",
+      icon : <BsGlobe color="blue" className="absolute top-2 w-10 h-6" />,
     },
     1: {
-      icon: "",
       title: "Call Us On",
       text: "+91 8073306479",
+      bgColor : "rgba(251, 124, 86, 0.1)",
+      icon : <RiHeadphoneLine color="blue" className="absolute top-2 w-10 h-6" />
     },
     2: {
       icon: "",
       title: "Email Us",
       text: "info@edlernity.com",
+      bgColor : "rgba(255, 164, 27, 0.1)",
+      icon : <IoMailOpenOutline color="blue" className="absolute top-2 w-10 h-6" />
     },
     3: {
       icon: "",
       title: "Our Location",
       text: "20, Sai Archids, Chikkabettahalli Vidyaranyapura Bangalore,India, 560097.",
+      bgColor : "rgba(82, 95, 225, 0.1)",
+      icon : <IoLocationOutline color="blue" className="absolute top-2 w-10 h-6" />
     },
   };
 
@@ -33,7 +43,7 @@ function Contact() {
       <BaseLayout>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>EdLernity | Contact Us</title>
+          <title>EdLernity | Contact</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
 
@@ -48,15 +58,15 @@ function Contact() {
             </h1>
           </div>
           {/* Contact Information */}
-          <div className="w-1/2 flex flex-wrap justify-center gap-8 mt-20">
+          <div className="w-1/2 flex flex-wrap justify-center gap-8 mt-20 animate__animated animate__backInLeft">
             {Object.keys(data).map((index) => (
               <div
                 key={index}
-                className="border-2 w-52 h-fit rounded-lg border-solid shadow-xl"
+                className="border-2 w-52 h-fit rounded-lg shadow-xl hover:transition hover:duration-1000 hover:ease-in-out hover:bg-[#859BFF] hover:-translate-y-6 "
               >
                 <div className="flex py-11 h-full items-center px-3 justify-between flex-col">
-                  <div className="w-11 rounded-full bg-blue-400 h-11 border-2 border-red-500 relative">
-                    <IoLocationOutline color="blue" className="absolute top-2 w-10 h-6"/>
+                  <div style={{ backgroundColor: data[index].bgColor }} className={`w-11 rounded-full h-11 border-2 relative`}>
+                  {data[index].icon}
                   </div>
                   <div className="text-center mt-2">
                     <h1 className="text-black text-xl font-bold mt-2">
@@ -71,7 +81,7 @@ function Contact() {
             ))}
           </div>
           {/* Contact Form */}
-          <div className="w-1/2 px-12">
+          <div className="w-1/2 px-12 animate__animated animate__backInRight">
             <form>
               <div className="mb-5">
                 <InputButton
@@ -129,7 +139,7 @@ function Contact() {
           </div>
         </div>
 
-        <div className="px-52 mb-32">
+        <div className="px-64 mb-32 animate__animated animate__backInRight">
           <iframe
             title="Google Maps"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15544.484040192685!2d77.53183771738283!3d13.091516500000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae23759f6e8a79%3A0xbeb8ddec4f82f2f0!2sSai%20Orchard%20Layout!5e0!3m2!1sen!2sin!4v1707893715831!5m2!1sen!2sin"
