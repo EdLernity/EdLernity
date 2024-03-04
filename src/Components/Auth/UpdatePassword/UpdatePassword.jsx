@@ -30,17 +30,17 @@ function UpdatePassword() {
           );
 
           if (response.status === 200) {
-            setResponseData(response.data);
+            setResponseData(response?.data);
             setIsValidLink(true);
           } else {
-            setResponseData(response.data.message);
+            setResponseData(response?.data?.message);
             setIsValidLink(false)
             setError(true);
           }
         } catch (error) {
           console.log(error);
           setIsValidLink(false)
-          setResponseData(error.response.data);
+          setResponseData(error?.response?.data);
           setError(true);
         }
       }
