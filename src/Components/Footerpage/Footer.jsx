@@ -50,7 +50,7 @@ function Footer() {
 
   return (
     <>
-      <footer className="relative w-full bg-black py-12 text-white ">
+      <footer className="relative w-full bg-black pt-12 pb-6 text-white ">
         <div className="mx-auto w-full px-8 ">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-sm:px-8">
             <Typography variant="h5" className="mb-6">
@@ -87,7 +87,7 @@ function Footer() {
                         // className=" space-y-5 font-semibold text-white transition-colors hover:text-blue-gray-900"
                         // activeClassName="text-blue-gray-900"
                         color="gray"
-                        className="py-1.5 font-normal text-white transition-colors hover:text-blue-gray-900"
+                        className="py-1.5 font-normal text-white transition-colors hover:text-blue-gray-600"
                       >
                         {label}
                       </NavLink>
@@ -117,7 +117,7 @@ function Footer() {
                   <img alt="linkedin" src="/Image/image 16.png" className="w-5 h-5" />
                 </NavLink>
               </Typography>
-              <Typography as="a" href="#" className=" hover:opacity-100">
+              <Typography as="a" href="#" className="hover:opacity-100">
                 <NavLink to="https://www.instagram.com/edlernity/?utm_source=ig_web_button_share_sheet&igshid=OGQ5ZDc2ODk2ZA%3D%3D">
                   <img alt="instagram" src="/Image/image 17.png" className="w-5 h-5" />
                 </NavLink>

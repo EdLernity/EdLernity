@@ -108,6 +108,22 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
           >
             Courses
           </NavLink>
+          
+          <NavLink
+            to="/contact-us"
+            className={({ isActive }) =>
+              cn(
+                isActive
+                  ? "text-[#181FC5] active-link"
+                  : isDarkMode
+                  ? "text-white"
+                  : "text-black",
+                "hover:text-[#181FC5] font-md text-lg"
+              )
+            }
+          >
+            Contact us
+          </NavLink>
 
           <NavLink
             to="/blog"
@@ -123,21 +139,6 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             }
           >
             Blog
-          </NavLink>
-          <NavLink
-            to="/contact-us"
-            className={({ isActive }) =>
-              cn(
-                isActive
-                  ? "text-[#181FC5] active-link"
-                  : isDarkMode
-                  ? "text-white"
-                  : "text-black",
-                "hover:text-[#181FC5] font-md text-lg"
-              )
-            }
-          >
-            Contact us
           </NavLink>
         </div>
 
@@ -205,13 +206,12 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             Courses
           </NavLink>
           <hr className="border border-gray-200"></hr>
-
-          <NavLink to="/blog" className="">
-            Blog
-          </NavLink>
-          <hr className="border border-gray-200"></hr>
           <NavLink to="/contact-us" className="">
             Contact Us
+          </NavLink>
+          <hr className="border border-gray-200"></hr>
+          <NavLink to="/blog" className="">
+            Blog
           </NavLink>
         </Typography>
         <div className="flex justify-between gap-2">
