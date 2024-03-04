@@ -12,34 +12,34 @@ function Success() {
     {
       id: 1,
       image: "Rectangle_Girl_Reviewer.png",
-      userProfileImage: "ali-akbar.jpeg",
-      story:
-        "EdLernity offers different courses that's helpfull for People who are looking to improve their skills.They have Technical courses and many more.The courses are well structured with clear objectives and engaging contents.Making complex topics easier to understand.Edlernity provides a valuable resource for life long learners. The course has helped provide a starting point for understanding, which certainly will prove useful in my current work/projects.",
-      userName: "Ali Akbar P",
-    },
-    {
-      id: 2,
-      image: "Rectangle_Girl_Reviewer.png",
-      userProfileImage: "abdul-wahab.jpeg",
-      story:
-        "Edlernity is one of the most amazing platform to get a chance for learning and improving all technical skills required for all IT students it's worthy to have an opportunity to learn and acquire skills of languages that provided by their inspired and professional teachers ..happy learning with EdLernity.",
-      userName: "Abdul Wahab",
-    },
-    {
-      id: 3,
-      image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "sejal-kesharwani.jpeg",
       story:
         "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
       userName: "Surabhi Kesarwani",
     },
     {
-      id: 4,
+      id: 2,
+      image: "Rectangle_Girl_Reviewer.png",
+      userProfileImage: "nikhil-reji.jpeg",
+      story:
+        "I recently came across membership of EdLernity, and I must say, it was a great experience. The platform's intuitive interface and engaging content made learning not only easy but also enjoyable. The courses structure was well-organized, guiding me through each topic seamlessly. I would recommend to take up the membership and explore the courses.",
+      userName: "Nikhil Reji",
+    },
+    {
+      id: 3,
       image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "sraadha-gupta.jpeg",
       story:
         "Great course, so many important topics covered in depth. There were many assessments which made us confident with our skills. I would like to enroll in more courses offered by EdLernity.",
       userName: "Shraddha Gupta",
+    },
+    {
+      id: 4,
+      image: "Rectangle_Girl_Reviewer.png",
+      userProfileImage: "ali-akbar.jpeg",
+      story:
+        "EdLernity offers different courses that's helpfull for People who are looking to improve their skills.They have Technical courses and many more.The courses are well structured with clear objectives and engaging contents.Making complex topics easier to understand.Edlernity provides a valuable resource for life long learners. The course has helped provide a starting point for understanding, which certainly will prove useful in my current work/projects.",
+      userName: "Ali Akbar P",
     },
     {
       id: 5,
@@ -52,26 +52,26 @@ function Success() {
     {
       id: 6,
       image: "Rectangle_Girl_Reviewer.png",
+      userProfileImage: "abdul-wahab.jpeg",
+      story:
+        "Edlernity is one of the most amazing platform to get a chance for learning and improving all technical skills required for all IT students it's worthy to have an opportunity to learn and acquire skills of languages that provided by their inspired and professional teachers ..happy learning with EdLernity.",
+      userName: "Abdul Wahab",
+    },
+    {
+      id: 7,
+      image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "r-muskan-zehra.jpeg",
       story:
         "I highly recommend this course provided by EdLernity to anyone looking to take their Python skills to the next level. Whether you're a beginner or an experienced programmer, you'll find valuable insights and practical knowledge that will enhance your proficiency in Python programming. Best of luck on your learning journey.",
       userName: "R Muskan Zehra",
     },
     {
-      id: 7,
+      id: 8,
       image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "md-burhanuddin.jpeg",
       story:
         "Packed with valuable insights and applicable skills. Worth every penny! Impressed with EdLernity courses! Easy-to-follow format, great community support, and actionable takeaways.Courses are top-notch Comprehensive curriculum, interactive exercises, and expert guidance. A must-try!.",
       userName: "Md Burhanuddin",
-    },
-    {
-      id: 8,
-      image: "Rectangle_Girl_Reviewer.png",
-      userProfileImage: "nikhil-reji.jpeg",
-      story:
-        "I recently came across membership of EdLernity, and I must say, it was a great experience. The platform's intuitive interface and engaging content made learning not only easy but also enjoyable. The courses structure was well-organized, guiding me through each topic seamlessly. I would recommend to take up the membership and explore the courses.",
-      userName: "Nikhil Reji",
     },
   ];
 
@@ -113,7 +113,7 @@ function Success() {
           <div className="relative w-auto animate__animated animate__backInLeft">
             <img
               src={`/Image/${successStories[currentSlide].image}`}
-              className="rounded-[57px]"
+              className="rounded-[57px] drop-shadow-[18px_12px_4px_gray]"
               alt="reviewer_img"
             />
             <div className="bg-[#181FC5] rounded-full w-[90px] h-[90px] absolute -right-6 -top-6 z-10"></div>
@@ -131,7 +131,7 @@ function Success() {
             <div className="flex py-12 items-center">
               <img
                 src={`/Image/user-review-picture/${successStories[currentSlide].userProfileImage}`}
-                className="w-24 h-24 rounded-full object-cover"
+                className="w-24 h-24 rounded-full object-cover drop-shadow-[10px_6px_6px_gray]"
                 alt="user_image"
               />
               <p className="pl-4 text-2xl font-bold text-[#302E2E]">{`- ${successStories[currentSlide].userName}`}</p>
@@ -158,7 +158,7 @@ function Success() {
               <Avatar
                 key={index}
                 variant="circular"
-                className="border-2 border-white hover:z-10 focus:z-10"
+                className="border-2 border-white hover:z-10 focus:z-10 drop-shadow-[-6px_8px_4px_gray]"
                 src={`/Image/user-review-picture/${imgPath}`}
                 alt={`Image ${index}`}
               />

@@ -32,7 +32,7 @@ function Home() {
         <div>
           <Offer />
         </div>
-        <div>
+        <div className="bg-[#F1F0F0]">
           <CoursesOffered />
         </div>
       </BaseLayout>
