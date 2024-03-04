@@ -122,7 +122,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
               )
             }
           >
-            Contact us
+            Contact
           </NavLink>
 
           <NavLink
@@ -207,7 +207,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
           </NavLink>
           <hr className="border border-gray-200"></hr>
           <NavLink to="/contact-us" className="">
-            Contact Us
+            Contact
           </NavLink>
           <hr className="border border-gray-200"></hr>
           <NavLink to="/blog" className="">
