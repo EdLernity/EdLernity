@@ -10,10 +10,10 @@ function Offer() {
 
             <div className="flex flex-wrap p-12 px-16 justify-between drop-shadow-[6px_3px_4px_gray]">
                 {/* Card 1 */}
-                <div className="max-w-sm rounded overflow-hidden border shadow-xl m-4 flex-1 ">
+                <div className="max-w-sm flex flex-col justify-between rounded overflow-hidden border shadow-xl m-4 flex-1 ">
                     <div className="px-6 py-4">
                         <div className="font-bold text-xl mb-2">Self paced Courses</div>
-                        <p className="text-gray-700 text-base">
+                        <p className="text-gray-700 text-base inline bg-[#f8f2cb]">
                             Learn & Up skill via online Courses.
                         </p>
                     </div>
@@ -26,12 +26,12 @@ function Offer() {
                 </div>
 
                 {/* Card 2 */}
-                <div className="max-w-sm rounded overflow-hidden border shadow-lg m-4 flex-1">
+                <div className="max-w-sm flex flex-col justify-between rounded overflow-hidden border shadow-lg m-4 flex-1">
                     {/* ... (similar structure for Card 2) */}
                     <div className="px-6 py-4">
                         <div className="font-bold text-xl mb-2">Interactive practice
                             platforms</div>
-                        <p className="text-gray-700 text-base">
+                        <p className="text-gray-700 text-base inline bg-[#d4f8e7]">
                             Learn Through Hands on
                             Coding Experience
                         </p>
@@ -45,10 +45,10 @@ function Offer() {
                 </div>
 
                 {/* Card 3 */}
-                <div className="max-w-sm rounded overflow-hidden border shadow-lg m-4 flex-1">
+                <div className="max-w-sm rounded flex flex-col justify-between overflow-hidden border shadow-lg m-4 flex-1">
                     <div className="px-6 py-4">
                         <div className="font-bold text-xl mb-2">Live Classes</div>
-                        <p className="text-gray-700 text-base">
+                        <p className="text-gray-700 text-base inline bg-[#e3defd]">
                             Interact with Professional
                             tutors with Live classes
 
