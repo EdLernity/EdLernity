@@ -5,14 +5,14 @@ function Offer() {
     return (
         <>
             <div className='px-8'>
-                <h1 className='md:mt-12 ml-8 text-2xl' style={{ color: "#1649FF" }}>What EdLernity offers you?</h1>
+                <h1 className='md:mt-12 ml-8 font-bold text-4xl' style={{ color: "#1649FF" }}>What EdLernity offers you?</h1>
             </div>
 
             <div className="flex flex-wrap p-8">
                 {/* Card 1 */}
                 <div className="max-w-sm rounded overflow-hidden border shadow-lg m-4">
                     <div className="px-6 py-4">
-                        <div className="font-bold text-xl mb-2">Self Placed Courses</div>
+                        <div className="font-bold text-xl mb-2">Self paced Courses</div>
                         <p className="text-gray-700 text-base">
                             Learn & Up skill via online Courses.
                         </p>
@@ -52,22 +52,6 @@ function Offer() {
                             Interact with Professional
                             tutors with Live classes
 
-                        </p>
-                    </div>
-                    <div className="px-6 py-4 flex items-center  justify-between">
-                        <button className="flex items-center gap-3 text-white font-bold py-2 px-4 rounded" style={{ color: "#1649FF" }}>
-                            Take a look
-                            <span className=""><FaArrowRight /></span>
-                        </button>
-                    </div>
-                </div>
-
-                {/* Card 4 */}
-                <div className="max-w-sm rounded overflow-hidden border shadow-lg m-4">
-                    <div className="px-6 py-4">
-                        <div className="font-bold text-xl mb-2">Self Placed Courses</div>
-                        <p className="text-gray-700 text-base">
-                            Learn & Up skill via online Courses.
                         </p>
                     </div>
                     <div className="px-6 py-4 flex items-center  justify-between">

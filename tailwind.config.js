@@ -17,7 +17,12 @@ module.exports = withMT({
     "path-to-your-node_modules/@material-tailwind/react/theme/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      dropShadow: {
+        'right': 'filter: drop-shadow(30px 10px 4px #4444dd);',
+        'left': 'filter: drop-shadow(30px -10px 4px #4444dd);',
+      }
+    },
   },
   plugins: [],
 });

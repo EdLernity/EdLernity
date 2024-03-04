@@ -17,7 +17,7 @@ function Coursecontent({ courseTitle, videos, setUrl, isLoading }) {
           return (
             <>
               {isLoading ? (
-                <div key={index} className="flex items-end mt-4">
+                <div className="flex items-end mt-4">
                   <Skeleton
                     width={20}
                     height={20}

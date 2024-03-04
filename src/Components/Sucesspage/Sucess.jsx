@@ -2,226 +2,182 @@ import React, { useState, useEffect } from "react";
 import { Avatar } from "@material-tailwind/react";
 import { StarIcon } from "@heroicons/react/solid";
 import { Button } from "@material-tailwind/react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
+import { RiDoubleQuotesL } from "react-icons/ri";
 
 function Success() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [visibleCards, setVisibleCards] = useState(1);
+  const [imagePaths, setImagePaths] = useState([]);
+
   const successStories = [
     {
       id: 1,
-      image: "/Image/Intern1.png",
-      story: "Story 1",
-      internshipDetails: "Internship details 1",
+      image: "Rectangle_Girl_Reviewer.png",
+      userProfileImage: "ali-akbar.jpeg",
+      story:
+        "EdLernity offers different courses that's helpfull for People who are looking to improve their skills.They have Technical courses and many more.The courses are well structured with clear objectives and engaging contents.Making complex topics easier to understand.Edlernity provides a valuable resource for life long learners. The course has helped provide a starting point for understanding, which certainly will prove useful in my current work/projects.",
+      userName: "Ali Akbar P",
     },
     {
       id: 2,
-      image: "image_url_2",
-      story: "Story 2",
-      internshipDetails: "Internship details 2",
+      image: "Rectangle_Girl_Reviewer.png",
+      userProfileImage: "abdul-wahab.jpeg",
+      story:
+        "Edlernity is one of the most amazing platform to get a chance for learning and improving all technical skills required for all IT students it's worthy to have an opportunity to learn and acquire skills of languages that provided by their inspired and professional teachers ..happy learning with EdLernity.",
+      userName: "Abdul Wahab",
     },
     {
       id: 3,
-      image: "image_url_3",
-      story: "Story 3",
-      internshipDetails: "Internship details 3",
+      image: "Rectangle_Girl_Reviewer.png",
+      userProfileImage: "sejal-kesharwani.jpeg",
+      story:
+        "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
+      userName: "Surabhi Kesarwani",
     },
     {
       id: 4,
-      image: "image_url_4",
-      story: "Story 4",
-      internshipDetails: "Internship details 4",
+      image: "Rectangle_Girl_Reviewer.png",
+      userProfileImage: "sraadha-gupta.jpeg",
+      story:
+        "Great course, so many important topics covered in depth. There were many assessments which made us confident with our skills. I would like to enroll in more courses offered by EdLernity.",
+      userName: "Shraddha Gupta",
     },
     {
       id: 5,
-      image: "image_url_5",
-      story: "Story 5",
-      internshipDetails: "Internship details 5",
+      image: "Rectangle_Girl_Reviewer.png",
+      userProfileImage: "manjari-rastogi.jpeg",
+      story:
+        "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
+      userName: "Manjari Rastogi",
     },
     {
       id: 6,
-      image: "image_url_6",
-      story: "Story 6",
-      internshipDetails: "Internship details 6",
+      image: "Rectangle_Girl_Reviewer.png",
+      userProfileImage: "r-muskan-zehra.jpeg",
+      story:
+        "I highly recommend this course provided by EdLernity to anyone looking to take their Python skills to the next level. Whether you're a beginner or an experienced programmer, you'll find valuable insights and practical knowledge that will enhance your proficiency in Python programming. Best of luck on your learning journey.",
+      userName: "R Muskan Zehra",
     },
     {
       id: 7,
-      image: "image_url_7",
-      story: "Story 7",
-      internshipDetails: "Internship details 7",
+      image: "Rectangle_Girl_Reviewer.png",
+      userProfileImage: "md-burhanuddin.jpeg",
+      story:
+        "Packed with valuable insights and applicable skills. Worth every penny! Impressed with EdLernity courses! Easy-to-follow format, great community support, and actionable takeaways.Courses are top-notch Comprehensive curriculum, interactive exercises, and expert guidance. A must-try!.",
+      userName: "Md Burhanuddin",
     },
     {
       id: 8,
-      image: "image_url_8",
-      story: "Story 8",
-      internshipDetails: "Internship details 8",
-    },
-    {
-      id: 9,
-      image: "image_url_9",
-      story: "Story 9",
-      internshipDetails: "Internship details 9",
-    },
-    {
-      id: 10,
-      image: "image_url_10",
-      story: "Story 10",
-      internshipDetails: "Internship details 10",
+      image: "Rectangle_Girl_Reviewer.png",
+      userProfileImage: "nikhil-reji.jpeg",
+      story:
+        "I recently came across membership of EdLernity, and I must say, it was a great experience. The platform's intuitive interface and engaging content made learning not only easy but also enjoyable. The courses structure was well-organized, guiding me through each topic seamlessly. I would recommend to take up the membership and explore the courses.",
+      userName: "Nikhil Reji",
     },
   ];
 
-  const nextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % successStories.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide(
-      (prevSlide) =>
-        (prevSlide - 1 + successStories.length) % successStories.length
-    );
-  };
-
-  const handleResize = () => {
-    const screenWidth = window.innerWidth;
-    // Adjust the threshold and number of visible cards based on your design
-    if (screenWidth >= 768) {
-      setVisibleCards(3);
-    } else {
-      setVisibleCards(1);
-    }
-  };
-
   useEffect(() => {
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
+    const fetchImages = async () => {
+      try {
+        const images = require.context(
+          "../../../public/Image/user-review-picture",
+          false,
+          /\.(png|jpe?g|svg)$/
+        );
+        const paths = images.keys().map(images);
+          const formattedPaths = paths.map((path) => {
+            const splitPath = path.split(".");
+            const splitPath2 = splitPath[0].split("/");
+            const formattedPath = `${splitPath2[3]}.${splitPath[2]}`; // Combine folder name and file name
+            return formattedPath; // Assigning the second occurrence
+        });
+        setImagePaths(formattedPaths);
+      } catch (error) {
+        console.error("Error fetching images:", error);
+      }
     };
+
+    fetchImages();
   }, []);
 
   return (
-    <div>
+    <>
       <h1
-        className="text-2xl text-center font-semibold"
+        className="text-5xl text-center font-extrabold mb-10"
         style={{ color: "#1649FF" }}
       >
         Stay in the loop with the latest updates in the tech industry
       </h1>
-      <div className="flex justify-center rounded-lg mt-8">
-        <Button className="">Success Stories</Button>
-      </div>
-      <div className="flex  justify-center mt-8 -space-x-4 flex-col md:flex-row xl:flex:row items-center">
-        <div>
-          <Avatar
-            variant="circular"
-            alt="user 1"
-            className="border-2 border-white hover:z-10 focus:z-10"
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-          />
-          <Avatar
-            variant="circular"
-            alt="user 2"
-            className="border-2 border-white hover:z-10 focus:z-10"
-            src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1061&q=80"
-          />
-          <Avatar
-            variant="circular"
-            alt="user 3"
-            className="border-2 border-white hover:z-10 focus:z-10"
-            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1288&q=80"
-          />
-          <Avatar
-            variant="circular"
-            alt="user 4"
-            className="border-2 border-white hover:z-10 focus:z-10"
-            src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80"
-          />
-          <Avatar
-            variant="circular"
-            alt="user 5"
-            className="border-2 border-white hover:z-10 focus:z-10"
-            src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1760&q=80"
-          />
+      <div className="flex flex-col bg-[#F1F0F0] bg-cover bg-center text-white p-6 min-h-[600px]">
+        {/* Carousel */}
+        <div className="flex justify-between items-center p-16">
+          <div className="relative w-auto animate__animated animate__backInLeft">
+            <img
+              src={`/Image/${successStories[currentSlide].image}`}
+              className="rounded-[57px]"
+              alt="reviewer_img"
+            />
+            <div className="bg-[#181FC5] rounded-full w-[90px] h-[90px] absolute -right-6 -top-6 z-10"></div>
+            <p className="text-white absolute text-5xl right-0 -top-1 z-10">
+              <RiDoubleQuotesL />
+            </p>
+          </div>
+          <div className="flex flex-col p-12 w-[50%] justify-between animate__animated animate__backInRight">
+            <h1 className="text-5xl font-extrabold text-black w-[70%] py-6">
+              What students say about us
+            </h1>
+            <p className="text-[#6C6868] py-6 min-h-[200px]">
+              {successStories[currentSlide].story}
+            </p>
+            <div className="flex py-12 items-center">
+              <img
+                src={`/Image/user-review-picture/${successStories[currentSlide].userProfileImage}`}
+                className="w-24 h-24 rounded-full object-cover"
+                alt="user_image"
+              />
+              <p className="pl-4 text-2xl font-bold text-[#302E2E]">{`- ${successStories[currentSlide].userName}`}</p>
+            </div>
+            <div className="flex justify-center mt-4 space-x-2">
+              {successStories.map((_, index) => (
+                <div
+                  key={index}
+                  className={`dot w-4 h-4 rounded-full ${
+                    index === currentSlide ? "bg-blue-500" : "bg-gray-300"
+                  }`}
+                  onClick={() => setCurrentSlide(index)}
+                />
+              ))}
+            </div>
+          </div>
         </div>
-        <div
-          className="ml-2 flex items-center flex-col md:flex-row xl:flex-row my-4"
-          style={{ marginLeft: "20px" }}
-        >
-          <p className="text-black">10,000+ Students</p>
-          <div className="flex my-4 xl:md-4 md:ml-4">
-            {[...Array(5)].map((_, index) => (
-              <StarIcon key={index} className="w-5 h-5 text-yellow-500 " />
+        <div className="flex justify-center rounded-lg mt-8 animate__animated animate__backInUp">
+          <Button className="">Success Stories</Button>
+        </div>
+        <div className="flex  justify-center mt-8 -space-x-4 flex-col md:flex-row xl:flex:row items-center animate__animated animate__backInUp">
+          <div className="-space-x-4">
+            {imagePaths.map((imgPath, index) => (
+              <Avatar
+                key={index}
+                variant="circular"
+                className="border-2 border-white hover:z-10 focus:z-10"
+                src={`/Image/user-review-picture/${imgPath}`}
+                alt={`Image ${index}`}
+              />
             ))}
+          </div>
+          <div
+            className="ml-2 flex items-center flex-col md:flex-col xl:flex-col my-2"
+            style={{ marginLeft: "20px" }}
+          >
+            <p className="text-black">10,000+ Students</p>
+            <div className="flex mt-1">
+              {[...Array(5)].map((_, index) => (
+                <StarIcon key={index} className="w-5 h-5 text-yellow-500 " />
+              ))}
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Success Stories Carousel */}
-      <div className="flex justify-center mt-8 -space-x-4 items-center relative overflow-x-auto">
-        <button
-          className="absolute left-[56px] top-1/2 transform -translate-y-1/2"
-          onClick={prevSlide}
-        >
-          <ChevronLeftIcon className="w-12 h-12 text-gray-600" />
-        </button>
-
-        {/* Carousel Content */}
-        {successStories.map(
-          (story, index) =>
-            index >= currentSlide &&
-            index < currentSlide + visibleCards && (
-              <div
-                key={story.id}
-                className={`slide w-full mx-auto`}
-                style={{
-                  width: "15rem",
-                  marginLeft: "2rem",
-                  marginRight: "4rem",
-                }}
-              >
-                <div className="card p-4 border gap-4">
-                  <Avatar
-                    variant="circular"
-                    alt={`user ${story.id}`}
-                    className="border-2 border-white hover:z-10 focus:z-10 mb-4"
-                    src={story.image}
-                  />
-                  <div className="flex items-center flex-row mb-2">
-                    <p className="text-black">{story.story}</p>
-                    {[...Array(5)].map((_, starIndex) => (
-                      <StarIcon
-                        key={starIndex}
-                        className="w-5 h-5 text-yellow-500 ml-2"
-                      />
-                    ))}
-                  </div>
-                  <p className="text-gray-600">{story.internshipDetails}</p>
-                </div>
-              </div>
-            )
-        )}
-
-        <button
-          className="absolute right-[56px] top-1/2 transform -translate-y-1/2"
-          onClick={nextSlide}
-        >
-          <ChevronRightIcon className="w-12 h-12 text-gray-600" />
-        </button>
-      </div>
-
-      {/* Circle Indicators */}
-      <div className="flex justify-center mt-4 space-x-2">
-        {successStories.map((_, index) => (
-          <div
-            key={index}
-            className={`dot w-4 h-4 rounded-full ${
-              index === currentSlide ? "bg-blue-500" : "bg-gray-300"
-            }`}
-            onClick={() => setCurrentSlide(index)}
-          />
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
 

@@ -58,8 +58,8 @@ function Certificate() {
 
       <div className="flex mt-12 flex-col md:flex-row xl:flex-row">
         <img
-          className="md:w-1/2 xl:w-1/2"
-          src="/../public/Image/Certificate of Completion (E.png"
+          className="md:w-1/2 xl:w-1/2 ml-4 rounded-2xl"
+          src="/Image/Certificate of Completion (E.png"
           alt="cerificate"
         />
         <canvas ref={canvasRef} width={800} height={600} style={{ display: 'none' }} />
