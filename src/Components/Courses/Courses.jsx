@@ -45,7 +45,7 @@ function Courses() {
             `http://localhost:3001/api/courses/${folderName}/${encodeURIComponent(course.videoNames[0])}`
           )
           .then((res) => {
-            setVideoUrl(res.data.videoUrl);
+            setVideoUrl(res?.data?.videoUrl);
             setIsLoading(false);
           });
         } catch (err) {
@@ -75,7 +75,7 @@ function Courses() {
         `http://localhost:3001/api/courses/${folderName}/${encodeURIComponent(fileNameForVideo)}`
       )
       .then((res) => {
-        setVideoUrl(res.data.videoUrl);
+        setVideoUrl(res?.data?.videoUrl);
         setIsLoading(false);
       });
     } catch (error) {
