@@ -10,6 +10,7 @@ const gcsRoutes  = require('./routes/gcsRoutes');
 const courseRoutes =  require('./routes/courseRoutes');
 const paymentRoutes =  require('./routes/phonePayRoutes');
 const userCourse =  require('./routes/userCourseRoutes');
+const ContactRoutes =  require('./routes/ContactRoutes');
 const path = require('path');
 
 const app = express();
@@ -37,6 +38,7 @@ app.use('/api', gcsRoutes);
 app.use('/api', courseRoutes);
 app.use('/api', paymentRoutes);
 app.use('/api', userCourse);
+app.use('/api', ContactRoutes);
 
 const PORT = process.env.PORT || 3002;
 

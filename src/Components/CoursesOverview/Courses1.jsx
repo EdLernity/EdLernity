@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BaseLayout from "../../Layout/BaseLayout";
 import {
-  Button,
   Dialog,
   DialogHeader,
   DialogBody,
@@ -10,8 +9,9 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import axios from "axios";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { Helmet } from "react-helmet";
 
 function Courses1() {
   const [isLoading, setIsLoading] = useState(true);
@@ -47,17 +47,18 @@ function Courses1() {
     popularCoursesData: [],
     coursesData: [],
   });
-  let pathName;
   const navigate = useNavigate();
 
   const handleClick = (course) => {
     localStorage.setItem("current_course", course.folderName);
     localStorage.setItem("courseName", course.courseTitle);
     localStorage.setItem("userName", "Nikhil Raj");
-    // navigate(`${window.location.pathname}/${course._id}`, { state: { course } });
-    navigate(`/courses/${course._id}`, {
+    navigate(`${window.location.pathname}/${course._id}`, {
       state: { course },
     });
+    // navigate(`/courses/${course._id}`, {
+    //   state: { course },
+    // });
   };
 
   useEffect(() => {
@@ -118,6 +119,11 @@ function Courses1() {
 
   return (
     <BaseLayout>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>EdLernity | Courses </title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <h1
         className="text-3xl mt-10 lg:ml-24 sm:ml-4 text-center lg:text-left font-bold"
         style={{ color: "#181FC5" }}
@@ -186,15 +192,15 @@ function Courses1() {
                 onClick={() => handleClick(popularCourse)}
               >
                 <div className="mb-2 md:mb-0 md:mr-4">
-                  <h1 className="text-xl text-nowrap text-white">
+                  <h1 className="text-xl text-nowrap text-white animate-pulse">
                     {popularCourse.courseTitle}
                   </h1>
                 </div>
                 <div>
                   <img
                     src={`/Image/${popularCourse.image}`}
-                    alt=""
-                    className="w-24 md:ml-2"
+                    alt="polular course"
+                    className="w-24 md:ml-2 animate-pulse"
                   />
                 </div>
               </div>

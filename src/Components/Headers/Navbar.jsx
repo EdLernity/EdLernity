@@ -17,15 +17,10 @@ import cn from "../../Utils/cn";
 function Navbar({ isDarkMode, toggleDarkMode }) {
   const [scrolled, setScrolled] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
-  // const [isDarkMode, setIsDarkMode] = useState(false);
 
   const toggleDrawer = () => {
     setOpenDrawer(!openDrawer);
   };
-
-  // const toggleDarkMode = () => {
-  //   setIsDarkMode(!isDarkMode);
-  // };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,11 +38,6 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
     };
   }, []);
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
   return (
     <>
       {/* <nav className="flex justify-between    items-center border shadow-lg px-4 py-2 bg-white text-black"> */}
@@ -118,6 +108,22 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
           >
             Courses
           </NavLink>
+          
+          <NavLink
+            to="/contact-us"
+            className={({ isActive }) =>
+              cn(
+                isActive
+                  ? "text-[#181FC5] active-link"
+                  : isDarkMode
+                  ? "text-white"
+                  : "text-black",
+                "hover:text-[#181FC5] font-md text-lg"
+              )
+            }
+          >
+            Contact
+          </NavLink>
 
           <NavLink
             to="/blog"
@@ -133,21 +139,6 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             }
           >
             Blog
-          </NavLink>
-          <NavLink
-            to="/contact-us"
-            className={({ isActive }) =>
-              cn(
-                isActive
-                  ? "text-[#181FC5] active-link"
-                  : isDarkMode
-                  ? "text-white"
-                  : "text-black",
-                "hover:text-[#181FC5] font-md text-lg"
-              )
-            }
-          >
-            Contact us
           </NavLink>
         </div>
 
@@ -215,13 +206,12 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             Courses
           </NavLink>
           <hr className="border border-gray-200"></hr>
-
-          <NavLink to="/blog" className="">
-            Blog
+          <NavLink to="/contact-us" className="">
+            Contact
           </NavLink>
           <hr className="border border-gray-200"></hr>
-          <NavLink to="/contact-us" className="">
-            Contact Us
+          <NavLink to="/blog" className="">
+            Blog
           </NavLink>
         </Typography>
         <div className="flex justify-between gap-2">

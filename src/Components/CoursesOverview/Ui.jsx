@@ -179,7 +179,7 @@ function Ui() {
       <BaseLayout>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>EdLernity | UI / UX</title>
+          <title>EdLernity | {course?.courseTitle}</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
 
@@ -247,7 +247,7 @@ function Ui() {
           </div>
         </div>
 
-        <div className="item-center flex justify-center mt-8 sm:mt-24">
+        <div className="item-center flex justify-center mt-8 sm:mt-24 animate-pulse">
           <div className="bg-[#2F35CB] rounded-2xl px-4 sm:px-12 py-2 sm:p-3">
             <NavLink to="/payment-method">
               <button className="text-white text-base sm:text-lg px-8 sm:px-24">
@@ -300,9 +300,9 @@ function Ui() {
               </p>
             </div>
             <img
-              src="/Image/Certificate.png"
+              src="/Image/Certificate of Completion (E.png"
               alt="Certificate"
-              className="w-24 sm:w-48 md:w-64 lg:w-96 h-auto ml-[-10px] relative z-10"
+              className="w-24 sm:w-48 md:w-64 lg:w-96 rounded-xl h-auto ml-[-10px] relative z-10"
             />
           </div>
         </div>
