@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import BaseLayout from "../../Layout/BaseLayout";
 import { Helmet } from "react-helmet";
 import InputButton from "../Input/InputButton";
@@ -17,6 +17,7 @@ function Contact() {
     message: ""
   });
   const [errors, setErrors] = useState({});
+  const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -30,28 +31,25 @@ function Contact() {
     });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateFormData(formData);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
-      // Form submission logic here
-      console.log("Form submitted:", formData);
-      axios.post("http://localhost:3001/api/contact", formData)
-      .then(response => {
-        console.log(response?.data);
-        // Handle data fetching here
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      try {
+        // Form submission logic here
+        await axios.post("http://localhost:3001/api/contact", formData);
+        console.log("Form submitted:", formData);
+        setSubmitted(true);
+      } catch (error) {
+        console.error('Error submitting form:', error);
         // Handle error
-      });
+      }
     }
   };
 
   const validateFormData = (data) => {
-    console.log(data)
     const errors = {};
     if (!data.name.trim()) {
       errors.name = "Name is required";
@@ -73,6 +71,18 @@ function Contact() {
       errors.subject = "Subject is required";
     }
     return errors;
+  };
+
+  const handleReset = () => {
+    setFormData({
+      name: "",
+      email: "",
+      subject: "",
+      phone: "",
+      message: ""
+    });
+    setErrors({});
+    setSubmitted(false);
   };
 
   const data = {
@@ -149,75 +159,87 @@ function Contact() {
           </div>
           {/* Contact Form */}
           <div className="w-1/2 px-12 animate__animated animate__backInRight">
-            <form onSubmit={handleSubmit}>
-              <div className="mb-5">
-                <InputButton
-                  fullWidth
-                  label="Name"
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full border rounded py-2 px-3" 
-                />
-                {errors.name && <span className="text-red-500">{errors.name}</span>}
-              </div>
-              <div className="mb-5">
-                <InputButton
-                  fullWidth
-                  label="Email"
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full border rounded py-2 px-3"
-                />
-                {errors.email && <span className="text-red-500">{errors.email}</span>}
-              </div>
-              <div className="mb-5">
-                <InputButton
-                  fullWidth
-                  label="Subject"
-                  type="text"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  className="w-full border rounded py-2 px-3 "
-                />
-                {errors.subject && <span className="text-red-500">{errors.subject}</span>}
-              </div>
-              <div className="mb-5">
-                <InputButton
-                  fullWidth
-                  label="Phone no."
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full border rounded py-2 px-3"
-                />
-                {errors.phone && <span className="text-red-500">{errors.phone}</span>}
-              </div>
-              <div className="mb-5">
-                <textarea
-                  id="message"
-                  placeholder="Message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="w-full border rounded py-2 px-3"
-                  rows="4"
-                ></textarea>
-                {errors.message && <span className="text-red-500">{errors.message}</span>}
-              </div>
+            {!submitted ? (
+              <form onSubmit={handleSubmit}>
+                <div className="mb-5">
+                  <InputButton
+                    fullWidth
+                    label="Name"
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full border rounded py-2 px-3"
+                  />
+                  {errors.name && <span className="text-red-500">{errors.name}</span>}
+                </div>
+                <div className="mb-5">
+                  <InputButton
+                    fullWidth
+                    label="Email"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full border rounded py-2 px-3"
+                  />
+                  {errors.email && <span className="text-red-500">{errors.email}</span>}
+                </div>
+                <div className="mb-5">
+                  <InputButton
+                    fullWidth
+                    label="Subject"
+                    type="text"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    className="w-full border rounded py-2 px-3"
+                  />
+                  {errors.subject && <span className="text-red-500">{errors.subject}</span>}
+                </div>
+                <div className="mb-5">
+                  <InputButton
+                    fullWidth
+                    label="Phone no."
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full border rounded py-2 px-3"
+                  />
+                  {errors.phone && <span className="text-red-500">{errors.phone}</span>}
+                </div>
+                <div className="mb-5">
+                  <textarea
+                    id="message"
+                    placeholder="Message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    className="w-full border rounded py-2 px-3"
+                    rows="4"
+                  ></textarea>
+                  {errors.message && <span className="text-red-500">{errors.message}</span>}
+                </div>
 
-              <button
-                type="submit"
-                className="bg-purple-800 text-white w-full max-sm:w-1/2  px-4 py-2 rounded hover:bg-black hover:text-white"
-              >
-                SUBMIT
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  className="bg-purple-800 text-white w-full max-sm:w-1/2  px-4 py-2 rounded hover:bg-black hover:text-white"
+                >
+                  SUBMIT
+                </button>
+              </form>
+            ) : (
+              <div className="text-center">
+                <p>Thank you for your query, we will repspond you back soon. 😊</p>
+                <button
+                  className="bg-purple-800 text-white w-full max-sm:w-1/2  px-4 py-2 rounded hover:bg-black hover:text-white mt-4"
+                  onClick={handleReset}
+                >
+                  Submit Another Response
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
