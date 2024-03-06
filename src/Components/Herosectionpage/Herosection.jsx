@@ -1,6 +1,14 @@
 import React from "react";
 import "animate.css";
+import { useNavigate } from "react-router-dom";
 function Herosection() {
+
+  const naviagte = useNavigate();
+
+  const handleClick = () => {
+    naviagte("/courses/overview");
+  }
+
   return (
     <div className="flex flex-col bg-[#F1F0F0] bg-cover bg-center text-white p-14 text-center min-h-[600px] justify-between relative">
 
@@ -18,7 +26,7 @@ function Herosection() {
         </p>
         <div className="item-center flex justify-center sm:mt-8 w-[90%]">
           <div className="bg-[#2F35CB] rounded-3xl py-2">
-            <button className="text-white text-base px-8">Get Started</button>
+            <button className="text-white text-base px-8" onClick={handleClick}>Get Started</button>
           </div>
         </div>
       </div>

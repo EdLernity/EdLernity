@@ -431,9 +431,9 @@ function About() {
 
       <div className="mt-10 px-4 md:px-8 lg:px-12">
         <div>
-          <h1 className="text-center font-bold text-4xl">About us</h1>
+          <h1 className="text-center font-bold text-4xl animate__animated animate__fadeInDownBig">About us</h1>
           <p
-            className="text-lg md:text-xl lg:text-2xl mt-5"
+            className="text-lg md:text-xl lg:text-2xl mt-5 animate__animated animate__backInLeft"
             style={{ color: "#605C5C" }}
           >
             Welcome to EdLernity Tech, where innovation converges with purpose
@@ -445,11 +445,11 @@ function About() {
         </div>
 
         <div className="mt-5">
-          <h2 className="text-left font-semibold text-2xl">
+          <h2 className="text-left font-semibold text-2xl animate__animated animate__fadeInDownBig">
             Special Offering:
           </h2>
           <p
-            className="text-lg md:text-xl lg:text-2xl mt-5"
+            className="text-lg md:text-xl lg:text-2xl mt-5 animate__animated animate__backInRight"
             style={{ color: "#605C5C" }}
           >
             At EdLernity, we go beyond traditional education. In addition to our
@@ -459,7 +459,7 @@ function About() {
             you the hands-on experience needed to excel in your career.
           </p>
           <p
-            className="text-lg md:text-xl lg:text-2xl mt-5"
+            className="text-lg md:text-xl lg:text-2xl mt-5 animate__animated animate__backInRight"
             style={{ color: "#605C5C" }}
           >
             Our internships offer a unique opportunity to work with industry
@@ -471,7 +471,7 @@ function About() {
           </p>
 
           <p
-            className="text-lg md:text-xl lg:text-2xl mt-5"
+            className="text-lg md:text-xl lg:text-2xl mt-5 animate__animated animate__backInRight"
             style={{ color: "#605C5C" }}
           >
             Join us on this transformative educational journey, because at
@@ -481,14 +481,14 @@ function About() {
         </div>
         <hr className="border-gray-500 mt-10"></hr>
         <div className="flex flex-wrap justify-center mt-10">
-          <div className="w-full md:w-1/2 pr-4 mb-4 md:mb-0">
+          <div className="w-full md:w-1/2 pr-4 mb-4 md:mb-0 animate__animated animate__backInLeft">
             <img
               src="/Image/About1.svg"
               alt="About Image"
               className="w-full md:w-auto h-auto md:max-w-md md:max-h-96"
             />
           </div>
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2  animate__animated animate__backInRight">
             <h1
               className="text-2xl md:text-xl font-bold mb-4"
               style={{ color: "#181FC5" }}
@@ -549,7 +549,7 @@ function About() {
           </div>
         </div>
 
-        <div className="mt-10 bg-[#D9D9D9] rounded-xl p-4">
+        <div className="mt-10 bg-[#D9D9D9] rounded-xl p-4 animate__animated animate__fadeInUpBig">
           <div className="text-center">
             <h4
               className="text-2xl font-bold"
@@ -605,7 +605,7 @@ function About() {
         </div>
 
         <div className=" flex flex-col md:flex-row" style={{marginBlock:"150px"}}>
-          <div className="md:w-1/2 pr-4">
+          <div className="md:w-1/2 pr-4 animate__animated animate__backInRight">
             <h2 className="font-bold text-2xl" style={{ color: "#181FC5" }}>
               OUR MISSION
             </h2>
@@ -618,7 +618,7 @@ function About() {
             </p>
           </div>
 
-          <div className="md:w-1/2 mt-6 md:mt-0">
+          <div className="md:w-1/2 mt-6 md:mt-0 animate__animated animate__backInLeft">
             <h2 className="font-bold text-2xl" style={{ color: "#181FC5" }}>
               OUR VISION
             </h2>
@@ -631,7 +631,7 @@ function About() {
           </div>
         </div>
 
-        <div className="mt-10 border-black rounded-xl bg-[#181FC5] relative" style={{marginBlock:"-120px"}}>
+        <div className="mt-10 border-black rounded-xl bg-[#181FC5] relative animate__animated animate__fadeIn" style={{marginBlock:"-120px"}}>
           <div className="py-24 text-center flex flex-col justify-center items-center">
             <img
               src="/Image/User.png"
