@@ -145,7 +145,7 @@ function Courses1() {
           : data.coursesData.map((course, index) => (
               <div
                 key={index}
-                className="relative w-300 m-10 text-center shadow-lg rounded-2xl overflow-hidden"
+                className="relative w-300 m-10 text-center shadow-lg rounded-2xl overflow-hidden animate__animated animate__pulse"
                 style={cardStyle}
               >
                 <img

@@ -22,25 +22,25 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
     setOpenDrawer(!openDrawer);
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.scrollY > 0) {
+  //       setScrolled(true);
+  //     } else {
+  //       setScrolled(false);
+  //     }
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
+  //   window.addEventListener("scroll", handleScroll);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
   return (
     <>
-      {/* <nav className="flex justify-between    items-center border shadow-lg px-4 py-2 bg-white text-black"> */}
+      {/* <nav className="flex justify-between items-center border shadow-lg px-4 py-2 bg-white text-black"> */}
       <nav
         className={`flex justify-between items-center border shadow-lg px-4 py-2 ${
           isDarkMode ? "bg-black text-white" : "bg-white text-black"
@@ -69,7 +69,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                   : isDarkMode
                   ? "text-white"
                   : "text-black",
-                "hover:text-[#181FC5] font-md text-lg"
+                "hover:text-[#181FC5] font-md text-lg font-bold"
               )
             }
           >
@@ -85,7 +85,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                   : isDarkMode
                   ? "text-white"
                   : "text-black",
-                "hover:text-[#181FC5] font-md text-lg"
+                "hover:text-[#181FC5] font-md text-lg font-bold"
               )
             }
           >
@@ -102,7 +102,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                   : isDarkMode
                   ? "text-white"
                   : "text-black",
-                "hover:text-[#181FC5] font-md text-lg"
+                "hover:text-[#181FC5] font-md text-lg font-bold"
               )
             }
           >
@@ -110,7 +110,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
           </NavLink>
           
           <NavLink
-            to="/contact-us"
+            to="/contact"
             className={({ isActive }) =>
               cn(
                 isActive
@@ -118,7 +118,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                   : isDarkMode
                   ? "text-white"
                   : "text-black",
-                "hover:text-[#181FC5] font-md text-lg"
+                "hover:text-[#181FC5] font-md text-lg font-bold"
               )
             }
           >
@@ -134,7 +134,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                   : isDarkMode
                   ? "text-white"
                   : "text-black",
-                "hover:text-[#181FC5] font-md text-lg"
+                "hover:text-[#181FC5] font-md text-lg font-bold"
               )
             }
           >
@@ -194,23 +194,23 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             fontWeight: "400",
           }}
         >
-          <NavLink to="/" className="  ">
+          <NavLink to="/" className="font-bold">
             Home
           </NavLink>
           <hr className="border border-gray-200"></hr>
-          <NavLink to="/about" className=" ">
+          <NavLink to="/about" className="font-bold">
             About
           </NavLink>
           <hr className="border border-gray-200"></hr>
-          <NavLink to="/courses/overview" className="">
+          <NavLink to="/courses/overview" className="font-bold">
             Courses
           </NavLink>
           <hr className="border border-gray-200"></hr>
-          <NavLink to="/contact-us" className="">
+          <NavLink to="/contact" className="font-bold">
             Contact
           </NavLink>
           <hr className="border border-gray-200"></hr>
-          <NavLink to="/blog" className="">
+          <NavLink to="/blog" className="font-bold">
             Blog
           </NavLink>
         </Typography>
