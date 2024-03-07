@@ -604,6 +604,54 @@ function About() {
           </div>
         </div>
 
+
+
+        {/* <div className="flex items-center justify-center bg-white py-8 px-4">
+      <div className="relative flex space-x-4">
+        <div className="absolute top-0 left-0 h-[100px] w-[100px] bg-[#623CEA] rounded-full" />
+        <div className="absolute top-0 right-0 h-[150px] w-[150px] bg-[#FF6B81] rounded-full" />
+        <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg p-4">
+          <img
+            alt="Group of people"
+            className="h-full w-full object-cover rounded-lg"
+            height="160"
+            src="/Image/People.png"
+            style={{
+              aspectRatio: "280/160",
+              objectFit: "cover",
+            }}
+            width="280"
+          />
+        </div>
+
+        <div className="z-20 flex h-[200px] w-[320px] items-center justify-center rounded-lg p-4">
+          <img
+            alt="Smiling woman"
+            className="h-full w-full object-cover rounded-lg"
+            height="180"
+            src="/Image/People1.png"
+            style={{
+              aspectRatio: "300/180",
+              objectFit: "cover",
+            }}
+            width="280"
+          />
+        </div>
+        <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg  p-4">
+          <img
+            alt="Man with laptop"
+            className="h-full w-full object-cover rounded-lg"
+            height="160"
+            src="/Image/People2.png"
+            style={{
+              aspectRatio: "280/160",
+              objectFit: "cover",
+            }}
+            width="280"
+          />
+        </div>
+      </div>
+    </div> */}
         <div className=" flex flex-col md:flex-row" style={{marginBlock:"150px"}}>
           <div className="md:w-1/2 pr-4 animate__animated animate__backInRight">
             <h2 className="font-bold text-2xl" style={{ color: "#181FC5" }}>
@@ -731,3 +779,58 @@ function About() {
 }
 
 export default About;
+
+
+
+
+
+
+
+ 
+    // <div className="flex items-center justify-center bg-white py-8 px-4">
+    //   <div className="relative flex space-x-4">
+    //     <div className="absolute top-0 left-0 h-[100px] w-[100px] bg-[#623CEA] rounded-full" />
+    //     <div className="absolute top-0 right-0 h-[150px] w-[150px] bg-[#FF6B81] rounded-full" />
+    //     <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg bg-[#F9D5A7] p-4">
+    //       <img
+    //         alt="Group of people"
+    //         className="h-full w-full object-cover rounded-lg"
+    //         height="160"
+    //         src="/placeholder.svg"
+    //         style={{
+    //           aspectRatio: "280/160",
+    //           objectFit: "cover",
+    //         }}
+    //         width="280"
+    //       />
+    //     </div>
+    //     <div className="z-20 flex h-[200px] w-[320px] items-center justify-center rounded-lg bg-[#56C2E6] p-4">
+    //       <img
+    //         alt="Smiling woman"
+    //         className="h-full w-full object-cover rounded-lg"
+    //         height="180"
+    //         src="/placeholder.svg"
+    //         style={{
+    //           aspectRatio: "300/180",
+    //           objectFit: "cover",
+    //         }}
+    //         width="300"
+    //       />
+    //     </div>
+    //     <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg bg-[#F4E06D] p-4">
+    //       <img
+    //         alt="Man with laptop"
+    //         className="h-full w-full object-cover rounded-lg"
+    //         height="160"
+    //         src="/placeholder.svg"
+    //         style={{
+    //           aspectRatio: "280/160",
+    //           objectFit: "cover",
+    //         }}
+    //         width="280"
+    //       />
+    //     </div>
+    //   </div>
+    // </div>
+
+

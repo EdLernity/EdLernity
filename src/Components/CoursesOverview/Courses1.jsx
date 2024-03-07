@@ -15,7 +15,6 @@ import { Helmet } from "react-helmet";
 
 function Courses1() {
   const [isLoading, setIsLoading] = useState(true);
-
   const cardStyle = {
     position: "relative",
     width: "300px",

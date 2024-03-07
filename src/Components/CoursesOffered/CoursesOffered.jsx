@@ -7,7 +7,7 @@ function CoursesOffered() {
     const navigate = useNavigate()
 
     const handleClickMulti = () => {
-        navigate()
+        navigate("/member")
     }
 
     const handleClickSingle = () => {
