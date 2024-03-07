@@ -20,6 +20,9 @@ import CancellationandRefundPolicy from './Components/Legal/CancellationandRefun
 import Courses from './Components/Courses/Courses.jsx';
 import SucessPage from './Components/Auth/SuccessPage/SuccessPage.jsx';
 import Paytm from './Components/paytm/paytm.jsx'
+import Member from './Components/Memberpage/Member.jsx'
+
+
 function App() {
   return (
     <div className="App">
@@ -49,6 +52,7 @@ function App() {
             <Route path='/cancellation-and-refund-policy' element={<CancellationandRefundPolicy />} />
             <Route path='/success' element={<SucessPage />} />
             <Route path='/paytm' element={<Paytm />} />
+            <Route path='/member' element={<Member />} />
 
         
           </Routes>
