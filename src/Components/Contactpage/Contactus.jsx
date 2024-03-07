@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import BaseLayout from "../../Layout/BaseLayout";
 import { Helmet } from "react-helmet";
 import InputButton from "../Input/InputButton";
@@ -86,7 +86,6 @@ function Contact() {
 
   const data = {
     0: {
-      icon: "",
       title: "Our Website",
       text: "www.edlernity.com",
       bgColor: "rgba(82, 95, 225, 0.1)",
@@ -99,14 +98,12 @@ function Contact() {
       icon : <RiHeadphoneLine color="orange" className="absolute top-2 w-10 h-6" />
     },
     2: {
-      icon: "",
       title: "Email Us",
       text: "info@edlernity.com",
       bgColor : "rgba(255, 164, 27, 0.1)",
       icon : <IoMailOpenOutline color="green" className="absolute top-2 w-10 h-6" />
     },
     3: {
-      icon: "",
       title: "Our Location",
       text: "20, Sai Archids, Chikkabettahalli Vidyaranyapura Bangalore,India, 560097.",
       bgColor : "rgba(82, 95, 225, 0.1)",
