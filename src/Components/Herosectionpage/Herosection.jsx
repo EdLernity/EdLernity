@@ -30,8 +30,8 @@ function Herosection() {
           </div>
         </div>
       </div>
-      <div class="animate__animated animate__backInLeft flex items-center max-w-full m-0 z-10">
-        <div class="flex flex-row items-center text-black pr-8">
+      <div className="animate__animated animate__backInLeft flex items-center max-w-full m-0 z-10">
+        <div className="flex flex-row items-center text-black pr-8">
           <img
             src="/Image/blue_tick.png"
             alt="blue_tick"
@@ -39,7 +39,7 @@ function Herosection() {
           />
           <p>Experienced mentor</p>
         </div>
-        <div class="flex flex-row items-center text-black px-8">
+        <div className="flex flex-row items-center text-black px-8">
           <img
             src="/Image/blue_tick.png"
             alt="blue_tick"
@@ -47,7 +47,7 @@ function Herosection() {
           />
           <p>Quality videos</p>
         </div>
-        <div class="flex flex-row items-center text-black px-8">
+        <div className="flex flex-row items-center text-black px-8">
           <img
             src="/Image/blue_tick.png"
             alt="blue_tick"

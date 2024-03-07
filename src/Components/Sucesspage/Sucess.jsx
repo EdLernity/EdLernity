@@ -155,10 +155,10 @@ function Success() {
             </div>
           </div>
         </div>
-        <div className="flex justify-center rounded-lg mt-8 animate__animated animate__backInUp">
+        <div className="flex justify-center rounded-lg mb-2 mt-8 animate__animated animate__backInUp">
           <Button className="">Success Stories</Button>
         </div>
-        <div className="flex  justify-center mt-8 -space-x-4 flex-col md:flex-row xl:flex:row items-center animate__animated animate__backInUp">
+        <div className="flex  justify-center my-8 -space-x-4 flex-col md:flex-row xl:flex:row items-center animate__animated animate__backInUp">
           <div className="-space-x-4">
             {imagePaths.map((imgPath, index) => (
               <Avatar

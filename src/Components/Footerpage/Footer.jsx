@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import ChatBot from "./ChatBot";
 import Whatsapp from "./Whatsapp";
+
 const LINKS = [
   {
     title: "Company",
@@ -53,26 +54,26 @@ function Footer() {
       <footer className="relative w-full bg-black pt-12 pb-6 text-white ">
         <div className="mx-auto w-full px-8 ">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-sm:px-8">
-            <Typography variant="h5" className="mb-6">
+            <div className="mb-6">
               <div className="flex items-center gap-4">
                 <img alt="logo" src="/Image/Logo1.svg" className="w-12" />
-                EdLernity
+                <Typography variant="h5">EdLernity</Typography>
               </div>
-              <h1 className="text-sm mt-4">
+              <Typography variant="paragraph" className="mt-4 text-sm">
                 EdLernity offers you the opportunity to learn without limits -
                 all the Upskilling Courses, Placement Preparation, and Various
                 Certification Courses on a single platform. Our Platform
                 includes Video-based learning, Practice Exercises, and a
                 personalized learning module that empowers learners with the
-                ability to study at their own place without any limitations. We
+                ability to study at their own pace without any limitations. We
                 offer 20+ Upskilling Courses, 200+ Placement Preparation
                 materials, and 20+ Certification Courses.
-              </h1>
-            </Typography>
+              </Typography>
+            </div>
 
             <div className="grid grid-cols-1 max-sm:justify-center sm:grid-cols-2 md:grid-cols-3 text-white gap-4">
               {LINKS.map(({ title, items }) => (
-                <ul key={title} className="text-center">
+                <div key={title} className="text-center">
                   <Typography
                     variant="small"
                     color="blue-gray"
@@ -80,20 +81,19 @@ function Footer() {
                   >
                     {title}
                   </Typography>
-                  {items.map(({ label, url }) => (
-                    <li key={label}>
-                      <NavLink
-                        to={url}
-                        // className=" space-y-5 font-semibold text-white transition-colors hover:text-blue-gray-900"
-                        // activeClassName="text-blue-gray-900"
-                        color="gray"
-                        className="py-1.5 font-normal text-white transition-colors hover:text-blue-gray-600"
-                      >
-                        {label}
-                      </NavLink>
-                    </li>
-                  ))}
-                </ul>
+                  <ul>
+                    {items.map(({ label, url }) => (
+                      <li key={label}>
+                        <NavLink
+                          to={url}
+                          className="py-1.5 font-normal text-white transition-colors hover:text-blue-gray-600"
+                        >
+                          {label}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
             </div>
 
@@ -111,24 +111,39 @@ function Footer() {
               Rights Reserved.
             </Typography>
 
-            <div className="flex gap-4  sm:justify-center">
-              <Typography as="a" href="#" className=" hover:opacity-100">
-                <NavLink to="https://www.linkedin.com/company/edlernity/">
-                  <img alt="linkedin" src="/Image/image 16.png" className="w-5 h-5" />
-                </NavLink>
-              </Typography>
-              <Typography as="a" href="#" className="hover:opacity-100">
-                <NavLink to="https://www.instagram.com/edlernity/?utm_source=ig_web_button_share_sheet&igshid=OGQ5ZDc2ODk2ZA%3D%3D">
-                  <img alt="instagram" src="/Image/image 17.png" className="w-5 h-5" />
-                </NavLink>
-              </Typography>
-              <Typography as="a" href="#" className=" hover:opacity-100">
-                <NavLink to="#">
-                  <img alt="x" src="/Image/image 15.png" className="w-5 h-5" />
-                </NavLink>
-              </Typography>
-
-              {/* <ChatBot /> */}
+            <div className="flex gap-4 sm:justify-center">
+              <a
+                href="https://www.linkedin.com/company/edlernity/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-100"
+              >
+                <img
+                  alt="linkedin"
+                  src="/Image/image 16.png"
+                  className="w-5 h-5"
+                />
+              </a>
+              <a
+                href="https://www.instagram.com/edlernity/?utm_source=ig_web_button_share_sheet&igshid=OGQ5ZDc2ODk2ZA%3D%3D"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-100"
+              >
+                <img
+                  alt="instagram"
+                  src="/Image/image 17.png"
+                  className="w-5 h-5"
+                />
+              </a>
+              <a
+                href="https://twitter.com/EdLernity"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-100"
+              >
+                <img alt="x" src="/Image/image 15.png" className="w-5 h-5" />
+              </a>
             </div>
           </div>
         </div>

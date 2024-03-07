@@ -6,6 +6,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useNavigate } from "react-router-dom";
 
 function MyCourses() {
+
   const cardStyle = {
     position: "relative",
     width: "300px",
@@ -34,32 +35,31 @@ function MyCourses() {
   };
 
   const [isLoading, setIsLoading] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
 
   const [data, setData] = useState({
-    allCoursesData: [],
-    popularCoursesData: [],
-    coursesData: [],
+    userAllCoursesData: [],
   });
 
   const handleClick = (course) => {
     localStorage.setItem("current_course", course.folderName);
     localStorage.setItem("courseName", course.courseTitle);
     localStorage.setItem("userName", "Nikhil Raj");
-    navigate(`${window.location.pathname}/${course._id}`, {
+    navigate(`/mycourses/${course._id}`, {
       state: { course },
     });
-    // navigate(`/courses/${course._id}`, {
-    //   state: { course },
-    // });
   };
 
   useEffect(() => {
     const fetchAllCourses = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/get-all-course-details"
+          "http://localhost:3001/api/get-course-by-id"
         );
+
+        console.log(response)
+
         if (response.status === 200) {
           setIsLoading(false);
         }
@@ -70,23 +70,15 @@ function MyCourses() {
           buttonText: "Overview",
         }));
 
-        let updatedCoursesData = data.map((course) => ({
-          ...course,
-          buttonText: "Explore",
-        }));
-
-        // updatedCoursesData = updatedCoursesData.slice(0, 4);
-
-        const popularCourses = data.filter((d) => {
-          return d.isPopular === true;
-        });
-
         setData({
           ...data,
-          allCoursesData: updatedAllCoursesData,
-          coursesData: updatedCoursesData,
-          popularCoursesData: popularCourses,
+          userAllCoursesData: updatedAllCoursesData
         });
+
+        const count = await axios.get(
+          "http://localhost:3001/api/get-all-course-count"
+        );
+        setTotalCount(count.data.data);
       } catch (error) {
         console.error("Error fetching all course details:", error);
       }
@@ -94,6 +86,8 @@ function MyCourses() {
 
     fetchAllCourses();
   }, []);
+
+  let name =  localStorage.getItem("userName")
 
   return (
     <BaseLayout>
@@ -103,7 +97,7 @@ function MyCourses() {
             <div className="h-[600px] flex col-span-1 justify-center items-center">
               <div className="pl-5 fixed flex flex-col space-y-4 lg:order-2 lg:row-start-1">
                 <h2 className="text-5xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Hi, Nikhil Raj
+                  Hi, {name}
                 </h2>
                 <p className="w-[90%] text-gray-500 md:text-xl/relaxed dark:text-gray-400">
                   Explore and master your enrolled courses, Enhance your skills
@@ -111,12 +105,12 @@ function MyCourses() {
                 </p>
                 <div className="max-w-md flex flex-col justify-between rounded overflow-hidden border shadow-xl px-8 py-8">
                   <span className="font-bold text-3xl py-4">
-                    Total Courses : 20
+                    Total Courses : {totalCount}
                   </span>
                 </div>
                 <div className="max-w-md flex flex-col justify-between rounded overflow-hidden border shadow-xl px-8 py-8">
                   <span className="font-bold text-3xl py-4">
-                    Total Enrolled Courses : 20
+                    Total Enrolled Courses : {data.userAllCoursesData.length}
                   </span>
                 </div>
               </div>
@@ -136,7 +130,7 @@ function MyCourses() {
                         />
                       </div>
                     ))
-                  : data.coursesData.map((course, index) => (
+                  : data.userAllCoursesData.map((course, index) => (
                       <div
                         key={index}
                         className="relative w-300 m-10 text-center shadow-lg rounded-2xl overflow-hidden animate__animated animate__pulse"

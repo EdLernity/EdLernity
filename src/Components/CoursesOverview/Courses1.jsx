@@ -54,11 +54,8 @@ function Courses1() {
     localStorage.setItem("courseName", course.courseTitle);
     localStorage.setItem("userName", "Nikhil Raj");
     navigate(`${window.location.pathname}/${course._id}`, {
-      state: { course },
+      state: { course , data },
     });
-    // navigate(`/courses/${course._id}`, {
-    //   state: { course },
-    // });
   };
 
   useEffect(() => {
@@ -213,7 +210,7 @@ function Courses1() {
         >
           All Courses{" "}
         </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:mx-24 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:mx-24 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-4 mb-16">
           {isLoading
             ? Array.from({ length: 4 }).map((_, index) => (
                 <div key={index}>

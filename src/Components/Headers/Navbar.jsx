@@ -6,11 +6,7 @@ import {
   Typography,
   IconButton,
 } from "@material-tailwind/react";
-import {
-  AlignJustify,
-  Moon,
-  Sun,
-} from "lucide-react";
+import { AlignJustify, Moon, Sun } from "lucide-react";
 import Profile from "../Profilepage/Profile";
 import cn from "../../Utils/cn";
 
@@ -60,7 +56,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
 
         <div className="hidden lg:flex ml-12 space-x-6">
           <NavLink
-            exact
+            exact="true"
             to="/"
             className={({ isActive }) =>
               cn(
@@ -93,7 +89,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
           </NavLink>
 
           <NavLink
-            exact
+            exact="true"
             to="/courses/overview"
             className={({ isActive }) =>
               cn(
@@ -108,7 +104,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
           >
             Courses
           </NavLink>
-          
+
           <NavLink
             to="/contact"
             className={({ isActive }) =>
@@ -184,36 +180,72 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             </svg>
           </IconButton>
         </div>
-        <Typography
-          color="gray"
-          className="mb-8 pr-4 text-base  flex flex-col space-y-3"
-          style={{
-            fontFamily: "Tenor Sans,sans-serif",
-            textTransform: "uppercase",
-            color: "#000",
-            fontWeight: "400",
-          }}
-        >
-          <NavLink to="/" className="font-bold">
-            Home
-          </NavLink>
-          <hr className="border border-gray-200"></hr>
-          <NavLink to="/about" className="font-bold">
-            About
-          </NavLink>
-          <hr className="border border-gray-200"></hr>
-          <NavLink to="/courses/overview" className="font-bold">
-            Courses
-          </NavLink>
-          <hr className="border border-gray-200"></hr>
-          <NavLink to="/contact" className="font-bold">
-            Contact
-          </NavLink>
-          <hr className="border border-gray-200"></hr>
-          <NavLink to="/blog" className="font-bold">
-            Blog
-          </NavLink>
-        </Typography>
+        <div className="mb-8 pr-4 text-base  flex flex-col space-y-3">
+          <Typography
+            color="gray"
+            className="font-bold"
+            style={{
+              fontFamily: "Tenor Sans, sans-serif",
+              textTransform: "uppercase",
+              color: "#000",
+              fontWeight: "400",
+            }}
+          >
+            <NavLink to="/">Home</NavLink>
+          </Typography>
+          <hr className="border border-gray-200" />
+          <Typography
+            color="gray"
+            className="font-bold"
+            style={{
+              fontFamily: "Tenor Sans, sans-serif",
+              textTransform: "uppercase",
+              color: "#000",
+              fontWeight: "400",
+            }}
+          >
+            <NavLink to="/about">About</NavLink>
+          </Typography>
+          <hr className="border border-gray-200" />
+          <Typography
+            color="gray"
+            className="font-bold"
+            style={{
+              fontFamily: "Tenor Sans, sans-serif",
+              textTransform: "uppercase",
+              color: "#000",
+              fontWeight: "400",
+            }}
+          >
+            <NavLink to="/courses/overview">Courses</NavLink>
+          </Typography>
+          <hr className="border border-gray-200" />
+          <Typography
+            color="gray"
+            className="font-bold"
+            style={{
+              fontFamily: "Tenor Sans, sans-serif",
+              textTransform: "uppercase",
+              color: "#000",
+              fontWeight: "400",
+            }}
+          >
+            <NavLink to="/contact">Contact</NavLink>
+          </Typography>
+          <hr className="border border-gray-200" />
+          <Typography
+            color="gray"
+            className="font-bold"
+            style={{
+              fontFamily: "Tenor Sans, sans-serif",
+              textTransform: "uppercase",
+              color: "#000",
+              fontWeight: "400",
+            }}
+          >
+            <NavLink to="/blog">Blog</NavLink>
+          </Typography>
+        </div>
         <div className="flex justify-between gap-2">
           <NavLink to="/login">
             <Button

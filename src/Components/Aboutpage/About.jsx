@@ -365,30 +365,64 @@ import { Helmet } from "react-helmet";
 import CountUp from "react-countup";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { Rating } from "@material-tailwind/react";
+import './About.css';
 function About() {
   const reviewData = [
     {
-      name: "John Doe1",
-      image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
-      comment:"I directly applied the concepts and skills I learned from my courses to an exciting new project at work.",
+      id: 1,
+      image: "sejal-kesharwani.jpeg",
+      comment:
+        "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
+      name: "Surabhi Kesarwani",
     },
-
     {
-      name: "John Doe2",
-      image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
-      comment: "I directly applied the concepts and skills I learned from my courses to an exciting new project at work.",
+      id: 2,
+      image: "nikhil-reji.jpeg",
+      comment:
+        "I recently came across membership of EdLernity, and I must say, it was a great experience. The platform's intuitive interface and engaging content made learning not only easy but also enjoyable. The courses structure was well-organized, guiding me through each topic seamlessly. I would recommend to take up the membership and explore the courses.",
+      name: "Nikhil Reji",
     },
-
     {
-      name: "John Doe3",
-      image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
-      comment: "I directly applied the concepts and skills I learned from my courses to an exciting new project at work.",
+      id: 3,
+      image: "sraadha-gupta.jpeg",
+      comment:
+        "Great course, so many important topics covered in depth. There were many assessments which made us confident with our skills. I would like to enroll in more courses offered by EdLernity.",
+      name: "Shraddha Gupta",
     },
-
     {
-      name: "John Doe4",
-      image: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
-      comment: "I directly applied the concepts and skills I learned from my courses to an exciting new project at work.",
+      id: 4,
+      image: "ali-akbar.jpeg",
+      comment:
+        "EdLernity offers different courses that's helpfull for People who are looking to improve their skills.They have Technical courses and many more.The courses are well structured with clear objectives and engaging contents.Making complex topics easier to understand.Edlernity provides a valuable resource for life long learners. The course has helped provide a starting point for understanding, which certainly will prove useful in my current work/projects.",
+      name: "Ali Akbar P",
+    },
+    {
+      id: 5,
+      image: "manjari-rastogi.jpeg",
+      comment:
+        "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
+      name: "Manjari Rastogi",
+    },
+    {
+      id: 6,
+      image: "abdul-wahab.jpeg",
+      comment:
+        "Edlernity is one of the most amazing platform to get a chance for learning and improving all technical skills required for all IT students it's worthy to have an opportunity to learn and acquire skills of languages that provided by their inspired and professional teachers ..happy learning with EdLernity.",
+      name: "Abdul Wahab",
+    },
+    {
+      id: 7,
+      image: "r-muskan-zehra.jpeg",
+      comment:
+        "I highly recommend this course provided by EdLernity to anyone looking to take their Python skills to the next level. Whether you're a beginner or an experienced programmer, you'll find valuable insights and practical knowledge that will enhance your proficiency in Python programming. Best of luck on your learning journey.",
+      name: "R Muskan Zehra",
+    },
+    {
+      id: 8,
+      image: "md-burhanuddin.jpeg",
+      comment:
+        "Packed with valuable insights and applicable skills. Worth every penny! Impressed with EdLernity courses! Easy-to-follow format, great community support, and actionable takeaways.Courses are top-notch Comprehensive curriculum, interactive exercises, and expert guidance. A must-try!.",
+      name: "Md Burhanuddin",
     },
   ];
 
@@ -431,7 +465,9 @@ function About() {
 
       <div className="mt-10 px-4 md:px-8 lg:px-12">
         <div>
-          <h1 className="text-center font-bold text-4xl animate__animated animate__fadeInDownBig">About us</h1>
+          <h1 className="text-center font-bold text-4xl animate__animated animate__fadeInDownBig">
+            About us
+          </h1>
           <p
             className="text-lg md:text-xl lg:text-2xl mt-5 animate__animated animate__backInLeft"
             style={{ color: "#605C5C" }}
@@ -604,55 +640,56 @@ function About() {
           </div>
         </div>
 
+        <div className="flex items-center justify-center bg-white pt-16 px-4">
+          <div className="relative flex space-x-4 pt-12">
+            <div className="absolute top-1 -left-12 h-[250px] w-[250px] bg-[#623CEA] rounded-full" />
+            <div className="absolute top-[105px] -right-16 h-[300px] w-[300px] bg-[#FF6B81] rounded-full" />
+            <div className="z-10 flex h-[280px] w-[350px] items-center justify-center rounded-lg p-4">
+              <img
+                alt="Group of people"
+                className="h-full w-full object-cover rounded-lg"
+                height="160"
+                src="/Image/People.png"
+                style={{
+                  aspectRatio: "280/160",
+                  objectFit: "cover",
+                }}
+                width="280"
+              />
+            </div>
 
-
-        {/* <div className="flex items-center justify-center bg-white py-8 px-4">
-      <div className="relative flex space-x-4">
-        <div className="absolute top-0 left-0 h-[100px] w-[100px] bg-[#623CEA] rounded-full" />
-        <div className="absolute top-0 right-0 h-[150px] w-[150px] bg-[#FF6B81] rounded-full" />
-        <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg p-4">
-          <img
-            alt="Group of people"
-            className="h-full w-full object-cover rounded-lg"
-            height="160"
-            src="/Image/People.png"
-            style={{
-              aspectRatio: "280/160",
-              objectFit: "cover",
-            }}
-            width="280"
-          />
+            <div className="z-20 flex h-[300px] w-[420px] items-center justify-center rounded-lg p-4">
+              <img
+                alt="Smiling woman"
+                className="h-full w-full object-cover rounded-lg"
+                height="180"
+                src="/Image/People1.png"
+                style={{
+                  aspectRatio: "300/180",
+                  objectFit: "cover",
+                }}
+                width="280"
+              />
+            </div>
+            <div className="z-10 flex h-[280px] w-[400px] items-center justify-center rounded-lg  p-4">
+              <img
+                alt="Man with laptop"
+                className="h-full w-full object-cover rounded-lg"
+                height="160"
+                src="/Image/People2.png"
+                style={{
+                  aspectRatio: "280/160",
+                  objectFit: "cover",
+                }}
+                width="280"
+              />
+            </div>
+          </div>
         </div>
-
-        <div className="z-20 flex h-[200px] w-[320px] items-center justify-center rounded-lg p-4">
-          <img
-            alt="Smiling woman"
-            className="h-full w-full object-cover rounded-lg"
-            height="180"
-            src="/Image/People1.png"
-            style={{
-              aspectRatio: "300/180",
-              objectFit: "cover",
-            }}
-            width="280"
-          />
-        </div>
-        <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg  p-4">
-          <img
-            alt="Man with laptop"
-            className="h-full w-full object-cover rounded-lg"
-            height="160"
-            src="/Image/People2.png"
-            style={{
-              aspectRatio: "280/160",
-              objectFit: "cover",
-            }}
-            width="280"
-          />
-        </div>
-      </div>
-    </div> */}
-        <div className=" flex flex-col md:flex-row" style={{marginBlock:"150px"}}>
+        <div
+          className=" flex flex-col md:flex-row"
+          style={{ marginBlock: "150px" }}
+        >
           <div className="md:w-1/2 pr-4 animate__animated animate__backInRight">
             <h2 className="font-bold text-2xl" style={{ color: "#181FC5" }}>
               OUR MISSION
@@ -679,7 +716,10 @@ function About() {
           </div>
         </div>
 
-        <div className="mt-10 border-black rounded-xl bg-[#181FC5] relative animate__animated animate__fadeIn" style={{marginBlock:"-120px"}}>
+        <div
+          className="mt-10 border-black rounded-xl bg-[#181FC5] relative animate__animated animate__fadeIn"
+          style={{ marginBlock: "-120px" }}
+        >
           <div className="py-24 text-center flex flex-col justify-center items-center">
             <img
               src="/Image/User.png"
@@ -710,7 +750,7 @@ function About() {
         <div className="">
           <h2
             className="text-center text-3xl  font-bold "
-            style={{ color: "#181FC5" , paddingTop:"12rem" }}
+            style={{ color: "#181FC5", paddingTop: "12rem" }}
           >
             Review from Learners
           </h2>
@@ -731,27 +771,27 @@ function About() {
           <div className="flex justify-center mt-8 -space-x-4 items-center relative overflow-x-auto">
             <div className="max-w-screen-lg mx-auto mt-10 w-full">
               <div className="flex items-center justify-center flex-wrap">
-                {reviewData.map(
+                {reviewData?.map(
                   (item, index) =>
                     index >= currentSlide &&
                     index < currentSlide + visibleCards && (
                       <div
                         key={index}
-                        className="w-full  sm:w-1/2 md:w-1/3 lg:w-1/3 p-4"
+                        className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 p-4"
                       >
-                        <div className="rounded-2xl flex bg-[#D9D9D9]">
+                        <div className="review-container h-72 flex bg-[#D9D9D9]">
                           <div className="" style={{marginLeft:"4px" , marginTop:"12px"}}>
                             <img
-                              src={item.image}
-                              alt={item.name}
-                              className="w-48 p-2  rounded-full object-cover"
+                              src={`/Image/user-review-picture/${item?.image}`}
+                              alt={item?.name}
+                              className="w-[1080px] h-[85px] rounded-full p-2 object-cover"
                             />
                           </div>
                           <div className="p-4">
                             <h2 className="text-xl whitespace-nowrap font-bold mb-2">
-                              {item.name}
+                              {item?.name}
                             </h2>
-                            <p className="">{item.comment}</p>
+                            <p className="pb-3">{item?.comment}</p>
                           </div>
                         </div>
                       </div>
@@ -761,8 +801,8 @@ function About() {
             </div>
           </div>
 
-          <div className="flex  justify-center mt-4 space-x-2">
-            {reviewData.map((_, index) => (
+          <div className="flex justify-center mt-4 space-x-2">
+            {reviewData?.map((_, index) => (
               <div
                 key={index}
                 className={`dot w-4 h-4 mb-12 rounded-full ${
@@ -780,57 +820,48 @@ function About() {
 
 export default About;
 
-
-
-
-
-
-
- 
-    // <div className="flex items-center justify-center bg-white py-8 px-4">
-    //   <div className="relative flex space-x-4">
-    //     <div className="absolute top-0 left-0 h-[100px] w-[100px] bg-[#623CEA] rounded-full" />
-    //     <div className="absolute top-0 right-0 h-[150px] w-[150px] bg-[#FF6B81] rounded-full" />
-    //     <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg bg-[#F9D5A7] p-4">
-    //       <img
-    //         alt="Group of people"
-    //         className="h-full w-full object-cover rounded-lg"
-    //         height="160"
-    //         src="/placeholder.svg"
-    //         style={{
-    //           aspectRatio: "280/160",
-    //           objectFit: "cover",
-    //         }}
-    //         width="280"
-    //       />
-    //     </div>
-    //     <div className="z-20 flex h-[200px] w-[320px] items-center justify-center rounded-lg bg-[#56C2E6] p-4">
-    //       <img
-    //         alt="Smiling woman"
-    //         className="h-full w-full object-cover rounded-lg"
-    //         height="180"
-    //         src="/placeholder.svg"
-    //         style={{
-    //           aspectRatio: "300/180",
-    //           objectFit: "cover",
-    //         }}
-    //         width="300"
-    //       />
-    //     </div>
-    //     <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg bg-[#F4E06D] p-4">
-    //       <img
-    //         alt="Man with laptop"
-    //         className="h-full w-full object-cover rounded-lg"
-    //         height="160"
-    //         src="/placeholder.svg"
-    //         style={{
-    //           aspectRatio: "280/160",
-    //           objectFit: "cover",
-    //         }}
-    //         width="280"
-    //       />
-    //     </div>
-    //   </div>
-    // </div>
-
-
+// <div className="flex items-center justify-center bg-white py-8 px-4">
+//   <div className="relative flex space-x-4">
+//     <div className="absolute top-0 left-0 h-[100px] w-[100px] bg-[#623CEA] rounded-full" />
+//     <div className="absolute top-0 right-0 h-[150px] w-[150px] bg-[#FF6B81] rounded-full" />
+//     <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg bg-[#F9D5A7] p-4">
+//       <img
+//         alt="Group of people"
+//         className="h-full w-full object-cover rounded-lg"
+//         height="160"
+//         src="/placeholder.svg"
+//         style={{
+//           aspectRatio: "280/160",
+//           objectFit: "cover",
+//         }}
+//         width="280"
+//       />
+//     </div>
+//     <div className="z-20 flex h-[200px] w-[320px] items-center justify-center rounded-lg bg-[#56C2E6] p-4">
+//       <img
+//         alt="Smiling woman"
+//         className="h-full w-full object-cover rounded-lg"
+//         height="180"
+//         src="/placeholder.svg"
+//         style={{
+//           aspectRatio: "300/180",
+//           objectFit: "cover",
+//         }}
+//         width="300"
+//       />
+//     </div>
+//     <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg bg-[#F4E06D] p-4">
+//       <img
+//         alt="Man with laptop"
+//         className="h-full w-full object-cover rounded-lg"
+//         height="160"
+//         src="/placeholder.svg"
+//         style={{
+//           aspectRatio: "280/160",
+//           objectFit: "cover",
+//         }}
+//         width="280"
+//       />
+//     </div>
+//   </div>
+// </div>

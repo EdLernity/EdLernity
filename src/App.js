@@ -5,7 +5,7 @@ import Home from './Components/Homepage/Home';
 import About from './Components/Aboutpage/About';
 import Courses1 from './Components/CoursesOverview/Courses1.jsx';
 import Blog from './Components/Blogpage/Blog';
-import Ui from './Components/CoursesOverview/Ui.jsx';
+import Ui from './Components/CoursesOverview/Ui/Ui.jsx';
 import Auth from './Components/Auth/Auth';
 import BaseLayout from './Layout/BaseLayout';
 import PageNotFound from './Components/PageNotFound/PageNotFound';
@@ -38,7 +38,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/courses/overview/" element={<Courses1 />} />
             <Route path="/courses/overview/:dynamicValue" element={<Ui />} />
-            <Route path="/courses/:id" element={ <BaseLayout ><Courses /></BaseLayout>} />
+            <Route path="/mycourses/:id" element={ <BaseLayout ><Courses /></BaseLayout>} />
             <Route path="/blog" element={<Blog />} />
             <Route path='*' element={<PageNotFound />} />
             <Route path='/upload' element={<BaseLayout ><UploadFolder /></BaseLayout>} />

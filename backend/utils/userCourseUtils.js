@@ -22,4 +22,29 @@ const createUserCourse = async (userId, courseIds, isAllCourse) => {
     }
 };
 
-module.exports = { createUserCourse };
+const getUserCourseById = async (userId) => {
+    try {
+        if (!userId)  {
+            const err = new Error("Invalid input");
+            err.statusCode = 400;
+            throw err;
+        }
+        const userCourse = await UserCourseModel.findOne( { userId: userId} );
+        if(!userCourse){
+            const err = new Error(`No record found for the given user id ${userId}`);
+            err.statusCode = 404;
+            throw err;
+        }
+
+        const data = {
+            userCourseIds : userCourse.courseIds,
+            isAllCourse : userCourse.isAllCourse
+        }
+        return data;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+module.exports = { createUserCourse , getUserCourseById};
