@@ -20,6 +20,8 @@ import CancellationandRefundPolicy from './Components/Legal/CancellationandRefun
 import Courses from './Components/Courses/Courses.jsx';
 import SucessPage from './Components/Auth/SuccessPage/SuccessPage.jsx';
 import Paytm from './Components/paytm/paytm.jsx'
+import Member from './Components/Memberpage/Member.jsx'
+import MyCourses from './Components/MyCourses/MyCourses.jsx'
 function App() {
   return (
     <div className="App">
@@ -36,21 +38,20 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/courses/overview/" element={<Courses1 />} />
             <Route path="/courses/overview/:dynamicValue" element={<Ui />} />
-            {/* <Route path="/courses/overview/ui-ux-design" element={<Ui />} /> */}
             <Route path="/courses/:id" element={ <BaseLayout ><Courses /></BaseLayout>} />
             <Route path="/blog" element={<Blog />} />
             <Route path='*' element={<PageNotFound />} />
             <Route path='/upload' element={<BaseLayout ><UploadFolder /></BaseLayout>} />
             <Route path='/video' element={<VideoPlayer />} />
-            <Route path='/Payment-method' element={<Payment />} />
-            <Route path='/Contact-us' element={<Contactus />} />
+            <Route path='/payment-method' element={<Payment />} />
+            <Route path='/contact' element={<Contactus />} />
             <Route path='/privacy-policy' element={<PrivacyPolicy />} />
             <Route path='/terms-and-conditions' element={<TermAndCondition />} />
             <Route path='/cancellation-and-refund-policy' element={<CancellationandRefundPolicy />} />
             <Route path='/success' element={<SucessPage />} />
             <Route path='/paytm' element={<Paytm />} />
-
-        
+            <Route path='/member' element={<Member />} />
+            <Route path='/mycourses' element={<MyCourses />} />
           </Routes>
         </BrowserRouter>
       </>

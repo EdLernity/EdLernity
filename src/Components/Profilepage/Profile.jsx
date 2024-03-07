@@ -7,10 +7,17 @@ import {
   Avatar,
   Typography,
 } from "@material-tailwind/react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {LogIn, UserCircle2, LogOut} from "lucide-react";
 
 function Profile () {
+
+  const navigate = useNavigate();
+
+  const handleMyCourses = () =>{
+    navigate('/mycourses')
+  }
+
   return (
     <Menu>
       <MenuHandler>
@@ -22,34 +29,29 @@ function Profile () {
         />
       </MenuHandler>
       <MenuList className="space-y-5 bg-[#1649FF]">
-        <MenuItem className="flex items-center gap-2 ">
+        {/* <MenuItem className="flex items-center gap-2 ">
           <UserCircle2 className="" style={{color: "white"}} />
           <Typography variant="small" className="font-semibold">
             <Link to="/profile">
               <button className="text-white">My Profile</button>
             </Link>
           </Typography>
-        </MenuItem>
-        <hr className="border-blue-gray-50"></hr>
+        </MenuItem> */}
+        {/* <hr className="border-blue-gray-50"></hr> */}
         <MenuItem className="flex items-center gap-3">
           <LogIn className="w-5 h-5" style={{color: "white"}} />
           <Typography variant="small" className="font-semibold">
             <Link to="/auth/login">
-              <button className="text-white">Login</button>
+              <button className="text-white">Sign in</button>
             </Link>
           </Typography>
         </MenuItem>
         <hr className="my-2 border-blue-gray-50" />
-        {/* <MenuItem className="flex items-center gap-3 ">
-          <LogOut className=" w-5 h-5" style={{color: "white"}} />
-
+        <MenuItem className="flex items-center gap-3 ">
           <Typography variant="small" className="font-semibold">
-            <Link to="/sign-up">
-              {" "}
-              <button className="text-white"> Sign Out</button>{" "}
-            </Link>
+              <button className="text-white" onClick={handleMyCourses}>My Courses</button>
           </Typography>
-        </MenuItem> */}
+        </MenuItem>
       </MenuList>
     </Menu>
   );
