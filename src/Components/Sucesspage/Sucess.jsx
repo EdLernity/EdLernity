@@ -97,7 +97,13 @@ function Success() {
     };
 
     fetchImages();
-  }, []);
+
+    const interval = setInterval(() => {
+      setCurrentSlide(prevSlide => (prevSlide + 1) % successStories.length);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, []);  
 
   return (
     <>
