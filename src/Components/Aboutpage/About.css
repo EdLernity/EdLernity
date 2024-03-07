@@ -1,0 +1,24 @@
+.review-container {
+    border-radius: 5px; /* Adjust the border radius as needed */
+    overflow-y: auto; /* Enable vertical scrollbar */
+  }
+  
+  /* Styling the scrollbar */
+  .review-container::-webkit-scrollbar {
+    width: 7px; /* Adjust the width as needed */
+  }
+  
+  .review-container::-webkit-scrollbar-track {
+    background: transparent; /* Background color of the scrollbar track */
+  }
+  
+  .review-container::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Border radius of the scrollbar thumb */
+    border: 2px solid transparent; /* Ensure the thumb stays within the border */
+    margin-top: 20px;
+  }
+  
+  .review-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Color of the scrollbar thumb on hover */
+  }

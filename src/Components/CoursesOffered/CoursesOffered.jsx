@@ -44,7 +44,7 @@ function CoursesOffered() {
         {/* Right side with image and text overlay */}
         <div className="relative w-[40%] animate__animated animate__backInRight">
           <img
-            src="/Image/Intern2.png"
+            src="/Image/our_course.png"
             alt="Course"
             className="w-96 h-[310px] rounded-lg"
           />
@@ -53,7 +53,7 @@ function CoursesOffered() {
             <p className="text-white text-center mb-1">Featured Courses</p>
             <button
               type="button"
-              className="flex text-white rounded-md bg-[#1649FF] px-4 py-1 mt-2 items-center ml-1"
+              className="flex text-white rounded-md bg-[#7D96F0] px-4 py-1 mt-2 items-center ml-1"
               onClick={handleClickSingle}
             >
               <IoSearchOutline className="mr-0.5" />
@@ -68,7 +68,7 @@ function CoursesOffered() {
 
         <div className="relative w-[40%] animate__animated animate__backInLeft">
           <img
-            src="/Image/Graph12.png" // Replace with your actual image URL
+            src="/Image/stats-home.png" // Replace with your actual image URL
             alt="Course"
             className="w-[400px] h-[330px] rounded-lg max-w-[400px]"
           />
@@ -120,7 +120,7 @@ function CoursesOffered() {
         {/* Right side with image and text overlay */}
         <div className="relative w-[50%] pr-20 mb-12 animate__animated animate__backInRight">
           <img
-            src="/Image/membership-image.png"
+            src="/Image/membership.png"
             alt="Course"
             className="w-[450px] h-[430px] rounded-lg max-w-[450px]"
           />
@@ -134,7 +134,7 @@ function CoursesOffered() {
             </ul>
             <button
               type="button"
-              className="flex text-white rounded-md bg-[#25602A] px-4 py-1 mt-4 items-center ml-1"
+              className="flex text-white rounded-md bg-[#000] px-4 py-1 mt-4 items-center ml-1"
               onClick={handleClickMulti}
             >
               <IoSearchOutline className="mr-0.5" />

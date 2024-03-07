@@ -1,0 +1,23 @@
+.review-container {
+    border-radius: 5px;
+    overflow-y: auto;
+  }
+
+  .review-container::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .review-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .review-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    margin-top: 20px;
+  }
+  
+  .review-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }

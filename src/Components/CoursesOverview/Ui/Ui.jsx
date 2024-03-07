@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import CourseCard from "../Coursespage/CourseCard";
-import VideoModal from "../Coursespage/VideoModal";
-import BaseLayout from "../../Layout/BaseLayout";
-import CourseDetails from "../Coursespage/CourseDetails";
+import CourseCard from "../../Coursespage/CourseCard";
+import VideoModal from "../../Coursespage/VideoModal";
+import BaseLayout from "../../../Layout/BaseLayout";
+import CourseDetails from "../../Coursespage/CourseDetails";
 import { StarIcon } from "@heroicons/react/solid";
 import {
   Accordion,
@@ -14,10 +14,11 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { Rating } from "@material-tailwind/react";
 import { NavLink, useLocation } from "react-router-dom";
 import axios from "axios";
+import './Ui.css';
 
 function Ui() {
   const location = useLocation();
-  const { course } = location?.state;
+  const { course , data } = location?.state;
   const [isOpen, setIsOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState("");
   const [open, setOpen] = useState("");
@@ -88,59 +89,88 @@ function Ui() {
 
   const reviewData = [
     {
-      name: "John Doe1",
-      image: "https://via.placeholder.com/150",
-      comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      id: 1,
+      image: "sejal-kesharwani.jpeg",
+      comment:
+        "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
+      name: "Surabhi Kesarwani",
     },
-
     {
-      name: "John Doe2",
-      image: "https://via.placeholder.com/150",
-      comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      id: 2,
+      image: "nikhil-reji.jpeg",
+      comment:
+        "I recently came across membership of EdLernity, and I must say, it was a great experience. The platform's intuitive interface and engaging content made learning not only easy but also enjoyable. The courses structure was well-organized, guiding me through each topic seamlessly. I would recommend to take up the membership and explore the courses.",
+      name: "Nikhil Reji",
     },
-
     {
-      name: "John Doe3",
-      image: "https://via.placeholder.com/150",
-      comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      id: 3,
+      image: "sraadha-gupta.jpeg",
+      comment:
+        "Great course, so many important topics covered in depth. There were many assessments which made us confident with our skills. I would like to enroll in more courses offered by EdLernity.",
+      name: "Shraddha Gupta",
     },
-
     {
-      name: "John Doe4",
-      image: "https://via.placeholder.com/150",
-      comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      id: 4,
+      image: "ali-akbar.jpeg",
+      comment:
+        "EdLernity offers different courses that's helpfull for People who are looking to improve their skills.They have Technical courses and many more.The courses are well structured with clear objectives and engaging contents.Making complex topics easier to understand.Edlernity provides a valuable resource for life long learners. The course has helped provide a starting point for understanding, which certainly will prove useful in my current work/projects.",
+      name: "Ali Akbar P",
+    },
+    {
+      id: 5,
+      image: "manjari-rastogi.jpeg",
+      comment:
+        "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
+      name: "Manjari Rastogi",
+    },
+    {
+      id: 6,
+      image: "abdul-wahab.jpeg",
+      comment:
+        "Edlernity is one of the most amazing platform to get a chance for learning and improving all technical skills required for all IT students it's worthy to have an opportunity to learn and acquire skills of languages that provided by their inspired and professional teachers ..happy learning with EdLernity.",
+      name: "Abdul Wahab",
+    },
+    {
+      id: 7,
+      image: "r-muskan-zehra.jpeg",
+      comment:
+        "I highly recommend this course provided by EdLernity to anyone looking to take their Python skills to the next level. Whether you're a beginner or an experienced programmer, you'll find valuable insights and practical knowledge that will enhance your proficiency in Python programming. Best of luck on your learning journey.",
+      name: "R Muskan Zehra",
+    },
+    {
+      id: 8,
+      image: "md-burhanuddin.jpeg",
+      comment:
+        "Packed with valuable insights and applicable skills. Worth every penny! Impressed with EdLernity courses! Easy-to-follow format, great community support, and actionable takeaways.Courses are top-notch Comprehensive curriculum, interactive exercises, and expert guidance. A must-try!.",
+      name: "Md Burhanuddin",
     },
   ];
 
   const topPicksData = [
     {
-      courseTitle: "Course 1",
+      data : data.popularCoursesData[3],
       rating: 5,
       duration: "5.2 hours",
       language: "English",
-      price: "$19.99",
     },
     {
-      courseTitle: "Course 1",
-      rating: 5,
-      duration: "5.2 hours",
+      data : data.popularCoursesData[1],
+      rating: 4.5,
+      duration: "7.4 hours",
       language: "English",
-      price: "$19.99",
     },
     {
-      courseTitle: "Course 1",
-      rating: 5,
-      duration: "5.2 hours",
+      data : data.popularCoursesData[2],
+      rating: 4.3,
+      duration: "10 hours",
       language: "English",
-      price: "$19.99",
     },
     {
-      courseTitle: "Course 1",
-      rating: 5,
-      duration: "5.2 hours",
+      data : data.popularCoursesData[0],
+      rating: 4.2,
+      duration: "8 hours",
       language: "English",
-      price: "$19.99",
-    },
+    }
     // Add more data for additional cards
   ];
 
@@ -354,18 +384,18 @@ function Ui() {
 
             <div className="max-w-screen-lg mx-auto mt-10 w-full">
               <div className="flex items-center justify-center flex-wrap">
-                {reviewData.map(
+                {reviewData?.map(
                   (item, index) =>
                     index >= currentSlide &&
                     index < currentSlide + visibleCards && (
                       <div
                         key={index}
-                        className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4"
+                        className="w-full sm:w-1/2 md:w-1/3 lg:w-[28%] p-4"
                       >
-                        <div className="rounded-md bg-[#D9D9D9]">
-                          <div className="w-full h-48 sm:h-32 mx-auto bg-blue-500 rounded-t-md overflow-hidden">
+                        <div className="review-container rounded-md h-96 bg-[#D9D9D9]">
+                          <div className="w-full h-48 sm:h-32 mx-auto bg-blue-500 rounded-t-md">
                             <img
-                              src={item?.image}
+                              src={`/Image/user-review-picture/${item?.image}`}
                               alt={item?.name}
                               className="w-full h-full object-cover"
                             />
@@ -392,7 +422,7 @@ function Ui() {
           </div>
 
           <div className="flex justify-center mt-4 space-x-2">
-            {reviewData.map((_, index) => (
+            {reviewData?.map((_, index) => (
               <div
                 key={index}
                 className={`dot w-4 h-4 rounded-full ${
@@ -404,7 +434,7 @@ function Ui() {
           </div>
         </div>
 
-        <div className="mt-12">
+        <div className="mt-12 pb-16">
           <h4
             className="text-3xl mt-10 lg:ml-10 font-bold text-center"
             style={{ color: "#181FC5" }}
@@ -413,22 +443,22 @@ function Ui() {
           </h4>
           <div className="flex justify-center items-center mt-6 overflow-x-auto">
             <div className="flex space-x-4">
-              {topPicksData.map((item, index) => (
+              {topPicksData?.map((item, index) => (
                 <div key={index} className="bg-blue-700 rounded-2xl p-8">
                   <h5 className="text-white text-center py-10 text-lg font-semibold">
-                    {item.courseTitle}
+                    {item?.data?.courseTitle}
                   </h5>
                   <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center">
                       <StarIcon className="w-5 h-5 text-white mr-1" />
-                      <span className="text-white">4.5</span>
+                      <span className="text-white">{item?.rating}</span>
                     </div>
                     <p className="text-white ml-4">
-                      {item.duration} | {item.language}
+                      {item?.duration} | {item?.language}
                     </p>
                   </div>
                   <div className="flex  rounded-2xl justify-between items-center gap-4 mt-4">
-                    <p className="text-white">{item.price}</p>
+                    <p className="text-white">{item?.price}</p>
                     <NavLink to="/payment-method">
                       <button className="text-white">Know more {">"} </button>
                     </NavLink>
