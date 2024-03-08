@@ -115,7 +115,7 @@ function MyCourses() {
                 </div>
               </div>
             </div>
-            <div className="grid gap-6 col-span-2 md:gap-8 items-stretch lg:order-1 lg:gap-10">
+            <div className="grid gap-6  col-span-2 md:gap-8 items-stretch lg:order-1 lg:gap-10">
               <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                 Enrolled Courses
               </h2>
