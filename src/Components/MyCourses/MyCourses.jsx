@@ -94,7 +94,7 @@ function MyCourses() {
     <div className="overflow-hidden">
         <section className="w-full h-screen overflow-y-auto">
           <div className="px-4 grid md:px-4 py-8 grid-cols-3 lg:grid-cols-3 gap-8 xl:gap-8">
-            <div className="h-[600px] flex col-span-1 justify-center items-center">
+            <div className="h-[600px] flex col-span-1 justify-center items-center overflow-y-auto">
               <div className="pl-5 fixed flex flex-col space-y-4 lg:order-2 lg:row-start-1">
                 <h2 className="text-5xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                   Hi, {name}
@@ -105,12 +105,12 @@ function MyCourses() {
                 </p>
                 <div className="max-w-md flex flex-col justify-between rounded overflow-hidden border shadow-xl px-8 py-8">
                   <span className="font-bold text-3xl py-4">
-                    Total Courses : {totalCount}
+                    Total Courses : {totalCount ? totalCount : "0" }
                   </span>
                 </div>
                 <div className="max-w-md flex flex-col justify-between rounded overflow-hidden border shadow-xl px-8 py-8">
                   <span className="font-bold text-3xl py-4">
-                    Total Enrolled Courses : {data.userAllCoursesData.length}
+                    Total Enrolled Courses : {data?.userAllCoursesData?.length || 0}
                   </span>
                 </div>
               </div>
@@ -162,7 +162,7 @@ function MyCourses() {
           </div>
         </section>
       </div>
-    </BaseLayout>
+      </BaseLayout>
   );
 }
 
