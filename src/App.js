@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes  } from 'react-router-dom';
 import Profile from './Components/Profilepage/Profile';
 import Home from './Components/Homepage/Home';
 import About from './Components/Aboutpage/About';
-
 import Courses1 from './Components/CoursesOverview/Courses1.jsx';
 import Blog from './Components/Blogpage/Blog';
 import Ui from './Components/CoursesOverview/Ui/Ui.jsx';
@@ -26,6 +25,8 @@ import Member from './Components/Memberpage/Member.jsx'
 import MyCourses from './Components/MyCourses/MyCourses.jsx'
 import Loader from './Components/Loaderpage/Loader.jsx'
 import ScrollToBottomTop from './Utils/ScrollToBottomTop.jsx';
+
+
 function App() {
   const [loading, setLoading] = useState(true);
 
