@@ -4,12 +4,12 @@
 // function Member() {
 //   return (
 //     <BaseLayout>
-//       <div className="bg-[#3f3cbb] min-h-screen p-8 text-white">
+//       <div className="bg-[#3d71f5] min-h-screen p-8 text-white">
 //         <main>
 //         <section className="flex flex-col items-center justify-center mb-12">
 //   <div className="flex items-center space-x-3">
 //     <div className="bg-white rounded-full p-2">
-//       <img src="/Image/Logo1.svg" className="w-10 text-[#3f3cbb]" alt="Logo" />
+//       <img src="/Image/Logo1.svg" className="w-10 text-[#3d71f5]" alt="Logo" />
 //     </div>
 //     <h1 className="text-3xl font-bold">EdLernity</h1>
 //   </div>
@@ -146,28 +146,25 @@ function Member() {
 
   return (
     <BaseLayout>
-      <div className="bg-[#3f3cbb]  p-8 text-white">
+      <div className="bg-[#3d71f5]  p-8 text-white">
         <main>
           <section className="flex flex-col items-center justify-center mb-12">
             <div className="flex items-center space-x-3">
               <div className="bg-white rounded-full p-2">
                 <img
                   src="/Image/Logo1.svg"
-                  className="w-10 text-[#3f3cbb]"
+                  className="w-10 text-[#3d71f5]"
                   alt="Logo"
                 />
               </div>
               <h1 className="text-3xl font-bold">EdLernity</h1>
             </div>
             <h2 className="text-5xl text-center mt-5 font-extrabold mb-6">
-              Lifetime Learning Pass
+              EdLernity's Lifetime subscription"
             </h2>
             <div className="bg-[#131313] p-6 rounded-xl max-w-md">
               <p className="text-lg">
-                Team EdLernity is exhilarated to announce that, due to our
-                remarkable growth over the last few months, we are initiating a
-                new pass that will be a turning point for you and your career
-                development.
+              We're thrilled to announce our latest course package offer designed to supercharge your learning journey! Dive into a world of knowledge with our comprehensive package, crafted to empower you with the skills and insights you need to succeed. Stay tuned for more details on how you can seize this incredible opportunity!
               </p>
             </div>
             <Button className="mt-6 bg-[#181FC5] hover:bg-[#181FC5]">
@@ -224,7 +221,9 @@ function Member() {
             </div>
             <div className=" mt-8 space-y-10">
               <div className="flex items-center space-x-4">
-                <img  src="/Image/Line.png" className="text-[#3b49df] h-12 bg-black w-12 rounded-full p-2" />
+                <img  src="/Image/Line.png" className="text-[#3b49df] h-12 bg-black w-12 rounded-full p-2"
+                alt="line.png"
+                 />
                 <div>
                   <h3 className="text-xl font-semibold">20+ Courses</h3>
                   <p className="text-lg">
@@ -234,7 +233,9 @@ function Member() {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-              <img  src="/Image/User1.png" className="text-[#3b49df] h-12 bg-black w-12 rounded-full p-2" />
+              <img  src="/Image/User1.png" className="text-[#3b49df] h-12 bg-black w-12 rounded-full p-2"
+              alt="user1"
+              />
                 <div>
                   <h3 className="text-xl font-semibold">Lifetime Access</h3>
                   <p className="text-lg">
@@ -244,7 +245,9 @@ function Member() {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-              <img  src="/Image/User2.png" className="text-[#3b49df] h-12 bg-black w-12 rounded-full p-2" />
+              <img  src="/Image/User2.png" className="text-[#3b49df] h-12 bg-black w-12 rounded-full p-2" 
+              alt="user2"
+              />
                 <div>
                   <h3 className="text-xl font-semibold">Certified</h3>
                   <p className="text-lg">
@@ -254,7 +257,9 @@ function Member() {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-              <img  src="/Image/User3.png" className="text-[#3b49df] h-12 bg-black w-12 rounded-full p-2" />
+              <img  src="/Image/User3.png" className="text-[#3b49df] h-12 bg-black w-12 rounded-full p-2" 
+               alt="user3"
+              />
                 <div>
                   <h3 className="text-xl font-semibold">EdLernity Academics</h3>
                   <p>
@@ -273,6 +278,7 @@ function Member() {
                 <img
                   src="/Image/Setting.png"
                   className="text-[#6fd6ff] h-12 w-12 p-2 rounded-full bg-[#214531]"
+                  alt="Settings Icon"
                 />
                 <div className=" space-y-1 items-center ">
                   <h2 className="text-2xl font-bold mt-2">Hike</h2>
@@ -286,6 +292,7 @@ function Member() {
                 <img
                   src="/Image/Star.png"
                   className="text-[#6fd6ff] p-2 h-12 w-12 rounded-full bg-[#214531]"
+                  alt="Star Icon"
                 />
                 <div className="space-y-1 items-center">
                   <h2 className="text-2xl mt-2 font-bold">Advantage</h2>
@@ -299,6 +306,7 @@ function Member() {
                 <img
                   src="/Image/Star.png"
                   className="text-[#6fd6ff] p-2 h-12 w-12 rounded-full bg-[#214531]"
+                  alt="Star Icon"
                 />
                 <div className="space-y-1 items-center">
                   <h2 className="text-2xl mt-2 font-bold">Efficiency</h2>
@@ -319,8 +327,8 @@ function Member() {
                   objectFit: "cover",
                 }}
               />
-              <p className="text-3xl text-center lg:ml-32 lg:text-left">
-                Simple Certificate
+              <p className="text-3xl text-center  lg:ml-32 lg:text-left ">
+                Sample Certificate
               </p>
             </div>
           </div>
