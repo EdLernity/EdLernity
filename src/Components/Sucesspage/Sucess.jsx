@@ -71,7 +71,7 @@ function Success() {
     const fetchImages = async () => {
       try {
         const images = require.context(
-          "../../../public/Image/user-review-picture",
+          "../../../public/Image/user-review-img",
           false,
           /\.(png|jpe?g|svg)$/
         );
@@ -131,8 +131,8 @@ function Success() {
             </p>
             <div className="flex items-center mb-4 md:mb-6 xl:mb-6">
               <img
-                src={`/Image/user-review-picture/${successStories[currentSlide].userProfileImage}`}
-                className="w-16 h-16 md:w-24 md:h-24 xl:w-24 xl:h-24 rounded-full object-cover drop-shadow-[10px_6px_6px_gray]"
+                src={`/Image/user-review-img/${successStories[currentSlide].userProfileImage}`}
+                className="w-24 h-24 rounded-full object-cover drop-shadow-[10px_6px_6px_gray]"
                 alt="user_image"
               />
               <p className="pl-2 md:pl-4 xl:pl-4 text-base md:text-2xl xl:text-2xl font-bold text-[#302E2E]">{`- ${successStories[currentSlide].userName}`}</p>
@@ -160,7 +160,7 @@ function Success() {
                 key={index}
                 variant="circular"
                 className="border-2 border-white hover:z-10 focus:z-10 drop-shadow-[-6px_8px_4px_gray]"
-                src={`/Image/user-review-picture/${imgPath}`}
+                src={`/Image/user-review-img/${imgPath}`}
                 alt={`Image ${index}`}
               />
             ))}

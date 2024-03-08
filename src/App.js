@@ -27,6 +27,8 @@ import Loader from './Components/Loaderpage/Loader.jsx'
 import ScrollToBottomTop from './Utils/ScrollToBottomTop.jsx';
 
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -71,6 +73,7 @@ function App() {
             <Route path='/member' element={<Member />} />
             <Route path='/mycourses' element={<MyCourses />} />
           </Routes>
+          <ToastContainer position="bottom-center" autoClose={5000} />
         </BrowserRouter>
         )}
         <ScrollToBottomTop/>

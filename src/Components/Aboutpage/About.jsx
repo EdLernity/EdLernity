@@ -69,12 +69,12 @@ function About() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const nextSlide = () => {
-    setCurrentSlide((prevSlide) => (prevSlide + 1) % reviewData.length);
+    setCurrentSlide((prevSlide) => (prevSlide + 1) % reviewData?.length);
   };
 
   const prevSlide = () => {
     setCurrentSlide(
-      (prevSlide) => (prevSlide - 1 + reviewData.length) % reviewData.length
+      (prevSlide) => (prevSlide - 1 + reviewData.length) % reviewData?.length
     );
   };
   const handleResize = () => {
@@ -279,7 +279,7 @@ function About() {
           </div>
         </div>
 
-        {/* <div className="flex items-center justify-center bg-white pt-16 px-4">
+        <div className="flex items-center justify-center bg-white pt-16 px-4 sm:hidden md:hidden">
           <div className="relative flex space-x-4 pt-12">
             <div className="absolute top-1 -left-12 h-[250px] w-[250px] bg-[#623CEA] rounded-full" />
             <div className="absolute top-[105px] -right-16 h-[300px] w-[300px] bg-[#FF6B81] rounded-full" />
@@ -324,7 +324,7 @@ function About() {
               />
             </div>
           </div>
-        </div> */}
+        </div>
         <div
           className=" flex flex-col md:flex-row"
           style={{ marginBlock: "150px" }}
@@ -421,7 +421,7 @@ function About() {
                         <div className="review-container h-72 flex bg-[#D9D9D9]">
                           <div className="" style={{ marginLeft: "4px", marginTop: "12px" }}>
                             <img
-                              src={`/Image/user-review-picture/${item?.image}`}
+                              src={`/Image/user-review-img/${item?.image}`}
                               alt={item?.name}
                               className="w-[1080px] h-[85px] rounded-full p-2 object-cover"
                             />

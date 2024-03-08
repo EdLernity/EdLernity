@@ -32,6 +32,7 @@
     "react-scroll": "^1.9.0",
     "react-slick": "^0.29.0",
     "react-spinners": "^0.13.8",
+    "react-toastify": "^10.0.4",
     "slick-carousel": "^1.8.1",
     "twilio": "^4.22.0",
     "use-react-countries": "^2.0.0",
