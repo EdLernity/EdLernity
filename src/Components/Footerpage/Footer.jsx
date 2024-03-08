@@ -51,7 +51,7 @@ function Footer() {
 
   return (
     <>
-      <footer className="relative w-full bg-black pt-12 pb-6 text-white ">
+      <footer className="relative w-full bg-black pt-12 pb-6 text-white">
         <div className="mx-auto w-full px-8 ">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-sm:px-8">
             <div className="mb-6">

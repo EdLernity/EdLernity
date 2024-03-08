@@ -10,7 +10,7 @@ function Blog() {
         <title>EdLernity | Blog </title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
-      <h1 className="mt-24 text-3xl text-center mb-48">Coming Soon</h1>
+      <h1 className="mt-24 text-6xl text-center mb-48">Coming Soon</h1>
     </BaseLayout>
   );
 }
