@@ -84,12 +84,19 @@ const saveCourseDetails = async (req, res) => {
 
 const getAllCourseDetails = async (req, res) => {
   try {
+
+    let isFromUi  = req?.query?.isFromUI || false;
+
     const courses = await courseModel.find({});
 
     // Sort videoNames array for each course
     const sortedCourses = courses.map((course) => sortVideoNames(course));
 
-    return res.status(200).json({ success: true, data: sortedCourses });
+    if (isFromUi) {
+      return res.status(200).json({ success: true, data: sortedCourses });
+    } else {
+      return sortedCourses;
+    }
   } catch (error) {
     console.log("Error in getting all Course Details: ", error);
     return res

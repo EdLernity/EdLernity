@@ -15,16 +15,18 @@ import { Rating } from "@material-tailwind/react";
 import { NavLink, useLocation } from "react-router-dom";
 import axios from "axios";
 import './Ui.css';
+import useErrorToast from '../../../Hooks/useErrorToast';
 
 function Ui() {
   const location = useLocation();
-  const { course , data } = location?.state;
+  const { course, data } = location?.state ?? {};
   const [isOpen, setIsOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState("");
   const [open, setOpen] = useState("");
   const handleOpen = (value) => setOpen(open === value ? null : value);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [firstVideoUrl,setFirstVideoUrl] = useState("");
+  const [error, setError] = useState(null);
 
   const openModal = (videoUrl) => {
     setCurrentVideo(videoUrl);
@@ -36,35 +38,40 @@ function Ui() {
     setCurrentVideo("");
   };
 
-    const cardData = [
-        {
-            image: '/Image/Rectangle.png',
-            video: 'https://www.youtube.com/embed/udMeRUz-7WY?autoplay=1&mute=1',
-            // video: firstVideoUrl,
-        },
-    ];
-
-  const badges = [
-    { image: "/Image/Badge.png", alt: "Top Choice Badge", text: "Top Choice" },
-    {
-      image: "/Image/Fire.png",
-      alt: "Most Popular Badge",
-      text: "Most Popular",
-    },
-    { image: "/Image/Fire.png", alt: "Best ROI Badge", text: "Best ROI" },
-  ];
-
   useEffect(() => {
     const folderName = localStorage.getItem("current_course");
-    try {
-      axios.get(`http://localhost:3001/api/courses/${folderName}/${course?.videoNames[0]}`)
-      .then((res) => {
-        setFirstVideoUrl(res?.data?.videoUrl);
-      });
-    } catch (error) {
-      console.log("Error getting the video url from server." , error);
-    }
+    // try {
+    //   axios.get(`http://localhost:3001/api/courses/${folderName}/${course?.videoNames[0]}`)
+    //   .then((res) => {
+    //     setFirstVideoUrl(res?.data?.videoUrl);
+    //   }).catch((err) => {
+    //     setError(err);
+    //   });
+    // } catch (err) {
+    //   setError(err);
+    //   console.log("Error getting the video url from server." , error);
+    // }
   }, [course?.videoNames]);
+
+  useErrorToast(error);
+
+  const cardData = [
+    {
+        image: '/Image/Rectangle.png',
+        video: 'https://www.youtube.com/embed/udMeRUz-7WY?autoplay=1&mute=1',
+        // video: firstVideoUrl,
+    },
+];
+
+const badges = [
+{ image: "/Image/Badge.png", alt: "Top Choice Badge", text: "Top Choice" },
+{
+  image: "/Image/Fire.png",
+  alt: "Most Popular Badge",
+  text: "Most Popular",
+},
+{ image: "/Image/Fire.png", alt: "Best ROI Badge", text: "Best ROI" },
+];
 
   function Icon({ id, open }) {
     return (
@@ -97,10 +104,10 @@ function Ui() {
     },
     {
       id: 2,
-      image: "nikhil-reji.jpeg",
+      image: "roshan-kumar.jpeg",
       comment:
-        "I recently came across membership of EdLernity, and I must say, it was a great experience. The platform's intuitive interface and engaging content made learning not only easy but also enjoyable. The courses structure was well-organized, guiding me through each topic seamlessly. I would recommend to take up the membership and explore the courses.",
-      name: "Nikhil Reji",
+        "The Subscription Course Package is an excellent investment for anyone committed to continuous learning and personal growth. Its flexibility, quality content, and supportive environment make it a standout choice in the crowded online learning landscape. I highly recommend EdLernity's Life time subscription it to anyone looking to expand their knowledge and skills in a convenient and effective manner. ",
+      name: "Roshan Kumar",
     },
     {
       id: 3,
@@ -111,10 +118,10 @@ function Ui() {
     },
     {
       id: 4,
-      image: "ali-akbar.jpeg",
+      image: "tamanna.jpeg",
       comment:
-        "EdLernity offers different courses that's helpfull for People who are looking to improve their skills.They have Technical courses and many more.The courses are well structured with clear objectives and engaging contents.Making complex topics easier to understand.Edlernity provides a valuable resource for life long learners. The course has helped provide a starting point for understanding, which certainly will prove useful in my current work/projects.",
-      name: "Ali Akbar P",
+        "Upon completing each course, learners receive a certificate of completion, which can be a valuable addition to their resume or professional portfolio. The certificates attest to the learner's mastery of the course material and can enhance their credibility in their chosen field and Overall, the Lifetime Membership of EdLernity is comprehensive and flexible learning experience that empowers learners to acquire new skills, advance their careers, and pursue their passions effectively and efficiently.",
+      name: "Tamanna",
     },
     {
       id: 5,
@@ -125,48 +132,48 @@ function Ui() {
     },
     {
       id: 6,
-      image: "abdul-wahab.jpeg",
+      image: "uzmaafreen-shirasangi.jpeg",
       comment:
         "Edlernity is one of the most amazing platform to get a chance for learning and improving all technical skills required for all IT students it's worthy to have an opportunity to learn and acquire skills of languages that provided by their inspired and professional teachers ..happy learning with EdLernity.",
-      name: "Abdul Wahab",
+      name: "Uzmaafreen Shirasangi",
     },
     {
       id: 7,
-      image: "r-muskan-zehra.jpeg",
+      image: "muthhar-dargah.jpeg",
       comment:
-        "I highly recommend this course provided by EdLernity to anyone looking to take their Python skills to the next level. Whether you're a beginner or an experienced programmer, you'll find valuable insights and practical knowledge that will enhance your proficiency in Python programming. Best of luck on your learning journey.",
-      name: "R Muskan Zehra",
+        "The quality of the course content is exceptional. Each module is well-structured, with clear explanations and practical examples that facilitate understanding and retention of the material. The instructors are knowledgeable and engaging, providing valuable insights and guidance throughout the learning process with EdLernity.This sense of community fosters a supportive learning environment and encourages peer-to-peer learning and networking.",
+      name: "Muthhar Dargah",
     },
     {
       id: 8,
-      image: "md-burhanuddin.jpeg",
+      image: "nafeesa-lachan.jpeg",
       comment:
-        "Packed with valuable insights and applicable skills. Worth every penny! Impressed with EdLernity courses! Easy-to-follow format, great community support, and actionable takeaways.Courses are top-notch Comprehensive curriculum, interactive exercises, and expert guidance. A must-try!.",
-      name: "Md Burhanuddin",
+        "One of the most impressive aspects of the course package of EdLernity is its flexibility. With lifetime access, I could progress through the courses at my own pace, allowing me to balance my learning with other commitments. Additionally, the diverse selection of courses catered to different interests and skill levels, ensuring there was always something new and relevant to explore. I can confidently say that it exceeded my expectations in every aspect.",
+      name: "Nafeesa Lachan",
     },
   ];
 
   const topPicksData = [
     {
-      data : data.popularCoursesData[3],
+      data : data?.popularCoursesData[3],
       rating: 5,
       duration: "5.2 hours",
       language: "English",
     },
     {
-      data : data.popularCoursesData[1],
+      data : data?.popularCoursesData[1],
       rating: 4.5,
       duration: "7.4 hours",
       language: "English",
     },
     {
-      data : data.popularCoursesData[2],
+      data : data?.popularCoursesData[2],
       rating: 4.3,
       duration: "10 hours",
       language: "English",
     },
     {
-      data : data.popularCoursesData[0],
+      data : data?.popularCoursesData[0],
       rating: 4.2,
       duration: "8 hours",
       language: "English",
@@ -209,7 +216,7 @@ function Ui() {
       <BaseLayout>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>EdLernity | {course?.courseTitle}</title>
+          <title>EdLernity {course?.courseTitle ? `| ${course?.courseTitle}` : ""}</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
 
@@ -395,7 +402,7 @@ function Ui() {
                         <div className="review-container rounded-md h-96 bg-[#D9D9D9]">
                           <div className="w-full h-48 sm:h-32 mx-auto bg-blue-500 rounded-t-md">
                             <img
-                              src={`/Image/user-review-picture/${item?.image}`}
+                              src={`/Image/user-review-img/${item?.image}`}
                               alt={item?.name}
                               className="w-full h-full object-cover"
                             />

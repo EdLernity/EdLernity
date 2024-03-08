@@ -4,6 +4,7 @@ import CourseContent from "./Coursecontent/Coursecontent";
 import Certificate from "../Certificate/Certificate";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import useErrorToast from '../../Hooks/useErrorToast';
 
 
 function Courses() {
@@ -15,6 +16,7 @@ function Courses() {
   const [courseTitle, setCourseTitle] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   // Get all courses in a specific folder on server side.
   useEffect(() => {
@@ -49,6 +51,7 @@ function Courses() {
             setIsLoading(false);
           });
         } catch (err) {
+          setError(err);
           console.error(`Error getting video URL for`, err);
         }
   }, []);
@@ -78,10 +81,13 @@ function Courses() {
         setVideoUrl(res?.data?.videoUrl);
         setIsLoading(false);
       });
-    } catch (error) {
-      console.error("Error getting courses ",error)
+    } catch (err) {
+      setError(err);
+      console.error("Error getting courses ",err)
     }
   };
+
+  useErrorToast(error);
 
   return (
     <>
@@ -95,7 +101,7 @@ function Courses() {
             <div className="pl-4 pr-4 md:pr-24 xl:pr-24 py-4">
               <h1 className="text-xl font-bold">{courseTitle}</h1>
               <div className="mt-4">
-                <p>{course.courseDesc}</p>
+                <p>{course?.courseDesc}</p>
               </div>
             </div>
           </div>
@@ -103,7 +109,7 @@ function Courses() {
             <CourseContent
               isLoading={isLoading}
               setUrl={setUrl}
-              courseTitle={course.courseTitle}
+              courseTitle={course?.courseTitle}
               videos={courses}
             />
           </div>
