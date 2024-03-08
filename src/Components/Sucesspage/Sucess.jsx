@@ -11,7 +11,6 @@ function Success() {
   const successStories = [
     {
       id: 1,
-      image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "sejal-kesharwani.jpeg",
       story:
         "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
@@ -19,7 +18,6 @@ function Success() {
     },
     {
       id: 2,
-      image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "nikhil-reji.jpeg",
       story:
         "I recently came across membership of EdLernity, and I must say, it was a great experience. The platform's intuitive interface and engaging content made learning not only easy but also enjoyable. The courses structure was well-organized, guiding me through each topic seamlessly. I would recommend to take up the membership and explore the courses.",
@@ -27,7 +25,6 @@ function Success() {
     },
     {
       id: 3,
-      image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "sraadha-gupta.jpeg",
       story:
         "Great course, so many important topics covered in depth. There were many assessments which made us confident with our skills. I would like to enroll in more courses offered by EdLernity.",
@@ -35,7 +32,6 @@ function Success() {
     },
     {
       id: 4,
-      image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "ali-akbar.jpeg",
       story:
         "EdLernity offers different courses that's helpfull for People who are looking to improve their skills.They have Technical courses and many more.The courses are well structured with clear objectives and engaging contents.Making complex topics easier to understand.Edlernity provides a valuable resource for life long learners. The course has helped provide a starting point for understanding, which certainly will prove useful in my current work/projects.",
@@ -43,7 +39,6 @@ function Success() {
     },
     {
       id: 5,
-      image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "manjari-rastogi.jpeg",
       story:
         "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
@@ -51,7 +46,6 @@ function Success() {
     },
     {
       id: 6,
-      image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "abdul-wahab.jpeg",
       story:
         "Edlernity is one of the most amazing platform to get a chance for learning and improving all technical skills required for all IT students it's worthy to have an opportunity to learn and acquire skills of languages that provided by their inspired and professional teachers ..happy learning with EdLernity.",
@@ -59,7 +53,6 @@ function Success() {
     },
     {
       id: 7,
-      image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "r-muskan-zehra.jpeg",
       story:
         "I highly recommend this course provided by EdLernity to anyone looking to take their Python skills to the next level. Whether you're a beginner or an experienced programmer, you'll find valuable insights and practical knowledge that will enhance your proficiency in Python programming. Best of luck on your learning journey.",
@@ -67,7 +60,6 @@ function Success() {
     },
     {
       id: 8,
-      image: "Rectangle_Girl_Reviewer.png",
       userProfileImage: "md-burhanuddin.jpeg",
       story:
         "Packed with valuable insights and applicable skills. Worth every penny! Impressed with EdLernity courses! Easy-to-follow format, great community support, and actionable takeaways.Courses are top-notch Comprehensive curriculum, interactive exercises, and expert guidance. A must-try!.",
@@ -84,11 +76,11 @@ function Success() {
           /\.(png|jpe?g|svg)$/
         );
         const paths = images.keys().map(images);
-          const formattedPaths = paths.map((path) => {
-            const splitPath = path.split(".");
-            const splitPath2 = splitPath[0].split("/");
-            const formattedPath = `${splitPath2[3]}.${splitPath[2]}`; // Combine folder name and file name
-            return formattedPath; // Assigning the second occurrence
+        const formattedPaths = paths.map((path) => {
+          const splitPath = path.split(".");
+          const splitPath2 = splitPath[0].split("/");
+          const formattedPath = `${splitPath2[3]}.${splitPath[2]}`;
+          return formattedPath;
         });
         setImagePaths(formattedPaths);
       } catch (error) {
@@ -99,11 +91,11 @@ function Success() {
     fetchImages();
 
     const interval = setInterval(() => {
-      setCurrentSlide(prevSlide => (prevSlide + 1) % successStories.length);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % successStories.length);
     }, 5000);
-    
+
     return () => clearInterval(interval);
-  }, []);  
+  }, []);
 
   return (
     <>
@@ -113,13 +105,14 @@ function Success() {
       >
         Stay in the loop with the latest updates in the tech industry
       </h1>
-      <div className="flex flex-col bg-[#F1F0F0] bg-cover bg-center text-white p-6 min-h-[600px]">
+      <div className="flex flex-col bg-[#F1F0F0] bg-cover bg-center text-white p-6 min-h-[600px] md:p-12 xl:p-16">
         {/* Carousel */}
-        <div className="flex justify-between items-center p-16">
-          <div className="relative w-auto animate__animated animate__backInLeft">
+        <div className="flex flex-col md:flex-row xl:flex-row justify-between items-center p-4 md:p-16 xl:p-24">
+          {/* left side image */}
+          <div className="relative w-full md:w-[40%] mb-4 md:mb-0">
             <img
-              src={`/Image/${successStories[currentSlide].image}`}
-              className="rounded-[57px] drop-shadow-[18px_12px_4px_gray]"
+              src="/Image/Rectangle_Girl_Reviewer.png"
+              className="rounded-[57px] drop-shadow-[18px_12px_4px_gray] w-full"
               alt="reviewer_img"
             />
             <div className="bg-[#181FC5] rounded-full w-[90px] h-[90px] absolute -right-6 -top-6 z-10"></div>
@@ -127,34 +120,36 @@ function Success() {
               <RiDoubleQuotesL />
             </p>
           </div>
-          <div className="flex flex-col p-12 w-[50%] justify-between animate__animated animate__backInRight">
-            <h1 className="text-5xl font-extrabold text-black w-[70%] py-6">
+
+          {/* right side content */}
+          <div className="flex flex-col w-full md:w-[60%] xl:w-[50%] p-4 md:p-0 xl:p-0 justify-between">
+            <h1 className="text-2xl md:text-4xl xl:text-5xl font-extrabold text-black mb-4 md:mb-6 xl:mb-6">
               What students say about us
             </h1>
-            <p className="text-[#6C6868] py-6 min-h-[200px]">
+            <p className="text-[#6C6868] mb-4 md:mb-6 xl:mb-6">
               {successStories[currentSlide].story}
             </p>
-            <div className="flex py-12 items-center">
+            <div className="flex items-center mb-4 md:mb-6 xl:mb-6">
               <img
                 src={`/Image/user-review-picture/${successStories[currentSlide].userProfileImage}`}
-                className="w-24 h-24 rounded-full object-cover drop-shadow-[10px_6px_6px_gray]"
+                className="w-16 h-16 md:w-24 md:h-24 xl:w-24 xl:h-24 rounded-full object-cover drop-shadow-[10px_6px_6px_gray]"
                 alt="user_image"
               />
-              <p className="pl-4 text-2xl font-bold text-[#302E2E]">{`- ${successStories[currentSlide].userName}`}</p>
+              <p className="pl-2 md:pl-4 xl:pl-4 text-base md:text-2xl xl:text-2xl font-bold text-[#302E2E]">{`- ${successStories[currentSlide].userName}`}</p>
             </div>
-            <div className="flex justify-center mt-4 space-x-2">
+            <div className="flex justify-center space-x-2 mb-2 md:mb-4 xl:mb-4">
               {successStories.map((_, index) => (
                 <div
                   key={index}
-                  className={`dot w-4 h-4 rounded-full ${
-                    index === currentSlide ? "bg-blue-500" : "bg-gray-300"
-                  }`}
+                  className={`dot w-3 h-3 md:w-4 md:h-4 xl:w-4 xl:h-4 rounded-full ${index === currentSlide ? "bg-[#181FC5]" : "bg-gray-300"
+                    }`}
                   onClick={() => setCurrentSlide(index)}
                 />
               ))}
             </div>
           </div>
         </div>
+
         <div className="flex justify-center rounded-lg mb-2 mt-8 animate__animated animate__backInUp">
           <Button className="">Success Stories</Button>
         </div>
@@ -188,3 +183,12 @@ function Success() {
 }
 
 export default Success;
+
+
+
+
+
+
+
+
+

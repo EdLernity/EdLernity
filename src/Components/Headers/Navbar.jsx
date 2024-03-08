@@ -18,29 +18,14 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
     setOpenDrawer(!openDrawer);
   };
 
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 0) {
-  //       setScrolled(true);
-  //     } else {
-  //       setScrolled(false);
-  //     }
-  //   };
 
-  //   window.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
 
   return (
     <>
       {/* <nav className="flex justify-between items-center border shadow-lg px-4 py-2 bg-white text-black"> */}
       <nav
-        className={`flex justify-between items-center border shadow-lg px-4 py-2 ${
-          isDarkMode ? "bg-black text-white" : "bg-white text-black"
-        }`}
+        className={`flex justify-between items-center border shadow-lg px-4 py-2 ${isDarkMode ? "bg-black text-white" : "bg-white text-black"
+          }`}
       >
         <div className="lg:hidden md:hidden">
           <AlignJustify
@@ -48,10 +33,13 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             onClick={toggleDrawer}
           />
         </div>
-        <div>
+        <div className="flex items-center max-sm:ml-4 justify-center">
           <NavLink to={"/"}>
             <img src="/Image/Logo1.svg" alt="Logo" className="w-10" />
           </NavLink>
+          <Typography variant="h3" color="black" className="" style={{color:"#1539cf"}}>
+              Edlernity{" "}
+            </Typography>
         </div>
 
         <div className="hidden lg:flex ml-12 space-x-6">
@@ -63,8 +51,8 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                 isActive
                   ? "text-[#181FC5] active-link"
                   : isDarkMode
-                  ? "text-white"
-                  : "text-black",
+                    ? "text-white"
+                    : "text-black",
                 "hover:text-[#181FC5] font-md text-lg font-bold"
               )
             }
@@ -79,8 +67,8 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                 isActive
                   ? "text-[#181FC5] active-link"
                   : isDarkMode
-                  ? "text-white"
-                  : "text-black",
+                    ? "text-white"
+                    : "text-black",
                 "hover:text-[#181FC5] font-md text-lg font-bold"
               )
             }
@@ -96,8 +84,8 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                 isActive
                   ? "text-[#181FC5] active-link"
                   : isDarkMode
-                  ? "text-white"
-                  : "text-black",
+                    ? "text-white"
+                    : "text-black",
                 "hover:text-[#181FC5] font-md text-lg font-bold"
               )
             }
@@ -112,8 +100,8 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                 isActive
                   ? "text-[#181FC5] active-link"
                   : isDarkMode
-                  ? "text-white"
-                  : "text-black",
+                    ? "text-white"
+                    : "text-black",
                 "hover:text-[#181FC5] font-md text-lg font-bold"
               )
             }
@@ -128,8 +116,8 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                 isActive
                   ? "text-[#181FC5] active-link"
                   : isDarkMode
-                  ? "text-white"
-                  : "text-black",
+                    ? "text-white"
+                    : "text-black",
                 "hover:text-[#181FC5] font-md text-lg font-bold"
               )
             }
@@ -141,9 +129,8 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
         <div className="flex space-x-4 ml-auto">
           <IconButton
             onClick={toggleDarkMode}
-            className={`bg-${isDarkMode ? "white" : "black"} text-${
-              isDarkMode ? "black" : "white"
-            } px-4 py-2 rounded`}
+            className={`bg-${isDarkMode ? "white" : "black"} text-${isDarkMode ? "black" : "white"
+              } px-4 py-2 rounded`}
           >
             {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
           </IconButton>
@@ -156,14 +143,14 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
       </nav>
 
       {/* for small device */}
-      <Drawer open={openDrawer} onClose={toggleDrawer} className="p-4 ">
-        <div className="mb-6 flex items-center justify-between z-[4]">
+      <Drawer open={openDrawer} onClose={toggleDrawer} className="">
+        <div className="mb-6 p-2 flex items-center justify-between z-[4] " style={{ backgroundColor: 'rgb(21, 57, 207)' }}>
           <NavLink to="/home">
-            <Typography variant="h5" color="blue-gray">
+            <Typography variant="h5" color="white" className="ml-4">
               Edlernity{" "}
             </Typography>
           </NavLink>
-          <IconButton variant="text" color="blue-gray" onClick={toggleDrawer}>
+          <IconButton variant="text" color="white" onClick={toggleDrawer}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -180,7 +167,8 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             </svg>
           </IconButton>
         </div>
-        <div className="mb-8 pr-4 text-base  flex flex-col space-y-3">
+
+        <div className="mb-8 pr-4 ml-4 text-base  flex flex-col space-y-3">
           <Typography
             color="gray"
             className="font-bold"
@@ -246,10 +234,10 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             <NavLink to="/blog">Blog</NavLink>
           </Typography>
         </div>
-        <div className="flex justify-between gap-2">
-          <NavLink to="/login">
+        <div className="flex ml-4 justify-between gap-2">
+          <NavLink to="/auth/login">
             <Button
-              className="hover:bg-[#1649FF]  hover:text-white cursor-pointer"
+              className="hover:bg-[#2F35CB]  hover:text-white cursor-pointer"
               variant="outlined"
             >
               Login

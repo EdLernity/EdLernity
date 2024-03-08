@@ -1,8 +1,10 @@
 import './App.css';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Routes  } from 'react-router-dom';
 import Profile from './Components/Profilepage/Profile';
 import Home from './Components/Homepage/Home';
 import About from './Components/Aboutpage/About';
+
 import Courses1 from './Components/CoursesOverview/Courses1.jsx';
 import Blog from './Components/Blogpage/Blog';
 import Ui from './Components/CoursesOverview/Ui/Ui.jsx';
@@ -22,10 +24,25 @@ import SucessPage from './Components/Auth/SuccessPage/SuccessPage.jsx';
 import Paytm from './Components/paytm/paytm.jsx'
 import Member from './Components/Memberpage/Member.jsx'
 import MyCourses from './Components/MyCourses/MyCourses.jsx'
+import Loader from './Components/Loaderpage/Loader.jsx'
+import ScrollToBottomTop from './Utils/ScrollToBottomTop.jsx';
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
   return (
-    <div className="App">
+  
       <>
+      <div>
+        {loading ? (
+          <Loader />
+        ) : (
         <BrowserRouter>
         <ScrollToTop />
           <Routes>
@@ -54,8 +71,11 @@ function App() {
             <Route path='/mycourses' element={<MyCourses />} />
           </Routes>
         </BrowserRouter>
+        )}
+        <ScrollToBottomTop/>
+        </div>
       </>
-    </div>
+  
   );
 }
 

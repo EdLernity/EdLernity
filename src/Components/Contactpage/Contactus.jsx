@@ -250,7 +250,7 @@ function Contact() {
 
                 <button
                   type="submit"
-                  className="bg-purple-800 text-white w-full max-sm:w-1/2  px-4 py-2 rounded hover:bg-black hover:text-white"
+                  className="bg-[#1539cf] text-white w-full max-sm:w-1/2  px-4 py-2 rounded hover:bg-[#1539cf] hover:text-white"
                 >
                   SUBMIT
                 </button>
@@ -261,7 +261,7 @@ function Contact() {
                   Thank you for your query, we will repspond you back soon. 😊
                 </p>
                 <button
-                  className="bg-purple-800 text-white w-full max-sm:w-1/2  px-4 py-2 rounded hover:bg-black hover:text-white mt-4"
+                  className="bg-[#1539cf] text-white w-full max-sm:w-1/2  px-4 py-2 rounded hover:bg-[#1539cf] hover:text-white mt-4"
                   onClick={handleReset}
                 >
                   Submit Another Response
