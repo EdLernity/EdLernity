@@ -1,6 +1,8 @@
 import React from "react";
 import "animate.css";
 import { useNavigate } from "react-router-dom";
+import { RiDoubleQuotesL, RiDoubleQuotesR} from "react-icons/ri";
+
 
 function Herosection() {
   const navigate = useNavigate();
@@ -44,10 +46,14 @@ function Herosection() {
           className="mt-4 sm:mt-8 text-lg text-[#4F4E4E] text-left w-[90%]"
           style={{ fontSize: window.innerWidth <= 640 ? "lg" : "" }}
         >
-          "Welcome to our innovative platform- EdLernity, "where
-          knowledge meets eternity". Explore a world of endless
-          possibilities as you embark on a journey of learning and
-          discovery, tailored to your pace and preferences"
+          <span className="inline-flex"><RiDoubleQuotesL/> &nbsp;</span>
+          Welcome to our innovative platform- EdLernity, 
+          <span className="inline-flex"><RiDoubleQuotesL size={18}/></span>
+          Where
+          knowledge meets eternity. Explore a world of endless
+          possibilities as you embark <span className="inline-flex"><RiDoubleQuotesR size={18}/></span>on a journey of learning and
+          discovery, tailored to your pace and preferences
+          <span className="inline-flex">&nbsp;<RiDoubleQuotesR/></span>
         </p>
         <div className="item-center flex justify-center sm:mt-8 w-[90%]">
           <div className="bg-[#2F35CB] rounded-3xl py-2">
