@@ -1,9 +1,5 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { BsArrowUpCircleFill } from 'react-icons/bs';
-
-
 function ScrollToBottomTop() {
   const [isVisible, setIsVisible] = useState(false);
 

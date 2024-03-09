@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { animateScroll as scroll } from "react-scroll";
 import { useInView } from "react-intersection-observer";
 
+
 const heroSectionContent = [
   {
     img: "timer.png",

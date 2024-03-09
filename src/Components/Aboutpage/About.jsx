@@ -5,6 +5,7 @@ import CountUp from "react-countup";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { Rating } from "@material-tailwind/react";
 import './About.css';
+import { RiDoubleQuotesL, RiDoubleQuotesR} from "react-icons/ri";
 function About() {
   const reviewData = [
     {
@@ -334,11 +335,12 @@ function About() {
               OUR MISSION
             </h2>
             <p className="text-2xl">
-              "We are on a mission to pioneer advancements in technology,
+            <span className="inline-flex"><RiDoubleQuotesL/></span>
+              We are on a mission to pioneer advancements in technology,
               creating value for our clients and contributing to the broader
               societal good. Through a relentless pursuit of excellence, ethical
               practices, and a commitment to sustainability, we strive to leave
-              a lasting impact on the world."
+              a lasting impact on the world. <span className="inline-flex"><RiDoubleQuotesR/></span>
             </p>
           </div>
 
@@ -347,10 +349,12 @@ function About() {
               OUR VISION
             </h2>
             <p className="text-2xl">
-              "At Edlernity, we envision a future where technology seamlessly
+            <span className="inline-flex"><RiDoubleQuotesL/></span>
+              At Edlernity, we envision a future where technology seamlessly
               integrates with human needs, fostering progress and enhancing
               lives. Our vision is to be a beacon of innovation, driving
-              positive change through transformative digital solutions."
+              positive change through transformative digital solutions.
+              <span className="inline-flex"><RiDoubleQuotesR/></span>
             </p>
           </div>
         </div>
