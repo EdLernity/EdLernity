@@ -90,8 +90,8 @@ function MyCourses() {
 
   return (
     <BaseLayout>
-      <section className="w-screen h-full overflow-hidden">
-        <div className="px-4 grid md:px-4 py-8 grid-cols-3 lg:grid-cols-3 gap-8 xl:gap-8">
+     <section className="w-screen h-full overflow-hidden">
+        <div className="px-4 grid md:px-4 py-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-8">
           <div className="h-[600px] flex col-span-1 justify-center items-center overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
             <div className="pl-5 flex flex-col space-y-4 lg:order-2 lg:row-start-1">
               <h2 className="text-5xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
@@ -115,10 +115,10 @@ function MyCourses() {
             </div>
           </div>
           <div className="grid gap-6 h-[700px] col-span-2 md:gap-8 items-stretch lg:order-1 lg:gap-10 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+            <h2 className="text-3xl ml-12 font-bold tracking-tighter sm:text-4xl md:text-5xl">
               Enrolled Courses
             </h2>
-            <div className="flex flex-row flex-wrap gap-1">
+            <div className="flex flex-row flex-wrap gap-1 justify-center ">
               {isLoading
                 ? Array.from({ length: 9 }).map((_, index) => (
                     <div key={index}>
@@ -130,9 +130,9 @@ function MyCourses() {
                     </div>
                   ))
                 : data.userAllCoursesData.map((course, index) => (
-                    <div
+                  <div
                       key={index}
-                      className="relative w-300 m-10 text-center shadow-lg rounded-2xl overflow-hidden animate__animated animate__pulse"
+                      className={`flex justify-center w-full md:w-1/2 lg:w-1/3 m-10 text-center shadow-lg rounded-2xl overflow-hidden animate__animated animate__pulse`}
                       style={cardStyle}
                     >
                       <img
@@ -165,3 +165,10 @@ function MyCourses() {
 }
 
 export default MyCourses;
+
+
+
+
+
+
+

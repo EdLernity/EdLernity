@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import CountUp from "react-countup";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { Rating } from "@material-tailwind/react";
-import './About.css';
+import "./About.css";
 function About() {
   const reviewData = [
     {
@@ -165,13 +165,15 @@ function About() {
             />
           </div>
           <div className="w-full md:w-1/2 animate__animated animate__backInRight space-y-4 flex flex-col  justify-center">
-            <h1 className="text-2xl md:text-xl font-bold mb-4 text-left" style={{ color: "#181FC5" }}>
+            <h1
+              className="text-2xl md:text-xl font-bold mb-4 text-left"
+              style={{ color: "#181FC5" }}
+            >
               WHO WE ARE
             </h1>
             <h2 className="text-4xl md:text-3xl font-semibold mb-2 text-left">
               We Offer The Best <br /> Carrier
             </h2>
-
 
             <div className="mb-4 flex flex-col md:flex-row items-center md:items-start md:space-x-4">
               <img
@@ -183,8 +185,8 @@ function About() {
                 <h4>Industry Expert Instructor</h4>
                 <p className="text-gray-700">
                   Unlock the wisdom of industry experts. Our instructors are the
-                  guiding stars of your educational journey, illuminating the path
-                  to success.
+                  guiding stars of your educational journey, illuminating the
+                  path to success.
                 </p>
               </div>
             </div>
@@ -199,8 +201,8 @@ function About() {
                 <h4>Up-to-Date Course Content</h4>
                 <p className="text-gray-700">
                   Unlock the wisdom of industry experts. Our instructors are the
-                  guiding stars of your educational journey, illuminating the path
-                  to success.
+                  guiding stars of your educational journey, illuminating the
+                  path to success.
                 </p>
               </div>
             </div>
@@ -215,12 +217,11 @@ function About() {
                 <h4>Biggest Student Community</h4>
                 <p className="text-gray-700">
                   Unlock the wisdom of industry experts. Our instructors are the
-                  guiding stars of your educational journey, illuminating the path
-                  to success.
+                  guiding stars of your educational journey, illuminating the
+                  path to success.
                 </p>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -279,7 +280,7 @@ function About() {
           </div>
         </div>
 
-        <div className="flex items-center justify-center bg-white pt-16 px-4 sm:hidden md:hidden">
+        {/* <div className="flex items-center justify-center bg-white pt-16 px-4 sm:hidden md:hidden">
           <div className="relative flex space-x-4 pt-12">
             <div className="absolute top-1 -left-12 h-[250px] w-[250px] bg-[#623CEA] rounded-full" />
             <div className="absolute top-[105px] -right-16 h-[300px] w-[300px] bg-[#FF6B81] rounded-full" />
@@ -324,7 +325,7 @@ function About() {
               />
             </div>
           </div>
-        </div>
+        </div> */}
         <div
           className=" flex flex-col md:flex-row"
           style={{ marginBlock: "150px" }}
@@ -407,9 +408,9 @@ function About() {
               </span>
             </div>
           </div>
-          <div className="flex justify-center mt-8 -space-x-4 items-center relative overflow-x-auto">
+          <div className="flex justify-center mt-8 items-center relative overflow-hidden">
             <div className="max-w-screen-lg mx-auto mt-10 w-full">
-              <div className="flex items-center justify-center flex-wrap">
+              <div className={`flex items-center justify-center flex-wrap ${window.innerWidth >= 768 ? 'overflow-x-auto' : ''}`}>
                 {reviewData?.map(
                   (item, index) =>
                     index >= currentSlide &&
@@ -419,12 +420,22 @@ function About() {
                         className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 p-4"
                       >
                         <div className="review-container h-72 flex bg-[#D9D9D9]">
-                          <div className="" style={{ marginLeft: "4px", marginTop: "12px" }}>
+                          <div
+                            className=""
+                            style={{ marginLeft: "4px", marginTop: "12px" }}
+                          >
+
                             <img
                               src={`/Image/user-review-img/${item?.image}`}
                               alt={item?.name}
-                              className="w-[1080px] h-[85px] rounded-full p-2 object-cover"
+                              className="w-[1080px] h-[85px] object-cover rounded-full"
+                              style={{
+                                aspectRatio: "3 / 2",
+                                // objectFit: "contain",
+                              }}
                             />
+
+
                           </div>
                           <div className="p-4">
                             <h2 className="text-xl whitespace-nowrap font-bold mb-2">
@@ -457,16 +468,6 @@ function About() {
 }
 
 export default About;
-
-
-
-
-
-
-
-
-
-
 
 // <div className="flex items-center justify-center bg-white py-8 px-4">
 //   <div className="relative flex space-x-4">

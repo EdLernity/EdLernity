@@ -84,3 +84,16 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+// overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200
