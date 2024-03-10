@@ -26,10 +26,24 @@ app.use((req, res, next) => {
 });
 
 // Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "../build")));
 
-app.use(cors());
+app.use(cors({
+    "origin" : "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+}));
 app.use(bodyParser.json()); // Add this line to parse JSON data
+
+app.get("/*",function (req,res) {
+    res.sendFile(
+        path.join(__dirname, "../build/index.html"),
+        function(err) {
+            if (err) {
+                res.status(500).send(err)
+            }
+        }
+    );
+})
 
 // Routes 
 app.use('/auth', registrationRoutes);
