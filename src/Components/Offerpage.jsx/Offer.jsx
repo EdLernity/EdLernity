@@ -15,7 +15,7 @@ function Offer() {
 
             <div className="flex flex-wrap justify-center items-stretch gap-4">
                 {/* Card 1 */}
-                <div className="max-w-sm rounded overflow-hidden border shadow-xl m-4">
+                <div className="max-w-sm rounded overflow-hidden border shadow-xl m-4 ">
                     <div className="px-6 py-4">
                         <div className="font-bold text-xl mb-2">Self-paced Courses</div>
                         <p className="text-gray-700 text-base bg-[#f8f2cb] p-2 rounded">

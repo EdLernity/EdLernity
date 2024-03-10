@@ -8,25 +8,25 @@ const heroSectionContent = [
     img: "timer.png",
     altImg: "timerImage",
     title: "Flexible time",
-    text: "Online education allows teachers and students to set their own pace of learning, and there is added flexibility in setting a schedule that fits everyone's agenda. ",
+    text: "At EdLernity, we believe that learning should adapt to fit your life, not the other way around. With our flexible timing options, you can pursue your educational goals without sacrificing the things that matter most to you. Join us today and unlock your full potential with the freedom to learn on your own terms.",
   },
   {
     img: "certificate-867.png",
     altImg: "certificateImage",
     title: "Certificate",
-    text: "Online education allows teachers and students to set their own pace of learning, and there is added flexibility in setting a schedule that fits everyone's agenda. ",
+    text: "Are you ready to take the next step in your career or academic journey? At EdLernity, we offer a wide range of certification programs designed to equip you with the skills and knowledge you need to succeed in today's competitive world.",
   },
   {
     img: "export-arrow.png",
     altImg: "exportArrowImage",
     title: "Membership options",
-    text: "Online education allows teachers and students to set their own pace of learning, and there is added flexibility in setting a schedule that fits everyone's agenda. ",
+    text: "Whether you're a lifelong learner, a career professional, or a student seeking to supplement your education, EdLernity's membership options provide the flexibility, affordability, and support you need to achieve your goals. Join our community today and embark on a journey of lifelong learning and growth.Save money while investing in your education and professional development. ",
   },
   {
     img: "price-label.png",
     altImg: "priceLabelImage",
     title: "Access anywhere",
-    text: "Online education allows teachers and students to set their own pace of learning, and there is added flexibility in setting a schedule that fits everyone's agenda. ",
+    text: "With EdLernity, the world is your classroom. Break free from the confines of traditional education and embrace the flexibility and convenience of learning anywhere, anytime. Join us today and start your journey towards knowledge and empowerment, no matter where life takes you.You'll always have access to our content whenever inspiration strikes. ",
   },
 ];
 

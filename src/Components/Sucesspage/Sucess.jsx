@@ -13,7 +13,7 @@ function Success() {
       id: 1,
       userProfileImage: "sejal-kesharwani.jpeg",
       story:
-        "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
+     "Through interactive lectures, practical exercises, and hands-on projects, Edlernity ensures that students not only grasp the fundamentals but also master advanced concepts in programming and technology. Our dedicated instructors are committed to providing personalized support, guiding students every step of the way towards achieving their career goals in IT.",
       userName: "Surabhi Kesarwani",
     },
     {
@@ -27,7 +27,7 @@ function Success() {
       id: 3,
       userProfileImage: "sraadha-gupta.jpeg",
       story:
-        "Great course, so many important topics covered in depth. There were many assessments which made us confident with our skills. I would like to enroll in more courses offered by EdLernity.",
+        "Great course, so many important topics covered in depth. There were many assessments which made us confident with our skills. I would like to enroll in more courses offered by EdLernity.I highly recommend EdLernity to anyone looking to enhance their skills and advance their career in the IT industry. The thorough coverage and rigorous assessments truly solidify your knowledge and competence in various key areas.",
       userName: "Shraddha Gupta",
     },
     {
@@ -41,7 +41,7 @@ function Success() {
       id: 5,
       userProfileImage: "manjari-rastogi.jpeg",
       story:
-        "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
+        "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts Edlernity's comprehensive courses cover everything from basic programming concepts to advanced software development techniques.",
       userName: "Manjari Rastogi",
     },
     {
