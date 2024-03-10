@@ -10,7 +10,7 @@ const gcsRoutes  = require('./routes/gcsRoutes');
 const courseRoutes =  require('./routes/courseRoutes');
 const paymentRoutes =  require('./routes/phonePayRoutes');
 const userCourse =  require('./routes/userCourseRoutes');
-const contactRoutes =  require('./routes/contactRoutes');
+const contactRoutes =  require('./routes/ContactRoutes');
 const path = require('path');
 
 const app = express();
