@@ -25,14 +25,26 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve static files
-app.use(express.static(path.join(__dirname, "../build")));
-
 app.use(cors({
     "origin" : "*",
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
 }));
+
 app.use(bodyParser.json()); // Add this line to parse JSON data
+
+
+// Routes 
+app.use('/auth', registrationRoutes);
+app.use('/api', cloudinaryRoutes);
+app.use('/api', gcsRoutes);
+app.use('/api', courseRoutes);
+app.use('/api', paymentRoutes);
+app.use('/api', userCourse);
+app.use('/api', contactRoutes);
+
+
+// Serve static files
+app.use(express.static(path.join(__dirname, "../build")));
 
 app.get("/*",function (req,res) {
     res.sendFile(
@@ -45,14 +57,12 @@ app.get("/*",function (req,res) {
     );
 })
 
-// Routes 
-app.use('/auth', registrationRoutes);
-app.use('/api', cloudinaryRoutes);
-app.use('/api', gcsRoutes);
-app.use('/api', courseRoutes);
-app.use('/api', paymentRoutes);
-app.use('/api', userCourse);
-app.use('/api', contactRoutes);
+app.use("/*", function (req, res, next) {
+    if (req.method !== 'GET') {
+        return res.status(405).send('Method Not Allowed');
+    }
+    next();
+});
 
 const PORT = process.env.PORT || 3002;
 
