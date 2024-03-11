@@ -25,7 +25,7 @@ function UpdatePassword() {
       if (token) {
         try {
           let response = await axios.post(
-            "http://localhost:3001/auth/verify-token",
+            "http://3.110.210.79:3001/auth/verify-token",
             tokenPayload
           );
 

@@ -62,7 +62,7 @@ function Courses1() {
     const fetchAllCourses = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/get-all-course-details", {
+          "http://3.110.210.79:3001/api/get-all-course-details", {
             params: {
               isFromUI: true // or false depending on your requirement
             }

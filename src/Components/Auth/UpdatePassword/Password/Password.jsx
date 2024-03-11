@@ -54,7 +54,7 @@ function Password() {
 
     try {
       let res = await axios.post(
-        "http://localhost:3001/auth/update-password",
+        "http://3.110.210.79:3001/auth/update-password",
         payload
       );
 

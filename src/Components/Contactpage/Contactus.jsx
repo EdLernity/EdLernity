@@ -41,7 +41,7 @@ function Contact() {
       setErrors(validationErrors);
     } else {
       try {
-        await axios.post("http://localhost:3001/api/contact", formData);
+        await axios.post("http://3.110.210.79:3001/api/contact", formData);
         console.log("Form submitted:", formData);
         setSubmitted(true);
       } catch (error) {

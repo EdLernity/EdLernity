@@ -44,7 +44,7 @@ function Courses() {
         try {
           axios
           .get(
-            `http://localhost:3001/api/courses/${folderName}/${encodeURIComponent(course.videoNames[0])}`
+            `http://3.110.210.79:3001/api/courses/${folderName}/${encodeURIComponent(course.videoNames[0])}`
           )
           .then((res) => {
             setVideoUrl(res?.data?.videoUrl);
@@ -75,7 +75,7 @@ function Courses() {
     try {
       axios
       .get(
-        `http://localhost:3001/api/courses/${folderName}/${encodeURIComponent(fileNameForVideo)}`
+        `http://3.110.210.79:3001/api/courses/${folderName}/${encodeURIComponent(fileNameForVideo)}`
       )
       .then((res) => {
         setVideoUrl(res?.data?.videoUrl);
