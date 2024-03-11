@@ -41,7 +41,7 @@ function Ui() {
   useEffect(() => {
     const folderName = localStorage.getItem("current_course");
     // try {
-    //   axios.get(`http://localhost:3001/api/courses/${folderName}/${course?.videoNames[0]}`)
+    //   axios.get(`http://3.110.210.79:3001/api/courses/${folderName}/${course?.videoNames[0]}`)
     //   .then((res) => {
     //     setFirstVideoUrl(res?.data?.videoUrl);
     //   }).catch((err) => {

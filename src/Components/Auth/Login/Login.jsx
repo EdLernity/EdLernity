@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ErrorComponent from "../UpdatePassword/ErrorComponent/ErrorComponent";
 
-function Login() {
+function Login() {;
   const textColor = {
     color: "#1539cf",
   };
@@ -60,7 +60,7 @@ function Login() {
   const handleSignup = async () => {
       handlePassord(data.password);
       try {
-        let res = await axios.post("http://localhost:3001/auth/login", data);
+        let res = await axios.post("http://3.110.210.79:3001/auth/login", data);
         if (res?.data?.success) {
           localStorage.setItem("jwt_token", res?.data?.token);
           alert("login sucess")

@@ -21,7 +21,7 @@ function ForgotPasswod({onResponse}) {
   
   const handleForgetPassword = async () => {
     try {
-      let res = await axios.post("http://localhost:3001/auth/reset-password", payload);
+      let res = await axios.post("http://3.110.210.79:3001/auth/reset-password", payload);
       console.log(res);
   
       if (res.status === 200) {

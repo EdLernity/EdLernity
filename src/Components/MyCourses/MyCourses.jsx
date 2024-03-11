@@ -54,7 +54,7 @@ function MyCourses() {
     const fetchAllCourses = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/api/get-course-by-id"
+          "http://3.110.210.79:3001/api/get-course-by-id"
         );
 
         console.log(response);
@@ -75,7 +75,7 @@ function MyCourses() {
         });
 
         const count = await axios.get(
-          "http://localhost:3001/api/get-all-course-count"
+          "http://3.110.210.79:3001/api/get-all-course-count"
         );
         setTotalCount(count.data.data);
       } catch (error) {
