@@ -176,7 +176,8 @@ const createOrder = async (courseId, uid,response) => {
   courseId:courseId,
   userId:uid,
   paymentMethod:"Online",
-  paymentId:response.razorpay_payment_id
+  paymentId:response.razorpay_payment_id,
+  amount:Number(course.offeredPrice)
  })
  const trans=await transactionObj.save();
 

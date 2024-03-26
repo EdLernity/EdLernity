@@ -40,7 +40,7 @@ const registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, phone, password, confirmPassword, googleSignUp } = req.body;
 
-    const requiredFields = googleSignUp ? ['firstName', 'lastName', 'email'] : ['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword'];
+    const requiredFields = googleSignUp ? ['firstName', 'email'] : ['firstName', 'lastName', 'email', 'phone', 'password', 'confirmPassword'];
 
     // Check for missing required fields
     const missingFields = requiredFields.filter(field => !req.body[field]);
@@ -52,6 +52,7 @@ const registerUser = async (req, res) => {
     if (!googleSignUp && password !== confirmPassword) {
       return res.status(400).json({ success: false, message: "Passwords do not match" });
     }
+    const userId = await generateUserId();
 
     // Check if the email already exists
     const existingUserByEmail = await userModel.findOne({ email });
@@ -70,7 +71,7 @@ const registerUser = async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Generate a unique numeric user ID
-      const userId = await generateUserId();
+     
       const newUser = new userModel({
         userId,
         firstName,
@@ -78,7 +79,8 @@ const registerUser = async (req, res) => {
         email,
         phone,
         password: hashedPassword,
-        googleAuth: false
+        isGoogleAuth: false,
+        isVerified:true
       });
       await newUser.save();
       //send mail
@@ -98,14 +100,15 @@ const registerUser = async (req, res) => {
 
 
     } else {
+      console.log("first")
       // Generate a unique numeric user ID
-      const userId = await generateUserId();
       const newUser = new userModel({
         userId,
         firstName,
         lastName,
         email,
-        googleAuth: true
+        isGoogleAuth: true,
+        isVerified:true
       });
       await newUser.save();
       return res.json({ success: true, message: "Thank you for registering with edlernity.", redirectTo: "/", text: "" });

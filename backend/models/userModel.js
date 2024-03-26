@@ -12,23 +12,23 @@ const userSchema = new mongoose.Schema({
     },
     lastName: {
         type: String,
-        required: true,
+        default:""
     },
     email: {
         type: String,
-        unique: true,
     },
     phone: {
-        type: Number,
-        unique: true,
+        type: String,
+        default:""
     },
     password: {
         type: String,
     },
-    googleAuth:{
+    isGoogleAuth:{
         type: Boolean,
     default: false,
     },
+    
     isVerified:{
         type: Boolean,
     default: false,
