@@ -17,7 +17,7 @@ const getEnrollCoursesList = async (req, res) => {
     const enrollList = await UserCourseModel.find({ userId: req.user._id })
     .populate({ path: "userId", select: ["firstName", "lastName"] })
     .populate({ path: "courseIds", select: ["courseTitle", "courseBanner","courseScore"] });
- if (enrollList.length <= 0) {
+ if (!enrollList) {
       return res.status(400).json({  });
     }
 

@@ -73,11 +73,11 @@ function CoursesOffered() {
 
       <div className="container mx-auto gap-4 p-4 md:flex md:flex-col lg:flex-row xl:flex-row md:items-start py-8">
         {/* Left side with text */}
-        <div className="relative w-full md:w-[40%] lg:w-[40%] xl:w-[40%] mb-4">
+        <div className="relative  md:w-[40%] lg:w-[40%] xl:w-[40%] mb-4">
           <img
             src="/Image/stats-home.png" 
             alt="Course"
-           className="w-[350px] h-[300px] rounded-lg max-w-[350px]"
+            className="w-96 h-[310px] rounded-lg"
           />
         </div>
         <div className="pr-4 sm:pr-8 md:pr-12 lg:pr-20">

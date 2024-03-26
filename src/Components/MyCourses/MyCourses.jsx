@@ -48,7 +48,7 @@ const [userData, setUserData] = useState("")
     });
   };
 
-
+console.log(profile)
   
 
 
