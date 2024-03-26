@@ -8,7 +8,6 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { BACKEND_URL } from "../../../URL_Config";
 import { axiosInstanceWithoutToken } from "../../../Utils/AxiosInstance";
 import InputButton from "../../Input/InputButton";
 import { showSnackbar } from "../../Utils/enQueSnackBar";
@@ -53,7 +52,7 @@ function Login() {;
           email:response.data.email,
           googleSignUp:true
         };
-        let res = await axios.post(BACKEND_URL+"/auth/login", googleSignInData);
+        let res = await axiosInstanceWithoutToken.post("/auth/login", googleSignInData);
         
         if (res?.data?.success) {
           localStorage.setItem("auth_token", res?.data?.token);
@@ -62,7 +61,7 @@ function Login() {;
           navigate(redirectUrl)
         }
       } catch (error) {
-        console.error("Error during signup:", error.message);
+        console.error("Error during signup:", error.response.message);
        
       }
     });
@@ -97,7 +96,7 @@ function Login() {;
     }
       handlePassord(data.password);
       try {
-        let res = await axiosInstanceWithoutToken.post(BACKEND_URL+"/auth/login", data);
+        let res = await axiosInstanceWithoutToken.post("/auth/login", data);
         if (res?.data?.success) {
           localStorage.setItem("_userAuth", res?.data?.token);
           showSnackbar("Login Successful", "success", "top");
