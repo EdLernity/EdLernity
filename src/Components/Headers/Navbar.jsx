@@ -25,7 +25,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
           <Link to="/" class="flex items-center space-x-2">
             <img src="/Image/Logo1.svg" alt="Logo" className="w-10" />
             <span class="self-center text-xl  font-semibold whitespace-nowrap dark:text-white">
-              Edlernity
+              EdLernity
             </span>
           </Link>
           <div class="flex justify-end items-end lg:order-2">
