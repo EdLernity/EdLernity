@@ -34,7 +34,7 @@ const getEnrolledCoursesList = async (req, res) => {
     const enrollList = await UserCourseModel.findOne({ userId: req.user._id })
     
  if (!enrollList) {
-      return res.status(400).json({enrollList:null});
+      return res.status(200).json({enrollList:null});
     }
 
     res.status(200).json({enrollList:enrollList.courseIds});
