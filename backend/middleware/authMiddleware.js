@@ -1,24 +1,39 @@
 // middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
-const authMiddleware = (req, res, next) => {
+const UserModel = require('../models/userModel');
+const { sendErrorResponse } = require('../utils/ApiReqRes');
+const authMiddleware = async (req, res, next) => {
 
     const authHeader = req.headers.authorization;
+    
+    
+    if(authHeader == null)
+    return res.status(401).json({ success: false, message: "No Token Provided" });
 
-    const [, token] = authHeader.split(' ');
+    const [, token] = authHeader?.split(' ');
 
     if (!token) {
-        return res.status(401).json({ error: 'Unauthorized: Missing token' });
-    }
+        return sendErrorResponse(res, 401, "Unauthorized request");
+      }
 
     try {
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.body.userId = decoded.userId;
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        
+        const user = await UserModel.findById(decodedToken?.userId).select(
+            "-password"
+          );
+      
+          if (!user) {
+           
+            return sendErrorResponse(res, 401, "Session Expired");
+          }
+        req.user = user;
         next();
         
     } catch (error) {
         console.log(error)
-        return res.status(401).json({ error: 'Unauthorized: Invalid token' });
+        return sendErrorResponse(res, 401, "Session Expired");
     }
 };
 

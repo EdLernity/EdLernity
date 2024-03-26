@@ -23,7 +23,7 @@ const getUserCourseByIdController = async (req, res) => {
 
         // let userId = decodeToken.userId;
 
-        let userId = '65e371937c70ff6e3cab6c3c';
+        let userId = '65f883faec701a12b213795e';
 
         const userCourse = await getUserCourseById(userId);
 

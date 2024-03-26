@@ -1,0 +1,960 @@
+[{
+  "_id": {
+    "$oid": "65e2e46db947328e75f33fef"
+  },
+  "courseTitle": "Python",
+  "initialPrice": 2500,
+  "offeredPrice": 499,
+  "discountInPercentage": 80,
+  "courseDesc": "Explore the fundamentals of Python programming with our dynamic course. Dive into Python syntax, data structures, and control flow to build a solid foundation in coding. From basic scripts to advanced applications, this course equips you with the skills to tackle any programming challenge. Join us and embark on a journey to unleash the full potential of Python in your projects and career.",
+  "courseOverviewDesc": "Unleash the power of Python with our comprehensive course designed to elevate your coding skills. Dive into the world of Python programming and master its syntax, data structures, and control flow. From writing simple scripts to developing complex applications, this course provides the perfect blend of theory and hands-on practice. Join us on a journey where you'll learn to harness the versatility and efficiency of Python to solve real-world problems and unlock endless opportunities in software development",
+  "folderName": "Python_EdLernity",
+  "courseContentDescription": [
+    {
+      "question": "What are the key features of Python?",
+      "answer": "Python is known for its simplicity, readability, and versatility. It supports multiple programming paradigms, including procedural, object-oriented, and functional programming. Python's extensive standard library and vibrant community make it ideal for a wide range of applications, from web development to scientific computing.",
+      "_id": {
+        "$oid": "65e2e46db947328e75f33ff0"
+      }
+    },
+    {
+      "question": "How does Python manage memory?",
+      "answer": "Python uses automatic memory management through a mechanism called garbage collection. Objects that are no longer referenced are automatically deallocated, freeing up memory for other purposes. This feature helps simplify memory management for developers and reduces the risk of memory leaks.",
+      "_id": {
+        "$oid": "65e2e46db947328e75f33ff1"
+      }
+    },
+    {
+      "question": "What are the differences between Python 2 and Python 3?",
+      "answer": "Python 2 and Python 3 are both widely used versions of the language, but they have some key differences. Python 3 introduced several syntax changes and new features to improve the language's consistency and functionality. One notable difference is the print statement, which became a print function in Python 3. Python 2 is legacy software and will no longer be maintained after 2020, so it's recommended to use Python 3 for new projects.",
+      "_id": {
+        "$oid": "65e2e46db947328e75f33ff2"
+      }
+    },
+    {
+      "question": "How can I handle exceptions in Python?",
+      "answer": "Python provides a robust mechanism for handling exceptions using try-except blocks. Developers can use try blocks to enclose code that may raise exceptions, and except blocks to specify how to handle those exceptions gracefully. This approach helps prevent program crashes and enables developers to write more robust and reliable code.",
+      "_id": {
+        "$oid": "65e2e46db947328e75f33ff3"
+      }
+    },
+    {
+      "question": "What are Python decorators?",
+      "answer": "Decorators are a powerful feature in Python that allow you to modify or extend the behavior of functions or methods. They provide a convenient way to add functionality to existing code without modifying its structure. Decorators are commonly used for tasks such as logging, authentication, and performance monitoring.",
+      "_id": {
+        "$oid": "65e2e46db947328e75f33ff4"
+      }
+    }
+  ],
+  "isPopular": false,
+  "image": "python.png",
+  "videoNames": [
+    "01 - Course Introduction.mp4",
+    "011 - Numbers.mp4",
+    "012 - Numbers and Operators.mp4",
+    "013 - Dictionaries.mp4",
+    "014 - Strings.mp4",
+    "015 - String Indexing and Splitting.mp4",
+    "016 - Lists.mp4",
+    "017 - Tuples.mp4",
+    "018 - Fixing Difficult Errors.mp4",
+    "019 - Syntax Errors.mp4",
+    "02 - Three Typical Python Programs.mp4",
+    "020 - Runtime Errors.mp4",
+    "021 - The Structure of a Good Programming Question.mp4",
+    "022 - Exception Handling in Python.mp4",
+    "023 - Creating a basic python application using webmaps and folium.mp4",
+    "024 - Creating python basic application using basic of Python.mp4",
+    "03 - Setting up Python on Windows.mp4",
+    "04 - Setting up Python on Mac.mp4",
+    "05 - Creating and Executing Program in windows.mp4",
+    "06 - Creating and Executing a Python Program on Mac.mp4",
+    "07 - Setting up Atom on Windows.mp4",
+    "08 - Setting up Atom on Mac.mp4",
+    "09 - Variable datatype and functions Introduction.mp4",
+    "10 - Variables.mp4"
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65e2ee03230982a431dffb8d"
+  },
+  "courseTitle": "Project Management",
+  "initialPrice": 2500,
+  "offeredPrice": 499,
+  "discountInPercentage": 80,
+  "courseDesc": "Embark on a transformative journey into the realm of Project Management with our dynamic course. Dive into the intricacies of planning, organizing, and overseeing projects, learning invaluable skills to navigate complexities and deliver results. From mastering stakeholder communication to adeptly handling timelines and resources, this course is your gateway to becoming a proficient project leader. Elevate your career trajectory and unleash your potential as you immerse yourself in this empowering learning experience.",
+  "courseOverviewDesc": "Our Project Management course is designed to equip individuals with the essential skills and knowledge needed to successfully plan, execute, and deliver projects on time and within budget. Participants will learn key project management methodologies, tools, and techniques, and gain practical insights into managing project scope, resources, risks, and stakeholders. Whether you're new to project management or looking to enhance your existing skills, this course will provide you with the foundation to lead projects effectively and achieve project success.",
+  "folderName": "Project_Management_EdLernity",
+  "courseContentDescription": [
+    {
+      "question": "What is project management?",
+      "answer": "Project management is the application of processes, methods, knowledge, skills, and experience to achieve specific project objectives according to the project's constraints.",
+      "_id": {
+        "$oid": "65e2ee03230982a431dffb8e"
+      }
+    },
+    {
+      "question": "What are the key components of project management?",
+      "answer": "The key components of project management include defining project scope, creating a project plan, assigning tasks, managing resources, monitoring progress, and communicating with stakeholders.",
+      "_id": {
+        "$oid": "65e2ee03230982a431dffb8f"
+      }
+    },
+    {
+      "question": "Why is project management important?",
+      "answer": "Project management is important because it ensures projects are completed on time, within budget, and according to specifications. It helps organizations effectively manage resources, mitigate risks, and achieve their strategic objectives.",
+      "_id": {
+        "$oid": "65e2ee03230982a431dffb90"
+      }
+    },
+    {
+      "question": "What are some common project management methodologies?",
+      "answer": "Common project management methodologies include Waterfall, Agile, Scrum, Kanban, and Lean. Each methodology has its own approach to planning, executing, and delivering projects.",
+      "_id": {
+        "$oid": "65e2ee03230982a431dffb91"
+      }
+    },
+    {
+      "question": "How can project management benefit individuals and organizations?",
+      "answer": "Project management benefits individuals by improving their organizational skills, time management, and ability to lead and collaborate effectively. For organizations, it leads to higher project success rates, increased productivity, improved customer satisfaction, and competitive advantage.",
+      "_id": {
+        "$oid": "65e2ee03230982a431dffb92"
+      }
+    },
+    {
+      "question": "What are some essential project management tools?",
+      "answer": "Essential project management tools include Gantt charts, project management software (e.g., Microsoft Project, Asana, Trello), communication tools (e.g., Slack, Microsoft Teams), and document sharing platforms (e.g., Google Drive, SharePoint).",
+      "_id": {
+        "$oid": "65e2ee03230982a431dffb93"
+      }
+    },
+    {
+      "question": "How can project managers effectively manage project risks?",
+      "answer": "Project managers can effectively manage project risks by identifying potential risks early, assessing their impact and likelihood, developing risk mitigation strategies, and regularly monitoring and reviewing risks throughout the project lifecycle.",
+      "_id": {
+        "$oid": "65e2ee03230982a431dffb94"
+      }
+    }
+  ],
+  "isPopular": false,
+  "image": "project-management.png",
+  "videoNames": [
+    "01 - Fundamentals Runs project effectively (Overview).mp4",
+    "02 - The role of a project manager.mp4",
+    "03 - How to initiate a project.mp4",
+    "04 - Effectively Completing a project.mp4",
+    "05 - Effectively integrate change into project.mp4",
+    "06 - lv_0_20240218222106.mp4",
+    "07 - lv_0_20240218231839.mp4",
+    "08 - Monitoring project progress.mp4",
+    "09 - Motivating your project team.mp4",
+    "10 - Run projects effectively Executing a project.mp4",
+    "011 - Skills for a project manager.mp4"
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65e2f43aedf40d8780ef9ecd"
+  },
+  "courseTitle": "Excel",
+  "initialPrice": 2500,
+  "offeredPrice": 499,
+  "discountInPercentage": 80,
+  "courseDesc": "Embark on a transformative journey through the world of Excel with our comprehensive course designed for beginners and seasoned users alike. From mastering basic functions to unleashing the full potential of advanced features, you'll learn everything you need to know to excel with Excel. Dive into formulas, pivot tables, data visualization, and automation techniques that will revolutionize your workflow and elevate your analytical prowess. Whether you're a student, professional, or business owner, this course is your gateway to unlocking the power of data analysis and making informed decisions with confidence. Join us and take your Excel skills to new heights!",
+  "courseOverviewDesc": "Our Excel Mastery Course is designed to equip you with the skills and knowledge needed to excel in today's data-driven world. With a comprehensive curriculum covering essential functions, data organization, formula creation, pivot tables, macros, and more, you'll gain practical skills that are directly applicable to your job or daily tasks. Led by industry experts, our course offers flexible learning options, interactive quizzes, and a certificate of achievement upon completion. Whether you're a beginner or experienced user, our course provides personalized support and lifetime access to course materials. Enroll today and take the first step towards mastering Excel!",
+  "folderName": "Excel_EdLernity",
+  "courseContentDescription": [
+    {
+      "question": "What topics are covered in this Excel Mastery Course?",
+      "answer": "Our Excel Mastery Course covers a wide range of topics, including Excel basics, essential functions, data organization, advanced formulas, pivot tables, macros, data visualization, and more. Whether you're a beginner or an experienced user, there's something for everyone in this comprehensive course.",
+      "_id": {
+        "$oid": "65e2f43aedf40d8780ef9ece"
+      }
+    },
+    {
+      "question": "How is the course structured?",
+      "answer": "The course is divided into modules, each focusing on a specific aspect of Excel. Within each module, you'll find detailed lessons, practical exercises, and real-world examples to help reinforce your learning. Additionally, you'll have access to quizzes and assessments to track your progress and ensure mastery of each topic.",
+      "_id": {
+        "$oid": "65e2f43aedf40d8780ef9ecf"
+      }
+    },
+    {
+      "question": "What can I expect to learn by the end of the course?",
+      "answer": "By the end of the course, you'll have gained proficiency in Excel and acquired valuable skills that can be applied in various personal and professional settings. You'll be able to confidently navigate Excel, perform complex calculations, analyze data effectively, create dynamic reports and dashboards, automate tasks with macros, and much more.",
+      "_id": {
+        "$oid": "65e2f43aedf40d8780ef9ed0"
+      }
+    },
+    {
+      "question": "Are there any prerequisites for this course?",
+      "answer": "No prior experience with Excel is required to enroll in this course. Whether you're completely new to Excel or have some familiarity with the software, our course is designed to accommodate learners of all levels. Our instructors will guide you step-by-step through each lesson, ensuring that you build a strong foundation and progress at your own pace.",
+      "_id": {
+        "$oid": "65e2f43aedf40d8780ef9ed1"
+      }
+    },
+    {
+      "question": "Will I receive a certificate upon completion of the course?",
+      "answer": "Yes, upon successful completion of the course, you'll receive a certificate of achievement that you can add to your resume or LinkedIn profile. Our certificate is a testament to your commitment to professional development and mastery of Excel skills, which can enhance your credibility and career prospects.",
+      "_id": {
+        "$oid": "65e2f43aedf40d8780ef9ed2"
+      }
+    },
+    {
+      "question": "Can I access the course materials after completing the course?",
+      "answer": "Yes, once you've completed the course, you'll have lifetime access to the course materials, including video lectures, downloadable resources, and supplementary materials. You can revisit the lessons at any time to review concepts, refresh your skills, or explore advanced topics.",
+      "_id": {
+        "$oid": "65e2f43aedf40d8780ef9ed3"
+      }
+    },
+    {
+      "question": "How can I get support if I have questions or encounter difficulties during the course?",
+      "answer": "We're committed to providing you with the support you need to succeed. Throughout the course, you'll have access to our dedicated instructors and support team who are available to answer your questions, provide guidance, and assist you with any technical issues you may encounter. You can reach out to us via email, discussion forums, or live chat for personalized assistance.",
+      "_id": {
+        "$oid": "65e2f43aedf40d8780ef9ed4"
+      }
+    }
+  ],
+  "isPopular": false,
+  "image": "excel.png",
+  "videoNames": [
+    "01 - Excel what-if analysis how to use the scenario manager.mp4",
+    "02 - How to calculate percentage in Excel with formulas.mp4",
+    "03 - How to image into excel.mp4",
+    "04 - How to make Gantt chart in Excel.mp4",
+    "05 - how to use excel 12 techniques for power user.mp4"
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65e2f86f6b2802fc6922d3f0"
+  },
+  "courseTitle": "Angular Framework (MEAN STACK)",
+  "initialPrice": 2500,
+  "offeredPrice": 499,
+  "discountInPercentage": 80,
+  "courseDesc": "This course covers Angular framework for building single-page web applications. Students will learn about components, services, routing, and state management in Angular.",
+  "courseOverviewDesc": "This course covers Angular framework for building single-page web applications. Students will learn about components, services, routing, and state management in Angular.",
+  "folderName": "Angular_Framework_EdLernity",
+  "courseContentDescription": [
+    {
+      "question": "What is angular?",
+      "answer": "It's and framework of the javascript.",
+      "_id": {
+        "$oid": "65e2f86f6b2802fc6922d3f1"
+      }
+    },
+    {
+      "question": "What is the MEAN stack?",
+      "answer": "The MEAN stack is a full-stack JavaScript framework used for developing web applications. It consists of four main components: MongoDB (a NoSQL database), Express.js (a web application framework for Node.js), Angular (a frontend framework), and Node.js (a JavaScript runtime environment).",
+      "_id": {
+        "$oid": "65e2f86f6b2802fc6922d3f2"
+      }
+    },
+    {
+      "question": "Why should I learn Angular?",
+      "answer": "Angular is widely used in the industry for building modern web applications due to its robust features and extensive ecosystem. Learning Angular opens up opportunities for building scalable, maintainable, and performant web applications.",
+      "_id": {
+        "$oid": "65e2f86f6b2802fc6922d3f3"
+      }
+    },
+    {
+      "question": "What will I learn in this Angular course?",
+      "answer": "In this Angular course, you will learn the fundamentals of Angular framework, including components, modules, services, routing, forms, and HTTP client. You will also explore advanced topics such as RxJS observables, authentication, and deployment strategies.",
+      "_id": {
+        "$oid": "65e2f86f6b2802fc6922d3f4"
+      }
+    },
+    {
+      "question": "Is prior knowledge of JavaScript required for this course?",
+      "answer": "While prior knowledge of JavaScript is beneficial, this course is designed to cater to beginners as well. We cover JavaScript fundamentals along with Angular concepts to ensure a smooth learning experience for all participants.",
+      "_id": {
+        "$oid": "65e2f86f6b2802fc6922d3f5"
+      }
+    },
+    {
+      "question": "How will this course benefit my career?",
+      "answer": "By mastering Angular and the MEAN stack, you'll be equipped to pursue roles as a frontend developer, full-stack developer, or web application engineer. The demand for Angular developers is high in the job market, and acquiring these skills will enhance your career prospects significantly.",
+      "_id": {
+        "$oid": "65e2f86f6b2802fc6922d3f6"
+      }
+    },
+    {
+      "question": "Are there any prerequisites for enrolling in this course?",
+      "answer": "No specific prerequisites are required for this course. However, having a basic understanding of HTML, CSS, and JavaScript will be advantageous. Enthusiasm to learn and willingness to practice are the only requirements!",
+      "_id": {
+        "$oid": "65e2f86f6b2802fc6922d3f7"
+      }
+    }
+  ],
+  "isPopular": false,
+  "image": "angular.png",
+  "videoNames": [
+    "01 - Introduction..mp4",
+    "010 - Angular http client..mp4",
+    "011 - Implement a full example..mp4",
+    "02 - Introduction to the angular framework..mp4",
+    "03 - Understanding the project..mp4",
+    "04 - Angular components..mp4",
+    "05 - Angular components in action..mp4",
+    "06 - Angular services and dependency injection..mp4",
+    "07 - Angular services and dependency injection in action..mp4",
+    "08 - Angular routing..mp4",
+    "09 - Angular routing in action..mp4"
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65e2fae26d52bc7058811609"
+  },
+  "courseTitle": "UI/UX Design",
+  "initialPrice": 2500,
+  "offeredPrice": 499,
+  "discountInPercentage": 80,
+  "courseDesc": "This course covers fundamental principles of UI/UX design, including user research, wireframing, prototyping, and usability testing. Students will learn industry-standard tools and techniques to create engaging and intuitive user experiences.",
+  "courseOverviewDesc": "Creating UX/UI designs using Figma is a highly effective process. Figma, a robust web-based application, offers unparalleled versatility as it transcends platform limitations. Whether you prefer designing within a web browser or through their dedicated desktop applications for Windows and Mac, Figma provides seamless functionality. While it shares similarities with Sketch and Adobe XD, Figma distinguishes itself by excelling in team collaboration and facilitating agile, responsive design processes.",
+  "folderName": "UI_UX_EdLernity",
+  "courseContentDescription": [
+    {
+      "question": "What is angular?",
+      "answer": "It's and framework of the javascript.",
+      "_id": {
+        "$oid": "65e2fae26d52bc705881160a"
+      }
+    },
+    {
+      "question": "Is prior knowledge of JavaScript required for this course?",
+      "answer": "While prior knowledge of JavaScript is beneficial, this course is designed to cater to beginners as well. We cover JavaScript fundamentals along with Angular concepts to ensure a smooth learning experience for all participants.",
+      "_id": {
+        "$oid": "65e2fae26d52bc705881160b"
+      }
+    },
+    {
+      "question": "How will this course benefit my career?",
+      "answer": "By mastering Angular and the MEAN stack, you'll be equipped to pursue roles as a frontend developer, full-stack developer, or web application engineer. The demand for Angular developers is high in the job market, and acquiring these skills will enhance your career prospects significantly.",
+      "_id": {
+        "$oid": "65e2fae26d52bc705881160c"
+      }
+    },
+    {
+      "question": "Are there any prerequisites for enrolling in this course?",
+      "answer": "No specific prerequisites are required for this course. However, having a basic understanding of HTML, CSS, and JavaScript will be advantageous. Enthusiasm to learn and willingness to practice are the only requirements!",
+      "_id": {
+        "$oid": "65e2fae26d52bc705881160d"
+      }
+    }
+  ],
+  "isPopular": true,
+  "image": "ui-ux-design.png",
+  "videoNames": [
+    "01 - Introduction to UIUX Design.mp4",
+    "02 - lecture 2.mp4",
+    "03 - lecture 3.mp4",
+    "04 - lecture 4.mp4",
+    "05 - lecture 5.mp4",
+    "06 - lecture 6.mp4"
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65e308f9f6428a0dcc074a3c"
+  },
+  "courseTitle": "Javascript",
+  "initialPrice": 2500,
+  "offeredPrice": 499,
+  "discountInPercentage": 80,
+  "courseDesc": "JavaScript is a versatile programming language primarily used for web development to add interactivity and dynamic behavior to websites. It allows developers to manipulate website content, control multimedia elements, create interactive forms, and respond to user actions in real-time. JavaScript is essential for modern web development, enabling the creation of rich, interactive web experiences across various devices and platforms.",
+  "courseOverviewDesc": "Unleash the power of the web with our JavaScript course! Dive into the dynamic world of web development as you master this essential programming language. From crafting interactive websites to building powerful web applications, JavaScript empowers you to bring your ideas to life with ease. Join us and embark on a journey where creativity meets functionality, and transform your coding skills into captivating digital experiences.",
+  "folderName": "Javascript_EdLernity",
+  "courseContentDescription": [
+    {
+      "question": "what will I learn in this JavaScript course?",
+      "answer": "In this course, you will learn the fundamentals of JavaScript programming, including variables, data types, control structures, functions, and objects. You will also delve into advanced topics such as DOM manipulation, event handling, AJAX, and ES6 features.",
+      "_id": {
+        "$oid": "65e308f9f6428a0dcc074a3d"
+      }
+    },
+    {
+      "question": " Will I receive a certificate upon completion?",
+      "answer": "Yes, upon successfully finishing the course, you will receive a certificate of completion, validating your proficiency in JavaScript programming. This certificate can be showcased to potential employers or used to enhance your resume.",
+      "_id": {
+        "$oid": "65e308f9f6428a0dcc074a3e"
+      }
+    },
+    {
+      "question": "What kind of support can I expect during the course?",
+      "answer": "Throughout the course, you will have access to our dedicated instructors who will provide guidance, assistance, and feedback to help you succeed. Additionally, you will join a community of fellow learners where you can collaborate, share ideas, and troubleshoot challenges together.",
+      "_id": {
+        "$oid": "65e308f9f6428a0dcc074a3f"
+      }
+    },
+    {
+      "question": "Can I access the course materials after completing the course?",
+      "answer": "Yes, you will have lifetime access to the course materials, including video lectures, coding exercises, and supplementary resources. This allows you to revisit the content at any time for review or reference as you continue to advance your skills in JavaScript programming.",
+      "_id": {
+        "$oid": "65e308f9f6428a0dcc074a40"
+      }
+    }
+  ],
+  "isPopular": true,
+  "image": "js.png",
+  "videoNames": [
+    "01 - Introduction toJavascript part 1.mp4",
+    "02 - introduction about loop,array and string in Javascript part 2.mp4",
+    "03 - introduction about object,getter and setter,api and window in Javascript part 3.mp4",
+    "04 - introduction about arrow function,xmlhttprequest and Regex in Javascript part 4.mp4",
+    "05 - introduction about DOM,promise,async await in Javascript part 5.mp4"
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65e30b58f6428a0dcc074a8a"
+  },
+  "courseTitle": "Motion Design",
+  "initialPrice": 2500,
+  "offeredPrice": 499,
+  "discountInPercentage": 80,
+  "courseDesc": "Embark on a journey into the captivating world of motion design with our comprehensive course. Discover the art of bringing static graphics to life through animation, typography, and visual effects. From concept development to execution, learn the techniques and principles behind creating dynamic visuals that engage and captivate audiences. Whether you're a beginner or an experienced designer looking to expand your skill set, this course will empower you to unleash your creativity and elevate your motion design projects to new heights.",
+  "courseOverviewDesc": "Ignite your creativity and breathe life into your designs with our exhilarating Motion Design course! Delve into the dynamic realm where graphics evolve into immersive experiences. From captivating animations to mesmerizing visual effects, discover the secrets behind crafting compelling motion graphics that leave a lasting impact. Whether you're a seasoned designer seeking to master new techniques or a newcomer eager to explore the world of motion, this course will empower you to unleash your imagination and transform static visuals into dynamic masterpieces that mesmerize and inspire. Join us on this exhilarating journey and let your creativity take flight!",
+  "folderName": "Motion_Design_EdLernity",
+  "courseContentDescription": [
+    {
+      "question": "What skills will I acquire in this Motion Design course?",
+      "answer": "In this course, you will learn the fundamentals of JavaScript programming, including variables, data types, control structures, functions, and objects. You will also delve into advanced topics such as DOM manipulation, event handling, AJAX, and ES6 features.",
+      "_id": {
+        "$oid": "65e30b58f6428a0dcc074a8b"
+      }
+    },
+    {
+      "question": " Is this course suitable for beginners?",
+      "answer": "Yes, this course is designed to accommodate beginners with no prior programming experience. Our comprehensive curriculum and hands-on approach will guide you through the basics and gradually build your proficiency in JavaScript programming.",
+      "_id": {
+        "$oid": "65e30b58f6428a0dcc074a8c"
+      }
+    },
+    {
+      "question": " How will this course benefit me?",
+      "answer": "By completing this course, you will gain the skills and knowledge needed to create interactive and dynamic websites, enhance your career prospects in web development, and unlock opportunities to work on exciting projects in the tech industry.",
+      "_id": {
+        "$oid": "65e30b58f6428a0dcc074a8d"
+      }
+    },
+    {
+      "question": " Will I receive a certificate upon completion?",
+      "answer": "Yes, upon successfully finishing the course, you will receive a certificate of completion, validating your proficiency in JavaScript programming. This certificate can be showcased to potential employers or used to enhance your resume.",
+      "_id": {
+        "$oid": "65e30b58f6428a0dcc074a8e"
+      }
+    },
+    {
+      "question": "What kind of support can I expect during the course?",
+      "answer": "Throughout the course, you will have access to our dedicated instructors who will provide guidance, assistance, and feedback to help you succeed. Additionally, you will join a community of fellow learners where you can collaborate, share ideas, and troubleshoot challenges together.",
+      "_id": {
+        "$oid": "65e30b58f6428a0dcc074a8f"
+      }
+    },
+    {
+      "question": "Can I access the course materials after completing the course?",
+      "answer": "Yes, you will have lifetime access to the course materials, including video lectures, coding exercises, and supplementary resources. This allows you to revisit the content at any time for review or reference as you continue to advance your skills in JavaScript programming.",
+      "_id": {
+        "$oid": "65e30b58f6428a0dcc074a90"
+      }
+    }
+  ],
+  "isPopular": false,
+  "image": "motion-design.png",
+  "videoNames": [
+    "01 - Introducton to motion.mp4"
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65e30cdae401e88affc3770c"
+  },
+  "courseTitle": "Mastering ChatGPT",
+  "initialPrice": 2500,
+  "offeredPrice": 499,
+  "discountInPercentage": 80,
+  "courseDesc": "Our \"Mastering ChatGPT\" course teaches you how to build advanced chatbots and virtual assistants using OpenAI's GPT models. From NLP basics to fine-tuning and deployment, learn to create conversational AI applications that engage users in natural conversations. Gain hands-on experience and master the skills needed to revolutionize human-AI interaction. Enroll now and unlock the potential of ChatGPT!",
+  "courseOverviewDesc": "Discover the world of conversational AI with our \"Mastering ChatGPT\" course. From understanding NLP principles to deploying GPT models in real-world applications, this course covers all aspects of building intelligent chatbots and virtual assistants. With hands-on projects and expert guidance, you'll learn to create engaging conversational experiences and transform the way humans interact with AI. Enroll now to become a ChatGPT master!",
+  "folderName": "Chat_GPT_Course_EdLernity",
+  "courseContentDescription": [
+    {
+      "question": "What is ChatGPT?",
+      "answer": "ChatGPT is a conversational AI model developed by OpenAI based on the GPT (Generative Pre-trained Transformer) architecture. It is designed to generate human-like text responses in natural language conversations",
+      "_id": {
+        "$oid": "65e30cdae401e88affc3770d"
+      }
+    },
+    {
+      "question": "How does ChatGPT work?",
+      "answer": "ChatGPT works by processing input text and generating contextually relevant responses based on its understanding of the conversation history. It leverages deep learning techniques to analyze and generate text, making it capable of engaging in meaningful conversations with users.",
+      "_id": {
+        "$oid": "65e30cdae401e88affc3770e"
+      }
+    },
+    {
+      "question": "What are the key components of training ChatGPT?",
+      "answer": "The key components of training ChatGPT include: Preprocessing and cleaning training data Fine-tuning the pre-trained model on domain-specific or task-specific datasets Evaluating model performance using appropriate metrics Iteratively refining the model based on feedback and evaluation results",
+      "_id": {
+        "$oid": "65e30cdae401e88affc3770f"
+      }
+    },
+    {
+      "question": "How can ChatGPT be fine-tuned for specific tasks or domains?",
+      "answer": "ChatGPT can be fine-tuned by training it on additional data related to the specific task or domain of interest. This involves providing the model with examples of input-output pairs relevant to the task and fine-tuning its parameters to optimize performance on the target task.",
+      "_id": {
+        "$oid": "65e30cdae401e88affc37710"
+      }
+    },
+    {
+      "question": "What are some ethical considerations when deploying ChatGPT-based applications?",
+      "answer": "Some ethical considerations when deploying ChatGPT-based applications include: Ensuring transparency about the AI nature of the system Mitigating biases in training data and model outputs Implementing safeguards to prevent misuse or harmful interactions Providing clear guidelines and instructions for users interacting with the system",
+      "_id": {
+        "$oid": "65e30cdae401e88affc37711"
+      }
+    },
+    {
+      "question": "How can ChatGPT be integrated into existing chatbot platforms or applications?",
+      "answer": "ChatGPT can be integrated into existing chatbot platforms or applications using APIs or SDKs provided by OpenAI. Developers can send user queries to the ChatGPT model and use the generated responses to enhance the conversational capabilities of their applications.",
+      "_id": {
+        "$oid": "65e30cdae401e88affc37712"
+      }
+    },
+    {
+      "question": "What are some real-world applications of ChatGPT?",
+      "answer": "ChatGPT has a wide range of real-world applications, including: Customer support chatbots Virtual assistants for scheduling and task management Conversational interfaces for e-commerce and shopping Educational chatbots for tutoring and learning assistance",
+      "_id": {
+        "$oid": "65e30cdae401e88affc37713"
+      }
+    }
+  ],
+  "isPopular": false,
+  "image": "chatgpt.png",
+  "videoNames": [
+    "01 - Introduction to the Tutorial Masterclass.mp4",
+    "011 - ChatGPT Launch E-Mails to Affiliates.mp4",
+    "012 - ChatGPT Script for a Sales Video.mp4",
+    "013 - AI with PowerPoint Presentation Coach.mp4",
+    "014 - AI with PowerPoint -Design and Accessibility.mp4",
+    "015 - ChatGPT - Write a Welcome E-Mail.mp4",
+    "016 - ChatGPT Suggests a Layout and Order for the Sales Page.mp4",
+    "017 - ChatGPT Suggests Colors and Background For the Sales.mp4",
+    "018 - ChatGPT Earnings Disclaimers.mp4",
+    "019 - ChatGPT Creates the Copy for the Opt-In Page.mp4",
+    "02 - ChatGPT Conversation Conventions.mp4",
+    "020 - ChatGPT - Creates the Opt-In E-Mail with Sales Message.mp4",
+    "03 - Google Talk To Books.mp4",
+    "04 - GPT Workaround for Up To Date Statistical Information.mp4",
+    "05 - Choosing a Sales Letter Framework.mp4",
+    "06 - ChatGPT - Ask for Image Prompts.mp4",
+    "07 - Canva Text to Image for ChatGPT Sales Presentation.mp4",
+    "08 - Use ChatGPT to Write Headlines and Sub Headlines.mp4",
+    "09 - ChatGPT Thank You Page Script.mp4",
+    "10 - Launch E-Mails to Customers.mp4"
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65e30e4af6428a0dcc074ae6"
+  },
+  "courseTitle": "Coding Interview Prepration",
+  "initialPrice": 2500,
+  "offeredPrice": 499,
+  "discountInPercentage": 80,
+  "courseDesc": "Prepare for success in your coding interviews with our comprehensive Coding Interview Preparation course. Dive into essential algorithms, data structures, and problem-solving techniques tailored specifically for technical interviews. Master the art of coding under pressure as you tackle a wide range of interview-style questions, honing your skills and confidence. With personalized guidance and extensive practice, you'll be equipped to ace even the most challenging coding interviews and land your dream job in the tech industry. Join us and embark on the journey to unlocking your full potential as a coding interview superstar.",
+  "courseOverviewDesc": "Unlock your potential and conquer coding interviews with our dynamic Coding Interview Preparation course! Dive into a comprehensive curriculum designed to equip you with the essential skills and strategies needed to excel in technical interviews. From mastering algorithms and data structures to honing problem-solving techniques, this course offers personalized guidance and extensive practice to boost your confidence and performance. Whether you're a seasoned coder or just starting your journey, join us and elevate your chances of landing your dream job in the competitive tech industry. Embark on this transformative journey and let your coding skills shine!",
+  "folderName": "Coding_Interview_Prepration_EdLernity",
+  "courseContentDescription": [
+    {
+      "question": "What topics are covered in this Coding Interview Preparation course?",
+      "answer": "This course covers a wide range of topics essential for coding interviews, including algorithms, data structures, problem-solving techniques, time and space complexity analysis, dynamic programming, graph algorithms, and more. You will also learn interview-specific strategies, such as how to approach technical questions, handle edge cases, and optimize solutions.",
+      "_id": {
+        "$oid": "65e30e4af6428a0dcc074ae7"
+      }
+    },
+    {
+      "question": " Is this course suitable for beginners?",
+      "answer": "Yes, this course is designed to accommodate beginners with no prior programming experience. Our comprehensive curriculum and hands-on approach will guide you through the basics and gradually build your proficiency in JavaScript programming.",
+      "_id": {
+        "$oid": "65e30e4af6428a0dcc074ae8"
+      }
+    },
+    {
+      "question": " How will this course benefit me?",
+      "answer": "By completing this course, you will gain the skills and knowledge needed to create interactive and dynamic websites, enhance your career prospects in web development, and unlock opportunities to work on exciting projects in the tech industry.",
+      "_id": {
+        "$oid": "65e30e4af6428a0dcc074ae9"
+      }
+    },
+    {
+      "question": " Will I receive a certificate upon completion?",
+      "answer": "Yes, upon successfully finishing the course, you will receive a certificate of completion, validating your proficiency in JavaScript programming. This certificate can be showcased to potential employers or used to enhance your resume.",
+      "_id": {
+        "$oid": "65e30e4af6428a0dcc074aea"
+      }
+    },
+    {
+      "question": "What kind of support can I expect during the course?",
+      "answer": "Throughout the course, you will have access to our dedicated instructors who will provide guidance, assistance, and feedback to help you succeed. Additionally, you will join a community of fellow learners where you can collaborate, share ideas, and troubleshoot challenges together.",
+      "_id": {
+        "$oid": "65e30e4af6428a0dcc074aeb"
+      }
+    },
+    {
+      "question": "Can I access the course materials after completing the course?",
+      "answer": "Yes, you will have lifetime access to the course materials, including video lectures, coding exercises, and supplementary resources. This allows you to revisit the content at any time for review or reference as you continue to advance your skills in JavaScript programming.",
+      "_id": {
+        "$oid": "65e30e4af6428a0dcc074aec"
+      }
+    }
+  ],
+  "isPopular": false,
+  "image": "interview-preapration.png",
+  "videoNames": [
+    "01 - Introduction about array in coding.mp4",
+    "02 - Array in deep.mp4",
+    "03 - Solving Question.mp4",
+    "04 - Qustion Solution.mp4",
+    "05 - Solving Question of leetcode.mp4",
+    "06 - Solving Question.mp4",
+    "07 - Optimize Solution.mp4",
+    "08 - Solving Question.mp4",
+    "09 - Solving Question.mp4",
+    "10 - Solving leetcode Qusetion.mp4",
+    "011 - Figure out a solution without code.mp4",
+    "012 - Solving Question .mp4",
+    "013 - Solving Question.mp4",
+    "014 - Solving Question.mp4",
+    "015 - Solving leetcode Question.mp4",
+    "016 - Optimize solution.mp4",
+    "017 - Solving Question.mp4",
+    "018 - Solving leetcode question.mp4",
+    "019 - Solving array deep Question.mp4",
+    "020 - Solving Question array.mp4",
+    "021 - Solving Question.mp4",
+    "022 - Solving Question coding.mp4",
+    "023 - lesson Overview of technical interview preparation.mp4"
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65e30f88f6428a0dcc074bc8"
+  },
+  "courseTitle": "Cyber security",
+  "initialPrice": 2500,
+  "offeredPrice": 499,
+  "discountInPercentage": 80,
+  "courseDesc": "Dive into the world of cybersecurity with our comprehensive course designed to equip you with the knowledge and skills needed to protect digital assets and combat cyber threats. Explore essential topics such as network security, encryption, risk management, and ethical hacking techniques. Learn from industry experts and gain hands-on experience through practical labs and simulations. Whether you're a beginner or an experienced professional, this course will empower you to navigate the complex landscape of cybersecurity and safeguard critical information in today's digital age. Join us and become a defender against cyber threats!",
+  "courseOverviewDesc": "Prepare to defend against cyber threats and safeguard digital assets with our cutting-edge Cybersecurity course! Delve into the fascinating realm where technology meets security, and equip yourself with the skills and knowledge needed to protect against cyberattacks. From mastering encryption techniques to learning the art of ethical hacking, this course offers a hands-on approach to mastering the latest cybersecurity practices. Whether you're an aspiring security professional or a seasoned IT expert looking to stay ahead of the curve, join us on this transformative journey to becoming a cyber guardian in today's digital landscape.",
+  "folderName": "Cyber_Security",
+  "courseContentDescription": [
+    {
+      "question": "What topics are covered in this Cybersecurity course?",
+      "answer": "This course covers a wide range of topics essential for cybersecurity, including network security, cryptography, threat detection and prevention, ethical hacking, risk management, compliance, and incident response. You'll also learn about emerging technologies and trends in cybersecurity.",
+      "_id": {
+        "$oid": "65e30f88f6428a0dcc074bc9"
+      }
+    },
+    {
+      "question": " Is this course suitable for beginners?",
+      "answer": "Yes, this course is designed to accommodate beginners with no prior programming experience. Our comprehensive curriculum and hands-on approach will guide you through the basics and gradually build your proficiency in JavaScript programming.",
+      "_id": {
+        "$oid": "65e30f88f6428a0dcc074bca"
+      }
+    },
+    {
+      "question": " How will this course benefit me?",
+      "answer": "By completing this course, you will gain the skills and knowledge needed to create interactive and dynamic websites, enhance your career prospects in web development, and unlock opportunities to work on exciting projects in the tech industry.",
+      "_id": {
+        "$oid": "65e30f88f6428a0dcc074bcb"
+      }
+    },
+    {
+      "question": " Will I receive a certificate upon completion?",
+      "answer": "Yes, upon successfully finishing the course, you will receive a certificate of completion, validating your proficiency in JavaScript programming. This certificate can be showcased to potential employers or used to enhance your resume.",
+      "_id": {
+        "$oid": "65e30f88f6428a0dcc074bcc"
+      }
+    },
+    {
+      "question": "What kind of support can I expect during the course?",
+      "answer": "Throughout the course, you will have access to our dedicated instructors who will provide guidance, assistance, and feedback to help you succeed. Additionally, you will join a community of fellow learners where you can collaborate, share ideas, and troubleshoot challenges together.",
+      "_id": {
+        "$oid": "65e30f88f6428a0dcc074bcd"
+      }
+    },
+    {
+      "question": "Can I access the course materials after completing the course?",
+      "answer": "Yes, you will have lifetime access to the course materials, including video lectures, coding exercises, and supplementary resources. This allows you to revisit the content at any time for review or reference as you continue to advance your skills in JavaScript programming.",
+      "_id": {
+        "$oid": "65e30f88f6428a0dcc074bce"
+      }
+    }
+  ],
+  "isPopular": true,
+  "image": "cyber-security.png",
+  "videoNames": [
+    "01 - What is Cyber Security.mp4",
+    "011 -  Most Common Attack demonstration.mp4",
+    "012 - Malware.mp4",
+    "013 -  Can We Catch Them.mp4",
+    "014 -  What is a Vulnerability.mp4",
+    "015 -  Most Common vulnerabilities.mp4",
+    "016 -  Unpatched Machine exploitation demonstration.mp4",
+    "017 -  Preventing Vulnerabilities.mp4",
+    "018 -  Resources for Buffer overflows.mp4",
+    "019 -  Buffer Overflow demonstration.mp4",
+    "02 - Introduction to cyber security.mp4",
+    "020 - Social Engineering attacks.mp4",
+    "021 -  How To Recognize phishing emails.mp4",
+    "022 -  Tools For Analyzing phishing attacks.mp4",
+    "023 -  Summary Of Social engineering.mp4",
+    "024 -  End Point Protection introduction.mp4",
+    "025 -  Browser Security.mp4",
+    "026 -  Firefox Security and hardening.mp4",
+    "027 - Brave Browser Security and privacy.mp4",
+    "028 -  Safari and Chrome security resources.mp4",
+    "029 -  Bitdefender, Kaspersky,McAfee,Malwarebytes.mp4",
+    "03 -  Most Common Cyber security path.mp4",
+    "030 -  password security and password management.mp4",
+    "031 - keepass.mp4",
+    "032 -  LastPass, NordPass, and 1Password.mp4",
+    "033 -  Files and disk encryption.mp4",
+    "034 -  process explorer.mp4",
+    "035 -  Netstat and wireshark.mp4",
+    "036 -  Htop.mp4",
+    "037 -  Rootkit Hunter.mp4",
+    "038 -  Host Based Firewalls.mp4",
+    "039 - Iptables.mp4",
+    "04 - History of Cyber security.mp4",
+    "040 -  Windows Defende firewall.mp4",
+    "041 -  Macos Firewall.mp4",
+    "042 -  How To Securely erase files on window linux macos.mp4",
+    "043 - end point security recap.mp4",
+    "044 -  Network Security introduction.mp4",
+    "045 -  Network Firewalls theory.mp4",
+    "046 -  Different Network Firewalls.mp4",
+    "047 -  Network Scanning and discovering vulnerabilities.mp4",
+    "048 -  Network Security with Nmap.mp4",
+    "049 -  Discovering Vulnerabilities with nessus.mp4",
+    "05 -  Goals Of Cyber Security.mp4",
+    "050 -  Scanning Window 7 machine with nessus.mp4",
+    "051 - Routersploit.mp4",
+    "052 -  Router Default credentials.mp4",
+    "053 -  Secure Network architecture.mp4",
+    "054 -  Wireless Security.mp4",
+    "055 -  Wireless Attack demonstration.mp4",
+    "056 -  Network Monitor with TCPDump.mp4",
+    "057 -  Common Network attack.mp4",
+    "058 -  Protect and Recover strategy.mp4",
+    "059 -  Endpoint Protection strategy.mp4",
+    "06 - Blue Team vs Red team.mp4",
+    "060 -  Application Centric strategy.mp4",
+    "061 -  Identity Centric strategy.mp4",
+    "062 -  Data Centric Strategy.mp4",
+    "063 -  Attack Centric strategy.mp4",
+    "064 -  IP Tracking.mp4",
+    "065 -  Cookies and Browser tracking.mp4",
+    "066 -  Exercise Imposter syndrome.mp4",
+    "067 -  Different Types of tracking.mp4",
+    "068 -  Anonymity Theory.mp4",
+    "069 -  Tor Browser.mp4",
+    "07 -  Protecting Asset.mp4",
+    "070 -  Proxychains With different tools.mp4",
+    "071 -  Installing VPN for kali.mp4",
+    "072 -  Whoami Anonymity tool.mp4",
+    "073 -  Steps to be as anonymous as possible.mp4",
+    "074 -  Gathering Email using the harvester and hunterio.mp4",
+    "075 -  Theory Behind Scanning.mp4",
+    "076 -  Reverse Shells,bind shells.mp4",
+    "077 -  Msfconsole Basic commands.mp4",
+    "078 -  Our First Exploit vsftp 2 3 4 exploitation.mp4",
+    "079 -  Software Vulnerability samba exploitation.mp4",
+    "08 -  How Companies Get compromised.mp4",
+    "080 -  Generating Basic payload with Msfvenom.mp4",
+    "081 -  Post Exploitation theory.mp4",
+    "082 -  Meterpreter Basic commands part 1.mp4",
+    "083 -  Meterpreter Basic commands part 2.mp4",
+    "084 - thank you.mp4",
+    "09 -  different securities.mp4",
+    "10 -  Who Are Hackers.mp4"
+  ],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "65e87bb1b4314d74ede40ac9"
+  },
+  "courseTitle": "Web-Development",
+  "initialPrice": 2500,
+  "offeredPrice": 499,
+  "discountInPercentage": 80,
+  "courseDesc": "Embark on a transformative journey into the dynamic world of web development with our comprehensive course. Learn the essential skills and techniques needed to design and build captivating websites from scratch. From mastering HTML and CSS to delving into JavaScript and beyond, this course offers a hands-on approach to developing responsive and interactive web experiences. Whether you're a beginner or looking to refine your skills, join us and unlock the potential to create stunning websites that leave a lasting impression.",
+  "courseOverviewDesc": "Ignite your passion for web development with our captivating course! Dive into the exciting realm where creativity meets technology and unlock the secrets to crafting stunning websites. From mastering the fundamentals of HTML and CSS to exploring the dynamic possibilities of JavaScript, this course offers a hands-on journey to transform your coding skills. Whether you're a novice eager to explore the world of web development or an experienced developer seeking to expand your repertoire, join us and embark on an exhilarating adventure to create the next generation of digital experiences. Let your imagination soar as you build the web of tomorrow!",
+  "folderName": "Web_Development_EdLernity",
+  "courseContentDescription": [
+    {
+      "question": " What topics are covered in this Web Development course?",
+      "answer": "This course covers a comprehensive range of topics essential for web development, including HTML, CSS, JavaScript, responsive design, front-end frameworks (such as Bootstrap), back-end development (using Node.js or other server-side technologies), databases (such as SQL or NoSQL), and deployment strategies. You'll also learn about web standards, best practices, and emerging trends in the field.",
+      "_id": {
+        "$oid": "65e87bb1b4314d74ede40aca"
+      }
+    },
+    {
+      "question": " Is this course suitable for beginners?",
+      "answer": "Yes, this course is designed to accommodate learners at all levels, including beginners with no prior experience in web development. Our curriculum starts with the basics and gradually progresses to more advanced topics, ensuring that everyone can follow along and build a strong foundation in web development principles and techniques.",
+      "_id": {
+        "$oid": "65e87bb1b4314d74ede40acb"
+      }
+    },
+    {
+      "question": "How will this course benefit me?",
+      "answer": "By completing this course, you will gain the skills and knowledge needed to design, build, and deploy professional-quality websites. Whether you're looking to kickstart a career in web development, enhance your existing skill set, or pursue personal projects, this course will equip you with the tools and confidence to succeed in the dynamic field of web development.",
+      "_id": {
+        "$oid": "65e87bb1b4314d74ede40acc"
+      }
+    },
+    {
+      "question": " Will I gain practical experience in this course?",
+      "answer": " Absolutely! This course emphasizes hands-on learning, with practical exercises, coding projects, and real-world examples to reinforce key concepts and techniques. You'll have the opportunity to apply what you've learned in a practical setting, building real websites and web applications from scratch.",
+      "_id": {
+        "$oid": "65e87bb1b4314d74ede40acd"
+      }
+    },
+    {
+      "question": " Can I showcase my projects in a portfolio?",
+      "answer": "Yes, throughout the course, you will work on a series of projects that you can showcase in your portfolio. These projects will demonstrate your skills and proficiency in various aspects of web development, providing valuable assets for job applications, freelance opportunities, or personal branding.",
+      "_id": {
+        "$oid": "65e87bb1b4314d74ede40ace"
+      }
+    },
+    {
+      "question": " Can I access the course materials after completing the course?",
+      "answer": "Yes, you will have lifetime access to the course materials, including video lectures, coding exercises, project files, and supplementary resources. This allows you to revisit the content at any time for review, refresh your knowledge, or explore new topics as you continue to grow as a web developer.",
+      "_id": {
+        "$oid": "65e87bb1b4314d74ede40acf"
+      }
+    }
+  ],
+  "isPopular": true,
+  "image": "web-dev.png",
+  "videoNames": [
+    "01 - Welcome To The Course!.mp4",
+    "02 - Curriculum Walkthrough.mp4",
+    "03 - When Was The Course Last Updated.mp4",
+    "04 - Will You Get A Job by this course.mp4",
+    "05 - Accessing Course Code & Slides.mp4",
+    "06 - Tips On The Interactive Coding Exercises.mp4",
+    "07 - Migrating From The Old Version Of Web Dev.mp4",
+    "08 - What is Internet-- (8).mp4",
+    "09 - Intro to the Web.mp4",
+    "10 - The RequestResponse Cycle.mp4",
+    "011 - What do HTML CSS JS do_2.mp4",
+    "012 -Setting Up Our Developer Environment.mp4",
+    "013 - OPTIONAL VSCode Theme_2.mp4",
+    "014 - Introduction to HTML.mp4",
+    "015 - Our Very First HTML Page.mp4",
+    "016 - TIP Mozilla Developer Network for WD.mp4",
+    "017 - Paragraph Elements in HTML.mp4",
+    "018 - Heading Elements in HTML.mp4",
+    "019 - Introduction to the Chrome Inspector_2.mp4",
+    "020 - HTML Boilerplate.mp4",
+    "21 -   VSCode Tip and Trick for Auto format.mp4",
+    "22 -  List Elements in HTML.mp4",
+    "23 -   Anchor Tags in HTML.mp4",
+    "24 -  Images in HTML.mp4",
+    "25 -  Introduction to Comments in HTML.mp4",
+    "26 -   What Exactly Is HTML5.mp4",
+    "27 -   Block vs  Inline Elements Divs and Spans.mp4",
+    "28 -  Introduction to an Odd Assortment.mp4",
+    "29 -   Entity Codes in HTML.mp4",
+    "30 - Introduction to Semantic Markup in HTML.mp4",
+    "31 -  Playing With Semantic Elements (Part-2)_2.mp4",
+    "32 -   Screen Reader Demonstration.mp4",
+    "33 -   VSCode Tip Emmet for HTML_2.mp4",
+    "34 -  Next Unit Goals.mp4",
+    "35 -   Introducing HTML Tables.mp4",
+    "36 -   Tables TR, TD, and TH Elements.mp4",
+    "37 -   Tables Thead,Tbody, and Tfoot Elements html.mp4",
+    "38 -   Tables Colspan & Rowspan in HTML.mp4",
+    "39 -  The Form Element in HTML.mp4",
+    "40 -  Common Input Types in HTML.mp4",
+    "41 -  The All Important Label in HTML.mp4",
+    "42 -  Buttons in HTML.mp4",
+    "43 -  The Name Attribute in HTML.mp4",
+    "44 -   Hijacking Google & Reddit's Search.mp4",
+    "45 -   What is CSS.mp4",
+    "46 -  CSS is Huge, Don't Panic!.mp4",
+    "47 -   Including CSS Styles Correctly.mp4",
+    "48 -  CSS Color & Background Color Properties.mp4",
+    "49 -  CSS Colors Systems RGB & Named Colors.mp4",
+    "50 -   CSS Colors Systems Hexadecimal.mp4",
+    "51 -   A Reminder On Semicolons & CSS.mp4",
+    "52 -   CSS Common Text Properties.mp4",
+    "53 -   Font Size Basics With Pixels.mp4",
+    "54 -   The Font Family Property of CSS.mp4",
+    "55 -   CSS Universal & Element Selectors.mp4",
+    "56 -   CSS ID Selector.mp4",
+    "57 -   CSS Class Selector.mp4",
+    "58 -   CSS Descendent Selector.mp4",
+    "59 -  The Adjacent & Direct Descendent Selectors.mp4",
+    "60 -   CSS Attribute Selector.mp4",
+    "61 -   CSS Pseudo Classes.mp4",
+    "62 -   CSS Pseudo Elements.mp4",
+    "63 -   The CSS Cascade.mp4",
+    "64 -   What is CSS Specificity.mp4",
+    "65 -  TIP Chrome Dev Tools & CSS.mp4",
+    "66 -   CSS Inline Styles & Important.mp4",
+    "67 -   CSS Inheritance.mp4",
+    "68 -   CSS Box Model Width & Height.mp4",
+    "69 - Box Model Border & Border Radius.mp4",
+    "70 -   CSS Box Model Padding.mp4",
+    "71 -   Box Model Margin.mp4",
+    "72 -   The CSS Display Property.mp4",
+    "73 -  CSS Units Revisited.mp4",
+    "74 - CSS Units ems.mp4",
+    "75 -  CSS Units rems.mp4",
+    "76 -  CSS Opacity & The Alpha Channel.mp4",
+    "77 -  The CSS Position Property.mp4",
+    "78 -  CSS Transitions.mp4",
+    "79 -  The Power of CSS Transforms.mp4",
+    "80 -  CSS Fancy Button Hover Effect CodeAlong.mp4",
+    "81 -  The Truth About CSS Background.mp4",
+    "82 -  CSS Google Fonts is Amazing.mp4",
+    "83 -  Project- Photo Blog CodeAlong Pt 1.mp4",
+    "84 -  Project- Photo Blog CodeAlong Pt  2.mp4",
+    "85 -  What on Earth Is CSS Flexbox.mp4",
+    "86 -  CSS Flex Direction.mp4",
+    "87 -  CSS Justify Content.mp4",
+    "88 -  CSS Flex Wrap.mp4",
+    "89 -  CSS Align Items.mp4",
+    "90 -  CSS Align Content & Align Self.mp4",
+    "91 -  CSS Flex Basis, Grow, & Shrink.mp4",
+    "92 -  CSS Flex Shorthand.mp4",
+    "93 -  CSS Responsive Design & Media Queries Intro.mp4",
+    "94 -  The Power of CSS Media Queries.mp4",
+    "95 -  Building a Responsive Navbar.mp4",
+    "96 - Project- Pricing Panel CodeAlong Pt  1.mp4",
+    "97 -  Project- Pricing Panel CodeAlong Pt 2.mp4",
+    "98 -  Project- Pricing Panel CodeAlong Pt 3.mp4",
+    "99 -  Project- Pricing Panel CodeAlong Pt 4.mp4",
+    "100 - Project_ Pricing Panel CodeAlong Pt 6.mp4",
+    "101 -  Project- Pricing Panel CodeAlong Pt 5 -.mp4",
+    "102 -   CSS Framework Bootstrap.mp4",
+    "103 -  Including Bootstrap & Containers.mp4",
+    "104 -  Bootstrap Buttons.mp4",
+    "105 - Bootstrap Typography Utilities.mp4",
+    "106 -  Badges, Alerts, & Button Groups.mp4"
+  ],
+  "__v": 0
+}]

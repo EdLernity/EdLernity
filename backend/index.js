@@ -12,6 +12,7 @@ const paymentRoutes =  require('./routes/phonePayRoutes');
 const userCourse =  require('./routes/userCourseRoutes');
 const contactRoutes =  require('./routes/ContactRoutes');
 const path = require('path');
+const enrollment = require('./routes/enroll.routes');
 
 const app = express();
 
@@ -37,9 +38,9 @@ app.use(bodyParser.json()); // Add this line to parse JSON data
 app.use('/auth', registrationRoutes);
 app.use('/api', cloudinaryRoutes);
 app.use('/api', gcsRoutes);
-app.use('/api', courseRoutes);
+app.use('/api/v1/course', courseRoutes);
 app.use('/api', paymentRoutes);
-app.use('/api', userCourse);
+app.use('/api/v1/enroll', enrollment);
 app.use('/api', contactRoutes);
 
 

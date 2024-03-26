@@ -1,9 +1,11 @@
+import { Button } from "@material-tailwind/react";
+import axios from "axios";
 import React, { useState } from "react";
 import { BiArrowBack } from "react-icons/bi";
-import { Button } from "@material-tailwind/react";
-import InputButton from "../../../Input/InputButton";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { BACKEND_URL } from "../../../../URL_Config";
+import InputButton from "../../../Input/InputButton";
+import { showSnackbar } from "../../../Utils/enQueSnackBar";
 
 function ForgotPasswod({onResponse}) {
   const [email,setEmail] = useState('');
@@ -21,8 +23,13 @@ function ForgotPasswod({onResponse}) {
   
   const handleForgetPassword = async () => {
     try {
-      let res = await axios.post("http://3.110.210.79:3001/auth/reset-password", payload);
-      console.log(res);
+      if(email.trim().length===0)
+      {
+        showSnackbar("Please enter email","error","top")
+        return;
+      }
+      let res = await axios.post(BACKEND_URL+"/auth/reset-password", payload);
+     
   
       if (res.status === 200) {
         onResponse(res);

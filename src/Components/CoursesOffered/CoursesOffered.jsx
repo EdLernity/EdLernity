@@ -108,66 +108,60 @@ function CoursesOffered() {
       </div>
 
       <div className="container mx-auto gap-4 p-4 md:flex md:flex-col lg:flex-row xl:flex-row md:items-start py-8">
-        {/* Left side with text */}
-        <div className="w-full mb-4">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-4 lg:mb-6">
-            Unlock Unlimited Learning with Our Exclusive Membership!
-          </h1>
-          <p className="text-gray-700 py-2 text-sm md:text-base ">
-            Ready to supercharge your learning journey? Explore our exclusive
-            membership options to gain unlimited access to our extensive library
-            of 15+ courses and premium content. Our membership packages offer
-            unparalleled value, giving you access to a wealth of knowledge
-            across various domains. From programming and technology to business
-            and personal development, there's something for everyone.
-          </p>
-          <p className="text-gray-700 py-2 text-sm md:text-base ">
-            With our membership, you'll enjoy flexible learning options,
-            including on-demand access to all courses, exclusive webinars, and
-            live Q&A sessions with industry experts. Discover the true potential
-            of online learning with our membership perks, which include
-            unlimited course enrollments, downloadable resources, and
-            personalized learning paths tailored to your goals.
-          </p>
-          <p className="text-gray-700 py-2 text-sm md:text-base ">
-            Invest in your future with our membership plans and unlock a world
-            of opportunities for growth and advancement. Join our community of
-            lifelong learners and embark on a transformative learning experience
-            today!
-          </p>
+      <div class="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 ring-gray-200 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
+      <div class="p-8 sm:p-10 lg:flex-auto">
+        <h3 class="text-2xl font-bold tracking-tight text-gray-900">One-time Subscription 15+ Courses</h3>
+        <p class="mt-6 text-base leading-7 text-gray-600">One-time Subscription: Access 15+ Courses. Pay once, unlock unlimited learning. Dive into diverse topics, from coding to business skills, with our comprehensive course bundle.</p>
+        <div class="mt-10 flex items-center gap-x-4">
+          <h4 class="flex-none text-sm font-semibold leading-6 text-indigo-600">What’s included</h4>
+          <div class="h-px flex-auto bg-gray-100"></div>
         </div>
-
-        {/* Right side with image and text overlay */}
-        <div className="relative w-full md:w-[50%] lg:w-[50%] xl:w-[50%] pr-4 sm:pr-8 md:pr-12 lg:pr-20 mb-4">
-          <img
-            src="/Image/membership.png"
-            alt="Course"
-            className="w-full h-[300px] md:h-[430px] rounded-lg max-w-[450px]"
-          />
-          <div className="absolute inset-0 top-3 right-4 sm:right-8 md:right-12 lg:right-20 flex flex-col items-center">
-            <p className="text-black text-2xl font-extrabold text-center w-[80%] mb-4">
-              One-time Subscription 15+ Courses
+        <ul role="list" class="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-gray-600 sm:grid-cols-2 sm:gap-6">
+          <li class="flex gap-x-3">
+            <svg class="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+            </svg>
+            Subscription to unlimited access to all our courses
+          </li>
+          <li class="flex gap-x-3">
+            <svg class="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+            </svg>
+            1,000+ hours of learning
+          </li>
+          <li class="flex gap-x-3">
+            <svg class="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+            </svg>
+            Access to 100+ upcoming courses in 2025
+          </li>
+          <li class="flex gap-x-3">
+            <svg class="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+            </svg>
+            E-books worth ₹9,999
+          </li>
+        </ul>
+      </div>
+      <div class="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
+      <div onClick={handleClickMulti} className="cursor-pointer flex-shrink-0 p-10 relative overflow-hidden bg-white rounded-lg max-w-md shadow-lg transition-all  duration-1000  hover:bg-blue-100  hover:shadow-xl   z-40 group ">
+              <svg className="absolute bottom-0 left-0 mb-8" viewBox="0 0 375 283" fill="none" style={{ transform: 'scale(1.5)', opacity: 0.1 }}>
+                <rect x="159.52" y="175" width="152" height="152" rx="8" transform="rotate(-45 159.52 175)" fill="blue" />
+                <rect y="107.48" width="152" height="152" rx="8" transform="rotate(-45 0 107.48)" fill="blue" />
+              </svg>
+          <div class="mx-auto max-w-xs px-8">
+            
+            <p class="text-base font-semibold text-gray-600">EdLernity's Lifetime subscription</p>
+            <p class="mt-6 flex items-baseline justify-center gap-x-2">
+              <span class="text-5xl font-bold tracking-tight text-gray-900">₹ 989</span>
+              <span class="text-sm font-semibold leading-6 tracking-wide text-gray-600">INR</span>
             </p>
-            <ul className="w-[60%] list-disc text-sm md:text-base lg:text-lg">
-              <li className="text-black text-start">
-                Subscription to unlimited access to all our courses
-              </li>
-              <li className="text-black text-start">1,000+ hours of learning</li>
-              <li className="text-black text-start">
-                Access to 100+ upcoming courses in 2025
-              </li>
-              <li className="text-black text-start">E-books worth ₹9,999</li>
-            </ul>
-            <button
-              type="button"
-              className="flex text-white rounded-md bg-[#000] px-3 py-1 mt-4 items-center text-sm md:text-base lg:text-lg"
-              onClick={handleClickMulti}
-            >
-              <IoSearchOutline className="mr-0.5" />
-              Explore
-            </button>
+            <span  class="mt-10 block w-full rounded-md bg-gray-900 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Explore</span>
+            <p class="mt-6 text-xs leading-5 text-gray-600">Pay once, own it forever</p>
           </div>
         </div>
+      </div>
+    </div>
       </div>
     </>
   );

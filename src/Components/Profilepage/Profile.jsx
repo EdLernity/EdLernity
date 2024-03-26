@@ -1,21 +1,20 @@
-import React from "react";
 import {
+  Avatar,
   Menu,
   MenuHandler,
-  MenuList,
-  MenuItem,
-  Avatar,
-  Typography,
+  MenuList
 } from "@material-tailwind/react";
-import {Link, useNavigate} from "react-router-dom";
-import {LogIn, UserCircle2, LogOut} from "lucide-react";
-
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import User from "../../assets/user.png";
 function Profile () {
 
   const navigate = useNavigate();
 
-  const handleMyCourses = () =>{
-    navigate('/mycourses')
+  const handleLogout = () =>{
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace("/")
   }
 
   return (
@@ -25,33 +24,16 @@ function Profile () {
           variant="circular"
           alt="tania andrew"
           className="cursor-pointer rounded-full w-10 h-10"
-          src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+          src={User}
         />
       </MenuHandler>
-      <MenuList className="space-y-5 bg-[#1649FF]">
-        {/* <MenuItem className="flex items-center gap-2 ">
-          <UserCircle2 className="" style={{color: "white"}} />
-          <Typography variant="small" className="font-semibold">
-            <Link to="/profile">
-              <button className="text-white">My Profile</button>
-            </Link>
-          </Typography>
-        </MenuItem> */}
-        {/* <hr className="border-blue-gray-50"></hr> */}
-        <MenuItem className="flex items-center gap-3">
-          <LogIn className="w-5 h-5" style={{color: "white"}} />
-          <Typography variant="small" className="font-semibold">
-            <Link to="/auth/login">
-              <button className="text-white">Sign in</button>
-            </Link>
-          </Typography>
-        </MenuItem>
-        <hr className="my-2 border-blue-gray-50" />
-        <MenuItem className="flex items-center gap-3 ">
-          <Typography variant="small" className="font-semibold">
-              <button className="text-white" onClick={handleMyCourses}>My Courses</button>
-          </Typography>
-        </MenuItem>
+   
+      <MenuList class="px-2 py-2 bg-white rounded-md shadow dark-mode:bg-gray-800">
+      <div >
+            <Link to="/profile" class="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" >My Profile</Link>
+            <Link to="/mycourses" class="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" >My Courses</Link>
+            <Link onClick={handleLogout} class="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" >LogOut</Link>
+          </div>
       </MenuList>
     </Menu>
   );

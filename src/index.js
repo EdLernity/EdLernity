@@ -1,14 +1,23 @@
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { SnackbarProvider } from 'notistack';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import App from './App';
+import { Context } from './Context';
+import './index.css';
 import reportWebVitals from './reportWebVitals';
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+
+  
+    <SnackbarProvider >
+    <GoogleOAuthProvider clientId="879823435298-bakjaqmlqh41ncbj4008ulefbjapmd82.apps.googleusercontent.com">
+    <Context>
     <App />
-  </React.StrictMode>
+    </Context>
+    </GoogleOAuthProvider>
+    </SnackbarProvider>
+ 
 );
 
 // If you want to start measuring performance in your app, pass a function

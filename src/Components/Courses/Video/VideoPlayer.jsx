@@ -1,11 +1,13 @@
+import { Media, Video } from '@vidstack/player-react';
 import React from "react";
-import ReactPlayer from "react-player/lazy";
-import './VideoPlayer.css';
 import Skeleton from "react-loading-skeleton";
-
+import './VideoPlayer.css';
 // Lazy load the YouTube player
 
-const VideoPlayer = ({ videoUrl , isLoading }) => {
+const VideoPlayer = ({ video , isLoading ,courseBanner}) => {
+  
+  const folder=video.url.split("_")[0]
+  const prepareVideoUrl=`https://edlernity.s3.ap-south-1.amazonaws.com/courses/${folder}/${video.url}`
   return (
     <div className="video-player-container">
       {isLoading ? (
@@ -15,20 +17,12 @@ const VideoPlayer = ({ videoUrl , isLoading }) => {
         height={410} // Responsive height based on screen size
       /> // Render skeleton component when isLoading is true
       ) : (
-        <ReactPlayer
-          className="react-player"
-          width="100%"
-          height="auto"
-          controls
-          config={{
-            file: {
-              attributes: {
-                controlsList: "nodownload",
-              },
-            },
-          }}
-          url={videoUrl}
-        />
+
+        <Media>
+  <Video loading="visible" poster={courseBanner} controls preload="true">
+    <video loading="visible" poster={courseBanner} src={prepareVideoUrl} preload="none" data-video="0" controls />
+  </Video>
+</Media>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function SucessPage({ req = {} }) {
@@ -21,11 +21,16 @@ function SucessPage({ req = {} }) {
   }
   console.log(req)
   return (
-    <div className='font-bold md:text-2xl'>
-       {req.message}
-       <br/>
-        {isPath ? <div><Link to={req.path} className='text-[#1539cf]' >Click here </Link>{req.text}</div> : ""}
-      </div>
+    
+    <>
+    <div class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden py-6 sm:py-12 bg-white">
+  <div class="max-w-xl px-5 text-center">
+    <h2 class="mb-2 text-[42px] font-bold text-zinc-800">Check your inbox</h2>
+    <p class="mb-2 text-lg text-zinc-500"><div dangerouslySetInnerHTML={{ __html: req.message }} /></p>
+    <Link to="/auth/login" class="mt-3 inline-block w-96 rounded bg-indigo-600 px-5 py-3 font-medium text-white shadow-md shadow-indigo-500/20 hover:bg-indigo-700">Login to Edlernity →</Link>
+  </div>
+</div>
+    </>
   )
 }
 

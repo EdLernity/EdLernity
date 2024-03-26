@@ -1,10 +1,6 @@
 import React, { useState } from "react";
-import { Typography } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 import ChatBot from "./ChatBot";
 import Whatsapp from "./Whatsapp";
-
 const LINKS = [
   {
     title: "Company",
@@ -51,103 +47,135 @@ function Footer() {
 
   return (
     <>
-      <footer className="relative w-full bg-black pt-12 pb-6 text-white">
-        <div className="mx-auto w-full px-8 ">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-sm:px-8">
-            <div className="mb-6">
-              <div className="flex items-center gap-4">
-                <img alt="logo" src="/Image/Logo1.svg" className="w-12" />
-                <Typography variant="h5">EdLernity</Typography>
-              </div>
-              <Typography variant="paragraph" className="mt-4 text-sm">
-                EdLernity offers you the opportunity to learn without limits -
-                all the Upskilling Courses, Placement Preparation, and Various
-                Certification Courses on a single platform. Our Platform
-                includes Video-based learning, Practice Exercises, and a
-                personalized learning module that empowers learners with the
-                ability to study at their own pace without any limitations. We
-                offer 20+ Upskilling Courses, 200+ Placement Preparation
-                materials, and 20+ Certification Courses.
-              </Typography>
+      <footer class="w-full text-gray-700 bg-gray-100 body-font">
+        <div class="container flex flex-col flex-wrap px-5 py-24 mx-auto md:items-center lg:items-start md:flex-row md:flex-no-wrap">
+          <div class="flex-shrink-0 w-[20rem] mx-auto text-center md:mx-0 md:text-left">
+            <a class="flex items-center justify-center font-medium text-gray-900 title-font md:justify-start">
+              <img alt="logo" src="/Image/Logo1.svg" className="w-12" />
+            </a>
+            <p class="mt-2 text-sm text-gray-500">
+              <b>EdLernity</b>: One platform, endless learning. Explore diverse
+              Upskilling, Placement Prep, and Certification Courses with
+              video-based learning, practice exercises, and personalized
+              modules. Study at your own pace with 20+ Upskilling, 200+
+              Placement Prep, and 20+ Certification Courses.
+            </p>
+            <div class="mt-4 ">
+              <span class="inline-flex justify-center mt-2 sm:ml-auto sm:mt-0 sm:justify-start gap-2">
+                <a
+                  href="https://www.linkedin.com/company/edlernity/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-100"
+                >
+                  <img
+                    alt="linkedin"
+                    src="/Image/image 16.png"
+                    className="w-5 h-5"
+                  />
+                </a>
+                <a
+                  href="https://www.instagram.com/edlernity/?utm_source=ig_web_button_share_sheet&igshid=OGQ5ZDc2ODk2ZA%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-100"
+                >
+                  <img
+                    alt="instagram"
+                    src="/Image/image 17.png"
+                    className="w-5 h-5"
+                  />
+                </a>
+                <a
+                  href="https://twitter.com/EdLernity"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:opacity-100"
+                >
+                  <img alt="x" src="/Image/image 15.png" className="w-5 h-5" />
+                </a>
+              </span>
             </div>
-
-            <div className="grid grid-cols-1 max-sm:justify-center sm:grid-cols-2 md:grid-cols-3 text-white gap-4">
-              {LINKS.map(({ title, items }) => (
-                <div key={title} className="text-center">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="mb-3 text-white text-lg uppercase font-semibold"
-                  >
-                    {title}
-                  </Typography>
-                  <ul>
-                    {items.map(({ label, url }) => (
-                      <li key={label}>
-                        <NavLink
-                          to={url}
-                          className="py-1.5 font-normal text-white transition-colors hover:text-blue-gray-600"
-                        >
-                          {label}
-                        </NavLink>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-
-            <Whatsapp onOpenChatBot={openChatBot} />
-            {isChatBotOpen && <ChatBot onClose={closeChatBot} />}
           </div>
-
-          <div className="mt-8 flex flex-col items-center justify-center border-t border-blue-gray-50 py-4 md:flex-row md:justify-between">
-            <Typography
-              variant="small"
-              className="mb-4 text-center text-white font-normal md:mb-0"
-            >
-              &copy; {currentYear}{" "}
-              <Link to="/">EdLernity Tech (OPC) Private Limited</Link>. All
-              Rights Reserved.
-            </Typography>
-
-            <div className="flex gap-4 sm:justify-center">
-              <a
-                href="https://www.linkedin.com/company/edlernity/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:opacity-100"
-              >
-                <img
-                  alt="linkedin"
-                  src="/Image/image 16.png"
-                  className="w-5 h-5"
-                />
-              </a>
-              <a
-                href="https://www.instagram.com/edlernity/?utm_source=ig_web_button_share_sheet&igshid=OGQ5ZDc2ODk2ZA%3D%3D"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:opacity-100"
-              >
-                <img
-                  alt="instagram"
-                  src="/Image/image 17.png"
-                  className="w-5 h-5"
-                />
-              </a>
-              <a
-                href="https://twitter.com/EdLernity"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:opacity-100"
-              >
-                <img alt="x" src="/Image/image 15.png" className="w-5 h-5" />
-              </a>
+          <div class="flex flex-wrap flex-grow mt-10 -mb-10 text-center md:pl-20 md:mt-0 md:text-left">
+            <div class="w-full px-4 lg:w-1/4 md:w-1/2">
+              {/* <h2 class="mb-3 text-sm font-medium tracking-widest text-gray-900 uppercase title-font">Support</h2>
+                    <nav class="mb-10 list-none">
+                        <li class="mt-3">
+                            <a class="text-gray-500 cursor-pointer hover:text-gray-900">Contact Support</a>
+                        </li>
+                        <li class="mt-3">
+                            <a class="text-gray-500 cursor-pointer hover:text-gray-900">Help Resources</a>
+                        </li>
+                        <li class="mt-3">
+                            <a class="text-gray-500 cursor-pointer hover:text-gray-900">Release Updates</a>
+                        </li>
+                    </nav> */}
+            </div>
+            <div class="w-full px-4 lg:w-1/4 md:w-1/2">
+              <h2 class="mb-3 text-sm font-medium tracking-widest text-gray-900 uppercase title-font">
+                About
+              </h2>
+              <nav class="mb-10 list-none">
+                {LINKS[0].items.map((item, idx) => (
+                  <li class="mt-3">
+                    <a
+                      href={item.url}
+                      class="text-gray-500 cursor-pointer hover:text-gray-900"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </nav>
+            </div>
+            <div class="w-full px-4 lg:w-1/4 md:w-1/2">
+              <h2 class="mb-3 text-sm font-medium tracking-widest text-gray-900 uppercase title-font">
+                Platform
+              </h2>
+              <nav class="mb-10 list-none">
+                {LINKS[1].items.map((item, idx) => (
+                  <li class="mt-3">
+                    <a
+                      href={item.url}
+                      class="text-gray-500 cursor-pointer hover:text-gray-900"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </nav>
+            </div>
+            <div class="w-full px-4 lg:w-1/4 md:w-1/2">
+              <h2 class="mb-3 text-sm font-medium tracking-widest text-gray-900 uppercase title-font">
+                Contact
+              </h2>
+              <nav class="mb-10 list-none">
+                {LINKS[2].items.map((item, idx) => (
+                  <li class="mt-3">
+                    <a
+                      href={item.url}
+                      class="text-gray-500 cursor-pointer hover:text-gray-900"
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                ))}
+              </nav>
             </div>
           </div>
         </div>
+        <div class="bg-gray-300">
+          <div class="container px-5 py-4 mx-auto">
+            <p class="text-sm text-gray-700 capitalize xl:text-center">
+              &copy; {currentYear} EdLernity Tech (OPC) Private Limited. All
+              rights reserved{" "}
+            </p>
+          </div>
+        </div>
       </footer>
+      <Whatsapp onOpenChatBot={openChatBot} />
+      {isChatBotOpen && <ChatBot onClose={closeChatBot} />}
     </>
   );
 }

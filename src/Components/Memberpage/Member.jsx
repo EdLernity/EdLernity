@@ -60,11 +60,13 @@
 
 // export default Member;
 
-import React from "react";
-import BaseLayout from "../../Layout/BaseLayout";
 import { Button } from "@material-tailwind/react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import BaseLayout from "../../Layout/BaseLayout";
 
 function Member() {
+  let navigate=useNavigate()
   function BadgeIcon(props) {
     return (
       <svg
@@ -143,7 +145,21 @@ function Member() {
       </svg>
     );
   }
+  const handleCheckout=()=>{
 
+    const token = localStorage.getItem("_userAuth");
+    if (!token) {
+      navigate('/auth/login');
+    return;
+    }else{
+const enrollingAllCourses=true
+      navigate("/payment", {
+          state: { enrollingAllCourses },
+        })
+    }
+
+  
+}
   return (
     <BaseLayout>
       <div className="bg-[#3d71f5]  p-8 text-white">
@@ -167,9 +183,7 @@ function Member() {
               We're thrilled to announce our latest course package offer designed to supercharge your learning journey! Dive into a world of knowledge with our comprehensive package, crafted to empower you with the skills and insights you need to succeed. Stay tuned for more details on how you can seize this incredible opportunity!
               </p>
             </div>
-            <Button className="mt-6 bg-[#181FC5] hover:bg-[#181FC5]">
-              Get Access
-            </Button>
+            
           </section>
 
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -215,7 +229,7 @@ function Member() {
               <Button className="bg-[#3b49df] text-white rounded-3xl mt-4">
                 Save 90%
               </Button>
-              <Button className="bg-[#3b49df] text-white mt-4">
+              <Button onClick={handleCheckout} className="bg-[#3b49df] text-white mt-4">
                 Get Access
               </Button>
             </div>

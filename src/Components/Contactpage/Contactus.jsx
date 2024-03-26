@@ -1,13 +1,13 @@
-import React, { useState , useEffect} from "react";
-import BaseLayout from "../../Layout/BaseLayout";
-import { Helmet } from "react-helmet";
-import InputButton from "../Input/InputButton";
-import { IoLocationOutline } from "react-icons/io5";
-import { IoMailOpenOutline } from "react-icons/io5";
-import { BsGlobe } from "react-icons/bs";
-import { RiHeadphoneLine } from "react-icons/ri";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
+import { BsGlobe } from "react-icons/bs";
+import { IoLocationOutline, IoMailOpenOutline } from "react-icons/io5";
+import { RiHeadphoneLine } from "react-icons/ri";
 import Skeleton from "react-loading-skeleton";
+import BaseLayout from "../../Layout/BaseLayout";
+import { BACKEND_URL } from "../../URL_Config";
+import InputButton from "../Input/InputButton";
 
 function Contact() {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,7 +41,7 @@ function Contact() {
       setErrors(validationErrors);
     } else {
       try {
-        await axios.post("http://3.110.210.79:3001/api/contact", formData);
+        await axios.post(BACKEND_URL+"/api/contact", formData);
         console.log("Form submitted:", formData);
         setSubmitted(true);
       } catch (error) {
@@ -52,6 +52,7 @@ function Contact() {
   };
 
   const validateFormData = (data) => {
+    console.log(data.phone)
     const errors = {};
     if (!data.name.trim()) {
       errors.name = "Name is required";
@@ -63,7 +64,7 @@ function Contact() {
     }
     if (!data.phone.trim()) {
       errors.phone = "Phone Number is required";
-    } else if (!/^\d{11}$/.test(data.phone.trim())) {
+    } else if (!/^\d{10}$/.test(data.phone.trim())) {
       errors.phone = "Phone Number must be less than  11 digits";
     }
     if (!data.message.trim()) {

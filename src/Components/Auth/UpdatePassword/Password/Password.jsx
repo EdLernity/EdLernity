@@ -1,14 +1,14 @@
-import React, { useState } from "react";
 import {
-  CardBody,
-  CardFooter,
-  Checkbox,
   Button,
+  CardBody,
+  CardFooter
 } from "@material-tailwind/react";
-import axios from "axios";
-import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../../../../URL_Config";
+import { axiosInstanceWithoutToken } from "../../../../Utils/AxiosInstance";
 import InputButton from "../../../Input/InputButton";
-import ErrorComponent from "../ErrorComponent/ErrorComponent";
+import { showSnackbar } from "../../../Utils/enQueSnackBar";
 
 function Password() {
   const [newPassword, setNewPaasword] = useState("");
@@ -16,7 +16,7 @@ function Password() {
   const [responseData, setResponseData] = useState({});
   const location = useLocation();
   const [error, setError] = useState(false);
-
+  const navigate=useNavigate();
   const queryParam = new URLSearchParams(location.search);
 
   const token = queryParam.get("token");
@@ -31,11 +31,8 @@ function Password() {
   // Extract the substring starting from the index of "/auth"
   const extractedUrl = currentUrl.substring(authIndex);
 
-  console.log(extractedUrl);
+ 
 
-  localStorage.setItem('url',extractedUrl)
-
-  console.log(currentUrl);
 
   const payload = {
     newPassword: newPassword,
@@ -51,48 +48,47 @@ function Password() {
 
   const updatePassword = async (e) => {
     e.preventDefault();
-
-    try {
-      let res = await axios.post(
-        "http://3.110.210.79:3001/auth/update-password",
-        payload
-      );
-
-      // console.log(res)
-
-      if (res.status === 200) {
-        setResponseData(res.response.data.message);
-        setError(false);
-        console.log("Success");
-      }
-    } catch (err) {
-      console.log(err);
-      setResponseData(err.response.data);
-      setError(true);
+    
+    // Trim whitespaces from passwords
+    const trimmedNewPassword = newPassword.trim();
+    const trimmedConfirmPassword = confirmPassword.trim();
+  
+    // Check if either password is empty or they don't match
+    if (trimmedNewPassword === "" || trimmedConfirmPassword === "") {
+      showSnackbar("Please enter your new password and confirm password", "error", "top");
+      return;
+    } else if (trimmedNewPassword !== trimmedConfirmPassword) {
+      showSnackbar("Passwords do not match", "error", "top");
+      return;
     }
+  
+    
+      await axiosInstanceWithoutToken.post(
+        BACKEND_URL + "/auth/update-password",
+        payload
+      ).then((response) => {
+       
+        if(response?.data.message=="Password reset successfully.")
+        {
+          showSnackbar("Password reset successfully.", "success", "top")
+          navigate(response.data.redirectTo,{replace:true});
+        }
+        
+      }).finally(() => {
+
+      });
+  
+      
+   
+      
   };
+  
 
-  console.log(responseData);
-
-  let path = localStorage.getItem("url");
-
-  const req = {
-    message: responseData.message,
-    path: path,
-    text: responseData.text,
-  };
-
-  const setErrorValue = (val) => {
-    setError(val);
-  };
-
-  console.log(req);
+  
 
   return (
     <>
-      {error ? (
-        <ErrorComponent setErrorValue={setErrorValue} req={req} />
-      ) : (
+      
         <>
           <CardBody className="flex flex-col gap-4 w-full">
             <InputButton
@@ -109,9 +105,7 @@ function Password() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-            <div className="-ml-2.5 flex ">
-              <Checkbox label="Remember Me" />
-            </div>
+           
           </CardBody>
           <CardFooter className="pt-0 flex flex-col w-[80%]">
             <Button style={buttonColor} onClick={updatePassword}>
@@ -119,7 +113,7 @@ function Password() {
             </Button>
           </CardFooter>
         </>
-      )}
+      
     </>
   );
 }

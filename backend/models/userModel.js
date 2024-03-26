@@ -16,19 +16,28 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,
         unique: true,
     },
     phone: {
         type: Number,
-        required: true,
         unique: true,
     },
     password: {
         type: String,
-        required: true,
     },
-});
+    googleAuth:{
+        type: Boolean,
+    default: false,
+    },
+    isVerified:{
+        type: Boolean,
+    default: false,
+    },
+    IsBlocked:{
+        type:Boolean,
+        default:false
+      },
+},{timestamps:true});
 
 const UserModel = mongoose.model('User', userSchema);
 

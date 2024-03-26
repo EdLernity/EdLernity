@@ -1,15 +1,18 @@
-import React, { useState } from "react";
 import {
+  Button,
   CardBody,
   CardFooter,
-  Typography,
-  Checkbox,
-  Button,
+  Typography
 } from "@material-tailwind/react";
-import { FcGoogle } from "react-icons/fc";
-import InputButton from "../../Input/InputButton";
-import { useNavigate } from "react-router-dom";
+import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import React, { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { useLocation, useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../../../URL_Config";
+import { axiosInstanceWithoutToken } from "../../../Utils/AxiosInstance";
+import InputButton from "../../Input/InputButton";
+import { showSnackbar } from "../../Utils/enQueSnackBar";
 import ErrorComponent from "../UpdatePassword/ErrorComponent/ErrorComponent";
 
 function Login() {;
@@ -28,15 +31,45 @@ function Login() {;
   const [passwordError,setPasswordError] =  useState("");
   const navigate = useNavigate();
   // const history = useHistory();
-
+  const location = useLocation();
+  const redirectUrl = location?.state?.redirectUrl || '/';
   const handlePassord = (password) => {
     if ( password.length <8 ) {
-      setPasswordError('Senha deve ter no mínimo 8 caracteres');
+      setPasswordError('Minimum 8  characters are required');
     } else {
       setPasswordError("")
       setPassword(password);
     }
   };
+
+   const login = useGoogleLogin({
+    onSuccess: async tokenResponse => {
+      const userInfo = await axios
+    .get('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+    })
+    .then(async (response)=>{
+      try {
+        let googleSignInData = {
+          email:response.data.email,
+          googleSignUp:true
+        };
+        let res = await axios.post(BACKEND_URL+"/auth/login", googleSignInData);
+        
+        if (res?.data?.success) {
+          localStorage.setItem("auth_token", res?.data?.token);
+          showSnackbar("Login Successful", "success", "top");
+
+          navigate(redirectUrl)
+        }
+      } catch (error) {
+        console.error("Error during signup:", error.message);
+       
+      }
+    });
+
+    },
+  });
 
   const handleEmailChange = (event) => {
     if (event && event.target) {
@@ -60,11 +93,12 @@ function Login() {;
   const handleSignup = async () => {
       handlePassord(data.password);
       try {
-        let res = await axios.post("http://3.110.210.79:3001/auth/login", data);
+        let res = await axiosInstanceWithoutToken.post(BACKEND_URL+"/auth/login", data);
         if (res?.data?.success) {
-          localStorage.setItem("jwt_token", res?.data?.token);
-          alert("login sucess")
-          navigate(res?.data?.redirectTo)
+          localStorage.setItem("_userAuth", res?.data?.token);
+          showSnackbar("Login Successful", "success", "top");
+
+          navigate(redirectUrl)
         }
       } catch (error) {
         console.error("Error during signup:", error.message);
@@ -75,12 +109,13 @@ function Login() {;
   return (
     <div className="flex justify-center items-center xl:w-2/4 md:w-2/4">
         <div className="p-6 w-full flex justify-center items-center flex-col">
-          <CardBody className="flex flex-col gap-4">
+          <CardBody className="flex flex-col gap-4 w-full">
             <Button
               size="sm"
               variant="outlined"
               color="blue-gray"
               className="flex items-center gap-2 justify-center"
+              onClick={() => login()}
             >
               <FcGoogle className="flex text-xs mt-px mr-0.5" />
               Continue With Google
@@ -107,7 +142,7 @@ function Login() {;
                   onChange={(e) => setPassword(e.target.value)}
             />
             <div className="-ml-2.5 flex">
-              <Checkbox label="Remember Me" />
+              {/* <Checkbox label="Remember Me" /> */}
               <Typography as='a' href="/auth/reset" className="flex items-center ml-12 font-bold" style={textColor}>Forget Password?</Typography>
             </div>
           </CardBody>

@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
 import {
+  Button,
   CardBody,
   CardFooter,
-  Typography,
   Checkbox,
-  Button,
+  Typography,
 } from "@material-tailwind/react";
-import { FcGoogle } from "react-icons/fc";
-import InputButton from "../../Input/InputButton";
+import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { BACKEND_URL } from "../../../URL_Config";
+import InputButton from "../../Input/InputButton";
 import SucessPage from "../SuccessPage/SuccessPage";
 import ErrorComponent from "../UpdatePassword/ErrorComponent/ErrorComponent";
 
@@ -111,7 +113,7 @@ function Signup() {
     } else {
       setError('');
       try {
-        let res = await axios.post("http://3.110.210.79:3001/auth/register", data);
+        let res = await axios.post(BACKEND_URL+"/auth/register", data);
         setResponseData(res.data);
         if (res?.data?.success) {
           setIsResgisterSucess(true);
@@ -140,12 +142,42 @@ function Signup() {
     phone,
     password,
     confirmPassword,
+    googleSignUp:false
   };
 
   const setErrorValue = (val) => {
     resetForm();
     setIsError(val)
   }
+  const googleSignUp = useGoogleLogin({
+    onSuccess: async tokenResponse => {
+      const userInfo = await axios
+    .get('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+    })
+    .then(async (response)=>{
+      try {
+        let googleSignInData = {
+          firstName:response.data.given_name,
+          lastName:response.data.family_name,
+          email:response.data.email,
+          googleSignUp:true
+        };
+        let res = await axios.post(BACKEND_URL+"/auth/register", googleSignInData);
+        setResponseData(res.data);
+        if (res?.data?.success) {
+          setIsResgisterSucess(true);
+        }
+      } catch (error) {
+        console.error("Error during signup:", error.message);
+        setIsError(true);
+        setError(error?.response?.data?.message)
+        setResponseData(error?.response?.data);
+      }
+    });
+
+    },
+  });
 
   return (
     <div className="block md:flex xl:flex justify-center items-center xl:w-2/4 md:w-2/4">
@@ -158,6 +190,7 @@ function Signup() {
           <>
             <CardBody className="flex flex-col gap-4">
               <Button
+               onClick={() => googleSignUp()}
                 size="sm"
                 variant="outlined"
                 color="blue-gray"
@@ -166,6 +199,7 @@ function Signup() {
                 <FcGoogle className="flex text-xs mt-px mr-0.5" />
                 Continue With Google
               </Button>
+              
               <p className="flex justify-center font-bold font-sans">
                 <span
                   className="flex justify-center w-1/6 rounded-full border border-[#607d8b]"

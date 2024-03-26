@@ -1,209 +1,220 @@
-import React from "react";
-import { Button, Input, Checkbox } from "@material-tailwind/react";
-import { NavLink } from "react-router-dom";
-import { ChevronLeftCircle } from "lucide-react";
-import InputButton from "../Input/InputButton";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../../URL_Config";
+import { apiInstancePrivate } from "../../Utils/AxiosInstance";
+import FreeCourse from "./5562402_21421.svg";
 function Payment() {
-    function goBack() {
-        window.history.back();
+  let navigation = useNavigate();
+  const location = useLocation();
+  const { course,enrollingAllCourses } = location?.state ?? {};
+
+  
+  const [ccode, setCcode] = useState("");
+  const [couponStatus, setCouponStatus] = useState();
+  const [couponData, setCouponData] = useState();
+  
+  useEffect(() => {
+    const token = localStorage.getItem("_userAuth");
+    if (!token) {
+      navigation('/auth/login',{replace:true});
     }
-    return (
-        <>
-            <div className="">
-                <div className="flex justify-center gap-3 p-3 bg-[#D4D4D4] items-center">
-                    <NavLink to="/" style={{ display: "contents" }}>
+  }, [navigation]);
+  const initPayment = (data,user,enrollingAllCourses) => {
+    
+    var options = {
+      key: "rzp_test_2LHb56jgwlFlJc",
+      amount: data.amount,
+      currency: data.currency,
+      order_id: data.id,
+      description: enrollingAllCourses?"EdLernity's Lifetime subscription":course.courseTitle,
+      image: enrollingAllCourses?"":course.courseBanner,
+      prefill: {
+        name:user.firstName,
+        email: user.email,
+        contact: user.phone
+      },
+      handler: async (response) => {
+        ////console.log('response',response)
+        try {
+          const CEdata = {
+            courseId: enrollingAllCourses?"lifeTimeFinalPrice":course._id,
+            response,
+          };
+          const { data } = await axios.post(
+            BACKEND_URL + "/api/v1/enroll/verify",
+            CEdata,
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("_userAuth"),
+              },
+            }
+          );
+          ////console.log(data)
+          if (data.message === "Payment verified successfully") {
+            window.location.replace("/mycourses");
+          }
+        } catch (error) {
+          //console.log("error",error)
+        }
+      },
+    };
+    ////console.log(options)
+    var rzp1 = new window.Razorpay(options);
+    rzp1.open();
+  };
+  const handlePayment = (enrollingAllCourses) => {
+    if(enrollingAllCourses)
+    {
+      const data = {
+        courseId: "lifeTimeFinalPrice",
+        enrollingAllCourses:true
+      };
+      ////console.log(data)
+      apiInstancePrivate.post("/api/v1/enroll/add",data)
+        .then((response) => {
+          // //console.log(response)
+          if (response.data.data === "enrolled") {
+            window.location.replace("/encourses");
+          }
+  
+          initPayment(response.data.data,response.data.userData,enrollingAllCourses);
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+    }
+    else{
+    const data = {
+      courseId: course._id,
+    };
+    ////console.log(data)
+    apiInstancePrivate.post("/api/v1/enroll/add",data)
+      .then((response) => {
+        // //console.log(response)
+        if (response.data.data === "enrolled") {
+          window.location.replace("/encourses");
+        }
 
-                        <img src="Image/Logo1.svg" className="w-8 h-8" />
-                        <h4 className="text-3xl font-bold" style={{ color: "#1539CF" }}>
-                            EdLernity
-                        </h4>
-                    </NavLink>
-                </div>
+        initPayment(response.data.data,response.data.userData);
+      })
+      .catch((error) => {
+        // //console.log(error)
+      });
+    }
+  };
 
-                <div className="px-8" style={{ display: "flex", alignItems: "center" }}>
-                    <div className="py-2 cursor-pointer" onClick={goBack}>
-                        <ChevronLeftCircle
-                            className="w-24 h-10"
-                            style={{ color: "#181FC5" }}
-                        />
-                    </div>
-                    <h2
-                        className="text-2xl py-2 text-nowrap"
-                        style={{ color: "#5B5B5B" }}
+  return (
+    <div class="py-16">
+      <div class="container m-auto px-6 text-gray-600 md:px-12 xl:px-6">
+        <div class="mb-12 space-y-2 text-center">
+          <h2 class="text-2xl text-cyan-900 font-bold md:text-4xl">Checkout</h2>
+        </div>
+
+        {course&&<div class="mt-8 lg:-mx-6 lg:flex lg:items-center">
+          <img
+            class="object-cover w-full lg:mx-6 lg:w-1/2 rounded-xl h-72 lg:h-96"
+            src={course?.courseBanner}
+            alt=""
+          />
+
+          <div class="mt-6 lg:w-1/2 lg:mt-0 lg:mx-6 ">
+            <span
+              href="#"
+              class="block mt-4 text-2xl font-semibold text-gray-800 dark:text-white md:text-3xl"
+            >
+              {course?.courseTitle}
+            </span>
+            <div class="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-gray-50 dark:bg-gray-800 space-y-6">
+          <h3 class="text-xl dark:text-white font-semibold leading-5 text-gray-800">Summary</h3>
+          <div class="flex justify-center items-center w-full space-y-4 flex-col border-gray-200 border-b pb-4">
+            <div class="flex justify-between w-full">
+              <p class="text-base dark:text-white leading-4 text-gray-800">Subtotal</p>
+              <p class="text-base dark:text-gray-300 leading-4 text-gray-600">&#8377;{course?.initialPrice}</p>
+            </div>
+            <div class="flex justify-between items-center w-full">
+              <p class="text-base dark:text-white leading-4 text-gray-800">Discount</p>
+              <p class="text-base dark:text-gray-300 leading-4 text-gray-600">{course?.discountInPercentage}%</p>
+            </div>
+            
+          </div>
+          <div class="flex justify-between items-center w-full">
+            <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Total</p>
+            <p class="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">&#8377;{course?.offeredPrice}</p>
+          </div>
+        </div>
+            <div class="pl-0 p-5">
+              <div class="space-y-2">
+                <div class="space-y-4">
+                  
+
+                  <div class="flex justify-end">
+                    <p
+                      onClick={() => handlePayment()}
+                      title="Checkout"
+                      class="w-max py-3 px-12 text-center rounded-xl transition bg-white shadow-md hover:bg-purple-100 active:bg-purple-200 focus:bg-purple-100"
                     >
-                        All Payment Methods
-                    </h2>
+                      <span class="text-purple-600 font-semibold cursor-pointer">
+                        Proceed to Checkout
+                      </span>
+                    </p>
+                  </div>
                 </div>
-                <hr className="border-gray-800 space-y-5"></hr>
+              </div>
             </div>
+          </div>
+        </div>}
+        {(!course&&enrollingAllCourses)&&<div class="mt-8 lg:-mx-6 lg:flex lg:items-center">
+          <img
+            class="object-cover w-full lg:mx-6 lg:w-1/2 rounded-xl h-72 lg:h-96"
+            src={FreeCourse}
+            alt="Test"
+          />
 
-            <div className="flex mt-12 flex-wrap lg:px-12">
-                <div className="w-full  md:w-1/4 px-4">
-                    <div className="sticky top-0">
-                        <NavLink to="#buttons-with-link">
-                            <Button
-                                variant="outlined"
-                                className="bg-[#F2F2F2] w-full font-thin text-md  text-start"
-                            >
-                                Credit Cards
-                            </Button>
-                        </NavLink>
-                        <NavLink to="#buttons-with-link">
-                            <Button
-                                variant="outlined"
-                                className="bg-[#F2F2F2] w-full my-2 font-thin text-md  text-start "
-                            >
-                                Debit Cards
-                            </Button>
-                        </NavLink>
-                        <NavLink to="#buttons-with-link">
-                            <Button
-                                variant="outlined"
-                                className="bg-[#F2F2F2] w-full my-2 font-thin text-md  text-start "
-                            >
-                                UPI
-                            </Button>
-                        </NavLink>
-                        <NavLink to="#buttons-with-link">
-                            <Button
-                                variant="outlined"
-                                className="bg-[#F2F2F2] w-full my-2 font-thin text-md   text-start"
-                            >
-                                Net Banking
-                            </Button>
-                        </NavLink>
-                        <NavLink to="#buttons-with-link">
-                            <Button
-                                variant="outlined"
-                                className="bg-[#F2F2F2] w-full my-2 font-thin text-md   text-start"
-                            >
-                                Wallet
-                            </Button>
-                        </NavLink>
-                        <NavLink to="#buttons-with-link">
-                            <Button
-                                variant="outlined"
-                                className="bg-[#F2F2F2] w-full my-2 font-thin text-md  text-start "
-                            >
-                                EMI Options
-                            </Button>
-                        </NavLink>
-                    </div>
+          <div class="mt-6 lg:w-1/2 lg:mt-0 lg:mx-6 ">
+            <div class="flex flex-col px-4 py-6 md:p-6 xl:p-8 w-full bg-gray-50 dark:bg-gray-800 space-y-6">
+          {/* <h3 class="text-xl dark:text-white font-semibold leading-5 text-gray-800">Summary</h3> */}
+            <span
+            
+              class="block mt-4 text-2xl font-semibold text-gray-800 dark:text-white md:text-3xl"
+            >
+              EdLernity's Lifetime subscription
+            </span>
+          <div class="flex justify-center items-center w-full space-y-4 flex-col border-gray-200 border-b pb-4">
+            
+            
+            
+          </div>
+          <div class="flex justify-between items-center w-full">
+            <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Total</p>
+            <p class="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">&#8377;989</p>
+          </div>
+        </div>
+            <div class="pl-0 p-5">
+              <div class="space-y-2">
+                <div class="space-y-4">
+                  
+
+                  <div class="flex justify-end">
+                    <p
+                      onClick={() => handlePayment(enrollingAllCourses)}
+                      title="Checkout"
+                      class="w-max py-3 px-12 text-center rounded-xl transition bg-white shadow-md hover:bg-purple-100 active:bg-purple-200 focus:bg-purple-100"
+                    >
+                      <span class="text-purple-600 font-semibold cursor-pointer">
+                        Proceed to Checkout
+                      </span>
+                    </p>
+                  </div>
                 </div>
-
-              
-                <div className="w-full space-y-4 md:w-1/2 px-4  ">
-                    <div className="bg-[#F2F2F2] space-y-4 px-4 border border-gray-800">
-                   
-                        <div className="flex mt-4 gap-2">
-                            <h4>We Accept: </h4>
-                            <img
-                                src="Image/american-express-icon.png"
-                                alt="Amex"
-                                className="w-8 h-8"
-                            />
-                            <img src="Image/visa-icon.png" alt="Visa" className="w-8 h-8" />
-                            <img src="Image/rupay-icon.png" alt="RuPay" className="w-8 h-8" />
-                           
-                        </div>
-                        <div>
-                            
-                            <InputButton
-                             type="text"
-                             id="cardNumber"
-                             label="Card Number"
-                             fullWidth
-                            />
-                        </div>
-
-                        <div className="flex gap-4">
-                            <div>
-                                
-                                <InputButton
-                                type="text"
-                                id="expiryDate"
-                                label="Expiry Date"
-                                fullWidth
-                            />
-                            </div>
-                            <div>
-                                <InputButton
-                                 type="text"
-                                 id="cvv"
-                                 label="CVV"
-                                 fullWidth
-                            />
-                            </div>
-                        </div>
-                        <div>
-         
-
-                            <InputButton
-                             type="text"
-                             id="Card Holder's Name"
-                             label="Card Holder's Name"
-                             fullWidth
-                            />
-
-
-                        </div>
-                        <div
-                            className="flex justify-center items-center "
-                            style={{ marginBottom: "20px" }}
-                        >
-                            <Checkbox
-                                color="lightBlue"
-                                inputId="saveCard"
-                                label="Save card securely for future payments"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="mt-12 px-4  bg-[#F2F2F2] border border-gray-900">
-                        <div className="flex justify-center items-center space-x-2">
-                            <Checkbox color="lightBlue" inputId="privacyPolicy" />
-                            <p>
-                                I agree with the Privacy Policy by proceeding with this payment.
-                            </p>
-                        </div>
-                        <p className="text-xl text-center">
-                            INR 699.00 (Total Amount Payable)
-                        </p>
-                        <div className="flex flex-col  justify-center items-center mt-2">
-                           
-                            <button
-                                className="bg-[#181FC5] text-white p-2 px-12 rounded-md"
-                                style={{}}
-                            >
-                                Make Payment
-                            </button>
-                            <button className="" style={{ color: "#181FC5" }}>
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="w-full  md:w-1/4 px-4">
-                    <div className="sticky  " style={{ marginTop: "20px" }}>
-                        <div className="mx-2 space-y-2 p-4 border-gray-900 bg-[#F2F2F2]  border">
-                            <h2 className="text-xl text-center font-bold">ORDER DETAILS</h2>
-                            <p>Course Name: UI/UX</p>
-                            <hr className="border-gray-800 py-1"></hr>
-                            <p>Order id: #12345678</p>
-                            <hr className="border-gray-800 py-1"></hr>
-                            <p>Order Amount: INR 699</p>
-                            <hr className="border-gray-800 py-1"></hr>
-                            <p>Total Amount: INR 699</p>
-
-                            <hr className="border-gray-800 py-1"></hr>
-
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
-        </>
-    );
+          </div>
+        </div>}
+      </div>
+      <div class="py-24 bg-gradient from-green-50 to-cyan-100"> </div>
+    </div>
+  );
 }
 
 export default Payment;

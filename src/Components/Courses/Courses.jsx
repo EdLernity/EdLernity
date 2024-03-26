@@ -1,122 +1,164 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../../URL_Config";
+import { apiInstancePrivate } from "../../Utils/AxiosInstance";
+import Loader from "../Utils/Spinner";
 import VideoPlayer from "./Video/VideoPlayer";
-import CourseContent from "./Coursecontent/Coursecontent";
-import Certificate from "../Certificate/Certificate";
-import axios from "axios";
-import { useLocation } from "react-router-dom";
-import useErrorToast from '../../Hooks/useErrorToast';
+const StarRating = (props) => {
+  const { ratingValue, setRating, courseId,handleRating } = props; // Added courseId
+  const handleStarClick = (rating) => {
+    setRating(rating); // Set the rating
+    handleRating(courseId,rating); // Call handleRating with courseId
+  };
 
+  return (
+    <div style={{ display: "flex" }}>
+      {[...Array(5)].map((star, i) => {
+        const rating = i + 1;
+        return (
+          <label key={i} onClick={() => handleStarClick(rating)}> {/* Call handleStarClick when star is clicked */}
+            {rating <= ratingValue ? (
+              <svg className="h-5 w-5 shrink-0 fill-amber-400 cursor-pointer" viewBox="0 0 256 256">
+                <path
+                  d="M239.2 97.4A16.4 16.4 0 00224.6 86l-59.4-4.1-22-55.5A16.4 16.4 0 00128 16h0a16.4 16.4 0 00-15.2 10.4L90.4 82.2 31.4 86A16.5 16.5 0 0016.8 97.4 16.8 16.8 0 0022 115.5l45.4 38.4L53.9 207a18.5 18.5 0 007 19.6 18 18 0 0020.1.6l46.9-29.7h.2l50.5 31.9a16.1 16.1 0 008.7 2.6 16.5 16.5 0 0015.8-20.8l-14.3-58.1L234 115.5A16.8 16.8 0 00239.2 97.4z"
+                />
+              </svg>
+            ) : (
+              <svg className="h-5 w-5 shrink-0 fill-gray-300 cursor-pointer" viewBox="0 0 256 256">
+                <path
+                  d="M239.2 97.4A16.4 16.4 0 00224.6 86l-59.4-4.1-22-55.5A16.4 16.4 0 00128 16h0a16.4 16.4 0 00-15.2 10.4L90.4 82.2 31.4 86A16.5 16.5 0 0016.8 97.4 16.8 16.8 0 0022 115.5l45.4 38.4L53.9 207a18.5 18.5 0 007 19.6 18 18 0 0020.1.6l46.9-29.7h.2l50.5 31.9a16.1 16.1 0 008.7 2.6 16.5 16.5 0 0015.8-20.8l-14.3-58.1L234 115.5A16.8 16.8 0 00239.2 97.4z"
+                />
+              </svg>
+            )}
+          </label>
+        );
+      })}
+    </div>
+  );
+};
 
 function Courses() {
   const location = useLocation();
-  const { course } = location.state;
-  const [folderName, setFolderName] = useState("");
-  const [courses, setCourses] = useState([]);
-  let [count] = useState(1);
-  const [courseTitle, setCourseTitle] = useState("");
-  const [videoUrl, setVideoUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  // Get all courses in a specific folder on server side.
+  const { course } = location?.state ?? {};
+ 
+  const [playlist, setPlaylist] = useState([])
+  const [loading, setloading] = useState(false)
+  const [rating, setRating] = useState(0);
+  const [selectedVideo, setSelectedVideo] = useState(null); // State to manage selected video
+  const [activeIndex, setActiveIndex] = useState(0); // State to manage active playlist item index
+  let navigate=useNavigate()
   useEffect(() => {
-    const folderName = localStorage.getItem("current_course");
-    setFolderName(folderName);
-        const extractedTitles = course.videoNames
-          .map((item, index) => {
-            let match = item.match(/\d+\s*-\s*(.*)\.mp4/);
-            let currentCount = count + index; // Add index to count
-
-            let formattedCount = currentCount.toString().padStart(2, "0");
-
-            match = `${formattedCount}. ${match[1]}`;
-
-            if (match && match[1]) {
-              return match;
-            } else {
-              console.log("Title not found in the file path.");
-              return null;
-            }
-          })
-          .filter((title) => title !== null); // Filter out null values
-        setCourses(extractedTitles);
-        setCourseTitle(extractedTitles[0]);
-        try {
-          axios
-          .get(
-            `http://3.110.210.79:3001/api/courses/${folderName}/${encodeURIComponent(course.videoNames[0])}`
-          )
-          .then((res) => {
-            setVideoUrl(res?.data?.videoUrl);
-            setIsLoading(false);
-          });
-        } catch (err) {
-          setError(err);
-          console.error(`Error getting video URL for`, err);
-        }
+    const token = localStorage.getItem("_userAuth");
+    if (!token) {
+      navigate('/auth/login',{replace:true});
+    }
   }, []);
-
-  const setUrl = (event) => {
-    let video;
-    let fileNameForVideo;
-    video = event.target.textContent;
-    console.log(event)
-    setCourseTitle(video);
-    const parts = video.split("."); // Split the video name by dot
-    if (parts.length === 2) {
-      let index = parts[0].trim();
-      if (index > 10) {
-        index = `0${index}`;
-      }
-      fileNameForVideo = `${index} - ${parts[1].trim()}.mp4`; // Combine index and file
-    } else {
-      return null; // Invalid format, return null or handle accordingly
-    }
-    try {
-      axios
-      .get(
-        `http://3.110.210.79:3001/api/courses/${folderName}/${encodeURIComponent(fileNameForVideo)}`
-      )
+  const handleRating = (courseId, rating) => {
+    apiInstancePrivate
+      .post(BACKEND_URL + "/api/v1/course/rate-course", {
+        courseId: courseId,
+        rating: rating,
+      })
       .then((res) => {
-        setVideoUrl(res?.data?.videoUrl);
-        setIsLoading(false);
-      });
-    } catch (err) {
-      setError(err);
-      console.error("Error getting courses ",err)
-    }
+        
+        
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {});
   };
 
-  useErrorToast(error);
+  useEffect(() => {
+    
+    setloading(true)
+    apiInstancePrivate
+    .post(BACKEND_URL + "/api/v1/course/get-course-watching", {
+      courseId: course?._id
+    })
+    .then((res) => {
+      
+      setPlaylist(res.data.data.lessonList)
+      setSelectedVideo(res.data.data.lessonList[0]);
+      setRating(res.data.rating)
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {
+      setloading(false)
+    });
+  }, [])
+  
+  // Function to handle video selection
+  const handleVideoSelect = (video, index) => {
+    setSelectedVideo(video);
+    setActiveIndex(index); // Set active index when playlist item is clicked
+  };
 
   return (
     <>
-      <div className="px-4 md:px-12 md:mt-10 xl:px-24 xl:mt-6">
-        <h1 className="text-center pb-4 font-bold text-2xl text-[#1539cf] leading-6 md:hidden xl:hidden mt-8 md:mt-0 xl:mt-0">{courseTitle}</h1>
-        <div className="flex w-full flex-col md:flex-row xl:flex-row">
-          <div className="flex flex-col md:w-4/6 xl:w-4/6">
-            <div className="mt-4">
-              <VideoPlayer isLoading={isLoading} videoUrl={videoUrl} />
+      {loading?<Loader/>:<div class="w-full">
+        <div class="flex   bg-white shadow-md rounded-lg overflow-hidden mx-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+            <div class=" p-5 border-b">
+              {selectedVideo && <VideoPlayer video={selectedVideo} courseBanner={course.courseBanner}/>}{" "}
+              {/* Render VideoPlayer if video is selected */}
+              <div class="flex flex-col px-2 w-full">
+                <span class="text-xs text-gray-700 uppercase font-medium ">
+                  now playing
+                </span>
+                <span class="text-sm text-red-500 capitalize font-semibold pt-1">
+                  {/* Display video title */}
+                  {selectedVideo ? selectedVideo.title : ""}
+                </span>
+                <span class="text-xs text-gray-500 uppercase font-medium ">
+                      {/* {`- "${selectedVideo?.artist}"`} */}
+                    </span>
+              </div>
             </div>
-            <div className="pl-4 pr-4 md:pr-24 xl:pr-24 py-4">
-              <h1 className="text-xl font-bold">{courseTitle}</h1>
-              <div className="mt-4">
-                <p>{course?.courseDesc}</p>
+
+            <div class="flex flex-col p-5">
+              <div class="border-b pb-1 flex justify-between items-center mb-2">
+                <span class=" text-base font-semibold uppercase text-gray-700">
+                  {" "}
+                  play list
+                </span>
+                <StarRating
+                  ratingValue={rating}
+                  setRating={setRating}
+                  courseId={course?._id}
+                  handleRating={handleRating}
+                />
+              </div>
+
+              {/* Mapping through playlist to render dynamic playlist */}
+              <div className="h-96 overflow-y-auto">
+              {playlist?.map((video, index) => (
+                <>
+                <div
+                  key={index}
+                  class={`flex border-b py-3 cursor-pointer ${activeIndex === index ? "bg-gray-200" : ""} hover:shadow-md px-2`}
+                  onClick={() => handleVideoSelect(video, index)} // Select video on click
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 my-1">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+</svg>
+
+                  <div class="flex flex-col px-2 w-full">
+                    <span class="text-md text-red-500 capitalize font-semibold pt-1">
+                      {video.title}
+                    </span>
+                   
+                  </div>
+                </div>
+                </>
+              ))}
               </div>
             </div>
           </div>
-          <div className="md:w-2/6 mx-2 md:ml-8 xl:ml-8 sm:ml-4">
-            <CourseContent
-              isLoading={isLoading}
-              setUrl={setUrl}
-              courseTitle={course?.courseTitle}
-              videos={courses}
-            />
-          </div>
         </div>
-        <hr className="h-[1px] border-0 text-gray-800 bg-gray-800 mt-4 md:mt-1 sm:mt-4 xl:mt-1" />
-        <Certificate />
-      </div>
+      </div>}
     </>
   );
 }
