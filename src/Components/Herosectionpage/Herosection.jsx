@@ -17,7 +17,7 @@ function Herosection() {
       <div className="flex justify-start items-end my-5 xl:my- mb-[15rem] md:mb-[0rem]">
         <div className="md:max-w-[400px] flex flex-col gap-6 my-14">
           <div>
-            <h1 className="text-[#8541dd] xl:text-[52px] text-[40px] font-extrabold leading-[50px]">
+            <h1 className="text-[#181fc5] xl:text-[52px] text-[40px] font-extrabold leading-[50px]">
             Build your skill to advance your career path
             </h1>
           </div>

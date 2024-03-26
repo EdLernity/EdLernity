@@ -24,7 +24,7 @@ function Internship() {
 
   return (
     <>
-     <div className="mx-auto md:text-5xl text-4xl text-[#8541dd] font-hindVadodara -tracking-[0.01] leading-[106.3%] mt-2">
+     <div className="mx-auto md:text-5xl text-4xl text-[#181fc5] font-hindVadodara -tracking-[0.01] leading-[106.3%] mt-2">
             <h1 className=" font-extrabold self-center text-center">
               What we offer here
             </h1>

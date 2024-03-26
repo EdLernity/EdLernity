@@ -105,7 +105,7 @@ function Success() {
           
           <div className="lg:pl-32 sm:pl-8 px-5 flex gap-12">
           <div className="flex flex-col w-full md:w-[60%] xl:w-[50%] p-4 md:p-0 xl:p-0 justify-between">
-            <h1 className="text-2xl md:text-3xl xl:text-4xl font-extrabold text-[#8541dd] mb-4 md:mb-6 xl:mb-6">
+            <h1 className="text-2xl md:text-3xl xl:text-4xl font-extrabold text-[#181fc5] mb-4 md:mb-6 xl:mb-6">
               What students say about us
             </h1>
             <p className="text-[#6C6868] mb-4 md:mb-6 xl:mb-6">
