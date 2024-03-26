@@ -35,7 +35,7 @@ function Payment() {
         contact: user.phone
       },
       handler: async (response) => {
-        ////console.log('response',response)
+        //////console.log('response',response)
         try {
           const CEdata = {
             courseId: enrollingAllCourses?"lifeTimeFinalPrice":course._id,
@@ -50,16 +50,16 @@ function Payment() {
               },
             }
           );
-          ////console.log(data)
+          //////console.log(data)
           if (data.message === "Payment verified successfully") {
             window.location.replace("/mycourses");
           }
         } catch (error) {
-          //console.log("error",error)
+          ////console.log("error",error)
         }
       },
     };
-    ////console.log(options)
+    //////console.log(options)
     var rzp1 = new window.Razorpay(options);
     rzp1.open();
   };
@@ -70,10 +70,10 @@ function Payment() {
         courseId: "lifeTimeFinalPrice",
         enrollingAllCourses:true
       };
-      ////console.log(data)
+      //////console.log(data)
       apiInstancePrivate.post("/api/v1/enroll/add",data)
         .then((response) => {
-          // //console.log(response)
+          // ////console.log(response)
           if (response.data.data === "enrolled") {
             window.location.replace("/encourses");
           }
@@ -81,17 +81,17 @@ function Payment() {
           initPayment(response.data.data,response.data.userData,enrollingAllCourses);
         })
         .catch((error) => {
-          console.log(error)
+          //console.log(error)
         });
     }
     else{
     const data = {
       courseId: course._id,
     };
-    ////console.log(data)
+    //////console.log(data)
     apiInstancePrivate.post("/api/v1/enroll/add",data)
       .then((response) => {
-        // //console.log(response)
+        // ////console.log(response)
         if (response.data.data === "enrolled") {
           window.location.replace("/encourses");
         }
@@ -99,7 +99,7 @@ function Payment() {
         initPayment(response.data.data,response.data.userData);
       })
       .catch((error) => {
-        // //console.log(error)
+        // ////console.log(error)
       });
     }
   };

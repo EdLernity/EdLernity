@@ -113,7 +113,7 @@ const EnrollCourses = async (req, res) => {
 };
 
 const createOrder = async (courseId, uid,response) => {
-  console.log(courseId)
+  //console.log(courseId)
   if(courseId==="lifeTimeFinalPrice")
   {
     const courses = await courseModel.find();
@@ -137,7 +137,7 @@ const createOrder = async (courseId, uid,response) => {
      })
      const trans=await transactionObj.save();
      const existingUserCourses = await UserCourseModel.findOne({ userId: uid });
-console.log(existingUserCourses)
+//console.log(existingUserCourses)
      let newCourseIds = [];
  
      if (existingUserCourses) {

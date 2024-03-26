@@ -136,7 +136,7 @@ const saveCourseDetails = async (req, res) => {
     return sendSuccessResponse(res,200,null,"Course Created Successfully.");
     
   } catch (err) {
-    console.log("Error in saving course details : ", err);
+    //console.log("Error in saving course details : ", err);
     return res.status(500).send({ error: "Internal Server Error" });
   }
 };
@@ -156,7 +156,7 @@ const getAllCourseDetails = async (req, res) => {
       return sendErrorResponse(res,404,null,"Course Not Found");
     }
   } catch (error) {
-    console.log("Error in getting all Course Details: ", error);
+    //console.log("Error in getting all Course Details: ", error);
     return res
       .status(500)
       .json({ success: false, message: "Internal Server Error" });
@@ -187,7 +187,7 @@ const getEnrolledCourses = async (req, res) => {
 
     return res.status(200).json({ success: true, data: allVideos,rating:course.courseScore[existingRatingIndex].rating });
   } catch (error) {
-    console.log("Error in getting all Course Details: ", error);
+    //console.log("Error in getting all Course Details: ", error);
     return res
       .status(500)
       .json({ success: false, message: "Internal Server Error" });
@@ -216,7 +216,7 @@ const rateCourse = async (req, res) => {
     await course.save();
     return res.status(200).json({ success: true, message: "Course rated successfully", data: course });
   } catch (error) {
-    console.log("Error in rating the course: ", error);
+    //console.log("Error in rating the course: ", error);
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
@@ -240,7 +240,7 @@ const getCourseDetailsByIds = async (req, res) => {
     return sortedCourses;
 
   } catch (error) {
-    console.log("Error in getting all Course Details: ", error);
+    //console.log("Error in getting all Course Details: ", error);
     return res
       .status(500)
       .json({ success: false, message: "Internal Server Error" });
@@ -271,7 +271,7 @@ const filteredCourses = courses.filter(course => String(course._id) !== courseId
 
 return res.status(200).json({ success: true, courses: filteredCourses });
   } catch (error) {
-    console.log("Error in getting all Course Details: ", error);
+    //console.log("Error in getting all Course Details: ", error);
     return res
       .status(500)
       .json({ success: false, message: "Internal Server Error" });

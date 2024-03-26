@@ -10,7 +10,7 @@ const CapturePayment = async (req, res) => {
       amount: req.body.amount, // amount in the smallest currency unit
       currency: 'INR',
     };
-    console.log(req.body.amount);
+    //console.log(req.body.amount);
     const myOrder = await instance.orders.create(options);
 
     res.status(200).json({

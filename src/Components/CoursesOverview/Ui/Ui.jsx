@@ -53,7 +53,7 @@ const navigate=useNavigate();
         });
     } catch (err) {
       setError(err);
-      console.log("Error getting the video url from server.", error);
+      //console.log("Error getting the video url from server.", error);
     }
   }, [course]);
 

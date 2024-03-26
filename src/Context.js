@@ -27,14 +27,14 @@ export const Context = ({ children }) => {
    if(isLogin)
    {
      apiInstancePrivate.get("/api/v1/enroll/fetch").then((response) => {
-    console.log(response);
+    //console.log(response);
     setProfile(response.data[0].userId);
     setCourses(response.data[0].courseIds)
      }).catch((error) => {
 
      })
      apiInstancePrivate.get("/api/v1/enroll/check-enrollment").then((response) => {
-      console.log(response);
+      //console.log(response);
       setEnrolledList(response.data.enrollList)
       
        }).catch((error) => {

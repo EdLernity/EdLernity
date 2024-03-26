@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import ForgotPasswod from "./ForgotPassword/ForgotPasswod";
+import React, { useEffect, useState } from "react";
 import SucessPage from "../SuccessPage/SuccessPage";
 import ErrorComponent from "../UpdatePassword/ErrorComponent/ErrorComponent";
+import ForgotPasswod from "./ForgotPassword/ForgotPasswod";
 
 const ForgetPasswordComponent = () => {
   const [showUi, setShowUi] = useState(true);
@@ -10,7 +10,7 @@ const ForgetPasswordComponent = () => {
   const [responseData, setResponseData] = useState({});
 
   const handleChildResponse = async (data) => {
-    console.log(data)
+    //console.log(data)
     if (data.status === 200) {
       setShowUi(!showUi);
       setSuccess(true);
@@ -23,7 +23,7 @@ const ForgetPasswordComponent = () => {
   };
 
   useEffect(() => {
-    console.log(responseData);
+    //console.log(responseData);
   }, [responseData]);
 
   const req = {

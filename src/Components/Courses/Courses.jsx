@@ -64,7 +64,7 @@ function Courses() {
         
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       })
       .finally(() => {});
   };
@@ -83,7 +83,7 @@ function Courses() {
       setRating(res.data.rating)
     })
     .catch((err) => {
-      console.log(err);
+      //console.log(err);
     })
     .finally(() => {
       setloading(false)

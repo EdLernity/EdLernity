@@ -136,7 +136,7 @@ videoFiles.forEach((file, index) => {
   };
   // Function to upload course banner
   const handleBannerUpload = (files) => {
-    console.log(files);
+    //console.log(files);
     // Check if file type is image
     if (files[0].type.startsWith("image")) {
       // Add uploaded banner files to state

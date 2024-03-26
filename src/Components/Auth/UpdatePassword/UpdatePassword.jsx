@@ -50,7 +50,7 @@ function UpdatePassword() {
     validateLink();
   }, [token]);
 
-  console.log(responseData)
+  //console.log(responseData)
   const req ={ 
     message : responseData.message,
     path : responseData.redirectTo,

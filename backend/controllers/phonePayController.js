@@ -55,11 +55,11 @@
 //       },
 //     };
 
-//     console.log(data)
+//     //console.log(data)
 
 //     const payload = JSON.stringify(data1);
 //     const mainPayload = Buffer.from(payload).toString("base64");
-//     console.log(`Main Payload is ${mainPayload}`);
+//     //console.log(`Main Payload is ${mainPayload}`);
 //     const keyIndex = 1;
 //     const string = mainPayload + "/pg/v1/pay" + process.env.salt_Key;
 
@@ -68,10 +68,10 @@
 //       .update(string, "utf8")
 //       .digest("hex");
 
-//     console.log(`sha256 : ${sha256}`);
+//     //console.log(`sha256 : ${sha256}`);
 
 //     const checksum = sha256 + "###" + keyIndex;
-//     console.log(checksum)
+//     //console.log(checksum)
 
 //     prod_Url_Payment = process.env.prod_Url_Payment
 
@@ -84,8 +84,8 @@
 //     axios.post(`https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay`, mainPayload ,{
 //         headers:headers,
 //     }).then((response)=>{
-//         console.log(response.data);
-//         console.log(response.data.data.instrumentResponse.redirectInfo.url);
+//         //console.log(response.data);
+//         //console.log(response.data.data.instrumentResponse.redirectInfo.url);
 //         if (response.status == 200) {
 //           return res.json({
 //             Payment_URL: `${response.data.data.instrumentResponse.redirectInfo.url}`,
@@ -93,13 +93,13 @@
 //           });
 //         }
 //     }).catch((error)=> {
-//         console.log(error)
+//         //console.log(error)
 //       return res.status(500).send({
 //         msg: "Error Occured while making Pay U request! Please Try Again Later.",
 //       });
 //     });
 //     } catch (err) {
-//     console.log(err);
+//     //console.log(err);
 //     return res.status(500).send({
 //       msg: "Error Occured while making Pay U request! Please Try Again Later. final catch",
 //       error: err,
@@ -138,7 +138,7 @@
 
 //   try {
 //     const res = await axios.request(options);
-//     console.log(res);
+//     //console.log(res);
 //     if (res.data.success) {
 //       const message = `Payment Successful with Transaction ID ${res.data.transaction.txnid}. Redirecting you to Home Page...`;
 //       // Update user's account balance in database and send email to user about successful transaction.
@@ -156,7 +156,7 @@
 //       return res.send({ status: false, message: "Something went wrong!" });
 //     }
 //   } catch (err) {
-//     console.log(err);
+//     //console.log(err);
 //   }
 // };
 
@@ -172,7 +172,7 @@ var key = "4vnQO9l9aHZzM1X%"
 
 const callback =  async (req, res) => {
     try {
-        console.log(req.body)
+        //console.log(req.body)
         const {ORDERID, RESPMSG} = req.body
 
         var paytmChecksum = req.body.CHECKSUMHASH;
@@ -181,14 +181,14 @@ const callback =  async (req, res) => {
         var isVerifySignature = PaytmChecksum.verifySignature(req.body, key, paytmChecksum);
         
         if (isVerifySignature) {
-            console.log("Checksum Matched");
+            //console.log("Checksum Matched");
             if(req.body.STATUS === "TXN_SUCCESS"){
                 return res.redirect(`http://localhost:3000/success?orderId=${ORDERID}&message=${RESPMSG}`);
             } else{
                 return res.redirect(`http://localhost:3000/failure?orderId=${ORDERID}&message=${RESPMSG}`);
             }
         } else {
-            console.log("Checksum Mismatched");
+            //console.log("Checksum Mismatched");
             return res.send("something went wrong")
         }
         
@@ -235,7 +235,7 @@ const payment = (req, res) => {
         res.json(paytmParams);
       })
       .catch(function (error) {
-        console.log(error);
+        //console.log(error);
       });
   };
 

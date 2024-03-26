@@ -8,7 +8,7 @@ const region = "ap-south-1";
 const bucketName = process.env.S3_BUCKET_NAME;
 const accessKeyId = process.env.AWS_ACCESS_KEY;
 const secretAccessKey = process.env.S3_SECRET_KEY;
-console.log(bucketName)
+//console.log(bucketName)
 // S3 configuration
 const s3 = new aws.S3({
   region,
@@ -55,7 +55,7 @@ const deleteS3Object = function(key) {
         console.error('Error deleting S3 object:', err);
         reject(err);
       } else {
-        console.log('S3 object deleted successfully:', data);
+        //console.log('S3 object deleted successfully:', data);
         resolve(data);
       }
     });
@@ -64,7 +64,7 @@ const deleteS3Object = function(key) {
 
 const deleteS3ObjectsInBulk = async function(keys) {
   try {
-    console.log(keys);
+    //console.log(keys);
     const params = {
       Bucket: bucketName,
       Delete: {
@@ -72,7 +72,7 @@ const deleteS3ObjectsInBulk = async function(keys) {
       },
     };
     await s3.deleteObjects(params).promise();
-    console.log('All S3 objects deleted successfully');
+    //console.log('All S3 objects deleted successfully');
   } catch (error) {
     console.error('Error deleting S3 objects:', error);
   }

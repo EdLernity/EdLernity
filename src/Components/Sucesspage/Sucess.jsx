@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from "react";
 import { Avatar } from "@material-tailwind/react";
-import { StarIcon } from "@heroicons/react/solid";
-import { Button } from "@material-tailwind/react";
-import { RiDoubleQuotesL } from "react-icons/ri";
+import React, { useEffect, useState } from "react";
 
 function Success() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -99,31 +96,16 @@ function Success() {
 
   return (
     <>
-      <h1
-        className="text-5xl text-center font-extrabold mb-10"
-        style={{ color: "#1649FF" }}
-      >
-        Stay in the loop with the latest updates in the tech industry
-      </h1>
-      <div className="flex flex-col bg-[#F1F0F0] bg-cover bg-center text-white p-6 min-h-[600px] md:p-12 xl:p-16">
-        {/* Carousel */}
-        <div className="flex flex-col md:flex-row xl:flex-row justify-between items-center p-4 md:p-16 xl:p-24">
-          {/* left side image */}
-          <div className="relative w-full md:w-[40%] mb-4 md:mb-0">
-            <img
-              src="/Image/Rectangle_Girl_Reviewer.png"
-              className="rounded-[57px] drop-shadow-[18px_12px_4px_gray] w-full"
-              alt="reviewer_img"
-            />
-            <div className="bg-[#181FC5] rounded-full w-[90px] h-[90px] absolute -right-6 -top-6 z-10"></div>
-            <p className="text-white absolute text-5xl right-0 -top-1 z-10">
-              <RiDoubleQuotesL />
-            </p>
-          </div>
-
-          {/* right side content */}
+     
+      <div className="w-full relative sm:h-[650px] h-[500px] py-28 overflow-hidden  mt-14">
+      <div className="absolute right-16 top-56 h-96 p-2 w-96 border-dashed border-[#000000] border-[1px] rounded-full"></div>
+      <div className="max-w-[1293px] mr-3 w-full sm:h-[578px] h-[500px] bg-[#ECF7FF] rounded-tl-[137px] sm:rounded-br-[400px] absolute top-0 z-10"></div>
+      <div className="!z-30 absolute top-0 h-full w-full flex flex-col gap-24 py-10">
+        <div className=" flex flex-col sm:gap-16 md:gap-24 gap-12 ">
+          
+          <div className="lg:pl-32 sm:pl-8 px-5 flex gap-12">
           <div className="flex flex-col w-full md:w-[60%] xl:w-[50%] p-4 md:p-0 xl:p-0 justify-between">
-            <h1 className="text-2xl md:text-4xl xl:text-5xl font-extrabold text-black mb-4 md:mb-6 xl:mb-6">
+            <h1 className="text-2xl md:text-3xl xl:text-4xl font-extrabold text-[#8541dd] mb-4 md:mb-6 xl:mb-6">
               What students say about us
             </h1>
             <p className="text-[#6C6868] mb-4 md:mb-6 xl:mb-6">
@@ -147,13 +129,7 @@ function Success() {
                 />
               ))}
             </div>
-          </div>
-        </div>
-
-        <div className="flex justify-center rounded-lg mb-2 mt-8 animate__animated animate__backInUp">
-          <Button className="">Success Stories</Button>
-        </div>
-        <div className="flex  justify-center my-8 -space-x-4 flex-col md:flex-row xl:flex:row items-center animate__animated animate__backInUp">
+            <div className="md:flex  justify-center my-8 hidden -space-x-4 flex-col md:flex-row xl:flex:row items-center animate__animated animate__backInUp">
           <div className="-space-x-4">
             {imagePaths.map((imgPath, index) => (
               <Avatar
@@ -165,7 +141,7 @@ function Success() {
               />
             ))}
           </div>
-          <div
+          {/* <div
             className="ml-2 flex items-center flex-col md:flex-col xl:flex-col my-2"
             style={{ marginLeft: "20px" }}
           >
@@ -175,9 +151,14 @@ function Success() {
                 <StarIcon key={index} className="w-5 h-5 text-yellow-500 " />
               ))}
             </div>
+          </div> */}
+        </div>
+          </div>
+        
           </div>
         </div>
       </div>
+    </div>
     </>
   );
 }

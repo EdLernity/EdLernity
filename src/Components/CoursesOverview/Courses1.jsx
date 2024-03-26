@@ -72,7 +72,7 @@ function Courses1() {
           setIsLoading(false);
         }
         const { data } = response.data;
-        console.log(data);
+        //console.log(data);
         const updatedAllCoursesData = data.map((course) => ({
           ...course,
           buttonText: "Overview",
@@ -107,7 +107,7 @@ function Courses1() {
   const [selectedCourse, setSelectedCourse] = useState([]);
 
   const handleOpen = (course) => {
-    console.log(course);
+    //console.log(course);
     setSelectedCourse(course);
     setOpenDialog(true);
   };
@@ -116,7 +116,7 @@ function Courses1() {
     setOpenDialog(false);
   };
 
-  console.log(isLoading);
+  //console.log(isLoading);
 
   return (
     <BaseLayout>
@@ -133,7 +133,7 @@ function Courses1() {
       </h1>
 
       <div class="flex overflow-x-scroll pb-10 hide-scroll-bar pt-3">
-        <div class="flex flex-nowrap lg:ml-[5.5rem] md:ml-20 ml-[4rem] ">
+        <div class="flex flex-nowrap lg:ml-[5.5rem] md:ml-20 ml-[1.5rem] ">
           {isLoading
             ? Array.from({ length: 4 }).map((_, index) => (
                 <div class="inline-block px-3">
@@ -166,7 +166,7 @@ function Courses1() {
           Popular Courses
         </h1>
         <div class="flex overflow-x-scroll pb-10 hide-scroll-bar pt-3">
-          <div class="flex flex-nowrap lg:ml-[5rem] md:ml-20 ml-[4rem] ">
+          <div class="flex flex-nowrap lg:ml-[5rem] md:ml-20 ">
             {isLoading
               ? Array.from({ length: 5 }).map((_, index) => (
                   <div class="inline-block px-3">

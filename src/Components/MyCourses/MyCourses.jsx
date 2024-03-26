@@ -28,11 +28,11 @@ const [userData, setUserData] = useState("")
     }
   }, [navigate]);
   const handleRating = (courseId,rating) => {
-    console.log(rating)
+    //console.log(rating)
     apiInstancePrivate.post(BACKEND_URL+"/api/v1/course/rate-course",{courseId:courseId, rating:rating}).then((res)=>{
-    console.log(res)
+    //console.log(res)
     }).catch((err) => {
-      console.log(err)
+      //console.log(err)
     }).finally(()=>{
 
     })

@@ -31,7 +31,7 @@ const bucketName = 'your-bucket-name';
 const folderName = 'your-folder-name';
 listVideosInFolder(bucketName, folderName)
   .then((videos) => {
-    console.log('Videos in folder:', videos);
+    //console.log('Videos in folder:', videos);
   })
   .catch((error) => {
     console.error('Error:', error);

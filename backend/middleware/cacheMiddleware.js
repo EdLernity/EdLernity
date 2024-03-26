@@ -8,7 +8,7 @@ const cacheMiddleware = (req, res, next) => {
 
     if (cachedData) {
         // If data is found in cache, send it back as response
-        console.log('Data retrieved from cache');
+        //console.log('Data retrieved from cache');
         return res.json({ success: true, data: cachedData });
     } else {
         // If data is not found in cache, proceed to the next middleware or route handler

@@ -22,7 +22,7 @@ async function uploadToGCS(folderName, files) {
       fs.unlinkSync(file.path);
     }
 
-    console.log('Files uploaded to Google Cloud Storage successfully.');
+    //console.log('Files uploaded to Google Cloud Storage successfully.');
     return true;
   } catch (error) {
     console.error('Error uploading files to GCS:', error);

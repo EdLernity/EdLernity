@@ -1,33 +1,7 @@
-import React from "react";
 import "animate.css";
+import React from "react";
 
 function Internship() {
-  const cardStyle = {
-    position: "relative",
-    width: "300px",
-    margin: "10px",
-    textAlign: "center",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    borderRadius: "30px",
-    overflow: "hidden",
-  };
-
-  const imageStyle = {
-    width: "100%",
-    height: "auto",
-    borderRadius: "20px",
-  };
-
-  const textStyle = {
-    position: "absolute",
-    top: "25%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    color: "#fff", // Text color
-    fontSize: "2.0rem", // Adjust font size as needed
-    fontWeight: "bold",
-    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)", // Optional text shadow for better readability
-  };
 
   const intershipData = [
     {
@@ -49,28 +23,33 @@ function Internship() {
   ];
 
   return (
-    <div className="flex flex-wrap justify-around pt-1 px-20 pb-20 animate__animated animate__backInLeft">
-      {intershipData.map((data, index) => (
-        <div
-          key={index}
-          style={cardStyle}
-          className="relative w-300 m-10 text-center shadow-lg rounded overflow-hidden"
-        >
-          <img
-            src={`/Image/internship/${data.img}`}
-            alt="Internship 1"
-            style={imageStyle}
-            className="w-full h-auto rounded"
-          />
-          <div
-            style={textStyle}
-            className="absolute top-25 left-50 transform -translate-x-50 -translate-y-50 text-white font-bold text-2xl"
-          >
-            {data.text}
+    <>
+     <div className="mx-auto md:text-5xl text-4xl text-[#8541dd] font-hindVadodara -tracking-[0.01] leading-[106.3%] mt-2">
+            <h1 className=" font-extrabold self-center text-center">
+              What we offer here
+            </h1>
           </div>
-        </div>
-      ))}
+    <div className="flex justify-center overflow-x-scroll pb-2 hide-scroll-bar">
+      
+      <div className="flex flex-nowrap lg:ml-[5rem] md:ml-20 ml-[52rem] text-center">
+        {intershipData.map((data, index) => (
+          <div className="inline-block px-3" key={index}>
+            <article className="relative w-64 h-64 isolate flex flex-col justify-end overflow-hidden rounded-2xl px-8 pb-8 pt-40 max-w-sm mx-auto mt-10">
+              <img src={`/Image/internship/${data.img}`} alt="University of Southern California" className="absolute inset-0 h-full w-full object-cover"/>
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40"></div>
+              <h3 className="z-10 mt-3 text-lg font-bold text-white">{data.text}</h3>
+            </article>
+          </div>
+        ))}
+      </div>
     </div>
+    {/* <h1
+        className="text-xl text-center font-extrabold mb-10"
+        style={{ color: "#8541dd" }}
+      >
+        Stay in the loop with the latest updates in the tech industry
+      </h1> */}
+    </>
   );
 }
 

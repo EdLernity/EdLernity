@@ -43,13 +43,13 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
               <>
                 {/* <Link to="/auth/signup" class="hover:bg-indigo-700 hover:text-white hover:-translate-y-1 transition-all duration-500 text-white bg-cyan-700  focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 lg:ml-auto">Login</Link> */}
 
+               
                 <Link
                   to="/auth/login"
-                  className="text-white hover:bg-indigo-700 hover:text-white hover:-translate-y-1 transition-all duration-500 bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 hidden md:block"
+                  className="py-3 px-7 hidden md:block text-white font-bold bg-gradient-to-r hover:-translate-y-1 transition-all duration-500 from-blue-500 to-pink-200 rounded-3xl group relative overflow-hidden"
                 >
                   Login
                 </Link>
-
                 <div className="lg:hidden md:hidden">
                   <AlignJustify
                     className="w-8 h-8 cursor-pointer mb-1"
@@ -60,7 +60,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             )}
           </div>
           <div
-            class="hidden justify-start items-start w-full lg:flex lg:w-auto me-[50rem] lg:order-1"
+            class="hidden justify-start items-start w-full lg:flex lg:w-auto me-[45rem] lg:order-1"
             id="mobile-menu-2"
           >
             <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">

@@ -7,7 +7,7 @@ function SucessPage({ req = {} }) {
     setIsPath(true);
   }
   const urlParams = new URLSearchParams(window.location.search);
-  console.log(req)
+  //console.log(req)
   if(Object.entries(req).length === 0){
     const message = urlParams.get('message');
     const path = urlParams.get('path');
@@ -19,7 +19,7 @@ function SucessPage({ req = {} }) {
     }
     return <SucessPage req={{message: message || "No Message Provided", path: path || "/", text: text || ""}}/>;
   }
-  console.log(req)
+  //console.log(req)
   return (
     
     <>

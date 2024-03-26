@@ -50,7 +50,7 @@ const sendEmail=async(subject,to,htmlTemplate,textFormat)=>{
       
       } catch (error) {
 
-        console.log("email error");
+        //console.log("email error");
       }
 }
 

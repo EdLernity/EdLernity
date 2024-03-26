@@ -42,7 +42,7 @@ function Contact() {
     } else {
       try {
         await axios.post(BACKEND_URL+"/api/contact", formData);
-        console.log("Form submitted:", formData);
+        //console.log("Form submitted:", formData);
         setSubmitted(true);
       } catch (error) {
         console.error("Error submitting form:", error);
@@ -52,7 +52,7 @@ function Contact() {
   };
 
   const validateFormData = (data) => {
-    console.log(data.phone)
+    //console.log(data.phone)
     const errors = {};
     if (!data.name.trim()) {
       errors.name = "Name is required";

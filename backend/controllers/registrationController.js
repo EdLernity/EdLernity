@@ -90,9 +90,9 @@ const registerUser = async (req, res) => {
      
       const htmlTemplate = emailVerificationTemplate(verificationLink, firstName);
       sendEmail("Verify your mail - EdLernity", email, htmlTemplate, htmlTemplate).then((result) => {
-        console.log(result)
+        //console.log(result)
       }).catch((error) => {
-        console.log("err", err)
+        //console.log("err", err)
       })
       return res.json({ success: true, message: `Thank you for registering with edlernity. We’ve sent you a verification link to the email address <span class="font-medium text-indigo-500">${email}</span>.`, redirectTo: "/", text: "" });
 
@@ -245,7 +245,7 @@ const resetPassword = async (req, res) => {
     sendEmail("Reset your password - EdLernity", user.email, htmlTemplate, htmlTemplate).then((result) => {
       
     }).catch((error) => {
-      console.log("err", err)
+      //console.log("err", err)
     })
 
   sendSuccessResponse(
@@ -255,7 +255,7 @@ const resetPassword = async (req, res) => {
     `Password reset link sent to your email: <span class="font-medium text-indigo-500">${email}</span>`
   );
   } catch (e) {
-    console.log(e)
+    //console.log(e)
     return res.status(400).json({
       sucess: false, message: "Error resetting password.",
       redirectTo: "/auth/reset",
@@ -382,7 +382,7 @@ const updatePasswordAfterValidate = async (req, res) => {
       return res.status(500).json({ success: false, message: 'Your link has already used. Please try to generate again.', redirectTo: "/auth/reset", text: "to reset again." });
     }
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     return res.status(500).json({
       success: false,
       message: `Error resetting password.`,
@@ -411,7 +411,7 @@ const reVerifyEmail = async (req, res) => {
       sendEmail("Verify your mail - EdLernity", emailExist.email, htmlTemplate, htmlTemplate).then((result) => {
         
       }).catch((error) => {
-        console.log("err", err)
+        //console.log("err", err)
       })
 
     sendSuccessResponse(
