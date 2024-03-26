@@ -8,7 +8,7 @@ import {
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { BACKEND_URL } from "../../../URL_Config";
+import { axiosInstanceWithoutToken } from "../../../Utils/AxiosInstance";
 import InputButton from "../../Input/InputButton";
 import SucessPage from "../SuccessPage/SuccessPage";
 import ErrorComponent from "../UpdatePassword/ErrorComponent/ErrorComponent";
@@ -112,7 +112,7 @@ function Signup() {
     } else {
       setError('');
       try {
-        let res = await axios.post(BACKEND_URL+"/auth/register", data);
+        let res = await axiosInstanceWithoutToken.post("/auth/register", data);
         setResponseData(res.data);
         if (res?.data?.success) {
           setIsResgisterSucess(true);
@@ -155,24 +155,19 @@ function Signup() {
       headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
     })
     .then(async (response)=>{
-      try {
+      
         let googleSignInData = {
           firstName:response.data.given_name,
           lastName:response.data.family_name,
           email:response.data.email,
           googleSignUp:true
         };
-        let res = await axios.post(BACKEND_URL+"/auth/register", googleSignInData);
+        let res = await axiosInstanceWithoutToken.post("/auth/register", googleSignInData);
         setResponseData(res.data);
         if (res?.data?.success) {
           setIsResgisterSucess(true);
         }
-      } catch (error) {
-        console.error("Error during signup:", error.message);
-        setIsError(true);
-        setError(error?.response?.data?.message)
-        setResponseData(error?.response?.data);
-      }
+      
     });
 
     },
