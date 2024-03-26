@@ -46,7 +46,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                
                 <Link
                   to="/auth/login"
-                  className="py-3 px-7 hidden md:block text-white font-bold bg-gradient-to-r hover:-translate-y-1 transition-all duration-500 from-blue-500 to-pink-200 rounded-3xl group relative overflow-hidden"
+                  className="py-2 px-7 hidden md:block text-white font-bold bg-gradient-to-r hover:-translate-y-1 transition-all duration-500 from-blue-500 to-pink-200 rounded-3xl group relative overflow-hidden"
                 >
                   Login
                 </Link>
