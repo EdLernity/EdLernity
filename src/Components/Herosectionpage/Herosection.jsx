@@ -36,8 +36,9 @@ function Herosection() {
             </button>
           </div>
         </div>
-        <div className="absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:-right-32 md:left-auto xl:-right-80 xl:-top-20 md:-top-5 lg:-right-28 lg:-top-14 ">
+        <div  className="absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:-right-32 md:left-auto xl:-right-80 xl:-top-20 md:-top-5 lg:-right-28 lg:-top-14 ">
           <img
+          data-aos="fade-left"
             src="/Image/background.png"
             alt=""
             className="relative md:max-w-[500px] lg:max-w-[600px] xl:max-w-[650px] hidden md:block"

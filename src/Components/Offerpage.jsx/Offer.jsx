@@ -16,7 +16,8 @@ function Offer() {
             <div class="flex flex-col">
 
 
-  <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-3">
+  <div data-aos="fade-up"
+     data-aos-duration="3000" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-3">
     <div class="flex items-start rounded-xl bg-white p-4 shadow-lg">
       <div class="flex h-12 w-12 items-center justify-center rounded-full border border-blue-100 bg-blue-50">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

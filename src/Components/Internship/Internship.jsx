@@ -33,7 +33,7 @@ function Internship() {
       
       <div className="flex flex-nowrap lg:ml-[5rem] md:ml-20 ml-[52rem] text-center">
         {intershipData.map((data, index) => (
-          <div className="inline-block px-3" key={index}>
+          <div data-aos="flip-up" className="inline-block px-3" key={index}>
             <article className="relative w-64 h-64 isolate flex flex-col justify-end overflow-hidden rounded-2xl px-8 pb-8 pt-40 max-w-sm mx-auto mt-10">
               <img src={`/Image/internship/${data.img}`} alt="University of Southern California" className="absolute inset-0 h-full w-full object-cover"/>
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40"></div>

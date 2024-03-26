@@ -125,6 +125,7 @@ function Herosection2() {
                 {heroSectionContent?.map((card, index) => (
                   <div class="inline-block px-3">
                     <div
+                    data-aos="flip-left"
                       key={index}
                       className="p-[18px]  flex flex-col justify-start bg-white shadow-3xl rounded-[10px] overflow-hidden w-[18rem] md:w-full"
                     >
