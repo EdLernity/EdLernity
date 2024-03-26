@@ -43,6 +43,10 @@ app.use('/api', paymentRoutes);
 app.use('/api/v1/enroll', enrollment);
 app.use('/api', contactRoutes);
 
+app.get("/", (req, res) => {
+    res.send("Edlernity-Backend-env");
+});
+
 
 // Serve static files
 app.use(express.static(path.join(__dirname, "../build")));
