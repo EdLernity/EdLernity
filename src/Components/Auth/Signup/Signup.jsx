@@ -165,7 +165,7 @@ function Signup() {
         let res = await axiosInstanceWithoutToken.post("/auth/register", googleSignInData);
         setResponseData(res.data);
         if (res?.data?.success) {
-          setIsResgisterSucess(true);
+          window.location.replace("/auth/login")
         }
       
     });

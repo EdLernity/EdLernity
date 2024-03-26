@@ -84,11 +84,12 @@ const registerUser = async (req, res) => {
       });
       await newUser.save();
       //send mail
-      const verificationLink = constructVerificationLink(
+      const verificationLink = await constructVerificationLink(
         process.env.APPLICATION_URL,
         email,
         1
       );
+      console.log(verificationLink)
      
       const htmlTemplate = emailVerificationTemplate(verificationLink, firstName);
       sendEmail("Verify your mail - EdLernity", email, htmlTemplate, htmlTemplate).then((result) => {
@@ -165,7 +166,7 @@ const loginUser = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, email: user.email,userTemp:user.userId },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "7d" }
     );
 
     // Send the token in the response
