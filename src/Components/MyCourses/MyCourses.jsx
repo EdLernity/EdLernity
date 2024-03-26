@@ -12,7 +12,7 @@ import { apiInstancePrivate } from "../../Utils/AxiosInstance.js";
 
 function MyCourses() {
 
-const {myCourses,profile}=useContext(Store);
+const {myCourses,profile,userProfile}=useContext(Store);
 const [userData, setUserData] = useState("")
   const [isLoading, setIsLoading] = useState(true);
   const [rating, setRating] = useState(0);
@@ -48,7 +48,7 @@ const [userData, setUserData] = useState("")
     });
   };
 
-console.log(profile)
+
   
 
 
@@ -56,12 +56,12 @@ console.log(profile)
     <BaseLayout>
     <div className="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
       <div className="flex justify-start item-start space-y-2 flex-col">
-        <h1 className="text-3xl dark:text-white lg:text-4xl font-semibold leading-7 lg:leading-9 text-gray-800">Hi {profile?.firstName},</h1>
+        <h1 className="text-3xl dark:text-white lg:text-4xl font-semibold leading-7 lg:leading-9 text-gray-800">Hi {userProfile?.firstName},</h1>
        
       </div>
       <div className="mt-10 flex flex-col xl:flex-row jusitfy-center items-stretch w-full xl:space-x-8 space-y-4 md:space-y-6 xl:space-y-0">
         <div className="flex flex-col justify-start items-start w-full space-y-4 md:space-y-6 xl:space-y-8">
-        <p class="text-lg md:text-xl dark:text-white font-semibold leading-6 xl:leading-5 text-gray-800">Enrolled Courses</p>
+        <p class="text-lg md:text-xl dark:text-white font-semibold leading-6 xl:leading-5 text-gray-800">{myCourses.length==0?"No Courses Enrolled":"Enrolled Courses"}</p>
           
         {myCourses.map((course, index) => (
   <div key={index} class="mt-4 md:mt-6 flex flex-col md:flex-row justify-start items-start md:items-center md:space-x-6 xl:space-x-8 w-full">
