@@ -90,7 +90,7 @@ function Login() {;
   }
 
   const handleSignup = async () => {
-    if(email.trim().length===0 || password.trim().length===0)
+    if(email.trim().length===0 || password.trim().length===0|| password.trim().length<8)
     {
       showSnackbar("Please enter email and password","info","top");
       return;
