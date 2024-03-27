@@ -5,11 +5,11 @@ const LINKS = [
   {
     title: "Company",
     items: [
-      { label: "Our Company", url: "/company" },
-      { label: "Student Stories", url: "/student-stories" },
-      { label: "Contact Us", url: "/contact-us" },
+      // { label: "Our Company", url: "/company" },
+      // { label: "Student Stories", url: "/student-stories" },
       { label: "About Us", url: "/about" },
-      { label: "Help and Support", url: "/help" },
+      { label: "Contact Us", url: "/contact" },
+      // { label: "Help and Support", url: "/help" },
     ],
   },
   {

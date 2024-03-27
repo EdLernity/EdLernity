@@ -45,8 +45,7 @@ apiInstancePrivate.interceptors.response.use(
   (error) => {
     const errorMessage =
       error.response && error.response.data && error.response.data.message
-        ? error.response.data.message
-        : "An error occurred";
+        && error.response.data.message;
     showSnackbar(errorMessage, "error", "top");
     if (errorMessage === "Session Expired") {
       window.location.replace("/auth/login");

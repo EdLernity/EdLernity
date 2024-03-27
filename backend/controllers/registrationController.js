@@ -101,15 +101,14 @@ const registerUser = async (req, res) => {
 
 
     } else {
-      console.log("first")
-      // Generate a unique numeric user ID
+        // Generate a unique numeric user ID
       const newUser = new userModel({
         userId,
         firstName,
         lastName,
         email,
         isGoogleAuth: true,
-        isVerified: true
+        isVerified: false
       });
       await newUser.save();
       return res.json({ success: true, message: "Thank you for registering with edlernity.", redirectTo: "/", text: "" });
