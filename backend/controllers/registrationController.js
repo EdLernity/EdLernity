@@ -71,7 +71,7 @@ const registerUser = async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Generate a unique numeric user ID
-     
+
       const newUser = new userModel({
         userId,
         firstName,
@@ -80,7 +80,7 @@ const registerUser = async (req, res) => {
         phone,
         password: hashedPassword,
         isGoogleAuth: false,
-        isVerified:true
+        isVerified: true
       });
       await newUser.save();
       //send mail
@@ -90,7 +90,7 @@ const registerUser = async (req, res) => {
         1
       );
       console.log(verificationLink)
-     
+
       const htmlTemplate = emailVerificationTemplate(verificationLink, firstName);
       sendEmail("Verify your mail - EdLernity", email, htmlTemplate, htmlTemplate).then((result) => {
         //console.log(result)
@@ -109,7 +109,7 @@ const registerUser = async (req, res) => {
         lastName,
         email,
         isGoogleAuth: true,
-        isVerified:true
+        isVerified: true
       });
       await newUser.save();
       return res.json({ success: true, message: "Thank you for registering with edlernity.", redirectTo: "/", text: "" });
@@ -126,7 +126,7 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { email, password,googleSignUp } = req.body;
+    const { email, password, googleSignUp } = req.body;
 
     // Check if email and password are provided
     if (!email) {
@@ -138,39 +138,53 @@ const loginUser = async (req, res) => {
     // Find the user by email
     const user = await userModel.findOne({ email });
 
-   
+
     // Check if the user exists
     if (!user) {
       return res
         .status(401)
         .json({ success: false, message: "Email is not registered", redirectTo: "/auth/login", text: "to login again." });
     }
-    if(!user.isVerified){
+    if (!user.isVerified) {
       return res
-      .status(401)
-      .json({ success: false, message: "Account not verified!", redirectTo: "/reverify-email", text: "to verify again." });
+        .status(401)
+        .json({ success: false, message: "Account not verified!", redirectTo: "/reverify-email", text: "to verify again." });
     }
-
+if(password&&user.isGoogleAuth)
+{
+  return res
+  .status(401)
+  .json({ success: false, message: "Please Login with Google", redirectTo: "/auth/login", text: "to login again." }); 
+}
     // Check if the password matches
-    if(!googleSignUp){
+    if (!googleSignUp) {
+      console.log(password, user.password)
       const isPasswordValid = await bcrypt.compare(password, user.password);
-  
+
       if (!isPasswordValid) {
         return res
           .status(401)
           .json({ success: false, message: "Incorrect password", redirectTo: "/auth/login", text: "to login again." });
       }
+      const token = jwt.sign(
+        { userId: user._id, email: user.email, userTemp: user.userId },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      // Send the token in the response
+      return res.json({ success: true, token, redirectTo: "/", text: "", token });
+    } else if (googleSignUp) {
+      // If email and password are valid, generate a JWT token
+      const token = jwt.sign(
+        { userId: user._id, email: user.email, userTemp: user.userId },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      // Send the token in the response
+      return res.json({ success: true, token, redirectTo: "/", text: "", token });
     }
-
-    // If email and password are valid, generate a JWT token
-    const token = jwt.sign(
-      { userId: user._id, email: user.email,userTemp:user.userId },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    // Send the token in the response
-    return res.json({ success: true, token, redirectTo: "/", text: "", token });
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).json({ success: false, message: "Internal server error", redirectTo: "/auth/login", text: "to login again." });
@@ -231,7 +245,7 @@ const resetPassword = async (req, res) => {
     // Check if the user with the provided email exists
     const user = await userModel.findOne({ email });
 
-    
+
 
     if (!user) {
       return res
@@ -244,20 +258,20 @@ const resetPassword = async (req, res) => {
       user.email,
       2
     );
-    
+
     const htmlTemplate = resetPasswordMailTemplate(verificationLink, user.firstName);
     sendEmail("Reset your password - EdLernity", user.email, htmlTemplate, htmlTemplate).then((result) => {
-      
+
     }).catch((error) => {
       //console.log("err", err)
     })
 
-  sendSuccessResponse(
-    res,
-    200,
-    null,
-    `Password reset link sent to your email: <span class="font-medium text-indigo-500">${email}</span>`
-  );
+    sendSuccessResponse(
+      res,
+      200,
+      null,
+      `Password reset link sent to your email: <span class="font-medium text-indigo-500">${email}</span>`
+    );
   } catch (e) {
     //console.log(e)
     return res.status(400).json({
@@ -269,7 +283,7 @@ const resetPassword = async (req, res) => {
 };
 
 const verifyUserAndToken = async (req, res) => {
-  
+
   try {
     const { token, action } = req.body;
     if (!(token || action)) {
@@ -279,9 +293,9 @@ const verifyUserAndToken = async (req, res) => {
 
       if (status === 1) {
         sendSuccessResponse(res, 200, "", "Account verified successfully");
-      } else if (status ===2){
+      } else if (status === 2) {
         sendSuccessResponse(res, 200, true, "");
-      }else if (status === 3) {
+      } else if (status === 3) {
         return sendErrorResponse(
           res,
           401,
@@ -320,25 +334,24 @@ const updatePasswordAfterValidate = async (req, res) => {
     // Finding the User from the database using the 'email' field
     const user = await userModel.findOne({ email });
 
-    
+
 
     try {
-      if (email&&user) {
+      if (email && user) {
         // If no such user found in the database then it will show 'No Such User Found.'
         if (!user) {
           return res.status(400).json({ message: "No Such User Found.", redirectTo: "/auth/reset", text: "to reset again." });
         } else {
 
-          const isTokenExpired=await Token.findOne({token:token,tokenType:"Password Reset" })
-          if(!isTokenExpired)
-          {
+          const isTokenExpired = await Token.findOne({ token: token, tokenType: "Password Reset" })
+          if (!isTokenExpired) {
             return res.status(500).json({ success: false, message: 'Your link has already used. Please try to generate again.', redirectTo: "/auth/reset", text: "to reset again." });
           }
           // Updating the password of the user with the help of 'updatePassword' function
           const oldPassword = user.password;
 
           // Compare the old password with the new password
-          const isOldPasswordValid =  await bcrypt.compare(
+          const isOldPasswordValid = await bcrypt.compare(
             newPassword,
             oldPassword
           );
@@ -371,7 +384,7 @@ const updatePasswordAfterValidate = async (req, res) => {
             });
           }
 
-          
+
           await Token.findByIdAndDelete(isTokenExpired._id);
           // Send a response to the client
           return res.status(200).json({
@@ -406,17 +419,17 @@ const reVerifyEmail = async (req, res) => {
   });
 
   if (emailExist) {
-     const verificationLink = constructVerificationLink(
-        process.env.APPLICATION_URL,
-        emailExist.email,
-        1
-      );
-      const htmlTemplate = emailVerificationTemplate(verificationLink, emailExist.firstName);
-      sendEmail("Verify your mail - EdLernity", emailExist.email, htmlTemplate, htmlTemplate).then((result) => {
-        
-      }).catch((error) => {
-        //console.log("err", err)
-      })
+    const verificationLink = constructVerificationLink(
+      process.env.APPLICATION_URL,
+      emailExist.email,
+      1
+    );
+    const htmlTemplate = emailVerificationTemplate(verificationLink, emailExist.firstName);
+    sendEmail("Verify your mail - EdLernity", emailExist.email, htmlTemplate, htmlTemplate).then((result) => {
+
+    }).catch((error) => {
+      //console.log("err", err)
+    })
 
     sendSuccessResponse(
       res,

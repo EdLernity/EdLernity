@@ -55,7 +55,7 @@ function Login() {;
         let res = await axiosInstanceWithoutToken.post("/auth/login", googleSignInData);
         
         if (res?.data?.success) {
-          localStorage.setItem("auth_token", res?.data?.token);
+          localStorage.setItem("_userAuth", res?.data?.token);
           showSnackbar("Login Successful", "success", "top");
 
           navigate(redirectUrl)
@@ -85,7 +85,8 @@ function Login() {;
 
   const data = {
     email : email,
-    password: password
+    password: password,
+    googleSignUp:false
   }
 
   const handleSignup = async () => {

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../../URL_Config";
-import { apiInstancePrivate } from "../../Utils/AxiosInstance";
+import { showSnackbar } from "../Utils/enQueSnackBar";
 import FreeCourse from "./5562402_21421.svg";
 function Payment() {
   let navigation = useNavigate();
@@ -71,7 +71,13 @@ function Payment() {
         enrollingAllCourses:true
       };
       //////console.log(data)
-      apiInstancePrivate.post("/api/v1/enroll/add",data)
+      
+      const token = localStorage.getItem("_userAuth");
+    axios.post(BACKEND_URL+"/api/v1/enroll/add", data, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
         .then((response) => {
           // ////console.log(response)
           if (response.data.data === "enrolled") {
@@ -89,18 +95,33 @@ function Payment() {
       courseId: course._id,
     };
     //////console.log(data)
-    apiInstancePrivate.post("/api/v1/enroll/add",data)
-      .then((response) => {
-        // ////console.log(response)
-        if (response.data.data === "enrolled") {
-          window.location.replace("/encourses");
-        }
-
-        initPayment(response.data.data,response.data.userData);
-      })
-      .catch((error) => {
-        // ////console.log(error)
-      });
+    const token = localStorage.getItem("_userAuth");
+    axios.post(BACKEND_URL+"/api/v1/enroll/add", data, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then((response) => {
+      // ////console.log(response)
+      if (response.data.data === "enrolled") {
+        window.location.replace("/encourses");
+      }
+    
+      initPayment(response.data.data, response.data.userData, enrollingAllCourses);
+    })
+    .catch((error) => {
+      //console.log(error)
+      const errorMessage =
+    error.response && error.response.data && error.response.data.message
+      ? error.response.data.message
+      : "An error occurred";
+  showSnackbar(errorMessage, "error", "top");
+  if (errorMessage === "Session Expired") {
+    window.location.replace("/auth/login");
+    localStorage.clear();
+    sessionStorage.clear();
+  }
+    });
     }
   };
 
