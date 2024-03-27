@@ -28,7 +28,7 @@ function Payment() {
       currency: data.currency,
       order_id: data.id,
       description: enrollingAllCourses?"EdLernity's Lifetime subscription":course.courseTitle,
-      image: enrollingAllCourses?"":course.courseBanner,
+      image: "https://edlernity.s3.ap-south-1.amazonaws.com/Logo.svg",
       prefill: {
         name:user.firstName,
         email: user.email,
