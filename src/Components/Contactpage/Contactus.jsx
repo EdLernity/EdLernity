@@ -4,7 +4,6 @@ import { Helmet } from "react-helmet";
 import { BsGlobe } from "react-icons/bs";
 import { IoLocationOutline, IoMailOpenOutline } from "react-icons/io5";
 import { RiHeadphoneLine } from "react-icons/ri";
-import Skeleton from "react-loading-skeleton";
 import BaseLayout from "../../Layout/BaseLayout";
 import { BACKEND_URL } from "../../URL_Config";
 import InputButton from "../Input/InputButton";
@@ -272,7 +271,7 @@ function Contact() {
           </div>
         </div>
 
-        <div className="mx-8 md:mx-0 rounded-xl md:px-16 xl:px-64 mb-16 md:mb-32 xl:mb-32 animate__animated animate__backInRight">
+        {/* <div className="mx-8 md:mx-0 rounded-xl md:px-16 xl:px-64 mb-16 md:mb-32 xl:mb-32 animate__animated animate__backInRight">
           {isLoading ? (
             <Skeleton
               count={1}
@@ -291,7 +290,7 @@ function Contact() {
               loading="lazy"
             ></iframe>
           )}
-        </div>
+        </div> */}
       </BaseLayout>
     </>
   );

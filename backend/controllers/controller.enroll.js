@@ -6,9 +6,61 @@ const UserModel = require("../models/userModel");
 const UserCourseModel = require('../models/userCourseSchema');
 const { createUserCourse } = require("../utils/userCourseUtils");
 const Transaction = require("../models/transactionSchema");
-
+const Certificate = require("../models/model.certfication");
+const { v4: uuidv4 } = require('uuid');
 
 dotenv.config();
+
+
+const getCertificationCoursesList = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const { courseId } = req.params;
+
+    // Check if courseId is null or not provided
+    if (!courseId) {
+      return res.status(400).json({ message: "CourseId is required" });
+    }
+    const isCertificationDone= await Certificate.findOne({ userId: req.user._id,courseId: courseId});
+    if(isCertificationDone)
+    {
+      res.status(200).json({ message: "Certificate already generated successfully", uuid: isCertificationDone.uuid });
+    }
+
+    const enrollList = await UserCourseModel.find({ userId: req.user._id, courseIds: { $in: courseId } });
+
+    if (!enrollList || enrollList.length === 0) {
+      return res.status(400).json({ message: "User is not enrolled in the specified course" });
+    }
+
+   
+
+    // Generate a UID for the certificate
+    const uuid = uuidv4();
+
+    // Create a new certificate document
+    const certification = new Certificate({
+      userId: req.user._id,
+      courseId: courseId,
+      uuid: uuid
+    });
+
+    // Save the certificate document
+    await certification.save();
+
+    // Send success response
+    res.status(200).json({ message: "Certificate generated successfully", uuid: uuid });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+module.exports = getCertificationCoursesList;
+
 
 const getEnrollCoursesList = async (req, res) => {
   if (!req.user) return res.status(401).json({ message: "Unauthorized" });
@@ -55,7 +107,7 @@ const EnrollCourses = async (req, res) => {
 
     if(enrollingAllCourses===true&&courseId==="lifeTimeFinalPrice")
     {
-    let lifeTimeFinalPrice = Number(989) + '00';
+    let lifeTimeFinalPrice = Number(689) + '00';
 
       var instance = new Razorpay({
         key_id: process.env.RAZORPAY_KEY,
@@ -213,4 +265,4 @@ const verify = async (req, res) => {
   }
 };
 
-module.exports = { getEnrollCoursesList, EnrollCourses, verify ,getEnrolledCoursesList};
+module.exports = { getEnrollCoursesList, EnrollCourses, verify ,getEnrolledCoursesList,getCertificationCoursesList};

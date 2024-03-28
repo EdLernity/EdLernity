@@ -108,7 +108,7 @@ const registerUser = async (req, res) => {
         lastName,
         email,
         isGoogleAuth: true,
-        isVerified: false
+        isVerified: true
       });
       await newUser.save();
       return res.json({ success: true, message: "Thank you for registering with edlernity.", redirectTo: "/", text: "" });

@@ -176,14 +176,16 @@ const enrollingAllCourses=true
               <h1 className="text-3xl font-bold">EdLernity</h1>
             </div>
             <h2 className="text-5xl text-center mt-5 font-extrabold mb-6">
-              EdLernity's Lifetime subscription"
+              "EdLernity's Lifetime subscription"
             </h2>
             <div className="bg-[#131313] p-6 rounded-xl max-w-md">
               <p className="text-lg">
               We're thrilled to announce our latest course package offer designed to supercharge your learning journey! Dive into a world of knowledge with our comprehensive package, crafted to empower you with the skills and insights you need to succeed. Stay tuned for more details on how you can seize this incredible opportunity!
               </p>
             </div>
-            
+            <Button onClick={handleCheckout} className="bg-[#3b49df] text-white mt-4">
+                Get Access
+              </Button>
           </section>
 
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -210,14 +212,14 @@ const enrollingAllCourses=true
             </div>
           </section>
         </main>
-        <div className="absolute top-0 left-0 w-32 h-32 bg-[#181FC5] rounded-full -translate-x-16 translate-y-16" />
+        {/* <div className="absolute top-0 left-0 w-32 h-32 bg-[#181FC5] rounded-full -translate-x-16 translate-y-16" /> */}
         {/* <div className="absolute top-32 right-20 w-24 h-24 bg-[#181FC5] rounded-full translate-x-16 -translate-y-16" /> */}
-        <div className="absolute bottom-28 left-0 w-32 h-32 bg-[#181FC5] rounded-full -translate-x-16 -translate-y-16" />
+        {/* <div className="absolute bottom-28 left-0 w-32 h-32 bg-[#181FC5] rounded-full -translate-x-16 -translate-y-16" /> */}
         <div className=" min-h-screen flex items-center justify-center p-4">
           <div className="flex flex-col md:flex-row  text-white rounded-lg  lg:space-x-24 justify-center overflow-hidden  w-full">
             <div className="bg-[#181FC5] p-8 rounded-2xl flex flex-col items-center justify-between">
               <h2 className="text-4xl font-bold mb-4">Join</h2>
-              <p className="text-6xl font-bold mb-4">₹ 989</p>
+              <p className="text-6xl font-bold mb-4">₹ 689</p>
               <div className="border-t border-white w-full py-4">
                 <ul className="text-center space-y-4">
                   <li>Verified Certificates for lifetime</li>
@@ -239,7 +241,7 @@ const enrollingAllCourses=true
                 alt="line.png"
                  />
                 <div>
-                  <h3 className="text-xl font-semibold">20+ Courses</h3>
+                  <h3 className="text-xl font-semibold">12+ Courses</h3>
                   <p className="text-lg">
                     Access prerecorded online courses by professionals. Build
                     skills that worth for you.

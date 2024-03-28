@@ -1,6 +1,6 @@
 import "animate.css";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 function Herosection() {
@@ -30,10 +30,10 @@ function Herosection() {
             </p>
           </div>
           <div>
-            <button className="py-3 px-7 text-white font-bold bg-gradient-to-r from-blue-500 to-pink-600 rounded-3xl group relative overflow-hidden">
+            <Link to="/courses/overview" className="py-3 px-7 text-white font-bold bg-gradient-to-r from-blue-500 to-pink-600 rounded-3xl group relative overflow-hidden">
               Get Started
               <div className="absolute duration-300 inset-0 w-full h-full transition-all scale-0 group-hover:scale-100 group-hover:bg-white/30 rounded-2xl"></div>
-            </button>
+            </Link>
           </div>
         </div>
         <div  className="absolute left-1/2 -translate-x-1/2 md:translate-x-0 md:-right-32 md:left-auto xl:-right-80 xl:-top-20 md:-top-5 lg:-right-28 lg:-top-14 ">

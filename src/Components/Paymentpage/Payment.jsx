@@ -23,7 +23,7 @@ function Payment() {
   const initPayment = (data,user,enrollingAllCourses) => {
     
     var options = {
-      key: "rzp_live_VAGF8Cc0ors5Zj",
+      key: "rzp_test_2LHb56jgwlFlJc",
       amount: data.amount,
       currency: data.currency,
       order_id: data.id,
@@ -176,7 +176,7 @@ function Payment() {
                       class="w-max py-3 px-12 text-center rounded-xl transition bg-white shadow-md hover:bg-purple-100 active:bg-purple-200 focus:bg-purple-100"
                     >
                       <span class="text-purple-600 font-semibold cursor-pointer">
-                        Proceed to Checkout
+                        Proceed to Pay
                       </span>
                     </p>
                   </div>
@@ -208,7 +208,7 @@ function Payment() {
           </div>
           <div class="flex justify-between items-center w-full">
             <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Total</p>
-            <p class="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">&#8377;989</p>
+            <p class="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">&#8377;689</p>
           </div>
         </div>
             <div class="pl-0 p-5">
@@ -223,7 +223,7 @@ function Payment() {
                       class="w-max py-3 px-12 text-center rounded-xl transition bg-white shadow-md hover:bg-purple-100 active:bg-purple-200 focus:bg-purple-100"
                     >
                       <span class="text-purple-600 font-semibold cursor-pointer">
-                        Proceed to Checkout
+                        Proceed to Pay
                       </span>
                     </p>
                   </div>

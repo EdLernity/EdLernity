@@ -10,7 +10,19 @@ const { extractS3Key } = require("../utils/extractS3Key");
 
 const saveCourseDetails = async (req, res) => {
   try {
-
+    if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+    if(req.user._id!="66032b6104c13e9447dc9403")
+    {
+      const videosObject = req.files.videoFiles.map(file => file.location);
+      const {location} = req.files.bannerFiles[0]
+      console.log(videosObject)
+            deleteS3Objects(extractS3Key([location]));
+             const a=videosObject.map(url => {
+              extractS3Key(url);
+            })
+            deleteS3Objects(a);
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     const {location} = req.files.bannerFiles[0]
     
     // Pass file URLs to controller
@@ -57,7 +69,7 @@ const saveCourseDetails = async (req, res) => {
     const isCourseNameExist = await courseModel.exists({ courseTitle });
     if (isCourseNameExist) {
     const videosObject = req.files.videoFiles.map(file => file.location);
-
+console.log(videosObject)
       deleteS3Objects(extractS3Key(location));
        videosObject.map(url => {
         deleteS3Objects(extractS3Key(url));
@@ -166,9 +178,9 @@ const getAllCourseDetails = async (req, res) => {
 const getEnrolledCourses = async (req, res) => {
   try {
     const { courseId } = req.body;
-    
+    console.log(req.user._id)
     if (!req.user) return res.status(401).json({ message: "Unauthorized" });
-    const isEnrolled = await userCourseSchema.findOne({ courseIds: { $in: courseId } });
+    const isEnrolled = await userCourseSchema.findOne({ courseIds: { $in: courseId },userId:req.user._id.toString() });
     if(!isEnrolled)
     {
       return res.status(404).json({ success: false, message: "You have not enrolled for this Course" });
@@ -179,15 +191,17 @@ const getEnrolledCourses = async (req, res) => {
     if (!course) {
       return res.status(404).json({ success: false, message: "Course not found" });
     }
-    const allVideos=await Player.findOne({courseId:course._id})
-
-    const existingRatingIndex = course.courseScore.findIndex(score => score.userId.toString() === req.user._id.toString());
+   
+    const allVideos=await Player.findOne({courseId:course._id.toString()})
+    
+    // const existingRatingIndex = course.courseScore.findIndex(score => score.userId.toString() === req.user._id.toString());
     
     
 
-    return res.status(200).json({ success: true, data: allVideos,rating:course.courseScore[existingRatingIndex].rating });
+    // return res.status(200).json({ success: true, data: allVideos,rating:course.courseScore[existingRatingIndex].rating });
+    return res.status(200).json({ success: true, data: allVideos ,courseName:course.courseTitle});
   } catch (error) {
-    //console.log("Error in getting all Course Details: ", error);
+    console.log("Error in getting all Course Details: ", error);
     return res
       .status(500)
       .json({ success: false, message: "Internal Server Error" });

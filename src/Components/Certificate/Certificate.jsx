@@ -1,86 +1,124 @@
-import React , { useRef } from "react";
+import React, { useRef, useState } from "react";
+import { apiInstancePrivate } from "../../Utils/AxiosInstance";
 
-function Certificate() {
-  let userName = localStorage.getItem("userName");
-  let courseName = localStorage.getItem("courseName");;
+function Certificate({ courseName, courseId }) {
+  const [userName, setUserName] = useState("");
+  const [showInput, setShowInput] = useState(false);
 
   const canvasRef = useRef(null);
 
   const handleDownload = () => {
+    if (!userName) {
+      setShowInput(true); // Show the input box if the user name is not entered
+      return;
+    }
 
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-  
-    const img = new Image();
-    img.src = '/Image/Certificate_of_Completion_EdLernity.png';
-    img.onload = () => {
+    apiInstancePrivate
+      .get("/api/v1/enroll/getCertificationCoursesList/" + courseId)
+      .then((res) => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d");
 
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  
-      ctx.font = 'bold 36px Montserrat classic';
-      ctx.fillStyle = '#0A3062';
-      ctx.textAlign = 'center';
-  
-      ctx.fillText(userName, 220, 270);
-  
-      ctx.font = 'bold 16px Raleway';
-      ctx.fillStyle = '#0A3062';
-      ctx.textAlign = 'center';
-  
-      ctx.fillText(courseName, 273, 340);
+        const img = new Image();
+        img.src =
+          "https://edlernity.s3.ap-south-1.amazonaws.com/Copy+of+Certificate+of+Completion+(EdLernity)_20240328_030736_0000.png";
+        img.crossOrigin = "*";
+        img.onload = () => {
+          canvas.width = img.width; // Match canvas width to image width
+          canvas.height = img.height; // Match canvas height to image height
 
-      ctx.fillText(new Date().toLocaleDateString(), 220, 519)
-  
-      const dataURL = canvas.toDataURL('image/jpeg', 1);
-  
-      const anchor = document.createElement('a');
-      anchor.href = dataURL;
-      anchor.download = `${userName}_${courseName}_certificate.jpeg`;
-      anchor.click();
-    };
+          ctx.drawImage(img, 0, 0); // Draw image onto canvas
+
+          ctx.font = "bold 78px Montserrat classic";
+          ctx.fillStyle = "#0A3062";
+          ctx.textAlign = "left";
+
+          ctx.fillText(userName, 360, 620);
+
+          ctx.font = "bold 35px Raleway";
+          ctx.fillStyle = "#0A3062";
+          ctx.textAlign = "left";
+
+          ctx.fillText(courseName, 360, 795);
+
+          ctx.font = "bold 35px Raleway";
+          ctx.fillStyle = "#0A3062";
+          ctx.textAlign = "center";
+          ctx.fillText(new Date().toLocaleDateString(), 540, 1225);
+          ctx.fillText(res.data.uuid, 750, 1290);
+
+          const dataURL = canvas.toDataURL("image/jpeg", 0.9); // Adjust quality parameter as needed (0.0 - 1.0)
+          const anchor = document.createElement("a");
+          anchor.href = dataURL;
+          anchor.download = `${userName}_${courseName}_certificate.jpeg`;
+          anchor.click();
+        };
+      })
+      .catch((err) => {
+        // Handle error
+      })
+      .finally(() => {});
   };
-  
 
   return (
     <div>
-      <h1 className="text-center pb-4 mt-6 font-bold text-4xl text-[#1539cf] leading-6">
-        To earn a Certificate
-      </h1>
+      <section class="sm:mt-6 lg:mt-8 mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="my-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28 flex gap-3 lg:flex-justify lg:flex flex-col lg:flex-row">
+          <div class="sm:text-center lg:text-left">
+            <h1 class="text-4xl tracking-tight font-extrabold text-gray-800 sm:text-5xl md:text-6xl">
+              <span class="block xl:inline"> To earn a </span>
+              <span class="block text-indigo-600 xl:inline"> online certificate </span>
+            </h1>
+            <p class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
+              Add this credential to your LinkedIn profile, resume, or CV. Share it on social media and in your performance review.
+            </p>
 
-      <div class="flex justify-center items-center mt-6 bg-[#EDEDED] h-auto md:h-32 w-full md:w-auto border-2 rounded-3xl px-4 py-6 md:px-6 md:py-8">
-        <p class="text-lg text-gray-700 text-center md:text-left">
-          Add this credential to your LinkedIn profile, resume, or CV Share it
-          on social media and in your performance review jghjfhg jkhidfglkhk Add
-          this credential to your LinkedIn profile, resume, or CV Share it on
-          social media and in your performance review.
-        </p>
-      </div>
+            <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+              <canvas ref={canvasRef} width={800} height={600} style={{ display: "none" }} />
+              <div class="mt-3 sm:mt-0 sm:ml-3">
+                <div
+                  onClick={handleDownload}
+                  class=" cursor-pointer curflex items-center text-center justify-center px-3 py-3 border border-transparent text-base font-medium rounded-md text-gray-800 bg-indigo-100 hover:bg-indigo-200 md:py-2 md:text-lg md:px-4"
+                >
+                  Download Certificate
+                </div>
+                
+              </div>
+            </div>
+          </div>
 
-      <div className="flex mt-12 flex-col md:flex-row xl:flex-row">
-        <img
-          className="md:w-1/2 xl:w-1/2 ml-4 rounded-2xl"
-          src="/Image/Certificate of Completion (E.png"
-          alt="cerificate"
-        />
-        <canvas ref={canvasRef} width={800} height={600} style={{ display: 'none' }} />
-        <div className="flex flex-row-reverse md:flex-col xl:flex-col sm:flex-col mt-6 md:mt-0 xl:mt-0 sm:mt-0 md:w-1/2 xl:w-1/2 justify-center items-center gap-8">
-          <div class="relative cursor-pointer w-full md:w-auto sm:w-auto xl:w-auto px-4 sm:mt-4"
-          onClick={handleDownload}
-          >
+          <div class="lg:inset-y-0 lg:right-0 lg:w-1/2 my-4">
             <img
-              className="absolute h-12 md:h-auto xl:h-auto sm:h-auto left-10 bottom-6 md:right-8 md:left-14 md:bottom-10 xl:right-8 xl:left-14 xl:bottom-10 sm:right-8 sm:left-14 sm:bottom-10"
-              src="/image/Arrow.png"
-              alt="arrow"
-            />
-            <img
-              className="w-24 h-24 md:w-40 md:h-40 xl:w-40 xl:h-40 sm:w-40 sm:h-40"
-              src="/image/Ellipse 65.png"
-              alt="ellipse"
+              class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
+              src="https://edlernity.s3.ap-south-1.amazonaws.com/Copy+of+Certificate+of+Completion+(EdLernity)_20240328_030736_0000.png"
+              alt="cerificate"
             />
           </div>
-          <p className="text-xl px-8 pr-2 pb-2">You can download certificate from here.</p>
         </div>
-      </div>
+      </section>
+
+      {showInput && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-lg">
+            <input
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="Enter Your Name"
+              className="border border-gray-300 px-4 py-2 rounded-md w-full mb-4"
+            />
+            <button
+              onClick={() => {
+                setShowInput(false);
+                handleDownload();
+              }}
+              className="bg-indigo-500 text-white px-4 py-2 rounded-md"
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

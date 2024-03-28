@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import BaseLayout from "../../Layout/BaseLayout";
-import { Helmet } from "react-helmet";
-import CountUp from "react-countup";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { Rating } from "@material-tailwind/react";
-import './About.css';
-import { RiDoubleQuotesL, RiDoubleQuotesR} from "react-icons/ri";
+import React, { useEffect, useState } from "react";
+import CountUp from "react-countup";
+import { Helmet } from "react-helmet";
+import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
+import BaseLayout from "../../Layout/BaseLayout";
+import "./About.css";
 function About() {
   const reviewData = [
     {
@@ -166,13 +165,15 @@ function About() {
             />
           </div>
           <div className="w-full md:w-1/2 animate__animated animate__backInRight space-y-4 flex flex-col  justify-center">
-            <h1 className="text-2xl md:text-xl font-bold mb-4 text-left" style={{ color: "#181FC5" }}>
+            <h1
+              className="text-2xl md:text-xl font-bold mb-4 text-left"
+              style={{ color: "#181FC5" }}
+            >
               WHO WE ARE
             </h1>
             <h2 className="text-4xl md:text-3xl font-semibold mb-2 text-left">
               We Offer The Best <br /> Carrier
             </h2>
-
 
             <div className="mb-4 flex flex-col md:flex-row items-center md:items-start md:space-x-4">
               <img
@@ -184,8 +185,8 @@ function About() {
                 <h4>Industry Expert Instructor</h4>
                 <p className="text-gray-700">
                   Unlock the wisdom of industry experts. Our instructors are the
-                  guiding stars of your educational journey, illuminating the path
-                  to success.
+                  guiding stars of your educational journey, illuminating the
+                  path to success.
                 </p>
               </div>
             </div>
@@ -200,8 +201,8 @@ function About() {
                 <h4>Up-to-Date Course Content</h4>
                 <p className="text-gray-700">
                   Unlock the wisdom of industry experts. Our instructors are the
-                  guiding stars of your educational journey, illuminating the path
-                  to success.
+                  guiding stars of your educational journey, illuminating the
+                  path to success.
                 </p>
               </div>
             </div>
@@ -216,12 +217,11 @@ function About() {
                 <h4>Biggest Student Community</h4>
                 <p className="text-gray-700">
                   Unlock the wisdom of industry experts. Our instructors are the
-                  guiding stars of your educational journey, illuminating the path
-                  to success.
+                  guiding stars of your educational journey, illuminating the
+                  path to success.
                 </p>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -298,7 +298,7 @@ function About() {
               />
             </div>
 
-            <div className="z-20 flex h-[300px] w-[420px] items-center justify-center rounded-lg p-4">
+            {/* <div className="z-20 flex h-[300px] w-[420px] items-center justify-center rounded-lg p-4">
               <img
                 alt="Smiling woman"
                 className="h-full w-full object-cover rounded-lg"
@@ -310,8 +310,8 @@ function About() {
                 }}
                 width="280"
               />
-            </div>
-            <div className="z-10 flex h-[280px] w-[400px] items-center justify-center rounded-lg  p-4">
+            </div> */}
+            {/* <div className="z-10 flex h-[280px] w-[400px] items-center justify-center rounded-lg  p-4">
               <img
                 alt="Man with laptop"
                 className="h-full w-full object-cover rounded-lg"
@@ -323,7 +323,7 @@ function About() {
                 }}
                 width="280"
               />
-            </div>
+            </div> */}
           </div>
         </div>
         <div
@@ -335,12 +335,17 @@ function About() {
               OUR MISSION
             </h2>
             <p className="text-2xl">
-            <span className="inline-flex"><RiDoubleQuotesL/></span>
+              <span className="inline-flex">
+                <RiDoubleQuotesL />
+              </span>
               We are on a mission to pioneer advancements in technology,
               creating value for our clients and contributing to the broader
               societal good. Through a relentless pursuit of excellence, ethical
               practices, and a commitment to sustainability, we strive to leave
-              a lasting impact on the world. <span className="inline-flex"><RiDoubleQuotesR/></span>
+              a lasting impact on the world.{" "}
+              <span className="inline-flex">
+                <RiDoubleQuotesR />
+              </span>
             </p>
           </div>
 
@@ -349,12 +354,16 @@ function About() {
               OUR VISION
             </h2>
             <p className="text-2xl">
-            <span className="inline-flex"><RiDoubleQuotesL/></span>
+              <span className="inline-flex">
+                <RiDoubleQuotesL />
+              </span>
               At Edlernity, we envision a future where technology seamlessly
               integrates with human needs, fostering progress and enhancing
               lives. Our vision is to be a beacon of innovation, driving
               positive change through transformative digital solutions.
-              <span className="inline-flex"><RiDoubleQuotesR/></span>
+              <span className="inline-flex">
+                <RiDoubleQuotesR />
+              </span>
             </p>
           </div>
         </div>
@@ -371,7 +380,7 @@ function About() {
             />
             <CountUp
               start={0}
-              end={7077}
+              end={5000}
               duration={100}
               separator=","
               delay={0.5}
@@ -382,6 +391,7 @@ function About() {
                 </div>
               )}
             </CountUp>
+
             <p className="text-xl font-semibold text-white pb-12">
               STUDENTS ENROLLED
             </p>
@@ -423,7 +433,10 @@ function About() {
                         className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 p-4"
                       >
                         <div className="review-container h-72 flex bg-[#D9D9D9]">
-                          <div className="" style={{ marginLeft: "4px", marginTop: "12px" }}>
+                          <div
+                            className=""
+                            style={{ marginLeft: "4px", marginTop: "12px" }}
+                          >
                             <img
                               src={`/Image/user-review-img/${item?.image}`}
                               alt={item?.name}
@@ -448,8 +461,9 @@ function About() {
             {reviewData?.map((_, index) => (
               <div
                 key={index}
-                className={`dot w-4 h-4 mb-12 rounded-full ${index === currentSlide ? "bg-[#353BCC]" : "bg-gray-300"
-                  }`}
+                className={`dot w-4 h-4 mb-12 rounded-full ${
+                  index === currentSlide ? "bg-[#353BCC]" : "bg-gray-300"
+                }`}
                 onClick={() => setCurrentSlide(index)}
               />
             ))}
@@ -461,16 +475,6 @@ function About() {
 }
 
 export default About;
-
-
-
-
-
-
-
-
-
-
 
 // <div className="flex items-center justify-center bg-white py-8 px-4">
 //   <div className="relative flex space-x-4">

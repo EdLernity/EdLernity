@@ -84,6 +84,7 @@ const uploadCourseToLib = uploadVideos.fields([
 ]);
 
 const deleteS3Objects = async function(keys) {
+  // console.log(first)
   deleteS3ObjectsInBulk(keys);
 };
 

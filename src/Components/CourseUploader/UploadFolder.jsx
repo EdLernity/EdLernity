@@ -63,7 +63,7 @@ const UploadFolder = () => {
     formData.append("offeredPrice", offeredPrice);
     formData.append("tags", tags);
     videoTitles.forEach(titleObj => {
-      formData.append(`videoTitle[${titleObj.index}]`, titleObj.title);
+      formData.append(`videoTitle[${titleObj?.index}]`, titleObj?.title);
     });
      // Append course content
      courseContent.forEach((entry, index) => {
@@ -229,7 +229,11 @@ videoFiles.forEach((file, index) => {
 
   // Update index values of titles
   newVideoTitles.forEach((titleObj, index) => {
-    titleObj.index = index;
+    if(titleObj)
+    {
+
+      titleObj.index = index;
+    }
   });
 
   setVideoTitles(newVideoTitles);
