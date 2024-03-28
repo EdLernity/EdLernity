@@ -163,6 +163,12 @@ videoFiles.forEach((file, index) => {
     if (files.every((file) => file.type.startsWith("video"))) {
       // Add uploaded video files to state
       setVideoFiles([...videoFiles, ...files]);
+      const updatedVideoTitles = [...videoTitles];
+      files.forEach((file, index) => {
+          const fileName = file.name.split('.')[0]; // Extract file name without extension
+          updatedVideoTitles.push({ index: videoFiles.length + index, title: fileName });
+      });
+      setVideoTitles(updatedVideoTitles);
     } else {
       showSnackbar(
         "Please upload video files for the course videos.",
