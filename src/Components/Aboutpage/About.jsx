@@ -9,7 +9,7 @@ function About() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (count < 100) {
+      if (count < 1000) {
         setCount(prevCount => prevCount + 1);
       }
     }, 10); // Adjust the interval as needed
