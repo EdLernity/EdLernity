@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useNavigate } from "react-router-dom";
 import { apiInstancePrivate } from "../../Utils/AxiosInstance";
 import Loader from "../Utils/Spinner";
 import { showSnackbar } from "../Utils/enQueSnackBar";
@@ -14,7 +15,7 @@ const UploadFolder = () => {
   const [initialPrice, setInitialPrice] = useState(0);
   const [offeredPrice, setOfferedPrice] = useState(0);
   const [loading, setLoading] = useState(false)
-
+let navigate=useNavigate()
   const [courseContent, setCourseContent] = useState([
     { title: "", description: "" },
   ]);
@@ -22,6 +23,12 @@ const UploadFolder = () => {
   const [bannerFiles, setBannerFiles] = useState();
   const [videoFiles, setVideoFiles] = useState([]);
   const [videoTitles, setVideoTitles] = useState(Array.from({ length: videoFiles.length }, (_, index) => ({ index, title: "" })));
+  useEffect(() => {
+    const token = localStorage.getItem("_userAuth");
+    if (!token) {
+      navigate('/auth/login',{replace:true});
+    }
+  }, []);
   const handleFormSubmit = (e) => {
     e.preventDefault();
     // Validation checks

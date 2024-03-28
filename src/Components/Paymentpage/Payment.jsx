@@ -23,7 +23,7 @@ function Payment() {
   const initPayment = (data,user,enrollingAllCourses) => {
     
     var options = {
-      key: "rzp_test_2LHb56jgwlFlJc",
+      key: "rzp_live_VAGF8Cc0ors5Zj",
       amount: data.amount,
       currency: data.currency,
       order_id: data.id,
