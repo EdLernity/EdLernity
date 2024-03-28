@@ -1,11 +1,21 @@
 import { Rating } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
-import CountUp from "react-countup";
 import { Helmet } from "react-helmet";
 import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
 import BaseLayout from "../../Layout/BaseLayout";
 import "./About.css";
 function About() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (count < 100) {
+        setCount(prevCount => prevCount + 1);
+      }
+    }, 10); // Adjust the interval as needed
+
+    return () => clearInterval(interval);
+  }, [count]);
   const reviewData = [
     {
       id: 1,
@@ -378,19 +388,19 @@ function About() {
               alt="User Icon"
               className="mx-auto w-24 h-24 mb-4"
             />
-            <CountUp
+            {/* <CountUp
               start={0}
               end={5000}
               duration={100}
               separator=","
               delay={0.5}
             >
-              {({ countUpRef }) => (
+              {({ countUpRef }) => ( */}
                 <div className="text-4xl font-bold text-white">
-                  <span ref={countUpRef}></span>+
+                  <span>{count}</span>+
                 </div>
-              )}
-            </CountUp>
+              {/* )} */}
+            {/* </CountUp> */}
 
             <p className="text-xl font-semibold text-white pb-12">
               STUDENTS ENROLLED
