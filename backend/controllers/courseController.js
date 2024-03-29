@@ -67,30 +67,30 @@ const saveCourseDetails = async (req, res) => {
 
     // Check if course name or folder name already exists
     const isCourseNameExist = await courseModel.exists({ courseTitle });
-    if (isCourseNameExist) {
-    const videosObject = req.files.videoFiles.map(file => file.location);
-console.log(videosObject)
-      deleteS3Objects(extractS3Key(location));
-       videosObject.map(url => {
-        deleteS3Objects(extractS3Key(url));
-      })
+//     if (isCourseNameExist) {
+//     const videosObject = req.files.videoFiles.map(file => file.location);
+// console.log(videosObject)
+//       deleteS3Objects(extractS3Key(location));
+//        videosObject.map(url => {
+//         deleteS3Objects(extractS3Key(url));
+//       })
 
-      return res
-        .status(409)
-        .json({ success: false, message: "This Course Name Already Exists" });
-    }
-    const isFolderNameExist = await courseModel.exists({ folderName });
-    if (isFolderNameExist) {
-      const videosObject = req.files.videoFiles.map(file => file.location);
+//       return res
+//         .status(409)
+//         .json({ success: false, message: "This Course Name Already Exists" });
+//     }
+    // const isFolderNameExist = await courseModel.exists({ folderName });
+    // if (isFolderNameExist) {
+    //   const videosObject = req.files.videoFiles.map(file => file.location);
 
-      deleteS3Objects(extractS3Key(location));
-       videosObject.map(url => {
-        deleteS3Objects(extractS3Key(url));
-      })
-      return res
-        .status(409)
-        .json({ success: false, message: "This Folder Name Already Exists" });
-    }
+    //   deleteS3Objects(extractS3Key(location));
+    //    videosObject.map(url => {
+    //     deleteS3Objects(extractS3Key(url));
+    //   })
+    //   return res
+    //     .status(409)
+    //     .json({ success: false, message: "This Folder Name Already Exists" });
+    // }
 
     // Calculate discount percentage
     const discountInPercentage = calculateDiscountPercentage(parseInt(initialPrice), parseInt(offeredPrice))
