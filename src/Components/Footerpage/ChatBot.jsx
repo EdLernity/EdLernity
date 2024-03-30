@@ -36,7 +36,7 @@ const ChatBot = ({ onClose }) => {
         </div>
       </div>
       <div className='flex flex-col justify-center items-center text-center mt-12 '>
-        <NavLink to="https://api.whatsapp.com/send?phone=8073306479">
+        <NavLink to="https://api.whatsapp.com/send?phone=918073306479">
           <button className="start-chat-button flex p-2 px-12 bg-[#4dc247] mb-12 rounded-3xl" onClick={onClose}>
             <FaWhatsapp className="whatsapp-icon w-8 h-6 mr-2" />
             Start Chat

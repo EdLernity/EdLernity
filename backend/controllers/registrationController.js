@@ -80,7 +80,7 @@ const registerUser = async (req, res) => {
         phone,
         password: hashedPassword,
         isGoogleAuth: false,
-        isVerified: true
+        isVerified: false
       });
       await newUser.save();
       //send mail
