@@ -44,8 +44,8 @@ function Certificate({ courseName, courseId }) {
           ctx.font = "bold 35px Raleway";
           ctx.fillStyle = "#0A3062";
           ctx.textAlign = "center";
-          ctx.fillText(new Date().toLocaleDateString(), 540, 1225);
-          ctx.fillText(res.data.uuid, 750, 1290);
+          ctx.fillText(new Date().toLocaleDateString(), isMobile()?535:540, 1225);
+          ctx.fillText(res.data.uuid, isMobile()?740:750, 1290);
 
           const dataURL = canvas.toDataURL("image/jpeg", 0.9); // Adjust quality parameter as needed (0.0 - 1.0)
           const anchor = document.createElement("a");
@@ -59,7 +59,11 @@ function Certificate({ courseName, courseId }) {
       })
       .finally(() => {});
   };
-
+  const isMobile = () => {
+    const userAgent =
+      typeof window.navigator === "undefined" ? "" : navigator.userAgent;
+    return /Mobi/.test(userAgent);
+  };
   return (
     <div>
       <section class="sm:mt-6 lg:mt-8 mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
