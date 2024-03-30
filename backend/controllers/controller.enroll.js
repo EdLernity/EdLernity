@@ -107,7 +107,7 @@ const EnrollCourses = async (req, res) => {
 
     if(enrollingAllCourses===true&&courseId==="lifeTimeFinalPrice")
     {
-    let lifeTimeFinalPrice = Number(698) + '00';
+    let lifeTimeFinalPrice = Number(689) + '00';
 
       var instance = new Razorpay({
         key_id: process.env.RAZORPAY_KEY,
