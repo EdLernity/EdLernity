@@ -21,8 +21,8 @@ function Certificate({ courseName, courseId }) {
 
         const img = new Image();
         img.src =
-          "https://edlernity.s3.ap-south-1.amazonaws.com/Copy+of+Certificate+of+Completion+(EdLernity)_20240328_030736_0000.png";
-        img.crossOrigin = "*";
+          "/Image/Cert.png";
+          img.crossOrigin = 'anonymous';
         img.onload = () => {
           canvas.width = img.width; // Match canvas width to image width
           canvas.height = img.height; // Match canvas height to image height
@@ -74,7 +74,7 @@ function Certificate({ courseName, courseId }) {
             </p>
 
             <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-              <canvas ref={canvasRef} width={800} height={600} style={{ display: "none" }} />
+              <canvas ref={canvasRef} width={800} height={600} style={{ display: "none" }} crossOrigin="anonymous" />
               <div class="mt-3 sm:mt-0 sm:ml-3">
                 <div
                   onClick={handleDownload}

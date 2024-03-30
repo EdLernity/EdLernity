@@ -27,7 +27,7 @@ const getCertificationCoursesList = async (req, res) => {
     const isCertificationDone= await Certificate.findOne({ userId: req.user._id,courseId: courseId});
     if(isCertificationDone)
     {
-      res.status(200).json({ message: "Certificate already generated successfully", uuid: isCertificationDone.uuid });
+      return  res.status(200).json({ message: "Certificate already generated successfully", uuid: isCertificationDone.uuid });
     }
 
     const enrollList = await UserCourseModel.find({ userId: req.user._id, courseIds: { $in: courseId } });
@@ -52,7 +52,7 @@ const getCertificationCoursesList = async (req, res) => {
     await certification.save();
 
     // Send success response
-    res.status(200).json({ message: "Certificate generated successfully", uuid: uuid });
+    return  res.status(200).json({ message: "Certificate generated successfully", uuid: uuid });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Something went wrong" });

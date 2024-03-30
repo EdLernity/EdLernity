@@ -199,7 +199,7 @@ const getEnrolledCourses = async (req, res) => {
     
 
     // return res.status(200).json({ success: true, data: allVideos,rating:course.courseScore[existingRatingIndex].rating });
-    return res.status(200).json({ success: true, data: allVideos ,courseName:course.courseTitle});
+    return res.status(200).json({ success: true, data: allVideos ,courseName:course.courseTitle,folderName:course.folderName});
   } catch (error) {
     console.log("Error in getting all Course Details: ", error);
     return res

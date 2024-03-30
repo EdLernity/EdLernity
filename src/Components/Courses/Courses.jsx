@@ -53,6 +53,7 @@ function Courses() {
   const [selectedVideo, setSelectedVideo] = useState(null); // State to manage selected video
   const [activeIndex, setActiveIndex] = useState(0); // State to manage active playlist item index
   const [course, setCourse] = useState("");
+  const [folderName, setFolderName] = useState()
   let navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("_userAuth");
@@ -82,6 +83,7 @@ function Courses() {
       .then((res) => {
         console.log(res)
         setCourse(res.data.courseName)
+        setFolderName(res.data.folderName)
         setPlaylist(res.data.data.lessonList);
         setSelectedVideo(res.data.data.lessonList[0]);
         setRating(res.data.rating);
@@ -113,6 +115,7 @@ function Courses() {
                   <VideoPlayer
                     video={selectedVideo}
                     courseBanner={course?.courseBanner}
+                    folderName={folderName}
                   />
                 )}{" "}
                 {/* Render VideoPlayer if video is selected */}

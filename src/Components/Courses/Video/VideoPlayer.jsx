@@ -1,29 +1,54 @@
 import { Media, Video } from '@vidstack/player-react';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import './VideoPlayer.css';
-// Lazy load the YouTube player
 
-const VideoPlayer = ({ video , isLoading ,courseBanner}) => {
+const VideoPlayer = ({ video, courseBanner, folderName }) => {
+  const [isVideoLoaded, setIsVideoLoaded] = useState(true); // State to track video loading
+
+  useEffect(() => {
+    // Show skeleton for 2 seconds when video.url changes
+    setIsVideoLoaded(true);
+    const timer = setTimeout(() => {
+      setIsVideoLoaded(false);
+    }, 2000); // 2000 milliseconds = 2 seconds
+    return () => clearTimeout(timer); // Clean up the timer on unmount or when video.url changes
+  }, [video.url]);
   
-  const folder=video.url.split("_")[0]
-  const prepareVideoUrl=`https://edlernity.s3.ap-south-1.amazonaws.com/courses/${folder}/${video.url}`
+  const prepareVideoUrl = `https://edlernity.s3.ap-south-1.amazonaws.com/courses/${folderName}/${video.url}`;
+
+  const handleVideoLoad = () => {
+    setIsVideoLoaded(false); // Set video loading state to false when video is loaded
+  };
+
   return (
     <div className="video-player-container">
-      {isLoading ? (
+      {isVideoLoaded ? ( // Show skeleton only when video is not loaded
         <Skeleton
-        count={1}
-        width="100%" // Set width to 100% for responsiveness
-        height={410} // Responsive height based on screen size
-      /> // Render skeleton component when isLoading is true
-      ) : (
-
-        <Media>
-  <Video loading="visible" poster={courseBanner} controls preload="true">
-    <video loading="visible" poster={courseBanner} src={prepareVideoUrl} preload="none" data-video="0" controls />
-  </Video>
-</Media>
-      )}
+          count={1}
+          width="100%"
+          height={410}
+        />
+      ):
+      <Media>
+        <Video
+        
+          loading="eager"
+          poster={courseBanner}
+          controls
+          preload="true"
+        >
+          <video
+            loading="visible"
+            poster={courseBanner}
+            src={prepareVideoUrl}
+            preload="none"
+            data-video="0"
+            controls
+             // Call handleVideoLoad when video is loaded
+          />
+        </Video>
+      </Media>}
     </div>
   );
 };
