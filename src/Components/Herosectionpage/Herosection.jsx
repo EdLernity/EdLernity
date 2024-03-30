@@ -30,7 +30,7 @@ function Herosection() {
             </p>
           </div>
           <div>
-            <Link to="/courses/overview" className="py-3 px-7 text-white font-bold bg-gradient-to-r from-blue-500 to-pink-600 rounded-3xl group relative overflow-hidden">
+            <Link to="/courses/overview" className="py-3 z-30 px-7 text-white font-bold bg-gradient-to-r from-blue-500 to-pink-600 rounded-3xl group relative overflow-hidden">
               Get Started
               <div className="absolute duration-300 inset-0 w-full h-full transition-all scale-0 group-hover:scale-100 group-hover:bg-white/30 rounded-2xl"></div>
             </Link>

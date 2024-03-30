@@ -30,6 +30,7 @@ function Login() {;
   const navigate = useNavigate();
   // const history = useHistory();
   const location = useLocation();
+  const { course } = location?.state ?? {};
   const redirectUrl = location?.state?.redirectUrl || '/';
   const handlePassord = (password) => {
     if ( password.length <8 ) {
@@ -59,6 +60,9 @@ function Login() {;
           showSnackbar("Login Successful", "success", "top");
 
           navigate(redirectUrl)
+          navigate(redirectUrl, {
+            state: {course:course }
+        });
         }
       } catch (error) {
         console.error("Error during signup:", error.response.message);

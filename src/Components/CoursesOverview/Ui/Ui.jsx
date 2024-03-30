@@ -105,21 +105,24 @@ const navigate=useNavigate();
       </svg>
     );
   }
-const handleCheckout=()=>{
-
+  const handleCheckout = () => {
     const token = localStorage.getItem("_userAuth");
     if (!token) {
-      navigate('/auth/login');
-    return;
-    }else{
-
-      navigate("/payment", {
-          state: { course },
-        })
+        // Get the current URL to use as a redirect URL
+        const currentPath = window.location.pathname;
+        
+        // Navigate to login with redirect URL
+        navigate('/auth/login', {
+            state: { redirectUrl: currentPath,course:course }
+        });
+        return;
+    } else {
+        navigate("/payment", {
+            state: { course },
+        });
     }
-
-  
 }
+
 
 const getCourseRating=(rating)=>{
   const sumOfRatings = rating?.reduce((total, score) => total + score.rating, 0);
@@ -199,7 +202,7 @@ return averageRating;
           </h2>
 
           <div class="mt-8 lg:-mx-6 lg:flex lg:items-center">
-          <img class="object-cover w-full lg:mx-6 lg:w-1/2 rounded-xl h-72 lg:h-96" src={course?.
+          <img class="object-cover w-full lg:mx-6 lg:w-1/2 rounded-xl h-72 lg:h-[30rem]" src={course?.
 courseBanner} alt=""/>
             <div class="mt-6 lg:w-1/2 lg:mt-0 lg:mx-6 ">
                 

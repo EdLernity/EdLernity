@@ -134,7 +134,7 @@ function Payment() {
 
         {course&&<div class="mt-8 lg:-mx-6 lg:flex lg:items-center">
           <img
-            class="object-cover w-full lg:mx-6 lg:w-1/2 rounded-xl h-72 lg:h-96"
+            class="object-cover w-full lg:mx-6 lg:w-1/2 rounded-xl h-72 lg:h-[30rem]"
             src={course?.courseBanner}
             alt=""
           />
