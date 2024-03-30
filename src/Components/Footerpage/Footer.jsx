@@ -38,7 +38,7 @@ function Footer() {
   const [isChatBotOpen, setIsChatBotOpen] = useState(false);
 
   const openChatBot = () => {
-    setIsChatBotOpen(true);
+    window.location.replace("https://api.whatsapp.com/send?phone=918073306479")
   };
 
   const closeChatBot = () => {
