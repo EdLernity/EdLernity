@@ -26,10 +26,12 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(cors({
-    "origin" : "*",
-    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-}));
+const corsOptions = {
+    origin: 'https://www.edlernity.com',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+};
+
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json()); // Add this line to parse JSON data
 
