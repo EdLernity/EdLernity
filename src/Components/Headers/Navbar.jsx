@@ -60,7 +60,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             )}
           </div>
           <div
-            class="hidden justify-start items-start w-full lg:flex lg:w-auto me-[45rem] lg:order-1"
+            class="hidden justify-start items-start w-full lg:flex lg:w-auto  lg:order-1"
             id="mobile-menu-2"
           >
             <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
