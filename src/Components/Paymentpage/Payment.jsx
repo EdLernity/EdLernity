@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../../URL_Config";
 import { showSnackbar } from "../Utils/enQueSnackBar";
-import FreeCourse from "./5562402_21421.svg";
+import FreeCourse from "./20240401_111951_0000.png";
 function Payment() {
   let navigation = useNavigate();
   const location = useLocation();
