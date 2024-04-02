@@ -24,10 +24,9 @@ const getCertificationCoursesList = async (req, res) => {
     if (!courseId) {
       return res.status(400).json({ message: "CourseId is required" });
     }
-    const isCertificationDone= await Certificate.findOne({ userId: req.user._id,courseId: courseId});
-    if(isCertificationDone)
-    {
-      return  res.status(200).json({ message: "Certificate already generated successfully", uuid: isCertificationDone.uuid });
+    const isCertificationDone = await Certificate.findOne({ userId: req.user._id, courseId: courseId });
+    if (isCertificationDone) {
+      return res.status(200).json({ message: "Certificate already generated successfully", uuid: isCertificationDone.uuid });
     }
 
     const enrollList = await UserCourseModel.find({ userId: req.user._id, courseIds: { $in: courseId } });
@@ -36,7 +35,7 @@ const getCertificationCoursesList = async (req, res) => {
       return res.status(400).json({ message: "User is not enrolled in the specified course" });
     }
 
-   
+
 
     // Generate a UID for the certificate
     const uuid = uuidv4();
@@ -52,7 +51,7 @@ const getCertificationCoursesList = async (req, res) => {
     await certification.save();
 
     // Send success response
-    return  res.status(200).json({ message: "Certificate generated successfully", uuid: uuid });
+    return res.status(200).json({ message: "Certificate generated successfully", uuid: uuid });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Something went wrong" });
@@ -67,10 +66,10 @@ const getEnrollCoursesList = async (req, res) => {
 
   try {
     const enrollList = await UserCourseModel.find({ userId: req.user._id })
-    .populate({ path: "userId", select: ["firstName", "lastName"] })
-    .populate({ path: "courseIds", select: ["courseTitle", "courseBanner","courseScore"] });
- if (!enrollList) {
-      return res.status(400).json({  });
+      .populate({ path: "userId", select: ["firstName", "lastName"] })
+      .populate({ path: "courseIds", select: ["courseTitle", "courseBanner", "courseScore"] });
+    if (!enrollList) {
+      return res.status(400).json({});
     }
 
     res.status(200).json(enrollList);
@@ -84,12 +83,12 @@ const getEnrolledCoursesList = async (req, res) => {
 
   try {
     const enrollList = await UserCourseModel.findOne({ userId: req.user._id })
-    
- if (!enrollList) {
-      return res.status(200).json({enrollList:[]});
+
+    if (!enrollList) {
+      return res.status(200).json({ enrollList: [] });
     }
 
-    res.status(200).json({enrollList:enrollList.courseIds});
+    res.status(200).json({ enrollList: enrollList.courseIds });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Something went Wrong" });
@@ -100,63 +99,62 @@ const EnrollCourses = async (req, res) => {
   if (!req.user) return res.status(401).json({ message: "Unauthorized" });
 
   try {
-    const { courseId ,enrollingAllCourses} = req.body;
+    const { courseId, enrollingAllCourses } = req.body;
 
-    
-  
 
-    if(enrollingAllCourses===true&&courseId==="lifeTimeFinalPrice")
-    {
-    let lifeTimeFinalPrice = Number(689) + '00';
+
+
+    if (enrollingAllCourses === true && courseId === "lifeTimeFinalPrice") {
+      let lifeTimeFinalPrice = Number(689) + '00';
 
       var instance = new Razorpay({
         key_id: process.env.RAZORPAY_KEY,
         key_secret: process.env.RAZORPAY_SECRET,
       });
-  
+
       var options = {
         amount: lifeTimeFinalPrice,
         currency: "INR",
         receipt: "EdLernity's Lifetime subscription"
       };
-  
+
       instance.orders.create(options, function (err, order) {
         if (err) {
           console.error(err);
         }
-  
-        res.status(200).json({ data: order,userData:req.user });
+
+        res.status(200).json({ data: order, userData: req.user });
       });
-    }else{
+    } else {
       if (!courseId) {
         return res.status(400).json({ message: "Course ID is required" });
       }
-  
+
       const course = await courseModel.findById(courseId);
-  
+
       if (!course) {
         return res.status(404).json({ message: "Course not found" });
       }
       let finalPrice = Number(course.offeredPrice) + '00';
-    var instance = new Razorpay({
-      key_id: process.env.RAZORPAY_KEY,
-      key_secret: process.env.RAZORPAY_SECRET,
-    });
+      var instance = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY,
+        key_secret: process.env.RAZORPAY_SECRET,
+      });
 
-    var options = {
-      amount: finalPrice,
-      currency: "INR",
-      receipt: course.courseTitle.slice(0, 40)
-    };
+      var options = {
+        amount: finalPrice,
+        currency: "INR",
+        receipt: course.courseTitle.slice(0, 40)
+      };
 
-    instance.orders.create(options, function (err, order) {
-      if (err) {
-        console.error(err);
-      }
+      instance.orders.create(options, function (err, order) {
+        if (err) {
+          console.error(err);
+        }
 
-      res.status(200).json({ data: order,userData:req.user });
-    });
-  }
+        res.status(200).json({ data: order, userData: req.user });
+      });
+    }
 
   } catch (err) {
     console.error(err);
@@ -164,10 +162,9 @@ const EnrollCourses = async (req, res) => {
   }
 };
 
-const createOrder = async (courseId, uid,response) => {
+const createOrder = async (courseId, uid, response) => {
   //console.log(courseId)
-  if(courseId==="lifeTimeFinalPrice")
-  {
+  if (courseId === "lifeTimeFinalPrice") {
     const courses = await courseModel.find();
     if (!courses || courses.length === 0) {
       return res.status(404).json({ message: "No courses found" });
@@ -179,67 +176,68 @@ const createOrder = async (courseId, uid,response) => {
     }));
     // Extracting _id values from courses
     const courseIds = courses.map(course => course._id);
-     // Fetch UserCourseModel by userId
-     const transactionObj=new Transaction({
-      userId:uid,
-      paymentMethod:"Online",
-      paymentId:response.razorpay_payment_id,
-      subscribedAllCourse:true,
-      amount:986
-     })
-     const trans=await transactionObj.save();
-     const existingUserCourses = await UserCourseModel.findOne({ userId: uid });
-//console.log(existingUserCourses)
-     let newCourseIds = [];
- 
-     if (existingUserCourses) {
-       // Extract existing courseIds from UserCourseModel
-       const existingCourseIds = existingUserCourses.courseIds;
- 
-       // Add only unique courseIds to newCourseIds
-       newCourseIds = courseIds.filter(courseId => !existingCourseIds.includes(courseId));
-       const existingUserCourses = await UserCourseModel.findOneAndUpdate(
+    // Fetch UserCourseModel by userId
+    const transactionObj = new Transaction({
+      userId: uid,
+      paymentMethod: "Online",
+      paymentId: response.razorpay_payment_id,
+      subscribedAllCourse: true,
+      amount: 986
+    })
+    const trans = await transactionObj.save();
+    const existingUserCourses = await UserCourseModel.findOne({ userId: uid });
+    //console.log(existingUserCourses)
+    let newCourseIds = [];
+
+    if (existingUserCourses) {
+      // Extract existing courseIds from UserCourseModel
+      const existingCourseIds = existingUserCourses.courseIds;
+
+      // Add only unique courseIds to newCourseIds
+      newCourseIds = courseIds.filter(courseId => !existingCourseIds.includes(courseId));
+      const existingUserCourses = await UserCourseModel.findOneAndUpdate(
         { userId: uid },
-        { $addToSet: { courseIds: { $each: newCourseIds } }, paid: true, transactionId: trans._id },
+        { $addToSet: { courseIds: { $each: newCourseIds } }, paid: true, transactionId: trans._id,isAllCourse:true },
         { upsert: true, new: true }
       );
-  
-     } else {
-       newCourseIds = courseIds;
-       const userCourseObj=new UserCourseModel({
-        userId:uid,
-        courseIds:newCourseIds,
-        paid:true,
-       transactionId:trans._id,
+
+    } else {
+      newCourseIds = courseIds;
+      const userCourseObj = new UserCourseModel({
+        userId: uid,
+        courseIds: newCourseIds,
+        paid: true,
+        transactionId: trans._id,
+        isAllCourse:true
       });
       await userCourseObj.save(); // No existing UserCourseModel, add all courseIds
-     }
-    
-    
-    
-  }
-  else{
-  const course = await courseModel.findById(courseId);
-  course.enrollmentCount+=1;
-  await course.save();
- 
- 
- const transactionObj=new Transaction({
-  courseId:courseId,
-  userId:uid,
-  paymentMethod:"Online",
-  paymentId:response.razorpay_payment_id,
-  amount:Number(course.offeredPrice)
- })
- const trans=await transactionObj.save();
+    }
 
- const userCourseObj=new UserCourseModel({
-  userId:uid,
-  courseIds:courseId,
-  paid:true,
- transactionId:trans._id,
-});
-await userCourseObj.save();
+
+
+  }
+  else {
+    const course = await courseModel.findById(courseId);
+    course.enrollmentCount += 1;
+    await course.save();
+
+
+    const transactionObj = new Transaction({
+      courseId: courseId,
+      userId: uid,
+      paymentMethod: "Online",
+      paymentId: response.razorpay_payment_id,
+      amount: Number(course.offeredPrice)
+    })
+    const trans = await transactionObj.save();
+
+    const userCourseObj = new UserCourseModel({
+      userId: uid,
+      courseIds: courseId,
+      paid: true,
+      transactionId: trans._id,
+    });
+    await userCourseObj.save();
   }
   // if (!userCourse) return res.status(401).send({ message: "Failed to add courses" });
 };
@@ -254,7 +252,7 @@ const verify = async (req, res) => {
       .update(sign.toString()).digest("hex");
 
     if (response.razorpay_signature === expectedSign) {
-      createOrder(courseId, req.user._id,response);
+      createOrder(courseId, req.user._id, response);
       return res.status(200).json({ message: "Payment verified successfully" });
     } else {
       return res.status(400).json({ message: "Invalid signature sent!" });
@@ -265,4 +263,4 @@ const verify = async (req, res) => {
   }
 };
 
-module.exports = { getEnrollCoursesList, EnrollCourses, verify ,getEnrolledCoursesList,getCertificationCoursesList};
+module.exports = { getEnrollCoursesList, EnrollCourses, verify, getEnrolledCoursesList, getCertificationCoursesList };

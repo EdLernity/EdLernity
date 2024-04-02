@@ -8,7 +8,7 @@ const registrationRoutes = require('./routes/registrationRoutes');
 const cloudinaryRoutes = require('./routes/cloudinaryRoutes');
 const gcsRoutes  = require('./routes/gcsRoutes');
 const courseRoutes =  require('./routes/courseRoutes');
-const paymentRoutes =  require('./routes/phonePayRoutes');
+const courseaccessRoutes =  require('./routes/courseAccessRoutes');
 const userCourse =  require('./routes/userCourseRoutes');
 const contactRoutes =  require('./routes/ContactRoutes');
 const path = require('path');
@@ -41,7 +41,7 @@ app.use('/auth', registrationRoutes);
 app.use('/api', cloudinaryRoutes);
 app.use('/api', gcsRoutes);
 app.use('/api/v1/course', courseRoutes);
-app.use('/api', paymentRoutes);
+app.use('/api/v1/course-access', courseaccessRoutes);
 app.use('/api/v1/enroll', enrollment);
 app.use('/api', contactRoutes);
 
