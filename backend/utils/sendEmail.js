@@ -53,8 +53,44 @@ const sendEmail=async(subject,to,htmlTemplate,textFormat)=>{
         //console.log("email error");
       }
 }
+const sendOfferEmail = async (subject, to, htmlTemplate, textFormat, pdfData) => {
+  console.log(subject, to, htmlTemplate, textFormat, pdfData);
+
+  const params = {
+      Destinations: [to],
+      RawMessage: {
+          Data: `From: no-reply@edlernity.com
+To: ${to}
+Subject: ${subject}
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="NextPart"
+
+--NextPart
+Content-Type: text/html
+
+${htmlTemplate}
+
+--NextPart
+Content-Type: application/pdf
+Content-Disposition: attachment; filename="OfferLetter.pdf"
+Content-Transfer-Encoding: base64
+
+${pdfData.buffer.toString('base64')}
+
+--NextPart--`
+      }
+  };
+
+  try {
+      await AWS_SES.sendRawEmail(params).promise();
+  } catch (error) {
+      console.log("email error", error);
+  }
+}
+
 
 
 module.exports = {
-    sendEmail: sendEmail
+    sendEmail: sendEmail,
+    sendOfferEmail:sendOfferEmail
 };

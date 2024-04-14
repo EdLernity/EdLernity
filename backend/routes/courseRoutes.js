@@ -1,8 +1,9 @@
 const express = require('express');
 const courseControler = require('../controllers/courseController');
-const { uploadCourseToLib } = require('../utils/awsFileConfig');
+const { uploadCourseToLib, uploadOfferLetter } = require('../utils/awsFileConfig');
 const authMiddleware = require('../middleware/authMiddleware');
-
+const multer = require('multer');
+const upload = multer();
 
 const router = express.Router();
 
@@ -11,6 +12,7 @@ router.post('/save-course',authMiddleware, uploadCourseToLib,courseControler.sav
 router.post('/rate-course',authMiddleware,courseControler.rateCourse);
 
 router.post('/get-course-watching', authMiddleware,courseControler.getEnrolledCourses);
+router.post('/offer-letter', authMiddleware, upload.single('pdfData'), courseControler.sendOfferLetter);
 // Route to get all videos in a folder
 router.get('/get-all-course-details', courseControler.getAllCourseDetails);
 

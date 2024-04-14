@@ -83,6 +83,7 @@ const uploadCourseToLib = uploadVideos.fields([
   { name: 'bannerFiles', maxCount: 1 },
 ]);
 
+
 const deleteS3Objects = async function(keys) {
   // console.log(first)
   deleteS3ObjectsInBulk(keys);
@@ -91,5 +92,6 @@ const deleteS3Objects = async function(keys) {
 module.exports = {
     uploadCourseToLib,
     deleteS3Objects,
+   
 };
  

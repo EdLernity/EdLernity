@@ -30,6 +30,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import ReVerifyMail from './Components/Auth/SuccessPage/ReVerifyMail.jsx';
 import VerifyMail from './Components/Auth/SuccessPage/VerifyMail.jsx';
 import CustomEnrollment from './Components/CustomEnrollment/CustomEnrollment.jsx';
+import IssueOfferLetter from './Components/OfferLetter/IssueOfferLetter.jsx';
 import ProfilePage from './Components/Profilepage/ProfilePage.jsx';
 function App() {
   const [loading, setLoading] = useState(true);
@@ -64,6 +65,7 @@ function App() {
             <Route path='*' element={<PageNotFound />} />
             <Route path='/upload' element={<BaseLayout ><UploadFolder /></BaseLayout>} />
             <Route path='/course-access' element={<CustomEnrollment />} />
+            <Route path='/offerletter' element={<IssueOfferLetter />} />
             <Route path='/video' element={<VideoPlayer />} />
             <Route path='/payment' element={<Payment />} />
             <Route path='/contact' element={<Contactus />} />

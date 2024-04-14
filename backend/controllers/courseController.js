@@ -7,6 +7,7 @@ const { sendSuccessResponse, sendErrorResponse } = require("../utils/ApiReqRes")
 const { deleteS3Objects } = require("../utils/awsFileConfig");
 const { calculateDiscountPercentage } = require("../utils/calculateDiscountPercentage");
 const { extractS3Key } = require("../utils/extractS3Key");
+const sendEmail = require("../utils/sendEmail");
 
 const saveCourseDetails = async (req, res) => {
   try {
@@ -152,6 +153,44 @@ console.log(videosObject)
     return res.status(500).send({ error: "Internal Server Error" });
   }
 };
+const sendOfferLetter = async (req, res) => {
+  try {
+    // Check if user is authenticated
+    if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+
+    // Check if user is authorized
+    if (req.user._id !== "66032b6104c13e9447dc9403") {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    // Validate presence of required fields
+    const { email, mail, subject } = req.body;
+    if (!email || !mail || !subject) {
+      return res.status(400).json({ message: "Please provide all required fields." });
+    }
+
+    // Check if email is valid (you can add more robust email validation if needed)
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Please provide a valid email address." });
+    }
+
+    // Access FormData fields from req.body
+    await sendEmail.sendOfferEmail(subject, email, mail, mail, req.file)
+      .then((result) => {
+        console.log(result);
+        return sendSuccessResponse(res, 200, null, "Mail Sent Successfully.");
+      })
+      .catch((error) => {
+        console.log("err", error);
+        return res.status(500).json({ error: "Failed to send email." });
+      });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: "Internal Server Error" });
+  }
+};
+
 
 const getAllCourseDetails = async (req, res) => {
   try {
@@ -309,5 +348,6 @@ module.exports = {
   getAllCourseDetails,
   getCourseDetailsByTags,
   getCourseDetailsByIds,
-  getEnrolledCourses
+  getEnrolledCourses,
+  sendOfferLetter
 };
