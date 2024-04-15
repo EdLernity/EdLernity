@@ -54,7 +54,7 @@ const sendEmail=async(subject,to,htmlTemplate,textFormat)=>{
       }
 }
 const sendOfferEmail = async (subject, to, htmlTemplate, textFormat, pdfData) => {
-  console.log(subject, to, htmlTemplate, textFormat, pdfData);
+ 
 
   const params = {
       Destinations: [to],

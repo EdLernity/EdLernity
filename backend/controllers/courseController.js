@@ -156,12 +156,16 @@ console.log(videosObject)
 const sendOfferLetter = async (req, res) => {
   try {
     // Check if user is authenticated
+    
     if (!req.user) return res.status(401).json({ message: "Unauthorized" });
-
     // Check if user is authorized
-    if (req.user._id !== "66032b6104c13e9447dc9403") {
+    if (
+      req.user._id.toString() !== "66032b6104c13e9447dc9403" &&
+      req.user._id.toString() !== "661cc83c2de92ebfe267b717"
+    ) {
       return res.status(401).json({ message: "Unauthorized" });
     }
+    
 
     // Validate presence of required fields
     const { email, mail, subject } = req.body;
