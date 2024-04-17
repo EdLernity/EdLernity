@@ -162,7 +162,7 @@ const sendOfferLetter = async (req, res) => {
     if (
       req.user._id.toString() !== "66032b6104c13e9447dc9403" &&
       req.user._id.toString() !== "661cc83c2de92ebfe267b717" &&
-      req.user._id.toString() !== "660ab2f14daa3637459eabbd" &&
+      req.user._id.toString() !== "660ab2f14daa3637459eabbd" 
 
     ) {
       return res.status(401).json({ message: "Unauthorized" });
