@@ -1,6 +1,7 @@
+import moment from 'moment';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import React, { useRef, useState } from "react";
-import { apiInstancePrivate } from "../../Utils/AxiosInstance";
-
+import { apiInstancePrivate } from '../../Utils/AxiosInstance';
 function Certificate({ courseName, courseId }) {
   const [userName, setUserName] = useState("");
   const [showInput, setShowInput] = useState(false);
@@ -15,50 +16,80 @@ function Certificate({ courseName, courseId }) {
 
     apiInstancePrivate
       .get("/api/v1/enroll/getCertificationCoursesList/" + courseId)
-      .then((res) => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
-
-        const img = new Image();
-        img.src =
-          "/Image/Cert.png";
-          img.crossOrigin = 'anonymous';
-        img.onload = () => {
-          canvas.width = img.width; // Match canvas width to image width
-          canvas.height = img.height; // Match canvas height to image height
-
-          ctx.drawImage(img, 0, 0); // Draw image onto canvas
-
-          ctx.font = "bold 78px Montserrat classic";
-          ctx.fillStyle = "#0A3062";
-          ctx.textAlign = "left";
-
-          ctx.fillText(userName, 360, 620);
-
-          ctx.font = "bold 35px Raleway";
-          ctx.fillStyle = "#0A3062";
-          ctx.textAlign = "left";
-
-          ctx.fillText(courseName, 360, 795);
-
-          ctx.font = "bold 35px Raleway";
-          ctx.fillStyle = "#0A3062";
-          ctx.textAlign = "center";
-          ctx.fillText(new Date().toLocaleDateString(), isMobile()?535:540, 1225);
-          ctx.fillText(res.data.uuid, isMobile()?740:750, 1290);
-
-          const dataURL = canvas.toDataURL("image/jpeg", 0.9); // Adjust quality parameter as needed (0.0 - 1.0)
-          const anchor = document.createElement("a");
-          anchor.href = dataURL;
-          anchor.download = `${userName}_${courseName}_certificate.jpeg`;
-          anchor.click();
-        };
+      .then(async (res) => {
+        
+        const urls = "https://edlernity.s3.ap-south-1.amazonaws.com/Copy+of+Copy+of+Certificate+of+Completion+(EdLernity)_20240420_100208_0000%5B1%5D.pdf";
+        const existingPdfBytes = await fetch(urls).then((res) => res.arrayBuffer());
+        
+    
+        const pdfDoc = await PDFDocument.load(existingPdfBytes);
+        const helveticaFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    
+        const pages = pdfDoc.getPages();
+        const firstPage = pages[0];
+        const { width, height } = firstPage.getSize();
+        const today = moment().format('DD/MM/YYYY');
+        firstPage.drawText(userName, {
+          x: 147, // Adjust x-coordinate as needed
+          y: height -  263, // Adjust y-coordinate as needed
+          size: 50, // Adjust font size as needed
+          font: helveticaFont,
+          color: rgb(0.0392156862745098, 0.18823529411764706, 0.3843137254901961), // Adjust color as needed
+          bold:true
+        });
+        firstPage.drawText(courseName, {
+          x: 148, // Adjust x-coordinate as needed
+          y: height -  328, // Adjust y-coordinate as needed
+          size: 25, // Adjust font size as needed
+          font: helveticaFont,
+          color: rgb(0.0392156862745098, 0.18823529411764706, 0.3843137254901961), // Adjust color as needed
+          bold:true
+        });
+        firstPage.drawText(today, {
+          x: 196, // Adjust x-coordinate as needed
+          y: height -  508, // Adjust y-coordinate as needed
+          size: 15, // Adjust font size as needed
+          font: helveticaFont,
+          color: rgb(0.0392156862745098, 0.18823529411764706, 0.3843137254901961), // Adjust color as needed
+          bold:true
+        });
+        firstPage.drawText(res.data.uuid, {
+          x: 190, // Adjust x-coordinate as needed
+          y: height -  536, // Adjust y-coordinate as needed
+          size: 15, // Adjust font size as needed
+          font: helveticaFont,
+          color: rgb(0.0392156862745098, 0.18823529411764706, 0.3843137254901961), // Adjust color as needed
+          bold:true
+        });
+    
+        const modifiedPdfBytes = await pdfDoc.save();
+    
+        // Create a Blob from the PDF data
+        const blob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
+        // Create a download URL for the Blob
+        const url = URL.createObjectURL(blob);
+        // Create a link element
+        const link = document.createElement('a');
+        // Set the href attribute to the download URL
+        link.href = url;
+        // Set the download attribute to specify the filename
+        link.download = `${userName}_${courseName}_certificate.pdf`;
+        // Append the link to the body
+        document.body.appendChild(link);
+        // Trigger the click event on the link
+        link.click();
+        // Remove the link from the body
+        document.body.removeChild(link);
       })
       .catch((err) => {
         // Handle error
       })
       .finally(() => {});
+
+     
+   
   };
+  
   const isMobile = () => {
     const userAgent =
       typeof window.navigator === "undefined" ? "" : navigator.userAgent;
