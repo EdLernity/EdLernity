@@ -29,7 +29,7 @@ function Certificate({ courseName, courseId }) {
         const firstPage = pages[0];
         const { width, height } = firstPage.getSize();
         const today = moment().format('DD/MM/YYYY');
-        firstPage.drawText(userName+" alabahadi kurnar", {
+        firstPage.drawText(userName, {
           x: 147, // Adjust x-coordinate as needed
           y: height -  263, // Adjust y-coordinate as needed
           size: 25, // Adjust font size as needed
