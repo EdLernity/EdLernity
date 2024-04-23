@@ -26,13 +26,12 @@ exports.addCoursesToUsers = async (req, res) => {
     }
     const data = req.body;
 
-  // Accessing properties of the object
-  const isAllCourseSubscribed = data["Is All Course Subscribed"];
-  const courseId = data["Course"];
-  const userName = data["User name"];
-  const paymentId = data["Payment Id"];
-// Log all properties of the object
-
+    // Accessing properties of the object
+    const isAllCourseSubscribed = data["Is All Course Subscribed"];
+    const courseId = data["Course"];
+    const userName = data["User name"];
+    const paymentId = data["Payment Id"];
+    
     if (isAllCourseSubscribed) {
       const courses = await courseModel.find();
       if (!courses || courses.length === 0) {
@@ -54,8 +53,8 @@ exports.addCoursesToUsers = async (req, res) => {
         amount: 986
       })
       const trans = await transactionObj.save();
-      const existingUserCourses = await UserCourseModel.findOne({ userId: userName });
-      //console.log(existingUserCourses)
+      let existingUserCourses = await UserCourseModel.findOne({ userId: userName });
+  
       let newCourseIds = [];
   
       if (existingUserCourses) {
@@ -64,7 +63,7 @@ exports.addCoursesToUsers = async (req, res) => {
   
         // Add only unique courseIds to newCourseIds
         newCourseIds = courseIds.filter(courseId => !existingCourseIds.includes(courseId));
-        const existingUserCourses = await UserCourseModel.findOneAndUpdate(
+        existingUserCourses = await UserCourseModel.findOneAndUpdate(
           { userId: userName },
           { $addToSet: { courseIds: { $each: newCourseIds } }, paid: true, transactionId: trans._id,isAllCourse:true },
           { upsert: true, new: true }
@@ -81,15 +80,11 @@ exports.addCoursesToUsers = async (req, res) => {
         });
         await userCourseObj.save(); // No existing UserCourseModel, add all courseIds
       }
-  
-  
-  
     }
     else {
       const course = await courseModel.findById(courseId);
       course.enrollmentCount += 1;
       await course.save();
-  
   
       const transactionObj = new Transaction({
         courseId: courseId,
