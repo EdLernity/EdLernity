@@ -31,7 +31,7 @@ function Certificate({ courseName, courseId }) {
         const today = moment().format('DD/MM/YYYY');
         firstPage.drawText(userName, {
           x: 147, // Adjust x-coordinate as needed
-          y: height -  263, // Adjust y-coordinate as needed
+          y: height -  254, // Adjust y-coordinate as needed
           size: 25, // Adjust font size as needed
           font: helveticaFont,
           color: rgb(0.0392156862745098, 0.18823529411764706, 0.3843137254901961), // Adjust color as needed
