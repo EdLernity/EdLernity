@@ -108,7 +108,7 @@ function CoursesOffered() {
             
             <p class="text-base font-semibold text-center text-gray-600">Explore Our Courses</p>
             <p class="mt-6 flex items-baseline justify-center gap-x-2">
-            Strating from 
+            Starting from 
               <span class="text-5xl font-bold tracking-tight text-gray-900">₹499</span>
               <span class="text-sm font-semibold leading-6 tracking-wide text-gray-600">INR</span>
             </p>
