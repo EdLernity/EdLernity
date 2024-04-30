@@ -29,6 +29,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ReVerifyMail from './Components/Auth/SuccessPage/ReVerifyMail.jsx';
 import VerifyMail from './Components/Auth/SuccessPage/VerifyMail.jsx';
+import CareersPage from './Components/Carrers/CareersPage.jsx';
+import InternShip from './Components/Carrers/InternShip.jsx';
 import CustomEnrollment from './Components/CustomEnrollment/CustomEnrollment.jsx';
 import IssueOfferLetter from './Components/OfferLetter/IssueOfferLetter.jsx';
 import ProfilePage from './Components/Profilepage/ProfilePage.jsx';
@@ -78,6 +80,8 @@ function App() {
             <Route path='/verify-email' element={<VerifyMail/>} />
             <Route path='/reverify-email' element={<ReVerifyMail/>} />
             <Route path='/mycourses' element={<MyCourses />} />
+            <Route path='/careers' element={<CareersPage />} />
+            <Route path='/internship' element={<InternShip />} />
           </Routes>
           <ToastContainer position="bottom-center" autoClose={5000} />
         </BrowserRouter>

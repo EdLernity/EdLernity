@@ -1,8 +1,8 @@
-import { Rating } from "@material-tailwind/react";
 import React, { useEffect, useState } from "react";
+import CountUp from 'react-countup';
 import { Helmet } from "react-helmet";
-import { RiDoubleQuotesL, RiDoubleQuotesR } from "react-icons/ri";
 import BaseLayout from "../../Layout/BaseLayout";
+
 import "./About.css";
 function About() {
   const [count, setCount] = useState(0);
@@ -111,65 +111,89 @@ function About() {
         <title>EdLernity | About Us</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
+      <section class="py-14 lg:py-24 relative z-0 bg-gray-50">
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center">
+    <h1
+        class="max-w-2xl mx-auto text-center font-manrope font-bold text-4xl  text-gray-900 mb-5 md:text-5xl md:leading-normal">
+        Welcome to <span class="text-indigo-600">EdLernity Tech </span>
+    </h1>
+    <p class=" mx-auto text-center text-base font-normal leading-7 text-gray-500 mb-9">Invest
+    where innovation converges with purpose to redefine the landscape of technological solutions. Established with a vision to lead in the ever-evolving tech industry, EdLernity Tech (OPC) Private Limited is committed to delivering cutting-edge products and services that transcend conventional boundaries.</p>
 
+
+</div>
+</section>
+
+<section class="py-14 lg:py-24 relative">
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative ">
+    <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-9 ">
+
+        <div class="lg:pr-24 flex items-center">
+            <div class="data w-full">
+                <img src="/Image/employees-are-busy-doing-work.svg" alt="About Us tailwind page"
+                    class="block lg:hidden mb-9 mx-auto"/>
+                <h2 class="font-manrope font-bold text-4xl lg:text-5xl text-black mb-9 max-lg:text-center">Special Offering</h2>
+                <p class="font-normal text-xl leading-8 text-gray-500 max-lg:text-center max-w-2xl mx-auto">
+                Experience the future of education at EdLernity. Beyond traditional courses, we offer immersive Tech internships, bridging theory with real-world application. Work alongside industry experts, gaining invaluable insights and hands-on experience. Whether aspiring to be a Web Developer or UI/UX Designer, unlock your potential with EdLernity today. Better skills develop nations. Join us and discover yours.
+                </p>
+            </div>
+        </div>
+        <div class="img-box ">
+            <img src="/Image/employees-are-busy-doing-work.svg" alt="About Us tailwind page"
+                class="hidden lg:block "/>
+        </div>
+    </div>
+</div>
+</section>
+
+<section class=" py-14 lg:py-24 bg-gray-50">
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
+  <div class="mb-16 rounded-full">
+    <h2 class="text-4xl font-manrope font-bold text-gray-900 text-center">We are ISO Certified</h2>
+  </div>
+
+  <div >
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <div class="relative mb-20">
+          <div class="max-w-max mx-auto lg:max-w-4xl">
+            <p class="text-lg text-gray-500 leading-8 mb-8 text-center">
+            EdLernity Tech (OPC) Private Limited is proud to be ISO 9001:2015 certified by QFS Management Systems LLP. This certification reaffirms our commitment to maintaining a high standard of quality in our education services and certification programs related to skill and vocational development. Accredited by the Standards Council of Canada, our certification underscores our dedication to excellence and adherence to international quality standards.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="relative flex w-96 flex-col rounded-xl mx-auto  ">
+  <div class="relative mx-4 mt-4 h-96 overflow-hidden rounded-x">
+    <img
+      src="/Image/2130-EDLERNITY_TECH__OPC__PRIVATE_LIMITED[1]_page-0001.jpg"
+      class="h-full w-full object-contain"
+    />
+  </div>
+  
+</div>
+
+
+
+      
+    </div>
+
+  </div>
+
+
+
+</div>
+</section>
       <div className="mt-10 px-4 md:px-8 lg:px-12">
-        <div>
-          <h1 className="text-center font-bold text-4xl animate__animated animate__fadeInDownBig">
-            About us
-          </h1>
-          <p
-            className="text-lg md:text-xl lg:text-2xl mt-5 animate__animated animate__backInLeft"
-            style={{ color: "#605C5C" }}
-          >
-            Welcome to EdLernity Tech, where innovation converges with purpose
-            to redefine the landscape of technological solutions. Established
-            with a vision to lead in the ever-evolving tech industry, EdLernity
-            Tech (OPC) Private Limited is committed to delivering cutting-edge
-            products and services that transcend conventional boundaries.
-          </p>
-        </div>
+      
 
-        <div className="mt-5">
-          <h2 className="text-left font-semibold text-2xl animate__animated animate__fadeInDownBig">
-            Special Offering:
-          </h2>
-          <p
-            className="text-lg md:text-xl lg:text-2xl mt-5 animate__animated animate__backInRight"
-            style={{ color: "#605C5C" }}
-          >
-            At EdLernity, we go beyond traditional education. In addition to our
-            wide array of courses, we are proud to offer Tech internships that
-            provide real-time practical knowledge. These internships are
-            designed to bridge the gap between theory and application, giving
-            you the hands-on experience needed to excel in your career.
-          </p>
-          <p
-            className="text-lg md:text-xl lg:text-2xl mt-5 animate__animated animate__backInRight"
-            style={{ color: "#605C5C" }}
-          >
-            Our internships offer a unique opportunity to work with industry
-            experts, gain valuable insights, and apply your skills in real-world
-            scenarios. Whether you're aspiring to be a Web Developer
-            professional or a UI/UX Designer, EdLernity is here to support your
-            journey and help you acquire the practical expertise that sets you
-            apart.
-          </p>
-
-          <p
-            className="text-lg md:text-xl lg:text-2xl mt-5 animate__animated animate__backInRight"
-            style={{ color: "#605C5C" }}
-          >
-            Join us on this transformative educational journey, because at
-            EdLernity, we firmly believe that "Better skills develop the nation.
-            Discover your potential with EdLernity today!
-          </p>
-        </div>
-        <hr className="border-gray-500 mt-10"></hr>
+        
+        
 
         <div className="flex flex-wrap justify-center mt-10">
           <div className="w-full md:w-1/2 pr-4 mb-4 md:mb-0 animate__animated animate__backInLeft">
             <img
-              src="/Image/About23.png"
+              src="/Image/about-us.svg"
               alt="About Image"
               className="w-full"
             />
@@ -308,178 +332,116 @@ function About() {
               />
             </div>
 
-            {/* <div className="z-20 flex h-[300px] w-[420px] items-center justify-center rounded-lg p-4">
-              <img
-                alt="Smiling woman"
-                className="h-full w-full object-cover rounded-lg"
-                height="180"
-                src="/Image/People1.png"
-                style={{
-                  aspectRatio: "300/180",
-                  objectFit: "cover",
-                }}
-                width="280"
-              />
-            </div> */}
-            {/* <div className="z-10 flex h-[280px] w-[400px] items-center justify-center rounded-lg  p-4">
-              <img
-                alt="Man with laptop"
-                className="h-full w-full object-cover rounded-lg"
-                height="160"
-                src="/Image/People2.png"
-                style={{
-                  aspectRatio: "280/160",
-                  objectFit: "cover",
-                }}
-                width="280"
-              />
-            </div> */}
+           
           </div>
         </div>
-        <div
-          className=" flex flex-col md:flex-row"
-          style={{ marginBlock: "150px" }}
-        >
-          <div className="md:w-1/2 pr-4 animate__animated animate__backInRight">
-            <h2 className="font-bold text-2xl" style={{ color: "#181FC5" }}>
-              OUR MISSION
-            </h2>
-            <p className="text-2xl">
-              <span className="inline-flex">
-                <RiDoubleQuotesL />
-              </span>
-              We are on a mission to pioneer advancements in technology,
+        <div class="text-center p-8">
+    <h2 class="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+        Why to choose US?
+    </h2>
+
+    <div class="flex flex-wrap items-center mt-20 text-left text-center">
+        <div class="w-full md:w-3/5 lg:w-1/2 px-4">
+            <img src="/Image/Astronaut with space shuttle.gif" alt="gem" class="inline-block rounded w-96 "/>
+        </div>
+        <div class="w-full md:w-2/5 lg:w-1/2 px-4 text-center md:text-left lg:pl-12">
+            <h3 class="font-bold mt-8 text-xl md:mt-0 sm:text-2xl text-[#181FC5]">
+            OUR MISSION
+            </h3>
+            <p class="sm:text-lg mt-6">
+            We are on a mission to pioneer advancements in technology,
               creating value for our clients and contributing to the broader
               societal good. Through a relentless pursuit of excellence, ethical
               practices, and a commitment to sustainability, we strive to leave
-              a lasting impact on the world.{" "}
-              <span className="inline-flex">
-                <RiDoubleQuotesR />
-              </span>
+              a lasting impact on the world.
             </p>
-          </div>
-
-          <div className="md:w-1/2 mt-6 md:mt-0 animate__animated animate__backInLeft">
-            <h2 className="font-bold text-2xl" style={{ color: "#181FC5" }}>
-              OUR VISION
-            </h2>
-            <p className="text-2xl">
-              <span className="inline-flex">
-                <RiDoubleQuotesL />
-              </span>
-              At Edlernity, we envision a future where technology seamlessly
-              integrates with human needs, fostering progress and enhancing
-              lives. Our vision is to be a beacon of innovation, driving
-              positive change through transformative digital solutions.
-              <span className="inline-flex">
-                <RiDoubleQuotesR />
-              </span>
-            </p>
-          </div>
         </div>
+    </div>
 
-        <div
-          className="mt-10 border-black rounded-xl bg-[#181FC5] relative animate__animated animate__fadeIn"
-          style={{ marginBlock: "-120px" }}
-        >
-          <div className="py-24 text-center flex flex-col justify-center items-center">
-            <img
-              src="/Image/User.png"
-              alt="User Icon"
-              className="mx-auto w-24 h-24 mb-4"
-            />
-            {/* <CountUp
-              start={0}
-              end={5000}
-              duration={100}
-              separator=","
-              delay={0.5}
-            >
-              {({ countUpRef }) => ( */}
-                <div className="text-4xl font-bold text-white">
-                  <span>{count}</span>+
-                </div>
-              {/* )} */}
-            {/* </CountUp> */}
-
-            <p className="text-xl font-semibold text-white pb-12">
-              STUDENTS ENROLLED
+    <div class="flex flex-wrap items-center mt-20 text-left text-center">
+        <div class="w-full md:w-3/5 lg:w-1/2 px-4">
+            <img src="/Image/employee-predicts-business-vision.svg" alt="project members" class="inline-block rounded  w-96 "/>
+        </div>
+        <div class="w-full md:w-2/5 lg:w-1/2 px-4 md:order-first text-center md:text-left lg:pr-12">
+            <h3 class="font-bold mt-8 text-xl md:mt-0 sm:text-2xl text-[#181FC5]">
+            OUR VISION
+            </h3>
+            <p class="sm:text-lg mt-6">
+            At Edlernity, we envision a future where technology seamlessly integrates with human needs, fostering progress and enhancing lives. Our vision is to be a beacon of innovation, driving positive change through transformative digital solutions.
             </p>
-          </div>
+        </div>
+    </div>
+
+    
+</div>
+       
+      
+      </div>
+      <div className="pb-12 mt-15  sm:pb-16">
+    <div className="relative">
+      <div className="absolute inset-0 h-1/2  "></div>
+      <div className="relative max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <dl className="bg-white  rounded-lg shadow-sm sm:grid sm:grid-cols-2">
+            <div className="flex flex-col p-6 text-center border-b border-gray-100  sm:border-0 sm:border-r">
+              <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 " id="item-1">
+                Users
+              </dt>
+              <dd className="order-1 text-5xl font-extrabold leading-none text-indigo-600 " aria-describedby="item-1" id="starsCount">
+                <CountUp end={1000} duration={5}  />+
+              </dd>
+            </div>
+            <div className="flex flex-col p-6 text-center border-t border-b border-gray-100  sm:border-0 sm:border-l sm:border-r">
+              <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 ">
+                Courses
+              </dt>
+              <dd className="order-1 text-5xl font-extrabold leading-none text-indigo-600 " id="downloadsCount">
+                <CountUp end={12} duration={5} />+
+              </dd>
+            </div>
+            
+          </dl>
         </div>
       </div>
+    </div>
+  </div>
+  <section class="bg-white px-4 py-12 md:py-24">
+  <div class="max-w-screen-xl mx-auto">
+    <h2 class="font-black  text-center text-3xl leading-none uppercase max-w-2xl mx-auto mb-12 text-[#181FC5]">What Our Students
+      Are Saying</h2>
+      <div class="flex overflow-x-scroll pb-10 hide-scroll-bar pt-3">
+          {reviewData.map((testimonial, index) => (
+          <div  key={index}  class="inline-block px-2">
+              <div className="lg:ml-[5.5rem] md:ml-10 relative rounded-2xl bg-white p-6 shadow shadow-slate-900/10 w-[50rem] h-[19rem] max-w-xs cursor-pointer overflow-hidden  hover:shadow-xl transition-shadow duration-300 ease-in-out">
+              <svg aria-hidden="true"
+                width="105" height="78" class="absolute opacity-10">
+                <path
+                  d="M25.086 77.292c-4.821 0-9.115-1.205-12.882-3.616-3.767-2.561-6.78-6.102-9.04-10.622C1.054 58.534 0 53.411 0 47.686c0-5.273.904-10.396 2.712-15.368 1.959-4.972 4.746-9.567 8.362-13.786a59.042 59.042 0 0 1 12.43-11.3C28.325 3.917 33.599 1.507 39.324 0l11.074 13.786c-6.479 2.561-11.677 5.951-15.594 10.17-3.767 4.219-5.65 7.835-5.65 10.848 0 1.356.377 2.863 1.13 4.52.904 1.507 2.637 3.089 5.198 4.746 3.767 2.41 6.328 4.972 7.684 7.684 1.507 2.561 2.26 5.5 2.26 8.814 0 5.123-1.959 9.19-5.876 12.204-3.767 3.013-8.588 4.52-14.464 4.52Zm54.24 0c-4.821 0-9.115-1.205-12.882-3.616-3.767-2.561-6.78-6.102-9.04-10.622-2.11-4.52-3.164-9.643-3.164-15.368 0-5.273.904-10.396 2.712-15.368 1.959-4.972 4.746-9.567 8.362-13.786a59.042 59.042 0 0 1 12.43-11.3C82.565 3.917 87.839 1.507 93.564 0l11.074 13.786c-6.479 2.561-11.677 5.951-15.594 10.17-3.767 4.219-5.65 7.835-5.65 10.848 0 1.356.377 2.863 1.13 4.52.904 1.507 2.637 3.089 5.198 4.746 3.767 2.41 6.328 4.972 7.684 7.684 1.507 2.561 2.26 5.5 2.26 8.814 0 5.123-1.959 9.19-5.876 12.204-3.767 3.013-8.588 4.52-14.464 4.52Z">
+                </path>
+              </svg>
+                <div className="relative">
+                <p className="text-lg tracking-tight text-slate-900 overflow-auto h-[10rem]">
+  { testimonial.comment}
+</p>
 
-      <div className="bg-[#808080]">
-        <div className="">
-          <h2
-            className="text-center text-3xl  font-bold "
-            style={{ color: "#181FC5", paddingTop: "12rem" }}
-          >
-            Review from Learners
-          </h2>
 
-          <div className="flex flex-col gap-4">
-            <div className="flex  justify-center items-center">
-              <Rating
-                readonly
-                value={4}
-                ratedColor="blue"
-                style={{ color: "#353BCC" }}
-              />
-              <span className=" ml-2" style={{ color: "#353BCC" }}>
-                4.3 Reviews
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-center mt-8 -space-x-4 items-center relative overflow-x-auto">
-            <div className="max-w-screen-lg mx-auto mt-10 w-full">
-              <div className="flex items-center justify-center flex-wrap">
-                {reviewData?.map(
-                  (item, index) =>
-                    index >= currentSlide &&
-                    index < currentSlide + visibleCards && (
-                      <div
-                        key={index}
-                        className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 p-4"
-                      >
-                        <div className="review-container h-72 flex bg-[#D9D9D9]">
-                          <div
-                            className=""
-                            style={{ marginLeft: "4px", marginTop: "12px" }}
-                          >
-                            <img
-                              src={`/Image/user-review-img/${item?.image}`}
-                              alt={item?.name}
-                              className="w-[1080px] h-[85px] rounded-full p-2 object-cover"
-                            />
-                          </div>
-                          <div className="p-4">
-                            <h2 className="text-xl whitespace-nowrap font-bold mb-2">
-                              {item?.name}
-                            </h2>
-                            <p className="pb-3">{item?.comment}</p>
-                          </div>
-                        </div>
-                      </div>
-                    )
-                )}
+                </div>
+                <figcaption className="relative mt-6 flex items-center justify-between border-t border-slate-100 pt-6">
+                  <div>
+                    <div className="font-display text-base text-slate-900">{testimonial.name}</div>
+                  </div>
+                  <div className="overflow-hidden rounded-full bg-slate-50">
+                    <img alt="" className="h-14 w-14 object-cover" src={`/Image/user-review-img/${testimonial?.image}`} />
+                  </div>
+                </figcaption>
               </div>
             </div>
+          ))}
           </div>
+  </div>
+</section>
 
-          <div className="flex justify-center mt-4 space-x-2">
-            {reviewData?.map((_, index) => (
-              <div
-                key={index}
-                className={`dot w-4 h-4 mb-12 rounded-full ${
-                  index === currentSlide ? "bg-[#353BCC]" : "bg-gray-300"
-                }`}
-                onClick={() => setCurrentSlide(index)}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+     
     </BaseLayout>
   );
 }

@@ -60,7 +60,7 @@ function Herosection2() {
       altImg: "certificateImage",
       title: "Certificate",
       logoBg: "bg-[#D4F0FF]",
-      text: "At EdLernity, we provide diverse certification programs to empower your career or academic growth in today's competitive landscape. Ready to take the next step?",
+      text: "At EdLernity, we offer certified programs for your career or academic growth. Our ISO 9001:2015 certification ensures excellence. Ready to join us?",
     },
     {
       img: (

@@ -326,7 +326,7 @@ courseBanner} alt=""/>
             </p>
         </div>
         <img
-            src="/Image/Certificate of Completion (E.png"
+            src="/Image/Course completion certificate _20240427_184541_0000[1]_page-0001.jpg"
             alt="Certificate"
             className="w-full sm:w-auto md:w-1/2 lg:w-1/3 rounded-xl h-auto"
         />

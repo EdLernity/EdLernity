@@ -162,9 +162,19 @@ function Footer() {
                   </li>
                 ))}
               </nav>
+               <div className="flex justify-end">
+  <img
+    alt="instagram"
+    src="/Image/Iso.png"
+    className="w-96 h-full"
+  />
+</div>
             </div>
+            
           </div>
         </div>
+       
+
         <div class="bg-gray-300">
           <div class="container px-5 py-4 mx-auto">
             <p class="text-sm text-gray-700 capitalize xl:text-center">
