@@ -8,6 +8,7 @@ const LINKS = [
       { label: "Home", url: "/" },
       { label: "Student Stories", url: "#StudentSayAboutUs" },
       { label: "About Us", url: "/about" },
+      { label: "Careers", url: "/careers" },
       { label: "Contact Us", url: "/contact" },
       { label: "Help and Support", url: "/contact" },
     ],
