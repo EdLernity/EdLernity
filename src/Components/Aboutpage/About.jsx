@@ -158,7 +158,7 @@ function About() {
         <div class="relative mb-20">
           <div class="max-w-max mx-auto lg:max-w-4xl">
             <p class="text-lg text-gray-500 leading-8 mb-8 text-center">
-            EdLernity Tech (OPC) Private Limited is proud to be ISO 9001:2015 certified by QFS Management Systems LLP. This certification reaffirms our commitment to maintaining a high standard of quality in our education services and certification programs related to skill and vocational development. Accredited by the Standards Council of Canada, our certification underscores our dedication to excellence and adherence to international quality standards.
+            EdLernity Tech (OPC) Private Limited is proud to be ISO 9001:2015 certified. This certification reaffirms our commitment to maintaining a high standard of quality in our education services and certification programs related to skill and vocational development. Accredited by the Standards Council of Canada, our certification underscores our dedication to excellence and adherence to international quality standards.
             </p>
           </div>
         </div>
@@ -166,7 +166,7 @@ function About() {
       <div class="relative flex w-96 flex-col rounded-xl mx-auto  ">
   <div class="relative mx-4 mt-4 h-96 overflow-hidden rounded-x">
     <img
-      src="/Image/2130-EDLERNITY_TECH__OPC__PRIVATE_LIMITED[1]_page-0001.jpg"
+      src="/Image/Image_20240430_131514_0000.jpg"
       class="h-full w-full object-contain"
     />
   </div>

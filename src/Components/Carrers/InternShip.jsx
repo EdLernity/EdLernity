@@ -1,8 +1,148 @@
-import React from 'react';
-import ReactSelect from 'react-select';
+import {
+  Button,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  DialogHeader,
+} from "@material-tailwind/react";
+import React, { useState } from 'react';
 import BaseLayout from '../../Layout/BaseLayout';
-
 function InternShip() {
+  const [open, setOpen] = React.useState(false);
+  const [index, setIndex] = useState(0);
+  const contentArray = [
+    {
+      title: 'Prerequisites',
+      description: `Basic programming skills in HTML, CSS, and JavaScript`
+    },
+    {
+      title: 'Week 1: Introduction to MERN Stack',
+      description: `Overview of MERN Stack\n
+      Setting up development environment\n
+      Introduction to MongoDB, Express.js, React.js, and Node.js\n
+      Building a simple CRUD application`
+    },
+    {
+      title: 'Week 2-3: MongoDB',
+      description: `Understanding NoSQL databases and MongoDB
+      CRUD operations in MongoDB
+      Working with MongoDB Atlas for cloud hosting
+      Data modeling and schema design`
+    },
+    {
+      title: 'Week 4-5: Express.js',
+      description: `Introduction to Express.js
+      Setting up routes and middleware
+      Handling requests and responses
+      Building RESTful APIs with Express`
+    },
+    {
+      title: 'Week 6-7: React.js',
+      description: `Introduction to React.js
+      Understanding components and props
+      State management in React
+      Routing with React Router
+      Building interactive UIs with React`
+    },
+    {
+      title: 'Week 8: Node.js',
+      description: `Introduction to Node.js
+      Working with the Node.js runtime environment
+      Asynchronous programming with callbacks, promises, and async/await
+      Building backend APIs with Node.js and Express.js`
+    },
+    {
+      title: 'Week 9-10: Project Work and Advanced Topics',
+      description: `Integrating MongoDB, Express.js, React.js, and Node.js into a full-stack application
+      Authentication and authorization using JSON Web Tokens (JWT)
+      Deployment strategies for MERN stack applications
+      Performance optimization and best practices`
+    },
+    {
+      title: 'Final Project',
+      description: `Interns will work on a final project where they will apply the skills learned throughout the internship to build a real-world MERN stack application. This project will demonstrate their understanding of the MERN stack and their ability to develop full-stack applications.
+  
+      Throughout the internship, there will be regular code reviews, discussions, and hands-on exercises to reinforce learning and ensure interns are making progress.`
+    },
+    {
+      title: 'Program Highlights',
+      description: `Real-world projects: Develop full-fledged MERN Stack applications to showcase your skills and understanding\n
+      Expert guidance: Receive personalized mentorship from experienced developers and instructors.\n
+      Comprehensive curriculum: Dive deep into each technology, learning best practices and industry standards.\n
+      Career preparation: Gain the skills and confidence needed to succeed as a full-stack developer.\n
+      Certification: Upon successful completion, receive a prestigious certification from Codersarts Training, recognized in the industry.`
+    }
+  ];
+  const contentArrayP = 
+  [
+    {
+      title: 'Prerequisites',
+      description: `Basic programming skills in Python\n
+      Familiarity with data analysis libraries such as NumPy and Pandas`
+    },
+    {
+      title: 'Week 1: Introduction to Data Science',
+      description: `Overview of Data Science\n
+      Introduction to Python for Data Science\n
+      Setting up development environment\n
+      Introduction to Jupyter Notebooks\n
+      Data exploration and visualization with Matplotlib and Seaborn`
+    },
+    {
+      title: 'Week 2-3: Data Manipulation with Pandas',
+      description: `Introduction to Pandas\n
+      Data manipulation and cleaning\n
+      Data aggregation and summarization\n
+      Handling missing data\n
+      Data merging and joining`
+    },
+    {
+      title: 'Week 4-5: Data Analysis and Visualization',
+      description: `Statistical analysis with NumPy and Pandas\n
+      Data visualization techniques\n
+      Exploratory data analysis (EDA)\n
+      Advanced visualization with Plotly\n
+      Dashboard creation with Dash`
+    },
+    {
+      title: 'Week 6-7: Machine Learning Fundamentals',
+      description: `Introduction to Machine Learning\n
+      Supervised and Unsupervised Learning\n
+      Linear Regression\n
+      Logistic Regression\n
+      Model evaluation and validation`
+    },
+    {
+      title: 'Week 8: Advanced Machine Learning',
+      description: `Decision Trees and Random Forests\n
+      Support Vector Machines (SVM)\n
+      Clustering Algorithms\n
+      Dimensionality Reduction\n
+      Introduction to Neural Networks`
+    },
+    {
+      title: 'Week 9-10: Project Work and Applications',
+      description: `Real-world projects: Apply data science techniques to solve practical problems\n
+      Hands-on experience with industry datasets\n
+      Presentation and communication skills\n
+      Final project: Develop and present a comprehensive data science project\n
+      Career guidance and preparation`
+    },
+    {
+      title: 'Program Highlights',
+      description: `Real-world projects: Apply data science techniques to solve practical problems\n
+      Expert guidance: Receive personalized mentorship from experienced data scientists and instructors.\n
+      Comprehensive curriculum: Dive deep into each concept, learning best practices and industry standards.\n
+      Career preparation: Gain the skills and confidence needed to succeed as a data scientist.\n
+      Certification: Upon successful completion, receive a prestigious certification from Codersarts Training, recognized in the industry.`
+    }
+  ];
+  const mergedContentArray = [contentArray,contentArrayP];
+  
+  const handleOpen = (index) => {
+    setIndex(index);
+    setOpen(!open)
+  };
   const options = [
     { value: 'https://forms.gle/4JeqCsAveQRqWWq48', label: 'MERN Stack | 2 months' },
     { value: 'https://forms.gle/4JeqCsAveQRqWWq48', label: 'Data Science | 2 months' },
@@ -52,7 +192,7 @@ function InternShip() {
               <div class="aspect-h-10 aspect-w-16 w-full">
               <div className="relative">
       {/* Place React Select component here */}
-      <span
+      {/* <span
                
                 class="absolute lg:top-[21rem] hidden lg:left-[18.5rem] z-10 w-[14.5rem] lg:inline-flex items-center justify-center gap-2 rounded bg-blue-700 px-4 py-2 font-semibold leading-6 text-white transition hover:border-blue-800 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring focus:ring-blue-500/50 active:border-blue-700 active:bg-blue-700"
               >
@@ -70,11 +210,11 @@ function InternShip() {
                     clip-rule="evenodd"
                   />
                 </svg>
-              </span>
-      <ReactSelect
+              </span> */}
+      {/* <ReactSelect
         options={options}
         className="absolute top-[18rem] left-[18.5rem] z-10 w-[14.5rem] hidden lg:block"
-      />
+      /> */}
       {/* Image */}
       <div className="aspect-h-10 aspect-w-16 w-full">
         <img
@@ -86,7 +226,7 @@ function InternShip() {
     </div>
               </div>
             </div>
-            <div class="flex flex-col justify-center gap-4 pb-24 pt-10 lg:hidden">
+            {/* <div class="flex flex-col justify-center gap-4 pb-24 pt-10 lg:hidden">
             <ReactSelect
         options={options}
         className=""
@@ -111,13 +251,67 @@ function InternShip() {
                 </svg>
               </span>
               
-            </div>
+            </div> */}
           </div>
         </div>
+        
         <section class="bg-gray-50 dark:bg-gray-800">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mx-4 mt-[3rem]" >
+            <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden" data-aos="flip-up">
+                <img src="/Image/business-interview.svg"
+                    alt="Headless UI" class="w-full h-64 object-cover"/>
+                <div class="p-4 md:p-6">
+                    <h3 class="text-xl font-semibold text-indigo-500 dark:text-indigo-300 mb-2">HR/Marketing</h3>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4 two-lines">
+                    Fuel your ambition: Take charge of your career with our 2-month HR/Marketing internship.
+                    </p>
+                    <a href="https://forms.gle/4JeqCsAveQRqWWq48"
+                        class="inline-block bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-full">Apply now</a>
+                </div>
+            </div>
+
+            <div class="bg-white  shadow-lg rounded-lg overflow-hidden" data-aos="flip-up">
+                <img src="/Image/React.png"
+                    alt="Heroicons" class="w-full h-64 object-contain bg-gradient-to-r from-[#0b0b15] to-[#3433b8]" />
+                <div class="p-4 md:p-6">
+                    <h3 class="text-xl font-semibold text-purple-500  mb-2">MERN Stack</h3>
+                    <p class="text-gray-700  mb-4 two-lines">Join our MERN Stack internship: 2 months to transform your skills into real-world solutions!</p>
+                    <div class="flex justify-between">
+ 
+  <a href="https://forms.gle/LGG7JATyz371ePQ37" class="inline-block bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-full">
+    Apply now
+  </a>
+  <Button onClick={()=>handleOpen(0)} className="inline-block bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-full">
+    View Detais
+  </Button>
+</div>
+</div>
+            </div>
+
+            <div class="bg-white  shadow-lg rounded-lg overflow-hidden" data-aos="flip-up">
+                <img src="/Image/Data Science.png"
+                    alt="Hero Patterns" class="w-full h-64 object-contain"/>
+                <div class="p-4 md:p-6">
+                    <h3 class="text-xl font-semibold text-cyan-500  mb-2">Data Science</h3>
+                    <p class="text-gray-700  mb-4 two-lines">Unlocking insights, shaping the future. Join our 2-month Data Science internship!</p>
+                   
+                    <div class="flex justify-between">
+ 
+  <a href="https://forms.gle/LGG7JATyz371ePQ37" class="inline-block bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-full">
+    Apply now
+  </a>
+  <Button onClick={()=>handleOpen(1)} className="inline-block bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-full">
+    View Detais
+  </Button>
+</div>   </div>
+            </div>
+
+         
+
+        </div>
         <div class="max-w-screen-xl px-4 py-8 mx-auto space-y-12 lg:space-y-20 lg:py-24 lg:px-6">
             <div class="items-center gap-8 lg:grid lg:grid-cols-2 xl:gap-16">
-                <div class="text-gray-500 sm:text-lg dark:text-gray-400">
+                <div class="text-gray-500 sm:text-lg dark:text-gray-400" data-aos="fade-right">
                     <h2 class="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">Program Highlights</h2>
                     <p class="mb-8 font-light lg:text-xl">Unlock 30+ internship resources, attend live sessions, and join a supportive community. Choose 1 or 2 months access, learn anytime, and download materials for lifetime use.</p>
                     <ul role="list" class="pt-8 space-y-5 border-t border-gray-200 my-7 dark:border-gray-700">
@@ -145,10 +339,10 @@ function InternShip() {
                     </ul>
                     
                 </div>
-                <img class="hidden w-full mb-4 rounded-lg lg:mb-0 lg:flex" src="/Image/online-learning-concept.svg" alt="dashboard feature image"/>
+                <img class="flex w-full mb-4 rounded-lg lg:mb-0" data-aos="fade-down-left" src="/Image/online-learning-concept.svg" alt="dashboard feature image"/>
             </div>
             <div class="items-center gap-8 lg:grid lg:grid-cols-2 xl:gap-16">
-                <img class="hidden w-full mb-4 rounded-lg lg:mb-0 lg:flex" src="/Image/MARKETING _20240427_185457_0000.jpg" alt="feature image 2"/>
+                <img class="flex w-full mb-4 rounded-lg lg:mb-0 " data-aos="flip-left" src="/Image/MARKETING _20240427_185457_0000.jpg" alt="feature image 2"/>
                 <div class="text-gray-500 sm:text-lg dark:text-gray-400">
                     <h2 class="mb-4 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">Internationally Recognized and Government-Approved Internship Certification</h2>
                   
@@ -173,7 +367,7 @@ function InternShip() {
         </div>
       </section>
       <section class="bg-white dark:bg-gray-900">
-            <div class="container px-6 py-10 mx-auto">
+            <div class="container px-6 py-10 mx-auto" data-aos="zoom-in">
               
                 <div class="lg:flex lg:items-center">
                     <div class="w-full space-y-12 lg:w-1/2 ">
@@ -280,7 +474,7 @@ function InternShip() {
             <div
               class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-2"
             >
-              <div
+              <div data-aos="flip-left"
                 class="rounded-2xl border-2 border-blue-50 bg-gradient-to-t from-blue-50 to-white p-10 text-center transition hover:border-blue-100"
               >
                 <svg
@@ -319,7 +513,7 @@ function InternShip() {
                        </ul>
                 </p>
               </div>
-              <div
+              <div data-aos="flip-left"
                 class="rounded-2xl border-2 border-indigo-50 bg-gradient-to-t from-indigo-50 to-white p-10 text-center transition hover:border-indigo-100"
               >
                 <svg
@@ -357,7 +551,7 @@ function InternShip() {
                        </ul>
                 </p>
               </div>
-              <div
+              <div data-aos="flip-left"
                 class="rounded-2xl border-2 border-purple-50 bg-gradient-to-t from-purple-50 to-white p-10 text-center transition hover:border-purple-100 sm:col-span-2 lg:col-span-1"
               >
                 <svg
@@ -397,7 +591,7 @@ function InternShip() {
                 
                 </p>
               </div>
-             <div class="rounded-2xl border-2 border-purple-50 bg-gradient-to-t from-purple-50 to-white p-10 text-center transition hover:border-purple-100 sm:col-span-2 lg:col-span-1">
+             <div data-aos="flip-left" class="rounded-2xl border-2 border-purple-50 bg-gradient-to-t from-purple-50 to-white p-10 text-center transition hover:border-purple-100 sm:col-span-2 lg:col-span-1">
     <svg class="hi-outline hi-presentation-chart-line mb-5 inline-block h-12 w-12 text-purple-500" stroke="currentColor" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
     </svg>
@@ -530,12 +724,12 @@ function InternShip() {
             <p class="mx-auto mt-3 sm:mt-6 max-w-xl text-md sm:text-lg sm:leading-snug text-gray-600 dark:text-gray-300">
             Elevate Your Skills, Define Your Future.
             </p>
-            <div class="mt-6 sm:mt-10 flex items-center justify-center gap-x-6">
+            {/* <div class="mt-6 sm:mt-10 flex items-center justify-center gap-x-6">
                 <a class="flex flex-row items-center justify-center min-w-[130px] px-4 rounded-full font-medium tracking-wide border disabled:cursor-not-allowed disabled:opacity-50 transition ease-in-out duration-150 text-base bg-blue-700 text-white font-medium tracking-wide border-transparent py-1.5 h-[38px] text-sm py-6 px-8"
                     href="">
                     Enroll now
                 </a>
-            </div>
+            </div> */}
         </div>
     </div>
 </div>
@@ -546,8 +740,40 @@ function InternShip() {
       </main>
     </div>
     </BaseLayout>
+    <Dialog open={open} handler={handleOpen} size="lg">
+        <DialogHeader>Internship Curriculum</DialogHeader>
+        <DialogBody className="h-[35rem] overflow-scroll">
+        
+        <div class="space-y-6 border-l-2 border-dashed ms-10">
+        {mergedContentArray[index]?.map((item, index) => (
+        <div key={index} className="relative w-full">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="absolute -top-0.5 z-10 -ml-3.5 h-7 w-7 rounded-full text-blue-500">
+            <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
+          </svg>
+          <div className="ml-6">
+            <h4 className="font-bold text-blue-500">{item.title}</h4>
+            <p className="mt-2 max-w-screen-sm text-sm text-gray-500 whitespace-pre-line leading-none">{item.description}</p>
+          </div>
+        </div>
+      ))}
+ 
+  </div>
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={handleOpen}
+            className="mr-1"
+          >
+            <span>Close</span>
+          </Button>
+          
+        </DialogFooter>
+      </Dialog>
     </>
   )
 }
+
 
 export default InternShip
