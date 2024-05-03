@@ -15,14 +15,14 @@ function CareersPage() {
     <>
     <BaseLayout>
     <section class="relative pt-24 pb-36 bg-blueGray-50 overflow-hidden">
-  <img class="absolute left-1/2 bottom-0 transform -translate-x-1/2" src="flaro-assets/images/career/gradient2.svg" alt=""/>
+  <img class="absolute left-1/2 bottom-0 transform -translate-x-1/2" src="/Image/lines-horizontal-waves-bg.png" alt=""/>
   <div class="relative z-10 container px-4 mx-auto">
     <p class="mb-6 text-sm text-indigo-600 font-bold uppercase tracking-px">Join with us</p>
     <h2 class="mb-5 text-6xl md:text-7xl font-bold font-heading tracking-px-n leading-tight">Open Positions</h2>
     <p class="mb-20 text-gray-600 font-medium leading-relaxed md:max-w-md">EdLernity: Greening Careers, Expanding Horizons. Your pathway to sustainable success.</p>
     <div class="flex flex-nowrap -m-2 mb-1.5">
-      <div class="flex-shrink-0 max-w-md p-2">
-        <a class="group" href="#">
+      <div class="flex-shrink-0 max-w-sm  p-2">
+        <Link class="group" to="/internship">
           <div class="p-8 h-full bg-white bg-opacity-80 border group-hover:border-gray-300 rounded-xl">
             <div class="flex flex-col justify-between h-full">
               <div class="mb-16">
@@ -70,7 +70,7 @@ function CareersPage() {
               </div>
             </div>
           </div>
-        </a>
+        </Link>
       </div>
       
     </div>
