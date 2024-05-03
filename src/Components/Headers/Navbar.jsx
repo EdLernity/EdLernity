@@ -11,7 +11,11 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
   const toggleDrawer = () => {
     setOpenDrawer(!openDrawer);
   };
-
+  const handleLogout = () =>{
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace("/")
+  }
   return (
     <>
       {/* <nav className="flex justify-between items-center border shadow-lg px-4 py-2 bg-white text-black"> */}
@@ -238,8 +242,25 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
               fontWeight: "400",
             }}
           >
-            <NavLink to="/profile">Profile</NavLink>
+            <NavLink to="/mycourses">My Courses</NavLink>
           </Typography>
+          <hr className="border border-gray-200" />
+          <Typography
+            color="gray"
+            className="font-bold"
+            style={{
+              fontFamily: "Tenor Sans, sans-serif",
+              textTransform: "uppercase",
+              color: "#000",
+              fontWeight: "400",
+            }}
+          >
+            <NavLink onClick={handleLogout} >Logout</NavLink>
+          </Typography>
+          {/* <Link to="/courses/overview" class="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" >Browse Courses</Link> */}
+            {/* <Link to="/profile" class="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" >My Profile</Link> */}
+            {/* <Link to="/mycourses" class="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" >My Courses</Link> */}
+            {/* <Link onClick={handleLogout} class="block px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" >Logout</Link> */}
             </>
             ) : (<div className="flex ml-4 justify-between gap-2">
           <Link
