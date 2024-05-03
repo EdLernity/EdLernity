@@ -2,7 +2,6 @@ import { Drawer, IconButton, Typography } from "@material-tailwind/react";
 import { AlignJustify } from "lucide-react";
 import React, { useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import Profile from "../Profilepage/Profile";
 
 function Navbar({ isDarkMode, toggleDarkMode }) {
   const [scrolled, setScrolled] = useState(false);
@@ -37,9 +36,9 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             >
               {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
             </IconButton> */}
-            {localStorage.getItem("_userAuth") ? (
+            {/* {localStorage.getItem("_userAuth") ? (
               <Profile />
-            ) : (
+            ) : ( */}
               <>
                 {/* <Link to="/auth/signup" class="hover:bg-indigo-700 hover:text-white hover:-translate-y-1 transition-all duration-500 text-white bg-cyan-700  focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 lg:ml-auto">Login</Link> */}
 
@@ -57,7 +56,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                   />
                 </div>
               </>
-            )}
+            {/* )} */}
           </div>
           <div
             class="hidden justify-start items-start w-full lg:flex lg:w-auto  lg:order-1"
@@ -211,16 +210,45 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
               fontWeight: "400",
             }}
           >
+            <NavLink to="/careers">Careers</NavLink>
+          </Typography>
+          <hr className="border border-gray-200" />
+          <Typography
+            color="gray"
+            className="font-bold"
+            style={{
+              fontFamily: "Tenor Sans, sans-serif",
+              textTransform: "uppercase",
+              color: "#000",
+              fontWeight: "400",
+            }}
+          >
             <NavLink to="/blog">Blog</NavLink>
           </Typography>
-        </div>
-        <div className="flex ml-4 justify-between gap-2">
+        {localStorage.getItem("_userAuth") ? (
+            <>
+             <hr className="border border-gray-200" />
+          <Typography
+            color="gray"
+            className="font-bold"
+            style={{
+              fontFamily: "Tenor Sans, sans-serif",
+              textTransform: "uppercase",
+              color: "#000",
+              fontWeight: "400",
+            }}
+          >
+            <NavLink to="/profile">Profile</NavLink>
+          </Typography>
+            </>
+            ) : (<div className="flex ml-4 justify-between gap-2">
           <Link
             to="/auth/login"
             class="text-white hover:bg-indigo-700 w-full text-center  hover:text-white hover:-translate-y-1 transition-all duration-500 bg-blue-700  focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
           >
             Login
           </Link>
+        </div>)}
         </div>
       </Drawer>
     </>
