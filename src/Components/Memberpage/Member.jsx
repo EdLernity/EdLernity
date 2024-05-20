@@ -337,7 +337,7 @@ const enrollingAllCourses=true
               <img
                 alt="Sample Certificate"
                 className="max-w-full h-auto shadow-lg mb-4"
-                src="/Image/Certificate.png"
+                src="/Image/Course completion certificate _20240427_184541_0000[1]_page-0001.jpg"
                 style={{
                   aspectRatio: "700/500",
                   objectFit: "cover",

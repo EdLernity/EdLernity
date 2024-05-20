@@ -24,38 +24,38 @@ function InternShip() {
     },
     {
       title: 'Week 2-3: MongoDB',
-      description: `Understanding NoSQL databases and MongoDB
-      CRUD operations in MongoDB
-      Working with MongoDB Atlas for cloud hosting
+      description: `Understanding NoSQL databases and MongoDB\n
+      CRUD operations in MongoDB\n
+      Working with MongoDB Atlas for cloud hosting\n
       Data modeling and schema design`
     },
     {
       title: 'Week 4-5: Express.js',
-      description: `Introduction to Express.js
-      Setting up routes and middleware
-      Handling requests and responses
+      description: `Introduction to Express.js\n
+      Setting up routes and middleware\n
+      Handling requests and responses\n
       Building RESTful APIs with Express`
     },
     {
       title: 'Week 6-7: React.js',
-      description: `Introduction to React.js
-      Understanding components and props
-      State management in React
-      Routing with React Router
+      description: `Introduction to React.js\n
+      Understanding components and props\n
+      State management in React\n
+      Routing with React Router\n
       Building interactive UIs with React`
     },
     {
       title: 'Week 8: Node.js',
       description: `Introduction to Node.js
-      Working with the Node.js runtime environment
-      Asynchronous programming with callbacks, promises, and async/await
+      Working with the Node.js runtime environment\n
+      Asynchronous programming with callbacks, promises, and async/await\n
       Building backend APIs with Node.js and Express.js`
     },
     {
       title: 'Week 9-10: Project Work and Advanced Topics',
-      description: `Integrating MongoDB, Express.js, React.js, and Node.js into a full-stack application
-      Authentication and authorization using JSON Web Tokens (JWT)
-      Deployment strategies for MERN stack applications
+      description: `Integrating MongoDB, Express.js, React.js, and Node.js into a full-stack application\n
+      Authentication and authorization using JSON Web Tokens (JWT)\n
+      Deployment strategies for MERN stack applications\n
       Performance optimization and best practices`
     },
     {
