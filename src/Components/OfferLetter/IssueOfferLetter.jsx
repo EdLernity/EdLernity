@@ -18,16 +18,16 @@ async function modifyPdfAndDownload(pdfUrl, email, name, mailBody, subject) {
   const { width, height } = firstPage.getSize();
   const today = moment().format('DD/MM/YYYY');
   firstPage.drawText(today, {
-    x: 83, // Adjust x-coordinate as needed
-    y: height - (type === 1 ? 191 : 204), // Adjust y-coordinate as needed
+    x: 84.2, // Adjust x-coordinate as needed
+    y: height - (type === 1 ? 191 : 191), // Adjust y-coordinate as needed
     size: 14, // Adjust font size as needed
     font: helveticaFont,
     color: rgb(0, 0, 0), // Adjust color as needed
     bold:true
   });
   firstPage.drawText(name, {
-    x: 80, // Adjust x-coordinate as needed
-    y: height - (type === 1 ? 211 : 223), // Adjust y-coordinate as needed
+    x: 82, // Adjust x-coordinate as needed
+    y: height - (type === 1 ? 211 : 211), // Adjust y-coordinate as needed
     size: 14, // Adjust font size as needed
     font: helveticaFont,
     color: rgb(0, 0, 0), // Adjust color as needed
@@ -114,16 +114,16 @@ function IssueOfferLetter() {
     const { width, height } = firstPage.getSize();
     const today = moment().format('DD/MM/YYYY');
     firstPage.drawText(today, {
-      x: 83, // Adjust x-coordinate as needed
-      y: height - (type === 1 ? 191 : 204), // Adjust y-coordinate as needed
+      x: 84.2, // Adjust x-coordinate as needed
+      y: height - (type === 1 ? 191 : 191), // Adjust y-coordinate as needed
       size: 14, // Adjust font size as needed
       font: helveticaFont,
       color: rgb(0, 0, 0), // Adjust color as needed
       bold:true
     });
     firstPage.drawText(name, {
-      x: 80, // Adjust x-coordinate as needed
-      y: height - (type === 1 ? 211 : 223), // Adjust y-coordinate as needed
+      x: 82, // Adjust x-coordinate as needed
+      y: height - (type === 1 ? 211 : 211), // Adjust y-coordinate as needed
       size: 14, // Adjust font size as needed
       font: helveticaFont,
       color: rgb(0, 0, 0), // Adjust color as needed
