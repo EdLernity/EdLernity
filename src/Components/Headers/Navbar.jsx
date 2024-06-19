@@ -46,13 +46,27 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
               <>
                 {/* <Link to="/auth/signup" class="hover:bg-indigo-700 hover:text-white hover:-translate-y-1 transition-all duration-500 text-white bg-cyan-700  focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 lg:ml-auto">Login</Link> */}
 
-               
+                {localStorage.getItem("_userAuth") ? (<><Link
+                  to="/mycourses"
+                  className="py-2 px-7 hidden md:block text-white font-bold bg-gradient-to-r hover:-translate-y-1 transition-all duration-500 from-blue-500 to-pink-200 rounded-3xl group relative overflow-hidden"
+                >
+                  My Courses
+                </Link>&nbsp;
+                <div onClick={handleLogout} class="group flex cursor-pointer items-center justify-center rounded-3xl bg-[#7c44e3] px-4 py-1 text-white transition">
+  <span class="group flex w-full items-center justify-center rounded-xl py-1 text-center font-bold text-white">Logout</span>
+  <svg class="flex-0 ml-2 h-5 w-5 transition-all group-hover:ml-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+  </svg>
+</div>
+
+ 
+                </>):(
                 <Link
                   to="/auth/login"
                   className="py-2 px-7 hidden md:block text-white font-bold bg-gradient-to-r hover:-translate-y-1 transition-all duration-500 from-blue-500 to-pink-200 rounded-3xl group relative overflow-hidden"
                 >
                   Login
-                </Link>
+                </Link>)}
                 <div className="lg:hidden md:hidden">
                   <AlignJustify
                     className="w-8 h-8 cursor-pointer mb-1"

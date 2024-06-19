@@ -45,6 +45,7 @@ const VideoPlayer = ({ video, courseBanner, folderName }) => {
             preload="none"
             data-video="0"
             controls
+            controlsList="nodownload"
              // Call handleVideoLoad when video is loaded
           />
         </Video>
