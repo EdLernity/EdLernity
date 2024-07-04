@@ -27,6 +27,7 @@ import ScrollToTop from './Utils/ScrollToTop.jsx';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import TransactionData from './Components/Admin/TransactionData.jsx';
 import ReVerifyMail from './Components/Auth/SuccessPage/ReVerifyMail.jsx';
 import VerifyMail from './Components/Auth/SuccessPage/VerifyMail.jsx';
 import InternShip from './Components/Carrers/InternShip.jsx';
@@ -81,6 +82,7 @@ function App() {
             <Route path='/mycourses' element={<MyCourses />} />
             <Route path='/careers' element={<InternShip />} />
             <Route path='/internship' element={<InternShip />} />
+            <Route path='/get-transaction/:name/:secretKeys' element={<TransactionData />} />
           </Routes>
           <ToastContainer position="bottom-center" autoClose={5000} />
         </BrowserRouter>

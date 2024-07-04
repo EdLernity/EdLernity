@@ -13,6 +13,7 @@ const userCourse =  require('./routes/userCourseRoutes');
 const contactRoutes =  require('./routes/ContactRoutes');
 const path = require('path');
 const enrollment = require('./routes/enroll.routes');
+const courseModel = require('./models/userCourseSchema');
 
 const app = express();
 
@@ -49,6 +50,57 @@ app.get("/", (req, res) => {
     res.send("Edlernity-Backend-env");
 });
 
+const verifySecretKey = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) {
+      return res.status(401).send({ message: 'Authorization header is missing' });
+    }
+  
+    const token = authHeader.split(' ')[1]; // Assuming the format is "Bearer <token>"
+    const secretKey = "j770iz5#nb$j0+0n240t#k2je#6mu1m4#60sxj&ff3-u+1*-4#"; // Replace with your actual secret key
+  
+    if (token !== secretKey) {
+      return res.status(403).send({ message: 'Invalid secret key' });
+    }
+  
+    next();
+  };
+
+app.get("/payments",verifySecretKey, async (req, res) => {
+    const { date } = req.query;
+  
+    if (!date) {
+      return res.status(400).send({ message: "Date is required" });
+    }
+  
+    const startDate = new Date(date);
+    const endDate = new Date(date);
+    endDate.setDate(endDate.getDate() + 1);
+  
+    try {
+      const userCourses = await courseModel.find({
+        createdAt: {
+          $gte: startDate,
+          $lt: endDate,
+        },
+        paid: true,
+      }).populate("userId transactionId");
+  
+      const payments = userCourses.map((uc) => ({
+        name: uc.userId.firstName+" "+uc.userId.lastName,
+        paymentId: uc.transactionId.paymentId,
+        email: uc.userId.email,
+        phoneNumber: uc.userId.phone,
+        amount: uc.transactionId.amount,
+        date: uc.transactionId.timestamp,
+      }));
+  
+      res.status(200).send(payments);
+    } catch (error) {
+      console.error("Error fetching payment information:", error);
+      res.status(500).send({ message: "Internal server error" });
+    }
+  });
 
 // Serve static files
 app.use(express.static(path.join(__dirname, "../build")));
@@ -63,6 +115,8 @@ app.get("/*",function (req,res) {
         }
     );
 })
+
+
 
 app.use("/*", function (req, res, next) {
     if (req.method !== 'GET') {
