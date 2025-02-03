@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const connectDB = require('./config/db');
-
+const helmet = require('helmet')
 const registrationRoutes = require('./routes/registrationRoutes');
 const cloudinaryRoutes = require('./routes/cloudinaryRoutes');
 const gcsRoutes  = require('./routes/gcsRoutes');
@@ -31,7 +31,7 @@ const corsOptions = {
     origin: 'https://www.edlernity.com',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 };
-
+app.use(helmet());
 app.use(cors(corsOptions));
 
 app.use(bodyParser.json()); // Add this line to parse JSON data

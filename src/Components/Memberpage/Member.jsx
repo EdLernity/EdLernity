@@ -219,7 +219,7 @@ const enrollingAllCourses=true
           <div className="flex flex-col md:flex-row  text-white rounded-lg  lg:space-x-24 justify-center overflow-hidden  w-full">
             <div className="bg-[#181FC5] p-8 rounded-2xl flex flex-col items-center justify-between">
               <h2 className="text-4xl font-bold mb-4">Join</h2>
-              <p className="text-6xl font-bold mb-4">₹ 689</p>
+              <p className="text-6xl font-bold mb-4">₹ 899</p>
               <div className="border-t border-white w-full py-4">
                 <ul className="text-center space-y-4">
                   <li>Verified Certificates for lifetime</li>
