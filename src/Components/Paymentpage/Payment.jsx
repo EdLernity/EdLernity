@@ -208,7 +208,7 @@ function Payment() {
           </div>
           <div class="flex justify-between items-center w-full">
             <p class="text-base dark:text-white font-semibold leading-4 text-gray-800">Total</p>
-            <p class="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">&#8377;689</p>
+            <p class="text-base dark:text-gray-300 font-semibold leading-4 text-gray-600">&#8377;899</p>
           </div>
         </div>
             <div class="pl-0 p-5">
