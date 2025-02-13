@@ -162,6 +162,7 @@ const sendOfferLetter = async (req, res) => {
     if (
       req.user._id.toString() !== "66032b6104c13e9447dc9403" &&
       req.user._id.toString() !== "661cc83c2de92ebfe267b717" &&
+      req.user._id.toString() !== "67adaf347da882ef744c6dbc" &&
       req.user._id.toString() !== "660ab2f14daa3637459eabbd" 
 
     ) {
