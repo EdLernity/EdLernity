@@ -223,7 +223,7 @@ const enrollingAllCourses=true
               <div className="border-t border-white w-full py-4">
                 <ul className="text-center space-y-4">
                   <li>Verified Certificates for lifetime</li>
-                  <li>100+ Upcoming Courses In 2024</li>
+                  <li>100+ Upcoming Courses In 2025</li>
                   <li>Unlimited Access To All Courses</li>
                   <li>Get Free Access To EdLernity Academics</li>
                 </ul>

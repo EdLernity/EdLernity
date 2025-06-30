@@ -165,7 +165,7 @@ function InternShip() {
           >
             <div class="text-center">
               <h2 class="mb-4 text-3xl font-black md:text-5xl">
-                EdLernity <span class="text-blue-600">Internship Program 2024</span>
+                EdLernity <span class="text-blue-600">Internship Program 2025</span>
               </h2>
               <h3
                 class="mx-auto text-balance text-lg font-medium text-gray-500 md:text-xl md:leading-relaxed lg:w-2/3"

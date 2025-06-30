@@ -18,7 +18,7 @@ function Certificate({ courseName, courseId }) {
       .get("/api/v1/enroll/getCertificationCoursesList/" + courseId)
       .then(async (res) => {
         
-        const urls = "https://edlernity.s3.ap-south-1.amazonaws.com/Course+completion+certificate+_20240427_184541_0000%5B1%5D.pdf";
+        const urls = "https://edlernity.s3.ap-south-1.amazonaws.com/Course+completion+certificate+(EdLernity)_20250508_204220_0000.pdf";
         const existingPdfBytes = await fetch(urls).then((res) => res.arrayBuffer());
         
     
@@ -125,7 +125,7 @@ function Certificate({ courseName, courseId }) {
           <div class="lg:inset-y-0 lg:right-0 lg:w-1/2 my-4">
             <img
               class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-              src="/Image/Course completion certificate _20240427_184541_0000[1]_page-0001.jpg"
+              src="/Image/Course completion certificate (EdLernity)_20250508_204220_0000_page-0001.jpg"
               alt="cerificate"
             />
           </div>
