@@ -5,10 +5,13 @@ const Transaction = require("../models/transactionSchema");
 exports.getAllCoursesAndUsers = async (req, res) => {
   try {
     if (!req.user) return res.status(401).json({ message: "Unauthorized" });
-    if(req.user._id!="66032b6104c13e9447dc9403"||req.user._id!="66b7932eda83251673d4c944")
-    {
-      return res.status(404).json({ message: "Unauthorized" }); 
-    }
+    if (
+  req.user._id != "66032b6104c13e9447dc9403" &&
+  req.user._id != "66b7932eda83251673d4c944"
+) {
+  return res.status(404).json({ message: "Unauthorized" });
+}
+
     const user=await UserModel.find({}).select("firstName email");
     const courses = await courseModel.find({}).select("courseTitle offeredPrice")
     res.json({user,courses});
@@ -20,10 +23,13 @@ exports.getAllCoursesAndUsers = async (req, res) => {
 exports.addCoursesToUsers = async (req, res) => {
   try {
     if (!req.user) return res.status(401).json({ message: "Unauthorized" });
-     if(req.user._id!="66032b6104c13e9447dc9403"||req.user._id!="66b7932eda83251673d4c944")
-    {
-      return res.status(404).json({ message: "Unauthorized" }); 
-    }
+     if (
+  req.user._id != "66032b6104c13e9447dc9403" &&
+  req.user._id != "66b7932eda83251673d4c944"
+) {
+  return res.status(404).json({ message: "Unauthorized" });
+}
+
     const data = req.body;
 
     // Accessing properties of the object
