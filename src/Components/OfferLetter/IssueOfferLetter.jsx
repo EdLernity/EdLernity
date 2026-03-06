@@ -11,7 +11,7 @@ async function modifyPdfAndDownload(pdfUrl, email, name, mailBody, subject) {
 
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const type = pdfUrl === "https://edlernity.s3.ap-south-1.amazonaws.com/Blank+MARKETING+offer+letter_20240404_132204_0000.pdf" ? 1 : 2;
+  const type = pdfUrl === "https://dd4maq26g014m.cloudfront.net/Blank+MARKETING+offer+letter_20240404_132204_0000.pdf" ? 1 : 2;
 
   const pages = pdfDoc.getPages();
   const firstPage = pages[0];
@@ -104,7 +104,7 @@ function IssueOfferLetter() {
     }
     const urls = pdfUrl;
     const existingPdfBytes = await fetch(urls).then((res) => res.arrayBuffer());
-    const type = pdfUrl === "https://edlernity.s3.ap-south-1.amazonaws.com/Blank+MARKETING+offer+letter_20240404_132204_0000.pdf" ? 1 : 2;
+    const type = pdfUrl === "https://dd4maq26g014m.cloudfront.net/Blank+MARKETING+offer+letter_20240404_132204_0000.pdf" ? 1 : 2;
 
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
     const helveticaFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
@@ -168,8 +168,8 @@ function IssueOfferLetter() {
                 onChange={(e) => setPdfUrl(e.target.value)}
               >
                 <option value="">Select PDF</option>
-                <option value="https://edlernity.s3.ap-south-1.amazonaws.com/Blank+hrm_20240404_132021_0000.pdf">HR OfferLetter</option>
-                <option value="https://edlernity.s3.ap-south-1.amazonaws.com/Blank+MARKETING+offer+letter_20240404_132204_0000.pdf">Marketing OfferLetter</option>
+                <option value="https://dd4maq26g014m.cloudfront.net/Blank+hrm_20240404_132021_0000.pdf">HR OfferLetter</option>
+                <option value="https://dd4maq26g014m.cloudfront.net/Blank+MARKETING+offer+letter_20240404_132204_0000.pdf">Marketing OfferLetter</option>
               </select>
             </div>
 

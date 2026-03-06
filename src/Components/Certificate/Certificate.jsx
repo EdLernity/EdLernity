@@ -18,7 +18,7 @@ function Certificate({ courseName, courseId }) {
       .get("/api/v1/enroll/getCertificationCoursesList/" + courseId)
       .then(async (res) => {
         
-        const urls = "https://edlernity.s3.ap-south-1.amazonaws.com/Course+completion+certificate+(EdLernity)_20250508_204220_0000.pdf";
+        const urls = "https://dd4maq26g014m.cloudfront.net/Course+completion+certificate+(EdLernity)_20250508_204220_0000.pdf";
         const existingPdfBytes = await fetch(urls).then((res) => res.arrayBuffer());
         
     

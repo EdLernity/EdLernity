@@ -15,7 +15,7 @@ const VideoPlayer = ({ video, courseBanner, folderName }) => {
     return () => clearTimeout(timer); // Clean up the timer on unmount or when video.url changes
   }, [video.url]);
   
-  const prepareVideoUrl = `https://edlernity.s3.ap-south-1.amazonaws.com/courses/${folderName}/${video.url}`;
+  const prepareVideoUrl = `https://dd4maq26g014m.cloudfront.net/courses/${folderName}/${video.url}`;
 
   const handleVideoLoad = () => {
     setIsVideoLoaded(false); // Set video loading state to false when video is loaded
