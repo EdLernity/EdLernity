@@ -7,7 +7,10 @@ import {
 } from "@material-tailwind/react";
 import React, { useState } from 'react';
 import BaseLayout from '../../Layout/BaseLayout';
+import SeoHead from '../SEO/SeoHead';
+import { PAGE_SEO } from '../../Utils/seoConfig';
 function InternShip() {
+  const currentYear = new Date().getFullYear();
   const [open, setOpen] = React.useState(false);
   const [index, setIndex] = useState(0);
   const contentArray = [
@@ -150,6 +153,12 @@ function InternShip() {
   return (
     <>
      <BaseLayout>
+      <SeoHead
+        title={PAGE_SEO.careers.title}
+        description={PAGE_SEO.careers.description}
+        path={PAGE_SEO.careers.path}
+        keywords={PAGE_SEO.careers.keywords}
+      />
   <div
       id="page-container"
       class="mx-auto flex min-h-screen w-full flex-col bg-gray-100"
@@ -165,7 +174,7 @@ function InternShip() {
           >
             <div class="text-center">
               <h2 class="mb-4 text-3xl font-black md:text-5xl">
-                EdLernity <span class="text-blue-600">Internship Program 2025</span>
+                EdLernity <span class="text-blue-600">Internship Program {currentYear}</span>
               </h2>
               <h3
                 class="mx-auto text-balance text-lg font-medium text-gray-500 md:text-xl md:leading-relaxed lg:w-2/3"

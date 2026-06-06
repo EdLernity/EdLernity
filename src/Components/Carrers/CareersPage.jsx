@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import BaseLayout from '../../Layout/BaseLayout';
 
 function CareersPage() {
+  const currentYear = new Date().getFullYear();
   const jobs = [
     {
-      title: "EdLernity - Summer Internship Drive 2025",
+      title: `EdLernity - Summer Internship Drive ${currentYear}`,
       location: "Remote",
       type: "Internship",
       applyLink: "https://forms.gle/4JeqCsAveQRqWWq48"
@@ -26,7 +27,7 @@ function CareersPage() {
           <div class="p-8 h-full bg-white bg-opacity-80 border group-hover:border-gray-300 rounded-xl">
             <div class="flex flex-col justify-between h-full">
               <div class="mb-16">
-                <h3 class="mb-4 text-xl font-bold font-heading leading-snug">EdLernity - Summer Internship Drive 2025</h3>
+                <h3 class="mb-4 text-xl font-bold font-heading leading-snug">EdLernity - Summer Internship Drive {currentYear}</h3>
                 <p class="text-gray-500 font-medium leading-relaxed">Lorem ipsum dolor sit amet, consectrtur adipiscing elit. Volutpat tempor vitae.</p>
               </div>
               <div class="flex flex-wrap justify-between items-center -m-2">

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
+import SeoHead from "../SEO/SeoHead";
+import { PAGE_SEO } from "../../Utils/seoConfig";
 import { BsGlobe } from "react-icons/bs";
 import { IoLocationOutline, IoMailOpenOutline } from "react-icons/io5";
 import { RiHeadphoneLine } from "react-icons/ri";
@@ -131,11 +132,12 @@ function Contact() {
   return (
     <>
       <BaseLayout>
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>EdLernity | Contact</title>
-          <link rel="canonical" href="http://mysite.com/example" />
-        </Helmet>
+        <SeoHead
+          title={PAGE_SEO.contact.title}
+          description={PAGE_SEO.contact.description}
+          path={PAGE_SEO.contact.path}
+          keywords={PAGE_SEO.contact.keywords}
+        />
 
         <div className="xl:flex md:flex flex-row flex-wrap justify-between items-center mt-6 xl:mt-0 md:mt-0 px-0.5 sm:px-8 md:px-2 xl:px-16 mb-8">
           {/* Title */}

@@ -6,7 +6,8 @@ const LINKS = [
     title: "Company",
     items: [
       { label: "Home", url: "/" },
-      { label: "Student Stories", url: "#StudentSayAboutUs" },
+      { label: "Reviews", url: "/reviews" },
+      { label: "Student Stories", url: "/reviews" },
       { label: "About Us", url: "/about" },
       { label: "Careers", url: "/careers" },
       { label: "Contact Us", url: "/contact" },

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import CountUp from 'react-countup';
-import { Helmet } from "react-helmet";
 import BaseLayout from "../../Layout/BaseLayout";
+import SeoHead from "../SEO/SeoHead";
+import { PAGE_SEO } from "../../Utils/seoConfig";
 
 import "./About.css";
 function About() {
@@ -106,11 +107,12 @@ function About() {
 
   return (
     <BaseLayout>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>EdLernity | About Us</title>
-        <link rel="canonical" href="http://mysite.com/example" />
-      </Helmet>
+      <SeoHead
+        title={PAGE_SEO.about.title}
+        description={PAGE_SEO.about.description}
+        path={PAGE_SEO.about.path}
+        keywords={PAGE_SEO.about.keywords}
+      />
       <section class="py-14 lg:py-24 relative z-0 bg-gray-50">
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center">
     <h1

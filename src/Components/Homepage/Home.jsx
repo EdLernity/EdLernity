@@ -1,6 +1,11 @@
 import React from "react";
-import { Helmet } from "react-helmet";
 import BaseLayout from "../../Layout/BaseLayout";
+import SeoHead from "../SEO/SeoHead";
+import {
+  PAGE_SEO,
+  organizationSchema,
+  websiteSchema,
+} from "../../Utils/seoConfig";
 import CoursesOffered from "../CoursesOffered/CoursesOffered";
 import Herosection from "../Herosectionpage/Herosection";
 import Herosection2 from "../Herosectionpage/Herosection2";
@@ -12,11 +17,13 @@ function Home() {
   return (
     <>
       <BaseLayout>
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>EdLernity | Home </title>
-          <link rel="canonical" href="/" />
-        </Helmet>
+        <SeoHead
+          title={PAGE_SEO.home.title}
+          description={PAGE_SEO.home.description}
+          path={PAGE_SEO.home.path}
+          keywords={PAGE_SEO.home.keywords}
+          jsonLd={[organizationSchema, websiteSchema]}
+        />
         <div>
           <Herosection />
         </div>

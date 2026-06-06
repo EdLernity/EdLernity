@@ -5,12 +5,13 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Store } from "../../../Context";
 import BaseLayout from "../../../Layout/BaseLayout";
+import SeoHead from "../../SEO/SeoHead";
 import { testimonialsData } from "../../../StaticObj/testimonials";
 import { BACKEND_URL } from "../../../URL_Config";
+import { buildCourseSchema } from "../../../Utils/seoConfig";
 import CourseFeatures from "./CourseFeatures";
 import StarRating from "./CourseRating";
 import Testimonials from "./Testimonials";
@@ -18,8 +19,11 @@ import "./Ui.css";
 
 function Ui() {
   const location = useLocation();
+  const { dynamicValue: courseId } = useParams();
   const { course, data } = location?.state ?? {};
- const {enrolledList}=useContext(Store);
+  const { enrolledList } = useContext(Store);
+  const [activeCourse, setActiveCourse] = useState(course ?? null);
+  const [catalogData, setCatalogData] = useState(data ?? null);
   const [isOpen, setIsOpen] = useState(false);
   const [currentVideo, setCurrentVideo] = useState("");
   const [open, setOpen] = useState("");
@@ -39,23 +43,53 @@ const navigate=useNavigate();
   };
 
   useEffect(() => {
-   
-    try {
-      axios
-        .get(
-          BACKEND_URL + `/api/v1/course/get-all-videos-tags/${course.tags}/${course._id}`
-        )
-        .then((res) => {
-          setTopPicks(res?.data?.courses);
-        })
-        .catch((err) => {
-          setError(err);
-        });
-    } catch (err) {
-      setError(err);
-      //console.log("Error getting the video url from server.", error);
+    if (course) {
+      setActiveCourse(course);
+      setCatalogData(data);
+      return;
     }
-  }, [course]);
+
+    if (!courseId) return;
+
+    const fetchCourse = async () => {
+      try {
+        const response = await axios.get(
+          BACKEND_URL + "/api/v1/course/get-all-course-details",
+          { params: { isFromUI: true } }
+        );
+        const courses = response.data.data;
+        const found = courses.find((c) => c._id === courseId);
+        if (found) {
+          setActiveCourse(found);
+          setCatalogData({
+            allCoursesData: courses,
+            popularCoursesData: courses.filter((d) => d.isPopular),
+            coursesData: courses.slice(0, 4),
+          });
+        }
+      } catch (err) {
+        setError(err);
+      }
+    };
+
+    fetchCourse();
+  }, [course, courseId, data]);
+
+  useEffect(() => {
+    if (!activeCourse?.tags || !activeCourse?._id) return;
+
+    axios
+      .get(
+        BACKEND_URL +
+          `/api/v1/course/get-all-videos-tags/${activeCourse.tags}/${activeCourse._id}`
+      )
+      .then((res) => {
+        setTopPicks(res?.data?.courses);
+      })
+      .catch((err) => {
+        setError(err);
+      });
+  }, [activeCourse]);
 
   // useErrorToast(error);
 
@@ -64,7 +98,7 @@ const navigate=useNavigate();
   
     
     navigate(`/courses/overview/${course._id}`, {
-      state: { course, data },
+      state: { course, data: catalogData },
     });
   };
   const cardData = [
@@ -113,12 +147,12 @@ const navigate=useNavigate();
         
         // Navigate to login with redirect URL
         navigate('/auth/login', {
-            state: { redirectUrl: currentPath,course:course }
+            state: { redirectUrl: currentPath, course: activeCourse }
         });
         return;
     } else {
         navigate("/payment", {
-            state: { course },
+            state: { course: activeCourse },
         });
     }
 }
@@ -134,25 +168,25 @@ return averageRating;
 
   const topPicksData = [
     {
-      data: data?.popularCoursesData[3],
+      data: catalogData?.popularCoursesData[3],
       rating: 5,
       duration: "5.2 hours",
       language: "English",
     },
     {
-      data: data?.popularCoursesData[1],
+      data: catalogData?.popularCoursesData[1],
       rating: 4.5,
       duration: "7.4 hours",
       language: "English",
     },
     {
-      data: data?.popularCoursesData[2],
+      data: catalogData?.popularCoursesData[2],
       rating: 4.3,
       duration: "10 hours",
       language: "English",
     },
     {
-      data: data?.popularCoursesData[0],
+      data: catalogData?.popularCoursesData[0],
       rating: 4.2,
       duration: "8 hours",
       language: "English",
@@ -185,32 +219,40 @@ return averageRating;
   return (
     <>
       <BaseLayout>
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>
-            EdLernity {course?.courseTitle ? `| ${course?.courseTitle}` : ""}
-          </title>
-          <link rel="canonical" href="http://mysite.com/example" />
-        </Helmet>
+        {activeCourse && (
+          <SeoHead
+            title={`${activeCourse.courseTitle} Online Course`}
+            description={
+              activeCourse.courseOverviewDesc ||
+              activeCourse.courseDesc ||
+              `Learn ${activeCourse.courseTitle} with EdLernity's expert-led online course.`
+            }
+            path={`/courses/overview/${activeCourse._id}`}
+            keywords={`${activeCourse.courseTitle} course, online ${activeCourse.courseTitle}, EdLernity`}
+            ogImage={activeCourse.courseBanner}
+            ogType="product"
+            jsonLd={buildCourseSchema(activeCourse)}
+          />
+        )}
 
         <div class="container max-w-xl p-6 mx-auto space-y-12 lg:px-8 lg:max-w-7xl">
-          <h2
+          <h1
             style={{ color: "#181FC5" }}
             class="text-lg items-start justify-start  font-bold text-left sm:text-5xl"
           >
-            {course?.courseTitle}
-          </h2>
+            {activeCourse?.courseTitle}
+          </h1>
 
           <div class="mt-8 lg:-mx-6 lg:flex lg:items-center">
-          <img class="object-cover w-full lg:mx-6 lg:w-1/2 rounded-xl h-72 lg:h-[30rem]" src={course?.
-courseBanner} alt=""/>
+          <img class="object-cover w-full lg:mx-6 lg:w-1/2 rounded-xl h-72 lg:h-[30rem]" src={activeCourse?.
+courseBanner} alt={activeCourse?.courseTitle ? `${activeCourse.courseTitle} course banner` : "Course banner"}/>
             <div class="mt-6 lg:w-1/2 lg:mt-0 lg:mx-6 ">
                 
 
                
 
                 <p class="mt-3 text-md text-gray-600 dark:text-gray-300 md:text-md">
-                {course?.courseOverviewDesc}
+                {activeCourse?.courseOverviewDesc}
                 </p>
 
                 
@@ -233,7 +275,7 @@ courseBanner} alt=""/>
                       </svg>
                     </div>
                     <div class="ml-4 mt-px">
-                      {course?.videosLength} Lectures
+                      {activeCourse?.videosLength} Lectures
                     </div>
                   </div>
 
@@ -282,21 +324,21 @@ courseBanner} alt=""/>
           <div>
             <div class="rounded-lg bg-gray-100 flex py-2 px-3">
               <span class="text-indigo-400 mr-1 mt-1">₹</span>
-              <span class="font-bold text-indigo-600 text-3xl">{course?.offeredPrice}</span>
+              <span class="font-bold text-indigo-600 text-3xl">{activeCourse?.offeredPrice}</span>
             </div>
           </div>
           <div class="flex-1">
-            <p class="text-green-500 text-xl font-semibold">Save {course?.discountInPercentage} %</p>
+            <p class="text-green-500 text-xl font-semibold">Save {activeCourse?.discountInPercentage} %</p>
             <span className="ml-1 text-xl sm:text-sm line-through text-gray-600">
-              ₹{course?.initialPrice}
+              ₹{activeCourse?.initialPrice}
             </span>
           </div>
         </div>
          
-        <StarRating rating={getCourseRating(course?.courseScore?.map(score => score?.rating))} />
+        <StarRating rating={getCourseRating(activeCourse?.courseScore?.map(score => score?.rating))} />
         </div>
         <div className="item-center flex justify-center mt-8  ">
-        {enrolledList.includes(course._id)?
+        {activeCourse && enrolledList.includes(activeCourse._id)?
         <button onClick={()=>navigate("/mycourses")} class="px-8 py-2 bg-indigo-600 text-white text-md font-medium rounded-lg hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500 w-60">Go to Course</button>
         :<button onClick={handleCheckout} class="px-8 py-2 bg-indigo-600 text-white text-md font-medium rounded-lg hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500 w-60">Enroll Now</button>
 }</div>
@@ -306,7 +348,7 @@ courseBanner} alt=""/>
       
         </div>
 
-        <CourseFeatures contentList={course?.contentList} />
+        <CourseFeatures contentList={activeCourse?.contentList} />
         
         
 
@@ -335,13 +377,13 @@ courseBanner} alt=""/>
 
 
         <div className="mt-12">
-          <h1
+          <h2
             className="text-md lg:text-2xl mt-10  text-center font-bold "
             style={{ color: "#181FC5" }}
           >
-            {course?.courseTitle} Training Syllabus
-          </h1>
-          {course?.courseContentDescription.map((c, index) => (
+            {activeCourse?.courseTitle} Training Syllabus
+          </h2>
+          {activeCourse?.courseContentDescription?.map((c, index) => (
             <div key={index} className="mt-4 items-center justify-center px-12">
               <Accordion
                 open={open === index}
@@ -381,7 +423,7 @@ courseBanner} alt=""/>
               </svg>
               <div className="relative pt-10 px-10 flex items-center justify-center">
                 <div className="block absolute w-48 h-48 bottom-0 left-0 -mb-24 ml-3" style={{ background: 'radial-gradient(black, transparent 60%)', transform: 'rotate3d(0, 0, 1, 20deg) scale3d(1, 0.6, 1)', opacity: 0.2 }}></div>
-                <img className="relative w-40" src={course.courseBanner} alt=""/>
+                <img className="relative w-40" src={course.courseBanner} alt={`${course.courseTitle} course thumbnail`}/>
               </div>
               <div className="relative text-white px- pb-6 mt-6 ">
                 <span className="block font-semibold -mb-1">{`${(course?.courseTitle || "").slice(0, 20)}${

@@ -1,17 +1,19 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
 import { NavLink } from 'react-router-dom';
 import BaseLayout from '../../Layout/BaseLayout';
 import './module.css';
+import SeoHead from '../SEO/SeoHead';
+import { PAGE_SEO } from '../../Utils/seoConfig';
 
 function CancellationAndRefundPolicy() {
   return (
     <BaseLayout>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>EdLernity | Cancellation-And-Refund-Policy</title>
-        <link rel="canonical" href="http://mysite.com/example" />
-      </Helmet>
+      <SeoHead
+        title={PAGE_SEO.refund.title}
+        description={PAGE_SEO.refund.description}
+        path={PAGE_SEO.refund.path}
+        keywords={PAGE_SEO.refund.keywords}
+      />
 
       <div className="cancellation-refund-policy-container">
         <h1 className='text-center justify-center text-3xl underline' style={{color:"rgba(21,57,207,1)"}}>Cancellation and Refund Policy</h1>

@@ -12,6 +12,7 @@ import VideoPlayer from './Components/Courses/Video/VideoPlayer.jsx';
 import Courses1 from './Components/CoursesOverview/Courses1.jsx';
 import Ui from './Components/CoursesOverview/Ui/Ui.jsx';
 import Home from './Components/Homepage/Home';
+import ReviewPage from './Components/Reviewpage/ReviewPage';
 import CancellationandRefundPolicy from './Components/Legal/CancellationandRefundPolicy.jsx';
 import PrivacyPolicy from './Components/Legal/PrivacyPolicy.jsx';
 import TermAndCondition from './Components/Legal/TermAndCondition.jsx';
@@ -64,6 +65,7 @@ function App() {
             <Route path="/courses/overview/:dynamicValue" element={<Ui />} />
             <Route path="/mycourses/:id" element={ <BaseLayout ><Courses /></BaseLayout>} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/reviews" element={<ReviewPage />} />
             <Route path='*' element={<PageNotFound />} />
             <Route path='/upload' element={<BaseLayout ><UploadFolder /></BaseLayout>} />
             <Route path='/course-access' element={<CustomEnrollment />} />

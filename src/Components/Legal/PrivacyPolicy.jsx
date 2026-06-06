@@ -1,17 +1,19 @@
 import React from 'react';
 import BaseLayout from '../../Layout/BaseLayout';
-import { Helmet } from 'react-helmet';
 import './module.css'; // Import CSS for styling
+import SeoHead from '../SEO/SeoHead';
+import { PAGE_SEO } from '../../Utils/seoConfig';
 import { NavLink } from 'react-router-dom';
 
 function PrivacyPolicy() {
   return (
     <BaseLayout>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>EdLernity | Privacy Policy</title>
-        <link rel="canonical" href="http://mysite.com/example" />
-      </Helmet>
+      <SeoHead
+        title={PAGE_SEO.privacy.title}
+        description={PAGE_SEO.privacy.description}
+        path={PAGE_SEO.privacy.path}
+        keywords={PAGE_SEO.privacy.keywords}
+      />
 
       <div className="privacy-policy-container">
       <h1 className='text-center justify-center text-3xl items-center mt-10 underline' style={{color:"rgba(21,57,207,1)"}}>Privacy Policy</h1>

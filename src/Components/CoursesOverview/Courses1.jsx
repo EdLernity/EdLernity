@@ -7,8 +7,9 @@ import {
 } from "@material-tailwind/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
 import Skeleton from "react-loading-skeleton";
+import SeoHead from "../SEO/SeoHead";
+import { PAGE_SEO } from "../../Utils/seoConfig";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useNavigate } from "react-router-dom";
 import BaseLayout from "../../Layout/BaseLayout";
@@ -120,11 +121,12 @@ function Courses1() {
 
   return (
     <BaseLayout>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>EdLernity | Courses </title>
-        <link rel="canonical" href="http://mysite.com/example" />
-      </Helmet>
+      <SeoHead
+        title={PAGE_SEO.courses.title}
+        description={PAGE_SEO.courses.description}
+        path={PAGE_SEO.courses.path}
+        keywords={PAGE_SEO.courses.keywords}
+      />
       <h1
         className="text-3xl mt-10 lg:ml-24 sm:ml-4 text-center lg:text-left font-bold"
         style={{ color: "#181FC5" }}

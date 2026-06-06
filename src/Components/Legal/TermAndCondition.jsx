@@ -1,17 +1,19 @@
 import React from 'react';
 import BaseLayout from '../../Layout/BaseLayout';
-import { Helmet } from 'react-helmet';
 import './module.css';
+import SeoHead from '../SEO/SeoHead';
+import { PAGE_SEO } from '../../Utils/seoConfig';
 import { NavLink } from 'react-router-dom';
 
 function TermAndCondition() {
   return (
     <BaseLayout>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>EdLernity | Term-And-Condition</title>
-        <link rel="canonical" href="http://mysite.com/example" />
-      </Helmet>
+      <SeoHead
+        title={PAGE_SEO.terms.title}
+        description={PAGE_SEO.terms.description}
+        path={PAGE_SEO.terms.path}
+        keywords={PAGE_SEO.terms.keywords}
+      />
 
       <div className="term-and-condition-container">
       <h1 className='text-center mt-10 text-3xl justify-center underline' style={{color:"rgba(21,57,207,1)"}}>Term-And-Condition</h1>
