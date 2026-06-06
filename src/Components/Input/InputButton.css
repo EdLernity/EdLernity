@@ -1,0 +1,73 @@
+.inputbtn {
+    position: relative;
+  }
+
+  .telDropDown{
+    border: 1px solid #b0bec5;
+    border-right: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+  
+  .inputbtn label {
+    position: absolute;
+    top: 9px;
+    left: 14px;
+    font-size: 14px;
+    color: #607d8b;
+    text-transform: capitalize;
+    transition: top 0.3s ease, font-size 0.3s ease;
+  }
+  
+  .inputbtn.focused label {
+    top: -8px;
+    font-size: 10px;
+    background-color: #ffff;
+    padding: 0px 7px;
+    border: 2px solid #1539cf;
+    border-radius: 15px
+  }
+  
+  .inputbtn.focused input {
+    border: 2px solid #1539cf;
+  }
+
+  .inputbtn input {
+    font-weight: 400;
+    width: 250px;
+    color: #344054;
+    background-color: transparent;
+    border: 1px solid #b0bec5;
+    box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+    border-radius: 5px;
+    padding: 10px 14px;
+    outline: none;
+    font-size: 15px
+  }
+
+
+  .inputbtn.valuecontained label {
+    top: -8px;
+    font-size: 10px;
+    background-color: #ffff;
+    padding: 0px 7px;
+    border: 2px solid #1539cf;
+    border-radius: 15px
+  }
+
+
+  .telDropDown.focused {
+    border: 2px solid #1539cf;
+    border-right: none;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+
+  .inputbtn.valuecontained input {
+    border: 1px solid #1539a9;
+  }
+
+  .telDropDown.valuecontained {
+    border: 1px solid #1539a9;
+    border-right: none;
+  }

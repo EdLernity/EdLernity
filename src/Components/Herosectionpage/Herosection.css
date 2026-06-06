@@ -1,0 +1,19 @@
+.responsive-image {
+    width: 200px;
+    height: 300px;
+    position: absolute;
+    right: 10vw;
+    top: 404px;
+    transform: translateY(-400px);
+  }
+  
+  /* Responsive styles for smaller screens */
+  @media (max-width: 640px) {
+    .responsive-image {
+      /* Adjust styles for smaller screens */
+      right: 10vw;
+      bottom: -400px;
+      top: auto;
+      transform: none;
+    }
+  }

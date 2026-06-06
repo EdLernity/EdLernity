@@ -1,0 +1,4 @@
+.review-container {
+    border-radius: 5px;
+    overflow-y: auto;
+  }

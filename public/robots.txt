@@ -1,0 +1,19 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+Disallow: /auth/
+Disallow: /profile
+Disallow: /payment
+Disallow: /upload
+Disallow: /video
+Disallow: /mycourses
+Disallow: /course-access
+Disallow: /offerletter
+Disallow: /verify-email
+Disallow: /reverify-email
+Disallow: /get-transaction/
+Disallow: /success
+Disallow: /paytm
+
+Sitemap: https://edlernity.com/sitemap.xml
