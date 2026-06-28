@@ -90,17 +90,17 @@ function Member() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-6 justify-center lg:justify-start">
                 <img src="/Image/Logo1.svg" alt="EdLernity" className="w-10 h-10" />
                 <span className="text-xl font-bold text-[#181FC5]">EdLernity</span>
               </div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-[#181FC5] mb-3">
-                Lifetime Learning Pass
-              </p>
+              <div className="text-[#181FC5] text-xs sm:text-sm font-bold uppercase tracking-widest mb-4">
+                LIFETIME LEARNING PASS
+              </div>
               <h1 className="text-4xl sm:text-5xl font-extrabold text-[#181FC5] leading-tight mb-6">
                 EdLernity Lifetime Subscription
               </h1>
-              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+              <p className="text-lg text-slate-600 leading-relaxed font-medium mb-8">
                 Supercharge your learning journey with our comprehensive membership
                 package — designed to give you the skills, certifications, and
                 confidence to succeed in your career.
@@ -147,17 +147,17 @@ function Member() {
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden lg:sticky lg:top-8">
               <div className="h-2 bg-gradient-to-r from-blue-500 to-pink-600" />
               <div className="p-8 text-center">
-                <p className="text-sm font-semibold uppercase tracking-wider text-[#181FC5] mb-2">
+                <p className="text-sm font-semibold uppercase tracking-wider text-indigo-600 mb-2">
                   Join EdLernity
                 </p>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Lifetime Pass</h2>
-                <p className="text-5xl font-extrabold text-[#181FC5] mb-1">₹899</p>
-                <p className="text-sm text-gray-500 mb-6">One-time · Lifetime access</p>
+                <h2 className="text-3xl font-extrabold text-slate-900 mb-2">Lifetime Pass</h2>
+                <p className="text-5xl font-black text-slate-900 mb-1">₹899</p>
+                <p className="text-sm text-slate-500 font-medium mb-6">One-time · Lifetime access</p>
 
                 <ul className="text-left space-y-3 mb-8">
                   {planIncludes.map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-gray-700">
-                      <span className="mt-1 w-5 h-5 rounded-full bg-[#181FC5]/10 text-[#181FC5] flex items-center justify-center text-xs font-bold shrink-0">
+                    <li key={item} className="flex items-start gap-3 text-slate-700 font-medium">
+                      <span className="mt-1 w-5 h-5 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-bold shrink-0">
                         ✓
                       </span>
                       {item.includes("upcoming") ? `${item} in ${currentYear}` : item}
@@ -182,10 +182,10 @@ function Member() {
             {/* Features list */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-[#181FC5] mb-2">
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">
                   What's Included
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-slate-600 font-medium">
                   Everything you need to learn, certify, and grow — in one membership.
                 </p>
               </div>
@@ -198,8 +198,8 @@ function Member() {
                     <Icon className="w-6 h-6 text-[#181FC5]" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">{title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{desc}</p>
+                    <h3 className="text-lg font-extrabold text-slate-900 mb-1">{title}</h3>
+                    <p className="text-slate-600 leading-relaxed font-medium">{desc}</p>
                   </div>
                 </div>
               ))}
@@ -213,7 +213,7 @@ function Member() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#181FC5]">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
                 Why Choose Lifetime Membership?
               </h2>
               {benefits.map((benefit) => (
@@ -221,10 +221,10 @@ function Member() {
                   key={benefit.title}
                   className="p-5 rounded-xl bg-[#ECF7FF] border border-[#181FC5]/10"
                 >
-                  <h3 className="text-lg font-semibold text-[#181FC5] mb-2">
+                  <h3 className="text-lg font-semibold text-indigo-600 mb-2">
                     {benefit.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">{benefit.desc}</p>
+                  <p className="text-slate-600 leading-relaxed font-medium">{benefit.desc}</p>
                 </div>
               ))}
             </div>
@@ -234,7 +234,7 @@ function Member() {
                 alt="EdLernity sample certificate"
                 className="rounded-xl shadow-lg border border-gray-100 w-full max-w-md mx-auto"
               />
-              <p className="mt-4 text-lg font-semibold text-[#181FC5]">
+              <p className="mt-4 text-lg font-bold text-slate-900">
                 Sample Certificate
               </p>
             </div>
@@ -246,8 +246,8 @@ function Member() {
       <section className="py-16 bg-[#181FC5]">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center text-white">
           <Users className="w-10 h-10 mx-auto mb-4 text-white/80" />
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">Got a question?</h2>
-          <p className="text-blue-100 mb-6">
+          <h2 className="text-2xl sm:text-3xl font-extrabold mb-3">Got a question?</h2>
+          <p className="text-blue-100 font-medium mb-6">
             We'd love to talk more about what you need from your membership.
           </p>
           <a

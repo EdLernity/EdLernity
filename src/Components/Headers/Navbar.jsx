@@ -108,6 +108,15 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                   Courses
                 </Link>
               </li>
+
+              <li>
+                <Link
+                  to="/internship-programs"
+                  className={location.pathname==="/internship-programs"?"block py-2 pr-4 pl-3 text-white rounded bg-blue-700 lg:bg-transparent lg:text-blue-700 lg:p-0 dark:text-white":"block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"}
+                >
+                  Internship Programs
+                </Link>
+              </li>
               <li>
                 <Link
                   to="/contact"
@@ -211,6 +220,19 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             }}
           >
             <NavLink to="/courses/overview">Courses</NavLink>
+          </Typography>
+          <hr className="border border-gray-200" />
+          <Typography
+            color="gray"
+            className="font-bold"
+            style={{
+              fontFamily: "Tenor Sans, sans-serif",
+              textTransform: "uppercase",
+              color: "#000",
+              fontWeight: "400",
+            }}
+          >
+            <NavLink to="/internship-programs">Internship Programs</NavLink>
           </Typography>
           <hr className="border border-gray-200" />
           <Typography

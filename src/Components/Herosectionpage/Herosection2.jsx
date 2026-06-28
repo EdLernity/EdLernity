@@ -1,158 +1,70 @@
-import React, { useEffect, useState } from "react";
-import { useInView } from "react-intersection-observer";
-import { animateScroll as scroll } from "react-scroll";
+import React from "react";
+import { Timer, Award, Key, Globe } from "lucide-react";
 
 function Herosection2() {
-  const { inView } = useInView({
-    triggerOnce: true,
-    threshold: 0.5,
-  });
-
-  useEffect(() => {
-    if (inView) {
-      scroll.scrollToTop({
-        duration: 800,
-      });
-    }
-  }, [inView]);
-  const [showMenu, setShowMenu] = useState(false);
-  const [active, setActive] = useState("Home");
-  const heroSectionContent = [
+  const chooseData = [
     {
-      img: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-          />
-        </svg>
-      ),
-      altImg: "timerImage",
-      title: "Flexible time",
-      logoBg: "bg-[#FFD4D4]",
-      text: "Learn on your terms with our flexible timing options. Join EdLernity to pursue your educational goals without sacrificing your lifestyle",
+      icon: <Timer className="w-6 h-6 text-red-500" />,
+      title: "Flexible Time",
+      bgColor: "bg-red-50 border-red-100/50",
+      text: "Learn on your own terms with our flexible timing options. Join EdLernity to pursue your educational goals without sacrificing your lifestyle.",
     },
     {
-      img: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-          />
-        </svg>
-      ),
-      altImg: "certificateImage",
-      title: "Certificate",
-      logoBg: "bg-[#D4F0FF]",
-      text: "At EdLernity, we offer certified programs for your career or academic growth. Our ISO 9001:2015 certification ensures excellence. Ready to join us?",
+      icon: <Award className="w-6 h-6 text-blue-500" />,
+      title: "ISO Certification",
+      bgColor: "bg-blue-50 border-blue-100/50",
+      text: "At EdLernity, we offer certified programs for your career or academic growth. Our ISO 9001:2015 certification ensures excellence.",
     },
     {
-      img: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-          />
-        </svg>
-      ),
-      altImg: "exportArrowImage",
-      title: "Membership options",
-      logoBg: "bg-[#FFDED4]",
+      icon: <Key className="w-6 h-6 text-orange-500" />,
+      title: "Membership Options",
+      bgColor: "bg-orange-50 border-orange-100/50",
       text: "Discover flexible, affordable membership options at EdLernity. Join our community for lifelong learning and professional growth.",
     },
     {
-      img: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M15 8.25H9m6 3H9m3 6-3-3h1.5a3 3 0 1 0 0-6M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-          />
-        </svg>
-      ),
-      altImg: "priceLabelImage",
-      title: "Access anywhere",
-      logoBg: "bg-[#D4F0FF]",
-      text: "Embrace learning anytime, anywhere with EdLernity. Break free from traditional constraints and empower yourself with knowledge wherever you go.",
+      icon: <Globe className="w-6 h-6 text-indigo-500" />,
+      title: "Access Anywhere",
+      bgColor: "bg-indigo-50 border-indigo-100/50",
+      text: "Embrace learning anytime, anywhere with EdLernity. Break free from traditional constraints and empower yourself with knowledge.",
     },
   ];
 
   return (
-    <div className="w-full relative sm:h-[650px] h-[500px] py-28 overflow-hidden md:mt-28 mt-14">
-      <div className="absolute right-16 top-56 h-96 p-2 w-96 border-dashed border-[#000000] border-[1px] rounded-full"></div>
-      <div className="max-w-[1293px] mr-3 w-full sm:h-[578px] h-[500px] bg-[#ECF7FF] rounded-tr-[137px] sm:rounded-tr-[400px] absolute top-0 z-10"></div>
-      <div className="!z-30 absolute top-0 h-full w-full flex flex-col gap-24 py-24">
-        <div className=" flex flex-col sm:gap-16 md:gap-24 gap-12">
-          <div className="mx-auto md:text-5xl text-4xl text-[#331B3B] font-hindVadodara -tracking-[0.01] leading-[106.3%]">
-            <h1 className=" font-bold self-center text-center">
-              Why choose EdLernity?
-            </h1>
-          </div>
-          <div className="lg:pl-32 sm:pl-8 px-5 flex gap-12">
-            <div class="flex overflow-x-scroll pb-10 hide-scroll-bar pt-3">
-              <div className=" flex justify-center gap-3">
-                {heroSectionContent?.map((card, index) => (
-                  <div class="inline-block px-3">
-                    <div
-                    data-aos="flip-left"
-                      key={index}
-                      className="p-[18px]  flex flex-col justify-start bg-white shadow-3xl rounded-[10px] overflow-hidden w-[18rem] md:w-full"
-                    >
-                      <div
-                        className={`w-[52px] h-12 flex justify-center items-center rounded-[10px] ${card?.logoBg}`}
-                      >
-                        {card.img}
-                      </div>
-                      <div>
-                        <span className="text-base mt-3 overflow-hidden uppercase font-bold font-hindVadodara leading-[137.3%] -tracking-tighter">
-                          {card.title}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[15px] mt-1.5 max-w-[230px] h-full max-h-16 Light font-light font-hindVadodara leading-[145.3%] tracking-[0.02]">
-                          {card.text}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+    <section className="py-20 lg:py-28 bg-[#ECF7FF]/30 border-y border-[#ECF7FF]/50 relative overflow-hidden">
+      {/* Background Accent Decorative Elements */}
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-96 h-96 border border-dashed border-indigo-200/55 rounded-full pointer-events-none -mr-48"></div>
+      <div className="absolute left-0 top-1/4 w-72 h-72 bg-blue-500/5 rounded-full filter blur-3xl pointer-events-none -ml-36"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-16">
+          <span className="text-sm font-bold uppercase tracking-wider text-[#181FC5] bg-[#181FC5]/10 px-3.5 py-1.5 rounded-full">
+            Why choose EdLernity?
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-6 max-w-2xl mx-auto leading-tight">
+            Designed for Real-World Tech Readiness
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {chooseData.map((card, index) => (
+            <div
+              key={index}
+              className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 hover:border-[#181FC5]/10 transition-all duration-300 flex flex-col items-start"
+            >
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 shadow-sm border ${card.bgColor}`}>
+                {card.icon}
               </div>
+              <h3 className="text-lg font-bold text-slate-800 mb-3 uppercase tracking-wide">
+                {card.title}
+              </h3>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                {card.text}
+              </p>
             </div>
-          </div>
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

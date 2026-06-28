@@ -46,9 +46,10 @@ export const PAGE_SEO = {
   careers: {
     title: "Careers & Internships at EdLernity",
     description:
-      "Join EdLernity's internship programs including MERN Stack development. Gain hands-on experience and build your tech career with expert mentorship.",
+      "Explore EdLernity careers and remote internships in Business Development, Sales & Marketing, Human Resources, and Technical tracks. Apply and grow with expert mentorship.",
     path: "/careers",
-    keywords: "EdLernity careers, tech internship, MERN stack internship",
+    keywords:
+      "EdLernity careers, business development internship, sales marketing internship, HR internship, technical internship",
   },
   reviews: {
     title: "EdLernity Reviews – Learner & Internship Testimonials",

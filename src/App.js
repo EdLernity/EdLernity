@@ -17,6 +17,7 @@ import CancellationandRefundPolicy from './Components/Legal/CancellationandRefun
 import PrivacyPolicy from './Components/Legal/PrivacyPolicy.jsx';
 import TermAndCondition from './Components/Legal/TermAndCondition.jsx';
 import Member from './Components/Memberpage/Member.jsx';
+import InternshipPrograms from './Components/InternshipPrograms/InternshipPrograms.jsx';
 import MyCourses from './Components/MyCourses/MyCourses.jsx';
 import PageNotFound from './Components/PageNotFound/PageNotFound';
 import Payment from './Components/Paymentpage/Payment.jsx';
@@ -32,6 +33,7 @@ import TransactionData from './Components/Admin/TransactionData.jsx';
 import ReVerifyMail from './Components/Auth/SuccessPage/ReVerifyMail.jsx';
 import VerifyMail from './Components/Auth/SuccessPage/VerifyMail.jsx';
 import InternShip from './Components/Carrers/InternShip.jsx';
+import CareersPage from './Components/Carrers/CareersPage.jsx';
 import CustomEnrollment from './Components/CustomEnrollment/CustomEnrollment.jsx';
 import IssueOfferLetter from './Components/OfferLetter/IssueOfferLetter.jsx';
 import ProfilePage from './Components/Profilepage/ProfilePage.jsx';
@@ -79,10 +81,11 @@ function App() {
             <Route path='/success' element={<SucessPage />} />
             <Route path='/paytm' element={<Paytm />} />
             <Route path='/member' element={<Member />} />
+            <Route path='/internship-programs' element={<InternshipPrograms />} />
             <Route path='/verify-email' element={<VerifyMail/>} />
             <Route path='/reverify-email' element={<ReVerifyMail/>} />
             <Route path='/mycourses' element={<MyCourses />} />
-            <Route path='/careers' element={<InternShip />} />
+            <Route path='/careers' element={<CareersPage />} />
             <Route path='/internship' element={<InternShip />} />
             <Route path='/get-transaction/:name/:secretKeys' element={<TransactionData />} />
           </Routes>

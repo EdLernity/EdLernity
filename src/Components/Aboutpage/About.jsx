@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from "react";
-import CountUp from 'react-countup';
+import CountUp from "react-countup";
+import { Star } from "lucide-react";
 import BaseLayout from "../../Layout/BaseLayout";
 import SeoHead from "../SEO/SeoHead";
 import { PAGE_SEO } from "../../Utils/seoConfig";
 
 import "./About.css";
+
+function StarRating({ rating }) {
+  return (
+    <div className="flex gap-0.5">
+      {[...Array(5)].map((_, i) => (
+        <Star
+          key={i}
+          className={`w-4 h-4 ${
+            i < rating ? "fill-amber-400 text-amber-400" : "text-gray-300"
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
 function About() {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (count < 1000) {
-        setCount(prevCount => prevCount + 1);
-      }
-    }, 10); // Adjust the interval as needed
-
-    return () => clearInterval(interval);
-  }, [count]);
   const reviewData = [
     {
       id: 1,
@@ -24,6 +30,8 @@ function About() {
       comment:
         "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
       name: "Surabhi Kesarwani",
+      role: "IT Aspirant",
+      rating: 5,
     },
     {
       id: 2,
@@ -31,6 +39,8 @@ function About() {
       comment:
         "I recently came across membership of EdLernity, and I must say, it was a great experience. The platform's intuitive interface and engaging content made learning not only easy but also enjoyable. The courses structure was well-organized, guiding me through each topic seamlessly. I would recommend to take up the membership and explore the courses.",
       name: "Nikhil Reji",
+      role: "Lifetime Member",
+      rating: 5,
     },
     {
       id: 3,
@@ -38,6 +48,8 @@ function About() {
       comment:
         "Great course, so many important topics covered in depth. There were many assessments which made us confident with our skills. I would like to enroll in more courses offered by EdLernity.",
       name: "Shraddha Gupta",
+      role: "Course Learner",
+      rating: 5,
     },
     {
       id: 4,
@@ -45,6 +57,8 @@ function About() {
       comment:
         "EdLernity offers different courses that's helpfull for People who are looking to improve their skills.They have Technical courses and many more.The courses are well structured with clear objectives and engaging contents.Making complex topics easier to understand.Edlernity provides a valuable resource for life long learners. The course has helped provide a starting point for understanding, which certainly will prove useful in my current work/projects.",
       name: "Ali Akbar P",
+      role: "Professional Upskiller",
+      rating: 5,
     },
     {
       id: 5,
@@ -52,6 +66,8 @@ function About() {
       comment:
         "Edlernity offers a variety of courses for students who are really keen to start a career in the IT field. It has become easy to learn programming languages in an amazing way with the help of experts.",
       name: "Manjari Rastogi",
+      role: "Programming Student",
+      rating: 5,
     },
     {
       id: 6,
@@ -59,6 +75,8 @@ function About() {
       comment:
         "Edlernity is one of the most amazing platform to get a chance for learning and improving all technical skills required for all IT students it's worthy to have an opportunity to learn and acquire skills of languages that provided by their inspired and professional teachers ..happy learning with EdLernity.",
       name: "Abdul Wahab",
+      role: "Tech Student",
+      rating: 5,
     },
     {
       id: 7,
@@ -66,6 +84,8 @@ function About() {
       comment:
         "I highly recommend this course provided by EdLernity to anyone looking to take their Python skills to the next level. Whether you're a beginner or an experienced programmer, you'll find valuable insights and practical knowledge that will enhance your proficiency in Python programming. Best of luck on your learning journey.",
       name: "R Muskan Zehra",
+      role: "Python Learner",
+      rating: 5,
     },
     {
       id: 8,
@@ -73,6 +93,8 @@ function About() {
       comment:
         "Packed with valuable insights and applicable skills. Worth every penny! Impressed with EdLernity courses! Easy-to-follow format, great community support, and actionable takeaways.Courses are top-notch Comprehensive curriculum, interactive exercises, and expert guidance. A must-try!.",
       name: "Md Burhanuddin",
+      role: "Certified Learner",
+      rating: 5,
     },
   ];
 
@@ -88,15 +110,16 @@ function About() {
       (prevSlide) => (prevSlide - 1 + reviewData.length) % reviewData?.length
     );
   };
+
   const handleResize = () => {
     const screenWidth = window.innerWidth;
-
     if (screenWidth >= 768) {
       setVisibleCards(3);
     } else {
       setVisibleCards(1);
     }
   };
+
   useEffect(() => {
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -113,385 +136,409 @@ function About() {
         path={PAGE_SEO.about.path}
         keywords={PAGE_SEO.about.keywords}
       />
-      <section class="py-14 lg:py-24 relative z-0 bg-gray-50">
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative text-center">
-    <h1
-        class="max-w-2xl mx-auto text-center font-manrope font-bold text-4xl  text-gray-900 mb-5 md:text-5xl md:leading-normal">
-        Welcome to <span class="text-indigo-600">EdLernity Tech </span>
-    </h1>
-    <p class=" mx-auto text-center text-base font-normal leading-7 text-gray-500 mb-9">Invest
-    where innovation converges with purpose to redefine the landscape of technological solutions. Established with a vision to lead in the ever-evolving tech industry, EdLernity Tech (OPC) Private Limited is committed to delivering cutting-edge products and services that transcend conventional boundaries.</p>
 
-
-</div>
-</section>
-
-<section class="py-14 lg:py-24 relative">
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative ">
-    <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-9 ">
-
-        <div class="lg:pr-24 flex items-center">
-            <div class="data w-full">
-                <img src="/Image/employees-are-busy-doing-work.svg" alt="About Us tailwind page"
-                    class="block lg:hidden mb-9 mx-auto"/>
-                <h2 class="font-manrope font-bold text-4xl lg:text-5xl text-black mb-9 max-lg:text-center">Special Offering</h2>
-                <p class="font-normal text-xl leading-8 text-gray-500 max-lg:text-center max-w-2xl mx-auto">
-                Experience the future of education at EdLernity. Beyond traditional courses, we offer immersive Tech internships, bridging theory with real-world application. Work alongside industry experts, gaining invaluable insights and hands-on experience. Whether aspiring to be a Web Developer or UI/UX Designer, unlock your potential with EdLernity today. Better skills develop nations. Join us and discover yours.
-                </p>
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#ECEFFE] via-[#F4F6FF] to-white pt-12 pb-20 lg:pt-20 lg:pb-32">
+        <div className="absolute top-0 right-1/4 w-80 h-80 bg-[#181FC5]/5 rounded-full filter blur-3xl pointer-events-none"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            
+            <div className="text-center lg:text-left text-slate-800">
+              <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#181FC5]/10 text-[#181FC5] text-xs font-semibold uppercase tracking-wider mb-6">
+                About EdLernity Tech
+              </span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-none mb-6">
+                Welcome to <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#181FC5] to-[#4F46E5]">EdLernity Tech</span>
+              </h1>
+              <p className="text-lg sm:text-xl text-slate-650 leading-relaxed font-medium mb-6">
+                Where innovation converges with purpose to redefine technological solutions.
+              </p>
+              <p className="text-base text-slate-500 leading-relaxed">
+                Established with a vision to lead in the ever-evolving tech industry, EdLernity Tech (OPC) Private Limited is committed to delivering cutting-edge educational products and services that transcend conventional boundaries. We foster professional career capabilities using custom methodologies.
+              </p>
             </div>
-        </div>
-        <div class="img-box ">
-            <img src="/Image/employees-are-busy-doing-work.svg" alt="About Us tailwind page"
-                class="hidden lg:block "/>
-        </div>
-    </div>
-</div>
-</section>
 
-<section class=" py-14 lg:py-24 bg-gray-50">
-<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-  <div class="mb-16 rounded-full">
-    <h2 class="text-4xl font-manrope font-bold text-gray-900 text-center">We are ISO Certified</h2>
-  </div>
+            <div className="flex justify-center relative">
+              <div className="absolute inset-0 bg-[#181FC5]/5 rounded-3xl filter blur-2xl transform rotate-3 pointer-events-none"></div>
+              <div className="relative bg-white/50 backdrop-blur border border-white/60 p-4 rounded-3xl shadow-2xl overflow-hidden hover:scale-[1.01] transition-transform duration-300">
+                <img
+                  src="/Image/about-us.svg"
+                  alt="About EdLernity"
+                  className="w-full max-w-md lg:max-w-lg rounded-2xl drop-shadow-[0_15px_30px_rgba(24,31,197,0.1)]"
+                />
+              </div>
+            </div>
 
-  <div >
-    <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <div class="relative mb-20">
-          <div class="max-w-max mx-auto lg:max-w-4xl">
-            <p class="text-lg text-gray-500 leading-8 mb-8 text-center">
-            EdLernity Tech (OPC) Private Limited is proud to be ISO 9001:2015 certified. This certification reaffirms our commitment to maintaining a high standard of quality in our education services and certification programs related to skill and vocational development. Accredited by the Standards Council of Canada, our certification underscores our dedication to excellence and adherence to international quality standards.
+          </div>
+        </div>
+      </section>
+
+      {/* Special Offering */}
+      <section className="py-20 lg:py-28 bg-white relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            
+            <div className="lg:col-span-6 lg:order-2">
+              <span className="text-sm font-bold uppercase tracking-wider text-[#181FC5] bg-[#181FC5]/10 px-3 py-1 rounded-full">SPECIAL OFFERING</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-4 mb-6 leading-tight">
+                Immersive Internships Bridging Theory & Practice
+              </h2>
+              <p className="text-slate-600 leading-relaxed mb-6 text-lg">
+                Experience the future of education at EdLernity. Beyond traditional courses, we offer immersive Tech internships, bridging concepts with real-world applications.
+              </p>
+              <p className="text-slate-500 leading-relaxed mb-8">
+                Work alongside industry experts, gaining invaluable insights and hands-on experience. Whether aspiring to be a Web Developer or UI/UX Designer, unlock your potential with EdLernity today. Better skills develop nations. Join us and discover yours.
+              </p>
+              <a
+                href="/careers"
+                className="inline-flex px-8 py-3.5 bg-gradient-to-r from-[#181FC5] to-[#4F46E5] text-white font-bold rounded-full hover:shadow-lg hover:shadow-indigo-500/25 transition-all text-base"
+              >
+                Apply for Internships
+              </a>
+            </div>
+
+            <div className="lg:col-span-6 lg:order-1 flex justify-center relative">
+              <div className="absolute inset-0 bg-pink-500/5 rounded-full filter blur-3xl pointer-events-none"></div>
+              <img
+                src="/Image/employees-are-busy-doing-work.svg"
+                alt="Special Offering"
+                className="w-full max-w-md lg:max-w-lg hover:scale-[1.01] transition-transform"
+              />
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ISO Certified */}
+      <section className="py-20 lg:py-28 bg-slate-50 border-y border-slate-100 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-650 text-xs font-bold uppercase tracking-wider mb-4 border border-emerald-100">
+              Quality Assurance
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-6">
+              We Are ISO Certified
+            </h2>
+            <p className="text-lg text-slate-600 leading-relaxed max-w-4xl mx-auto">
+              EdLernity Tech (OPC) Private Limited is proud to be <strong>ISO 9001:2015 certified</strong>. This certification reaffirms our commitment to maintaining a high standard of quality in our educational services and certification programs related to vocational and technical development. Accredited by the Standards Council of Canada, our certification underscores our dedication to excellence.
             </p>
           </div>
-        </div>
-      </div>
-      <div class="relative flex w-96 flex-col rounded-xl mx-auto  ">
-  <div class="relative mx-4 mt-4 h-96 overflow-hidden rounded-x">
-    <img
-      src="/Image/Image_20240430_131514_0000.jpg"
-      class="h-full w-full object-contain"
-    />
-  </div>
-  
-</div>
 
-
-
-      
-    </div>
-
-  </div>
-
-
-
-</div>
-</section>
-      <div className="mt-10 px-4 md:px-8 lg:px-12">
-      
-
-        
-        
-
-        <div className="flex flex-wrap justify-center mt-10">
-          <div className="w-full md:w-1/2 pr-4 mb-4 md:mb-0 animate__animated animate__backInLeft">
-            <img
-              src="/Image/about-us.svg"
-              alt="About Image"
-              className="w-full"
-            />
-          </div>
-          <div className="w-full md:w-1/2 animate__animated animate__backInRight space-y-4 flex flex-col  justify-center">
-            <h1
-              className="text-2xl md:text-xl font-bold mb-4 text-left"
-              style={{ color: "#181FC5" }}
-            >
-              WHO WE ARE
-            </h1>
-            <h2 className="text-4xl md:text-3xl font-semibold mb-2 text-left">
-              We Offer The Best <br /> Carrier
-            </h2>
-
-            <div className="mb-4 flex flex-col md:flex-row items-center md:items-start md:space-x-4">
+          <div className="flex justify-center">
+            <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 max-w-sm mx-auto hover:scale-[1.02] transition-transform duration-300">
               <img
-                src="/Image/Industry.png"
-                className="w-8 h-8 mb-2 md:mb-0"
-                alt="Industry Icon"
+                src="/Image/Image_20240430_131514_0000.jpg"
+                alt="ISO Certification"
+                className="w-full rounded-2xl object-contain shadow-sm"
               />
-              <div className="text-center md:text-left">
-                <h4>Industry Expert Instructor</h4>
-                <p className="text-gray-700">
-                  Unlock the wisdom of industry experts. Our instructors are the
-                  guiding stars of your educational journey, illuminating the
-                  path to success.
-                </p>
-              </div>
-            </div>
-
-            <div className="mb-4 flex flex-col md:flex-row items-center md:items-start md:space-x-4">
-              <img
-                src="/Image/Industry.png"
-                className="w-8 h-8 mb-2 md:mb-0"
-                alt="Industry Icon"
-              />
-              <div className="text-center md:text-left">
-                <h4>Up-to-Date Course Content</h4>
-                <p className="text-gray-700">
-                  Unlock the wisdom of industry experts. Our instructors are the
-                  guiding stars of your educational journey, illuminating the
-                  path to success.
-                </p>
-              </div>
-            </div>
-
-            <div className="mb-4 flex flex-col md:flex-row items-center md:items-start md:space-x-4">
-              <img
-                src="/Image/Industry.png"
-                className="w-8 h-8 mb-2 md:mb-0"
-                alt="Industry Icon"
-              />
-              <div className="text-center md:text-left">
-                <h4>Biggest Student Community</h4>
-                <p className="text-gray-700">
-                  Unlock the wisdom of industry experts. Our instructors are the
-                  guiding stars of your educational journey, illuminating the
-                  path to success.
-                </p>
-              </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-10 bg-[#D9D9D9] rounded-xl p-4 animate__animated animate__fadeInUpBig">
-          <div className="text-center">
-            <h4
-              className="text-2xl font-bold"
-              style={{ color: "#181FC5", paddingTop: "50px" }}
-            >
-              WHO WE ARE
-            </h4>
-            <h2 className="mt-5 text-3xl font-bold">
+        </div>
+      </section>
+
+      {/* Who We Are */}
+      <section className="py-20 lg:py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            
+            <div className="lg:col-span-5 flex justify-center">
+              <img
+                src="/Image/about-us.svg"
+                alt="Who We Are"
+                className="w-full max-w-md lg:max-w-lg"
+              />
+            </div>
+
+            <div className="lg:col-span-7">
+              <span className="text-sm font-bold uppercase tracking-wider text-[#181FC5] bg-[#181FC5]/10 px-3 py-1 rounded-full">WHO WE ARE</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-4 mb-10 leading-tight">
+                Offering The Best Tech Career Paths
+              </h2>
+
+              <div className="space-y-8">
+                
+                <div className="flex gap-5 items-start">
+                  <div className="flex-shrink-0 w-12 h-12 bg-blue-50 text-[#181FC5] rounded-2xl flex items-center justify-center shadow-sm">
+                    <img
+                      src="/Image/Industry.png"
+                      className="w-6 h-6 object-contain"
+                      alt="Industry Icon"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-800 text-lg mb-2">
+                      Industry Expert Instructors
+                    </h4>
+                    <p className="text-slate-500 leading-relaxed text-sm sm:text-base">
+                      Unlock the wisdom of active specialists. Our instructors are the guiding stars of your educational journey, translating core corporate problems into structured lessons.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-5 items-start">
+                  <div className="flex-shrink-0 w-12 h-12 bg-pink-50 text-pink-600 rounded-2xl flex items-center justify-center shadow-sm">
+                    <img
+                      src="/Image/Industry.png"
+                      className="w-6 h-6 object-contain"
+                      alt="Industry Icon"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-800 text-lg mb-2">
+                      Up-to-Date Course Content
+                    </h4>
+                    <p className="text-slate-500 leading-relaxed text-sm sm:text-base">
+                      Stay ahead with a curriculum that evolves with global industry standards. Our courses are continuously updated to reflect the latest packages and best practices.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-5 items-start">
+                  <div className="flex-shrink-0 w-12 h-12 bg-violet-50 text-violet-600 rounded-2xl flex items-center justify-center shadow-sm">
+                    <img
+                      src="/Image/Industry.png"
+                      className="w-6 h-6 object-contain"
+                      alt="Industry Icon"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-800 text-lg mb-2">
+                      Expanding Student Community
+                    </h4>
+                    <p className="text-slate-500 leading-relaxed text-sm sm:text-base">
+                      Join a thriving community of peers. Collaborate, share code fragments, and grow together alongside students from diverse technical backgrounds.
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* How Does EdLernity Work? */}
+      <section className="py-20 lg:py-28 bg-slate-50 border-y border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center mb-16">
+            <span className="text-sm font-bold uppercase tracking-wider text-[#181FC5]">HOW IT WORKS</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2">
               How Does EdLernity Work?
             </h2>
           </div>
 
-          <div className="mt-8 flex flex-col sm:flex-row justify-center sm:px-8 lg:px-32 pb-8">
-            <div className="text-center items-center space-y-4 justify-center mb-8 sm:mb-0">
-              <img
-                src="/Image/Book.png"
-                className="w-12 h-12 p-2 bg-[#181FC5] rounded-full mx-auto"
-                alt="Choose Any Courses"
-              />
-              <h5>Choose Any Courses</h5>
-              <p className="text-sm" style={{ color: "#5E5E5E" }}>
-                Education is the passport to the future, for tomorrow belongs to
-                those who prepare for it today.
-              </p>
-            </div>
-
-            <div className="text-center items-center space-y-4 justify-center mb-8 sm:mb-0">
-              <img
-                src="/Image/Book4.png"
-                className="w-12 h-12 p-2 bg-[#181FC5] rounded-full mx-auto"
-                alt="Purchase Your Course"
-              />
-              <h5>Purchase Your Course</h5>
-              <p className="text-sm" style={{ color: "#5E5E5E" }}>
-                Invest in your mind. Purchase knowledge and watch your potential
-                grow.
-              </p>
-            </div>
-
-            <div className="text-center items-center space-y-4 justify-center">
-              <img
-                src="/Image/Book2.png"
-                className="w-12 h-12 p-2 bg-[#181FC5] rounded-full mx-auto"
-                alt="Great! Start Learn"
-              />
-              <h5>Great! Start Learn</h5>
-              <p className="text-sm" style={{ color: "#5E5E5E" }}>
-                Embark on your learning journey with enthusiasm, for every
-                lesson is a step toward greatness.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-center bg-white pt-16 px-4 sm:hidden md:hidden">
-          <div className="relative flex space-x-4 pt-12">
-            <div className="absolute top-1 -left-12 h-[250px] w-[250px] bg-[#623CEA] rounded-full" />
-            <div className="absolute top-[105px] -right-16 h-[300px] w-[300px] bg-[#FF6B81] rounded-full" />
-            <div className="z-10 flex h-[280px] w-[350px] items-center justify-center rounded-lg p-4">
-              <img
-                alt="Group of people"
-                className="h-full w-full object-cover rounded-lg"
-                height="160"
-                src="/Image/People.png"
-                style={{
-                  aspectRatio: "280/160",
-                  objectFit: "cover",
-                }}
-                width="280"
-              />
-            </div>
-
-           
-          </div>
-        </div>
-        <div class="text-center p-8">
-    <h2 class="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-        Why to choose US?
-    </h2>
-
-    <div class="flex flex-wrap items-center mt-20 text-left text-center">
-        <div class="w-full md:w-3/5 lg:w-1/2 px-4">
-            <img src="/Image/Astronaut with space shuttle.gif" alt="gem" class="inline-block rounded w-96 "/>
-        </div>
-        <div class="w-full md:w-2/5 lg:w-1/2 px-4 text-center md:text-left lg:pl-12">
-            <h3 class="font-bold mt-8 text-xl md:mt-0 sm:text-2xl text-[#181FC5]">
-            OUR MISSION
-            </h3>
-            <p class="sm:text-lg mt-6">
-            We are on a mission to pioneer advancements in technology,
-              creating value for our clients and contributing to the broader
-              societal good. Through a relentless pursuit of excellence, ethical
-              practices, and a commitment to sustainability, we strive to leave
-              a lasting impact on the world.
-            </p>
-        </div>
-    </div>
-
-    <div class="flex flex-wrap items-center mt-20 text-left text-center">
-        <div class="w-full md:w-3/5 lg:w-1/2 px-4">
-            <img src="/Image/employee-predicts-business-vision.svg" alt="project members" class="inline-block rounded  w-96 "/>
-        </div>
-        <div class="w-full md:w-2/5 lg:w-1/2 px-4 md:order-first text-center md:text-left lg:pr-12">
-            <h3 class="font-bold mt-8 text-xl md:mt-0 sm:text-2xl text-[#181FC5]">
-            OUR VISION
-            </h3>
-            <p class="sm:text-lg mt-6">
-            At Edlernity, we envision a future where technology seamlessly integrates with human needs, fostering progress and enhancing lives. Our vision is to be a beacon of innovation, driving positive change through transformative digital solutions.
-            </p>
-        </div>
-    </div>
-
-    
-</div>
-       
-      
-      </div>
-      <div className="pb-12 mt-15  sm:pb-16">
-    <div className="relative">
-      <div className="absolute inset-0 h-1/2  "></div>
-      <div className="relative max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <dl className="bg-white  rounded-lg shadow-sm sm:grid sm:grid-cols-2">
-            <div className="flex flex-col p-6 text-center border-b border-gray-100  sm:border-0 sm:border-r">
-              <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 " id="item-1">
-                Users
-              </dt>
-              <dd className="order-1 text-5xl font-extrabold leading-none text-indigo-600 " aria-describedby="item-1" id="starsCount">
-                <CountUp end={1000} duration={5}  />+
-              </dd>
-            </div>
-            <div className="flex flex-col p-6 text-center border-t border-b border-gray-100  sm:border-0 sm:border-l sm:border-r">
-              <dt className="order-2 mt-2 text-lg font-medium leading-6 text-gray-500 ">
-                Courses
-              </dt>
-              <dd className="order-1 text-5xl font-extrabold leading-none text-indigo-600 " id="downloadsCount">
-                <CountUp end={12} duration={5} />+
-              </dd>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-          </dl>
-        </div>
-      </div>
-    </div>
-  </div>
-  <section class="bg-white px-4 py-12 md:py-24">
-  <div class="max-w-screen-xl mx-auto">
-    <h2 class="font-black  text-center text-3xl leading-none uppercase max-w-2xl mx-auto mb-12 text-[#181FC5]">What Our Students
-      Are Saying</h2>
-      <div class="flex overflow-x-scroll pb-10 hide-scroll-bar pt-3">
-          {reviewData.map((testimonial, index) => (
-          <div  key={index}  class="inline-block px-2">
-              <div className="lg:ml-[5.5rem] md:ml-10 relative rounded-2xl bg-white p-6 shadow shadow-slate-900/10 w-[50rem] h-[19rem] max-w-xs cursor-pointer overflow-hidden  hover:shadow-xl transition-shadow duration-300 ease-in-out">
-              <svg aria-hidden="true"
-                width="105" height="78" class="absolute opacity-10">
-                <path
-                  d="M25.086 77.292c-4.821 0-9.115-1.205-12.882-3.616-3.767-2.561-6.78-6.102-9.04-10.622C1.054 58.534 0 53.411 0 47.686c0-5.273.904-10.396 2.712-15.368 1.959-4.972 4.746-9.567 8.362-13.786a59.042 59.042 0 0 1 12.43-11.3C28.325 3.917 33.599 1.507 39.324 0l11.074 13.786c-6.479 2.561-11.677 5.951-15.594 10.17-3.767 4.219-5.65 7.835-5.65 10.848 0 1.356.377 2.863 1.13 4.52.904 1.507 2.637 3.089 5.198 4.746 3.767 2.41 6.328 4.972 7.684 7.684 1.507 2.561 2.26 5.5 2.26 8.814 0 5.123-1.959 9.19-5.876 12.204-3.767 3.013-8.588 4.52-14.464 4.52Zm54.24 0c-4.821 0-9.115-1.205-12.882-3.616-3.767-2.561-6.78-6.102-9.04-10.622-2.11-4.52-3.164-9.643-3.164-15.368 0-5.273.904-10.396 2.712-15.368 1.959-4.972 4.746-9.567 8.362-13.786a59.042 59.042 0 0 1 12.43-11.3C82.565 3.917 87.839 1.507 93.564 0l11.074 13.786c-6.479 2.561-11.677 5.951-15.594 10.17-3.767 4.219-5.65 7.835-5.65 10.848 0 1.356.377 2.863 1.13 4.52.904 1.507 2.637 3.089 5.198 4.746 3.767 2.41 6.328 4.972 7.684 7.684 1.507 2.561 2.26 5.5 2.26 8.814 0 5.123-1.959 9.19-5.876 12.204-3.767 3.013-8.588 4.52-14.464 4.52Z">
-                </path>
-              </svg>
-                <div className="relative">
-                <p className="text-lg tracking-tight text-slate-900 overflow-auto h-[10rem]">
-  { testimonial.comment}
-</p>
-
-
-                </div>
-                <figcaption className="relative mt-6 flex items-center justify-between border-t border-slate-100 pt-6">
-                  <div>
-                    <div className="font-display text-base text-slate-900">{testimonial.name}</div>
-                  </div>
-                  <div className="overflow-hidden rounded-full bg-slate-50">
-                    <img alt="" className="h-14 w-14 object-cover" src={`/Image/user-review-img/${testimonial?.image}`} />
-                  </div>
-                </figcaption>
+            <div className="bg-white rounded-3xl border border-slate-100 p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-14 h-14 bg-blue-50 text-[#181FC5] rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <img
+                  src="/Image/Book.png"
+                  className="w-7 h-7 object-contain"
+                  alt="Choose Any Courses"
+                />
               </div>
+              <h4 className="text-xl font-bold text-slate-800 mb-3">
+                Choose Any Course
+              </h4>
+              <p className="text-slate-500 leading-relaxed text-sm">
+                Education is the passport to the future, for tomorrow belongs to those who prepare for it today.
+              </p>
             </div>
-          ))}
-          </div>
-  </div>
-</section>
 
-     
+            <div className="bg-white rounded-3xl border border-slate-100 p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-14 h-14 bg-pink-50 text-pink-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <img
+                  src="/Image/Book4.png"
+                  className="w-7 h-7 object-contain"
+                  alt="Purchase Your Course"
+                />
+              </div>
+              <h4 className="text-xl font-bold text-slate-800 mb-3">
+                Purchase Your Course
+              </h4>
+              <p className="text-slate-500 leading-relaxed text-sm">
+                Invest in your mind. Purchase knowledge and watch your career potential grow exponentially.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-3xl border border-slate-100 p-8 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-14 h-14 bg-violet-50 text-violet-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <img
+                  src="/Image/Book2.png"
+                  className="w-7 h-7 object-contain"
+                  alt="Great! Start Learn"
+                />
+              </div>
+              <h4 className="text-xl font-bold text-slate-800 mb-3">
+                Great! Start Learning
+              </h4>
+              <p className="text-slate-500 leading-relaxed text-sm">
+                Embark on your learning journey with enthusiasm, for every lesson is a step toward greatness.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Mission & Vision */}
+      <section className="py-20 lg:py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center mb-20">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">
+              Why Choose EdLernity?
+            </h2>
+            <div className="w-16 h-1 bg-gradient-to-r from-[#181FC5] to-[#4F46E5] mx-auto rounded-full mt-4"></div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
+            <div className="flex justify-center relative">
+              <div className="absolute inset-0 bg-[#181FC5]/5 rounded-3xl filter blur-2xl transform rotate-3 pointer-events-none"></div>
+              <img
+                src="/Image/Astronaut with space shuttle.gif"
+                alt="Our Mission"
+                className="w-full max-w-sm rounded-3xl shadow-xl relative"
+              />
+            </div>
+            <div>
+              <span className="text-sm font-bold uppercase tracking-wider text-[#181FC5] bg-[#181FC5]/10 px-3 py-1 rounded-full">CORE PURPOSE</span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-4 mb-5">
+                OUR MISSION
+              </h3>
+              <p className="text-lg text-slate-600 leading-relaxed">
+                We are on a mission to pioneer advancements in tech training, creating values for our candidates and contributing to the broader educational infrastructure. Through ethical standards, industry alignment, and a commitment to accessibility, we strive to build future tech leaders.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="lg:order-2 flex justify-center relative">
+              <div className="absolute inset-0 bg-pink-500/5 rounded-3xl filter blur-2xl transform -rotate-3 pointer-events-none"></div>
+              <img
+                src="/Image/employee-predicts-business-vision.svg"
+                alt="Our Vision"
+                className="w-full max-w-sm rounded-3xl relative"
+              />
+            </div>
+            <div className="lg:order-1">
+              <span className="text-sm font-bold uppercase tracking-wider text-pink-600 bg-pink-50 px-3 py-1 rounded-full">FUTURE OUTLOOK</span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-4 mb-5">
+                OUR VISION
+              </h3>
+              <p className="text-lg text-slate-655 leading-relaxed">
+                At EdLernity, we envision a future where technology seamlessly integrates with learning, fostering progress and enhancing career trajectories. Our vision is to be a beacon of innovation, driving positive educational shifts through practical methodologies.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="bg-gradient-to-br from-[#181FC5] to-[#4F46E5] py-20 text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-72 h-72 bg-white/5 rounded-full filter blur-3xl pointer-events-none"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 text-center">
+            <div>
+              <p className="text-5xl sm:text-6xl font-extrabold mb-2">
+                <CountUp end={1000} duration={3} />+
+              </p>
+              <p className="text-blue-100 text-lg font-semibold uppercase tracking-wider">Active Users</p>
+            </div>
+            <div>
+              <p className="text-5xl sm:text-6xl font-extrabold mb-2">
+                <CountUp end={12} duration={3} />+
+              </p>
+              <p className="text-blue-100 text-lg font-semibold uppercase tracking-wider">Expert Courses</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 lg:py-28 bg-[#ECF7FF]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#181FC5] mb-3">
+              What Our Students Say
+            </h2>
+            <p className="text-slate-600 text-lg">
+              Hear from our global community of learners
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {reviewData.map((testimonial) => (
+              <article
+                key={testimonial.id}
+                className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:border-[#181FC5]/10 border border-slate-100 transition-all flex flex-col justify-between"
+              >
+                <div>
+                  <StarRating rating={testimonial.rating} />
+                  <p className="text-slate-600 mt-6 mb-8 leading-relaxed text-sm sm:text-base italic">
+                    "${testimonial.comment}"
+                  </p>
+                </div>
+                
+                <div className="flex items-center gap-4 pt-6 border-t border-slate-50">
+                  <img
+                    src={`/Image/user-review-img/${testimonial.image}`}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full object-cover border border-slate-100 shadow-sm"
+                    onError={(e) => {
+                      e.target.src = "/Image/Logo1.svg";
+                    }}
+                  />
+                  <div>
+                    <p className="font-extrabold text-slate-800 text-sm sm:text-base">{testimonial.name}</p>
+                    <p className="text-xs text-slate-400 font-semibold">{testimonial.role}</p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <h2 className="text-3xl sm:text-5xl font-extrabold mb-6 leading-tight">
+            Ready to Start Your Learning Journey?
+          </h2>
+          <p className="text-slate-300 opacity-90 mb-10 max-w-2xl mx-auto text-lg leading-relaxed">
+            Join thousands of active learners who are building real tech skills and advancing their careers with EdLernity.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href="/courses/overview"
+              className="px-8 py-3.5 bg-white text-slate-900 font-bold rounded-full hover:bg-slate-100 hover:scale-105 transition-all"
+            >
+              Explore Courses
+            </a>
+            <a
+              href="/careers"
+              className="px-8 py-3.5 border-2 border-white/50 text-white font-bold rounded-full hover:bg-white/10 hover:scale-105 transition-all"
+            >
+              View Careers
+            </a>
+          </div>
+        </div>
+      </section>
     </BaseLayout>
   );
 }
 
 export default About;
-
-// <div className="flex items-center justify-center bg-white py-8 px-4">
-//   <div className="relative flex space-x-4">
-//     <div className="absolute top-0 left-0 h-[100px] w-[100px] bg-[#623CEA] rounded-full" />
-//     <div className="absolute top-0 right-0 h-[150px] w-[150px] bg-[#FF6B81] rounded-full" />
-//     <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg bg-[#F9D5A7] p-4">
-//       <img
-//         alt="Group of people"
-//         className="h-full w-full object-cover rounded-lg"
-//         height="160"
-//         src="/placeholder.svg"
-//         style={{
-//           aspectRatio: "280/160",
-//           objectFit: "cover",
-//         }}
-//         width="280"
-//       />
-//     </div>
-//     <div className="z-20 flex h-[200px] w-[320px] items-center justify-center rounded-lg bg-[#56C2E6] p-4">
-//       <img
-//         alt="Smiling woman"
-//         className="h-full w-full object-cover rounded-lg"
-//         height="180"
-//         src="/placeholder.svg"
-//         style={{
-//           aspectRatio: "300/180",
-//           objectFit: "cover",
-//         }}
-//         width="300"
-//       />
-//     </div>
-//     <div className="z-10 flex h-[180px] w-[300px] items-center justify-center rounded-lg bg-[#F4E06D] p-4">
-//       <img
-//         alt="Man with laptop"
-//         className="h-full w-full object-cover rounded-lg"
-//         height="160"
-//         src="/placeholder.svg"
-//         style={{
-//           aspectRatio: "280/160",
-//           objectFit: "cover",
-//         }}
-//         width="280"
-//       />
-//     </div>
-//   </div>
-// </div>

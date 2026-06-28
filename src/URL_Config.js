@@ -1,6 +1,6 @@
-//Dev
-// export const BACKEND_URL="http://localhost:3001"
-export const BACKEND_URL="https://edlernity-166q.onrender.com"
+const configuredApiUrl = (
+  process.env.REACT_APP_BACKEND_URL || "https://edlernity-166q.onrender.com/api/v1"
+).replace(/\/$/, "");
 
-//PROD
-// export const BACKEND_URL="http://localhost:30001"
+export const API_URL = configuredApiUrl;
+export const BACKEND_URL = configuredApiUrl.replace(/\/api\/v1$/, "");

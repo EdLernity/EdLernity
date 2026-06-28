@@ -28,7 +28,12 @@ app.use((req, res, next) => {
 });
 
 const corsOptions = {
-    origin: 'https://www.edlernity.com',
+    origin: [
+        'https://www.edlernity.com',
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'https://monopoly-autistic-cadmium.ngrok-free.dev',
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 };
 app.use(helmet());
