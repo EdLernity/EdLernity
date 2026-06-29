@@ -17,3 +17,4 @@ Disallow: /success
 Disallow: /paytm
 
 Sitemap: https://edlernity.com/sitemap.xml
+
