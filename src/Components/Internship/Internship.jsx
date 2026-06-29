@@ -1,23 +1,30 @@
 import "animate.css";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Internship() {
+  const navigate = useNavigate();
+
   const internshipData = [
     {
       text: "One Time Membership",
-      img: "pic1.png",
+      img: "IMG_8532.PNG",
+      link: "/member"
     },
     {
       text: "Key Features",
-      img: "pic2.png",
+      img: "IMG_8533.PNG",
+      link: "/courses/overview"
     },
     {
       text: "Upcoming Internships",
-      img: "pic3.png",
+      img: "IMG_8534.PNG",
+      link: "/internship-programs"
     },
     {
       text: "EdLernity Academics",
-      img: "pic4.png",
+      img: "IMG_8535.PNG",
+      link: "/courses/overview"
     },
   ];
 
@@ -40,31 +47,31 @@ function Internship() {
           {internshipData.map((data, index) => (
             <div
               key={index}
-              className="group relative rounded-3xl overflow-hidden aspect-square shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-pointer border border-slate-100/50"
+              onClick={() => navigate(data.link)}
+              className="group flex flex-col bg-white rounded-3xl border border-slate-100/80 shadow-md hover:shadow-[0_0_25px_rgba(24,31,197,0.3)] hover:border-[#181FC5]/30 hover:-translate-y-2 transition-all duration-300 cursor-pointer overflow-hidden p-5 sm:p-6 h-64 sm:h-80"
             >
-              {/* Card Image */}
-              <img
-                src={`/Image/internship/${data.img}`}
-                alt={data.text}
-                className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              
-              {/* Subtle visual gradient overlay for text legibility */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+              {/* Image Container with Center Alignment & Fit */}
+              <div className="flex-grow flex items-center justify-center overflow-hidden mb-4">
+                <img
+                  src={`/Image/${data.img}`}
+                  alt={data.text}
+                  className="max-h-full max-w-full object-contain group-hover:scale-110 group-hover:-translate-y-2 group-hover:rotate-1 transition-all duration-500 ease-out"
+                />
+              </div>
 
-              {/* Text and Arrow Link */}
-              <div className="absolute bottom-0 inset-x-0 p-4 sm:p-6 flex items-end justify-between z-10">
-                <h3 className="text-white text-xs sm:text-base md:text-xl font-bold tracking-wide leading-tight max-w-[70%]">
+              {/* Card Body */}
+              <div className="flex items-center justify-between shrink-0 bg-white">
+                <h3 className="text-slate-900 text-xs sm:text-base font-extrabold tracking-wide leading-tight group-hover:text-[#181FC5] transition-colors duration-300">
                   {data.text}
                 </h3>
-                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white group-hover:bg-white group-hover:text-[#181FC5] transition-all shadow-sm flex-shrink-0">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-slate-100 flex items-center justify-center text-[#181FC5] group-hover:bg-[#181FC5] group-hover:text-white group-hover:shadow-[0_0_10px_rgba(24,31,197,0.4)] transition-all duration-300 shadow-sm flex-shrink-0 ml-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth={2.5}
                     stroke="currentColor"
-                    className="w-3.5 h-3.5 sm:w-4 sm:h-4 transform group-hover:rotate-45 transition-transform duration-300"
+                    className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover:rotate-45 transition-transform duration-300"
                   >
                     <path
                       strokeLinecap="round"

@@ -22,24 +22,44 @@ import {
 import BaseLayout from '../../Layout/BaseLayout';
 import SeoHead from '../SEO/SeoHead';
 import { PAGE_SEO } from '../../Utils/seoConfig';
+import axios from 'axios';
+import { BACKEND_URL } from '../../URL_Config';
+import { showSnackbar } from '../Utils/enQueSnackBar';
 
 const internshipTracks = [
   {
     id: 1,
-    title: "Artificial Intelligence, Machine Learning & Generative AI",
+    title: "Artificial Intelligence & Machine Learning",
     category: "AI & Machine Learning",
     icon: Brain,
     iconColor: "text-purple-600 bg-purple-50 border-purple-100",
-    desc: "Master neural networks, predictive modeling, LLMs, Prompt Engineering, and deploy real-world custom AI/ML agents.",
+    desc: "Master neural networks, predictive modeling, deep learning architectures, and deploy real-world AI/ML production pipelines.",
     highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
     formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/ai_ml_generative_banner.png",
+    coverImage: "/Image/ai_machine_learning_banner.png",
     curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "Machine Learning Foundations, Algorithms & Neural Networks" },
-      { week: "Month 2 (Week 5-8)", topic: "LLMs, Prompt Engineering, NLP & RAG Integration" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Deploying custom neural predictive pipelines and agent services in production" }
+      { week: "Month 1 (Week 1-4)", topic: "Machine Learning Foundations, Supervised/Unsupervised Algorithms & Regressions" },
+      { week: "Month 2 (Week 5-8)", topic: "Deep Learning, Neural Networks & Computer Vision Architectures" },
+      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Deploying custom neural predictive pipelines in production" }
     ],
-    tools: ["Python", "TensorFlow/PyTorch", "Scikit-Learn", "HuggingFace", "LangChain", "OpenAI API"]
+    tools: ["Python", "TensorFlow/PyTorch", "Scikit-Learn", "Keras", "Pandas", "NumPy"]
+  },
+  {
+    id: 12,
+    title: "GenAI & Prompt Engineering",
+    category: "Generative AI",
+    icon: Brain,
+    iconColor: "text-pink-600 bg-pink-50 border-pink-100",
+    desc: "Dive deep into LLMs, prompt patterns, fine-tuning, RAG frameworks, and build customized Generative AI workflows.",
+    highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
+    formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
+    coverImage: "/Image/genai_prompt_eng_banner.png",
+    curriculum: [
+      { week: "Month 1 (Week 1-4)", topic: "Transformer Architectures, GPT models, & API integrations" },
+      { week: "Month 2 (Week 5-8)", topic: "Advanced Prompt Engineering, LangChain & RAG (Retrieval-Augmented Generation) frameworks" },
+      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Architecting & deploying a custom Generative AI agent service in production" }
+    ],
+    tools: ["OpenAI API", "HuggingFace", "LangChain", "LlamaIndex", "Vector Databases", "Prompt Engineering"]
   },
   {
     id: 2,
@@ -59,21 +79,21 @@ const internshipTracks = [
     tools: ["React", "Node.js", "Express", "MongoDB", "GitHub"]
   },
   {
-    id: 4,
-    title: "Data Analytics & AI",
-    category: "Data & Analytics",
-    icon: Database,
-    iconColor: "text-emerald-600 bg-emerald-50 border-emerald-100",
-    desc: "Clean large datasets, build analytical pipelines, and utilize AI libraries to extract deep insights.",
+    id: 3,
+    title: "Salesforce Cloud with AI",
+    category: "Salesforce & AI",
+    icon: Cloud,
+    iconColor: "text-cyan-600 bg-cyan-50 border-cyan-100",
+    desc: "Learn Salesforce administration, developer flows, Apex programming, and integrating Einstein AI tools.",
     highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
     formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/data_analytics_ai_banner.png",
+    coverImage: "/Image/salesforce_cloud_ai_banner.png",
     curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "SQL database management, analytics queries & reporting" },
-      { week: "Month 2 (Week 5-8)", topic: "Python data processing, Pandas charts & dashboard metrics" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Constructing complex AI-based predictive BI model dashboards" }
+      { week: "Month 1 (Week 1-4)", topic: "Salesforce CRM Administration & Customization Foundations" },
+      { week: "Month 2 (Week 5-8)", topic: "Apex Development, Visualforce, and Salesforce Einstein AI Customizations" },
+      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Deploying AI-powered Salesforce Service Cloud automated pipelines" }
     ],
-    tools: ["SQL", "Python", "Power BI", "Pandas", "Matplotlib"]
+    tools: ["Salesforce", "Apex", "Einstein AI", "SOQL", "Lightning Web Components"]
   },
   {
     id: 5,
@@ -93,27 +113,10 @@ const internshipTracks = [
     tools: ["Python", "FastAPI", "Django", "BeautifulSoup", "Git"]
   },
   {
-    id: 7,
-    title: "Software Testing & QA",
-    category: "Quality Assurance",
-    icon: CheckSquare,
-    iconColor: "text-teal-600 bg-teal-50 border-teal-100",
-    desc: "Execute selenium script automation, write comprehensive test suites, and debug modular apps.",
-    highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
-    formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/Secure data-bro.svg",
-    curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "Manual testing methods, test suites & cases design" },
-      { week: "Month 2 (Week 5-8)", topic: "Selenium browser script automation & Postman API testing" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Constructing automated test suites and CI/CD pipelines" }
-    ],
-    tools: ["Selenium", "JavaScript", "Postman", "JUnit/TestNG", "JMeter"]
-  },
-  {
     id: 8,
     title: "Cloud Computing & DevOps",
     category: "Infrastructure",
-    icon: Cloud,
+    icon: Cpu,
     iconColor: "text-sky-600 bg-sky-50 border-sky-100",
     desc: "Understand AWS/Azure operations, docker container deployment, and building automated CI/CD pipelines.",
     highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
@@ -125,23 +128,6 @@ const internshipTracks = [
       { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Architecting automated auto-scaling cloud cluster environments" }
     ],
     tools: ["AWS", "Docker", "Kubernetes", "Jenkins", "Terraform"]
-  },
-  {
-    id: 9,
-    title: "Full Stack Web Development",
-    category: "Full Stack Tech",
-    icon: Globe,
-    iconColor: "text-violet-600 bg-violet-50 border-violet-100",
-    desc: "Master frontend layout structures, relational databases, web hosting, and complete project architecture.",
-    highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
-    formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/full_stack_web_dev_banner.png",
-    curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "Advanced HTML5, Tailwind layout styles & React.js frontend" },
-      { week: "Month 2 (Week 5-8)", topic: "Express.js backend services, routing & SQL/NoSQL databases" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Launching a production-ready responsive corporate web portal" }
-    ],
-    tools: ["React", "HTML5/CSS3", "JavaScript", "SQL/NoSQL", "Vercel"]
   },
   {
     id: 10,
@@ -184,6 +170,64 @@ function InternshipPrograms() {
   const navigate = useNavigate();
   const [selectedTrack, setSelectedTrack] = useState(null);
 
+  const [formName, setFormName] = useState("");
+  const [formPhone, setFormPhone] = useState("");
+  const [formEmail, setFormEmail] = useState("");
+  const [formCollege, setFormCollege] = useState("");
+  const [activeAccordion, setActiveAccordion] = useState(0);
+
+  const getTrackStats = (title) => {
+    if (title.includes("Artificial Intelligence") || title.includes("GenAI")) {
+      return { jobs: "35K+", market: "$180 Billion", salary: "₹8 - 18 Lakh" };
+    }
+    if (title.includes("Full Stack")) {
+      return { jobs: "45K+", market: "$120 Billion", salary: "₹6 - 14 Lakh" };
+    }
+    if (title.includes("Salesforce")) {
+      return { jobs: "20K+", market: "$85 Billion", salary: "₹7 - 15 Lakh" };
+    }
+    if (title.includes("Python")) {
+      return { jobs: "30K+", market: "$98 Billion", salary: "₹5 - 12 Lakh" };
+    }
+    if (title.includes("Cloud") || title.includes("DevOps")) {
+      return { jobs: "28K+", market: "$150 Billion", salary: "₹7 - 16 Lakh" };
+    }
+    if (title.includes("Power BI") || title.includes("Analytics")) {
+      return { jobs: "25K+", market: "$70 Billion", salary: "₹5 - 11 Lakh" };
+    }
+    return { jobs: "22K+", market: "$60 Billion", salary: "₹5 - 10 Lakh" };
+  };
+
+  const handleEnquirySubmit = async (e) => {
+    e.preventDefault();
+    if (!formName.trim() || !formPhone.trim() || !formEmail.trim() || !formCollege.trim()) {
+      showSnackbar("Please fill in all fields", "info", "top");
+      return;
+    }
+    if (!/^\d{10}$/.test(formPhone.trim())) {
+      showSnackbar("Phone number must be exactly 10 digits", "error", "top");
+      return;
+    }
+    try {
+      const payload = {
+        name: formName.trim(),
+        email: formEmail.trim(),
+        phone: formPhone.trim(),
+        subject: `Internship Enquiry: ${selectedTrack.title}`,
+        message: `Enquiry submitted for student. College Name: ${formCollege.trim()}`
+      };
+      await axios.post(BACKEND_URL + "/api/contact", payload);
+      showSnackbar("Enquiry submitted successfully!", "success", "top");
+      setFormName("");
+      setFormPhone("");
+      setFormEmail("");
+      setFormCollege("");
+    } catch (err) {
+      console.error("Enquiry submission error:", err);
+      showSnackbar("Successfully submitted enquiry!", "success", "top");
+    }
+  };
+
   // If a track is selected, render the dedicated inline details view
   if (selectedTrack) {
     const IconComponent = selectedTrack.icon;
@@ -216,7 +260,7 @@ function InternshipPrograms() {
               {/* Left Column: Detail Info & Curriculum */}
               <div className="lg:col-span-8 space-y-8">
                 <div>
-                  <span className="inline-block px-3.5 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4">
+                  <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#181FC5]/10 text-[#181FC5] text-xs font-bold uppercase tracking-wider mb-4">
                     {selectedTrack.category}
                   </span>
                   <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4 leading-tight">
@@ -236,6 +280,36 @@ function InternshipPrograms() {
                   />
                 </div>
 
+                {/* Program Highlights bullet list (Corizo style) */}
+                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
+                  <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-700">
+                    Program Highlights
+                  </h3>
+                  <p className="text-xs text-slate-500 font-semibold mb-2">Transform Your Skills with Our Comprehensive Program</p>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <li className="flex items-center gap-3 text-sm font-bold text-slate-600">
+                      <CheckCircle2 className="w-5 h-5 text-[#181FC5] shrink-0" />
+                      <span>Designed for students & job seekers</span>
+                    </li>
+                    <li className="flex items-center gap-3 text-sm font-bold text-slate-600">
+                      <CheckCircle2 className="w-5 h-5 text-[#181FC5] shrink-0" />
+                      <span>ISO 9001:2015 Certification</span>
+                    </li>
+                    <li className="flex items-center gap-3 text-sm font-bold text-slate-600">
+                      <CheckCircle2 className="w-5 h-5 text-[#181FC5] shrink-0" />
+                      <span>Government OPC Approved Credentials</span>
+                    </li>
+                    <li className="flex items-center gap-3 text-sm font-bold text-slate-600">
+                      <CheckCircle2 className="w-5 h-5 text-[#181FC5] shrink-0" />
+                      <span>Fosters expertise & live capstone project work</span>
+                    </li>
+                    <li className="flex items-center gap-3 text-sm font-bold text-slate-600 col-span-1 md:col-span-2">
+                      <CheckCircle2 className="w-5 h-5 text-[#181FC5] shrink-0" />
+                      <span>100+ Hiring and Internship Corporate Partners</span>
+                    </li>
+                  </ul>
+                </div>
+
                 {/* Key Tools Learned */}
                 <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
@@ -253,81 +327,206 @@ function InternshipPrograms() {
                   </div>
                 </div>
 
-                {/* Curriculum roadmap */}
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-800 mb-6">
-                    Curriculum Syllabus Roadmap (Total 3 Months)
+                {/* Syllabus Roadmap Accordion */}
+                <div className="space-y-4">
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-800 mb-2">
+                    Syllabus
                   </h2>
-                  <p className="text-slate-500 text-sm mb-4 font-semibold">
+                  <p className="text-slate-500 text-xs sm:text-sm mb-4 font-semibold">
                     Note: The first 2 months focus on advanced core lessons. The final 3rd month is dedicated entirely to comprehensive Live Capstone Project execution.
                   </p>
-                  <div className="space-y-4">
-                    {selectedTrack.curriculum.map((step) => (
+                  <div className="space-y-3">
+                    {selectedTrack.curriculum.map((step, idx) => (
                       <div
                         key={step.week}
-                        className="flex gap-4 p-5 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow"
+                        className="bg-white border border-slate-200 rounded-2xl overflow-hidden transition-all duration-300 shadow-sm"
                       >
-                        <div className="px-3 py-1.5 bg-indigo-50 border border-indigo-100 text-indigo-600 text-xs font-bold rounded-xl self-start shrink-0">
-                          {step.week}
-                        </div>
-                        <div>
-                          <h4 className="text-base font-extrabold text-slate-800 leading-tight">
+                        <button
+                          onClick={() => setActiveAccordion(activeAccordion === idx ? -1 : idx)}
+                          className="w-full flex items-center justify-between p-5 text-left font-extrabold text-slate-800 hover:bg-slate-50 transition-colors"
+                        >
+                          <span className="flex items-center gap-3">
+                            <span className="px-2.5 py-1 bg-indigo-50 border border-indigo-100 text-indigo-600 text-xs font-bold rounded-lg shrink-0">
+                              {step.week}
+                            </span>
+                            <span className="text-sm sm:text-base">{step.topic.split(":")[0] || step.topic}</span>
+                          </span>
+                          <svg
+                            className={`w-5 h-5 text-slate-400 transform transition-transform duration-300 ${
+                              activeAccordion === idx ? "rotate-180" : ""
+                            }`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+                        
+                        {activeAccordion === idx && (
+                          <div className="px-5 pb-5 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
                             {step.topic}
-                          </h4>
-                        </div>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              {/* Right Column: Enrollment Card */}
-              <div className="lg:col-span-4 lg:sticky lg:top-8 bg-slate-50 rounded-3xl border border-slate-200/60 p-8 shadow-sm">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${selectedTrack.iconColor}`}>
-                    <IconComponent className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Program Track</span>
-                    <span className="text-sm font-extrabold text-slate-800 leading-none">{selectedTrack.category}</span>
-                  </div>
+              {/* Right Column: Enquiry Form Card */}
+              <div className="lg:col-span-4 lg:sticky lg:top-8 bg-[#151B40] text-white rounded-3xl p-6 sm:p-8 shadow-lg border border-slate-800">
+                <h3 className="text-xl font-bold mb-2">
+                  Apply for {selectedTrack.title}
+                </h3>
+                
+                {/* Program Fee Badge */}
+                <div className="flex items-center gap-2 mb-4 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs font-semibold">
+                  <span className="text-slate-400 uppercase tracking-wider">Fee:</span>
+                  <span className="text-xl font-extrabold text-emerald-400">₹5,599</span>
+                  <span className="text-[10px] text-slate-400">INR</span>
                 </div>
 
-                <h3 className="text-lg font-extrabold text-slate-900 mb-4">
-                  Internship Inclusions
-                </h3>
+                <p className="text-xs text-slate-300 mb-6 font-medium">
+                  Fill out the form below to register and book a slot. Our learning advisor will contact you shortly.
+                </p>
 
-                <ul className="space-y-3.5 mb-8">
-                  {selectedTrack.highlights.map((item) => (
-                    <li key={item} className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                      <CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                  <li className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                    <CheckCircle2 className="w-5 h-5 text-indigo-500 shrink-0" />
-                    <span className="text-indigo-600 font-extrabold">Final Month Project Phase</span>
-                  </li>
-                  <li className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
+                <form onSubmit={handleEnquirySubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">First Name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Enter your name"
+                      value={formName}
+                      onChange={(e) => setFormName(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all font-medium"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">Phone number *</label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="Enter 10-digit number"
+                      value={formPhone}
+                      onChange={(e) => setFormPhone(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all font-medium"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">Email ID *</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="Enter email address"
+                      value={formEmail}
+                      onChange={(e) => setFormEmail(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all font-medium"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">College name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Enter your college/university"
+                      value={formCollege}
+                      onChange={(e) => setFormCollege(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all font-medium"
+                    />
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      className="w-full py-4 text-center text-white font-bold bg-[#181FC5] hover:bg-[#1418a0] rounded-xl transition-all shadow-md text-xs uppercase tracking-widest hover:scale-[1.01] active:scale-[0.99]"
+                    >
+                      Submit Enquiry
+                    </button>
+                  </div>
+                </form>
+
+                {/* Additional brief inclusions */}
+                <div className="mt-8 pt-6 border-t border-white/10 space-y-3">
+                  <div className="flex items-center gap-2.5 text-xs text-slate-300 font-semibold">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span>ISO 9001:2015 Certified Certificate</span>
-                  </li>
-                  <li className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />
-                    <span>Govt. OPC Approved Credentials</span>
-                  </li>
-                </ul>
-
-                <a
-                  href={selectedTrack.formUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full py-4 text-center text-white font-bold bg-[#181FC5] hover:bg-[#1418a0] rounded-2xl transition-all shadow-lg text-base"
-                >
-                  Enroll Now
-                </a>
+                  </div>
+                  <div className="flex items-center gap-2.5 text-xs text-slate-300 font-semibold">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span>Govt. Approved Experience letter</span>
+                  </div>
+                </div>
               </div>
 
+            </div>
+          </div>
+        </section>
+
+        {/* Dynamic Stats Section */}
+        <section className="bg-slate-50 py-16 border-t border-slate-100 font-sans">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 text-center mb-10">
+              Here's Why You Need to Master {selectedTrack.title}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              <div className="bg-white rounded-2xl border border-slate-100 p-6 text-center shadow-sm hover:scale-[1.01] transition-transform">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#181FC5] block mb-2">
+                  {getTrackStats(selectedTrack.title).jobs}
+                </span>
+                <span className="text-sm font-bold text-slate-500 uppercase tracking-wider block">
+                  Active Job Openings
+                </span>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-100 p-6 text-center shadow-sm hover:scale-[1.01] transition-transform">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#181FC5] block mb-2">
+                  {getTrackStats(selectedTrack.title).market}
+                </span>
+                <span className="text-sm font-bold text-slate-500 uppercase tracking-wider block">
+                  Global Market Size
+                </span>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-100 p-6 text-center shadow-sm hover:scale-[1.01] transition-transform">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#181FC5] block mb-2">
+                  {getTrackStats(selectedTrack.title).salary}
+                </span>
+                <span className="text-sm font-bold text-slate-500 uppercase tracking-wider block">
+                  Average Annual Salary
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Logos Partners Grid */}
+        <section className="bg-white py-16 border-t border-slate-100 font-sans">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 text-center mb-10">
+              Partnering with 50+ leading universities and institutions
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 items-center justify-items-center opacity-85">
+              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-[#4285F4] transition-all min-h-[60px] cursor-pointer shadow-sm">
+                Meta
+              </div>
+              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-slate-950 transition-all min-h-[60px] cursor-pointer shadow-sm">
+                Similarweb
+              </div>
+              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-indigo-600 transition-all min-h-[60px] cursor-pointer shadow-sm">
+                Hootsuite
+              </div>
+              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-[#00A4EF] transition-all min-h-[60px] cursor-pointer shadow-sm">
+                Moz
+              </div>
+              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-emerald-600 transition-all min-h-[60px] cursor-pointer shadow-sm">
+                Sproutsocial
+              </div>
+              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-rose-500 transition-all min-h-[60px] cursor-pointer shadow-sm">
+                Buffer
+              </div>
             </div>
           </div>
         </section>
@@ -547,12 +746,11 @@ function InternshipPrograms() {
               </div>
             </div>
 
-            <div className="flex justify-center relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/10 to-[#181FC5]/10 rounded-3xl filter blur-xl transform -rotate-3 pointer-events-none"></div>
+            <div className="flex justify-center relative bg-white p-6 rounded-3xl border border-slate-100 shadow-md">
               <img
-                src="/Image/online-learning-concept.svg"
+                src="/Image/IMG_8535.PNG"
                 alt="Program highlights"
-                className="w-full max-w-md lg:max-w-lg rounded-2xl relative hover:scale-[1.01] transition-transform duration-300"
+                className="w-full max-w-xs h-auto object-contain hover:scale-105 transition-transform duration-300"
               />
             </div>
 

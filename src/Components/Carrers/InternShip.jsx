@@ -452,12 +452,11 @@ function InternShip() {
               </div>
             </div>
 
-            <div className="flex justify-center relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/10 to-[#181FC5]/10 rounded-3xl filter blur-xl transform -rotate-3 pointer-events-none"></div>
+            <div className="flex justify-center relative bg-white p-6 rounded-3xl border border-slate-100 shadow-md">
               <img
-                src="/Image/online-learning-concept.svg"
+                src="/Image/IMG_8535.PNG"
                 alt="Program highlights"
-                className="w-full max-w-md lg:max-w-lg rounded-2xl relative hover:scale-[1.01] transition-transform duration-300"
+                className="w-full max-w-xs h-auto object-contain hover:scale-105 transition-transform duration-300"
               />
             </div>
 

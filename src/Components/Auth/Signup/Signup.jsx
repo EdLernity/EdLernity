@@ -174,38 +174,47 @@ function Signup() {
   });
 
   return (
-    <div className="block md:flex xl:flex justify-center items-center xl:w-2/4 md:w-2/4">
-      <div className="p-6 w-full block md:flex xl:flex justify-center items-center flex-col">
+    <div className="w-full flex flex-col justify-center">
+      <div className="w-full flex flex-col justify-center">
         {isResgisterSucess ? (
           <SucessPage req={req} />
         ) :  isError ? (
           <ErrorComponent setErrorValue={setErrorValue} req={req} />
         ) : (
           <>
-            <CardBody className="flex flex-col gap-4">
+            {/* Header */}
+            <div className="text-center md:text-left mb-6">
+              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-1.5">Create Account</h2>
+              <p className="text-sm text-slate-500 font-medium">Join EdLernity to start your learning journey</p>
+            </div>
+
+            <div className="space-y-4">
+              {/* Google Button */}
               <Button
-               onClick={() => googleSignUp()}
-                size="sm"
+                onClick={() => googleSignUp()}
+                size="lg"
                 variant="outlined"
                 color="blue-gray"
-                className="flex items-center gap-2 justify-center"
+                className="w-full flex items-center justify-center gap-3 py-3 border border-slate-200 hover:bg-slate-50/80 rounded-2xl transition-all font-bold text-sm tracking-wide shadow-sm normal-case"
               >
-                <svg className="flex text-xs mt-px mr-0.5 w-6 h-6" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48">
-<path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
-</svg>
-                Continue With Google
+                <svg className="w-5 h-5 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                  <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                  <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
+                  <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
+                  <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                </svg>
+                <span className="text-slate-700">Continue with Google</span>
               </Button>
-              
-              <p className="flex justify-center font-bold font-sans">
-                <span
-                  className="flex justify-center w-1/6 rounded-full border border-[#607d8b]"
-                  style={textColor}
-                >
-                  or
-                </span>
-              </p>
-              <div className="grid flex-col md:flex-row xl:flex-row gap-3 items-end md:flex xl:flex ">
-                <div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-4 my-4">
+                <div className="h-px flex-grow bg-slate-100"></div>
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">or</span>
+                <div className="h-px flex-grow bg-slate-100"></div>
+              </div>
+
+              {/* First Name & Last Name */}
+              <div className="grid grid-cols-2 gap-4">
                 <InputButton
                   fullWidth
                   label="First Name"
@@ -215,8 +224,6 @@ function Signup() {
                   error={firstNameError}
                   onChange={handleFirstNameChange}
                 />
-                </div>
-                <div>
                 <InputButton
                   fullWidth
                   label="Last Name"
@@ -225,12 +232,13 @@ function Signup() {
                   error={lastNameError}
                   onChange={handleLastNameChange}
                 />
-                </div>
               </div>
-              <div className="flex flex-col gap-3">
+
+              {/* Email & Phone */}
+              <div className="space-y-4">
                 <InputButton
                   fullWidth
-                  label="Email"
+                  label="Email Address"
                   type="email"
                   value={email}
                   error={emailError}
@@ -238,14 +246,16 @@ function Signup() {
                 />
                 <InputButton
                   fullWidth
-                  label="Phone no."
+                  label="Phone Number"
                   type="tel"
                   value={phone}
                   error={phoneNumberError}
                   onChange={handlePhoneChange}
                 />
               </div>
-              <div className="w-full flex flex-col xl:flex-row gap-3">
+
+              {/* Password & Confirm Password */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <InputButton
                   fullWidth
                   label="Password"
@@ -262,34 +272,40 @@ function Signup() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </div>
-              <div className="-ml-2.5 flex">
+
+              {/* Terms Checkbox */}
+              <div className="flex items-center gap-2 pt-1">
                 <Checkbox
                   onChange={(e) => setTermsAndConditions(e.target.checked)}
-                  label="Terms and condition"
+                  id="terms"
+                  className="rounded-md border-slate-300 text-[#181FC5] focus:ring-[#181FC5]"
                 />
+                <label htmlFor="terms" className="text-xs text-slate-500 font-semibold cursor-pointer">
+                  I agree to the Terms & Conditions
+                </label>
               </div>
-            </CardBody>
-            <CardFooter className="pt-0 flex flex-col">
-              <Button
-                style={buttonColor}
-                onClick={handleSignup}
-                disabled={!termsAndConditions}
-              >
-                Sign up
-              </Button>
-              <Typography variant="small" className="mt-6 flex justify-center">
-                Already have an account?
-                <Typography
-                  as="a"
-                  href="/auth/login"
-                  variant="small"
-                  style={textColor}
-                  className="ml-1 font-bold"
+
+              {/* Sign Up Button */}
+              <div className="pt-2">
+                <Button
+                  className="w-full py-4 text-white font-bold bg-gradient-to-r from-[#181FC5] to-[#4F46E5] rounded-2xl shadow-lg hover:shadow-indigo-500/20 hover:scale-[1.01] active:scale-[0.99] transition-all text-base normal-case"
+                  onClick={handleSignup}
+                  disabled={!termsAndConditions}
                 >
-                  Login
-                </Typography>
-              </Typography>
-            </CardFooter>
+                  Sign up
+                </Button>
+              </div>
+
+              {/* Already have account */}
+              <div className="text-center pt-2">
+                <p className="text-sm text-slate-500 font-medium">
+                  Already have an account?{' '}
+                  <a href="/auth/login" className="font-bold text-[#181FC5] hover:underline ml-1">
+                    Login
+                  </a>
+                </p>
+              </div>
+            </div>
           </>
         )}
       </div>

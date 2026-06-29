@@ -54,9 +54,9 @@ function CareersPage() {
             </div>
             <div className="flex justify-center">
               <img
-                src="/Image/internship_hero_2026.png"
+                src="/Image/IMG_8470.PNG"
                 alt="Careers at EdLernity"
-                className="w-full max-w-lg rounded-2xl shadow-lg border border-gray-100"
+                className="w-full max-w-lg rounded-2xl"
               />
             </div>
           </div>
@@ -186,11 +186,18 @@ function CareersPage() {
       <section className="py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <img
-              src="/Image/Intern3.png"
-              alt="EdLernity team culture"
-              className="rounded-2xl shadow-lg border border-gray-100 w-full"
-            />
+            <div className="w-full rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-slate-900 relative">
+              <video
+                src="/Image/animatew_this_walking_and_comi.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                controlsList="nodownload"
+                onContextMenu={(e) => e.preventDefault()}
+                className="w-full h-auto object-cover"
+              />
+            </div>
             <div>
               <h2 className="text-2xl sm:text-3xl font-bold text-[#181FC5] mb-4">
                 Why Intern at EdLernity?

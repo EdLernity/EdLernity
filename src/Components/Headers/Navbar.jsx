@@ -63,7 +63,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                 </>):(
                 <Link
                   to="/auth/login"
-                  className="py-2 px-7 hidden md:block text-white font-bold bg-gradient-to-r hover:-translate-y-1 transition-all duration-500 from-blue-500 to-pink-200 rounded-3xl group relative overflow-hidden"
+                  className="py-2 px-7 hidden md:block text-white font-bold bg-gradient-to-r from-[#181FC5] to-[#4F46E5] hover:shadow-lg hover:shadow-indigo-500/25 hover:-translate-y-1 transition-all duration-500 rounded-3xl group relative overflow-hidden"
                 >
                   Login
                 </Link>)}
@@ -322,7 +322,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             ) : (<div className="flex ml-4 justify-between gap-2">
           <Link
             to="/auth/login"
-            class="text-white hover:bg-indigo-700 w-full text-center  hover:text-white hover:-translate-y-1 transition-all duration-500 bg-blue-700  focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            className="text-white w-full text-center hover:scale-[1.01] transition-transform bg-gradient-to-r from-[#181FC5] to-[#4F46E5] font-bold rounded-2xl text-sm px-5 py-3 shadow-md focus:outline-none"
           >
             Login
           </Link>

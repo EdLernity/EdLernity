@@ -46,14 +46,9 @@ function Herosection() {
 
             <div className="relative w-full max-w-md lg:max-w-lg">
               <img
-                src="/Image/background.png"
-                alt="EdLernity Background"
-                className="w-full drop-shadow-[0_15px_30px_rgba(24,31,197,0.08)] hidden md:block rounded-3xl"
-              />
-              <img
-                src="/Image/mobileback.png"
-                alt="EdLernity Mobile"
-                className="w-full drop-shadow-[0_15px_30px_rgba(24,31,197,0.08)] md:hidden block rounded-2xl"
+                src="/Image/Untitled design.svg"
+                alt="EdLernity Illustration"
+                className="w-full max-w-xs sm:max-w-sm mx-auto drop-shadow-[0_20px_40px_rgba(24,31,197,0.12)] rounded-3xl animate-bounce-slow scale-110 sm:scale-100 transform transition-transform"
               />
 
               {/* Floating Glass Cards */}

@@ -12,6 +12,10 @@ function CoursesOffered() {
     navigate("/courses/overview");
   };
 
+  const handleClickInternship = () => {
+    navigate("/internship-programs");
+  };
+
   return (
     <>
      
@@ -188,12 +192,12 @@ function CoursesOffered() {
     </div>
       </div>
 
-      {/* Third Card: Lifetime Subscription */}
+      {/* Third Card: Professional Internship Programs */}
       <div className="container mx-auto gap-4 p-4 md:flex md:flex-col lg:flex-row xl:flex-row md:items-start py-8">
         <div className="mx-auto mt-4 max-w-2xl rounded-3xl ring-1 ring-gray-200 sm:mt-8 lg:mx-0 lg:flex lg:max-w-none">
           <div className="p-8 sm:p-10 lg:flex-auto">
-            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">One-time Subscription 12+ Courses</h3>
-            <p className="mt-6 text-base leading-relaxed text-slate-600 font-medium">One-time Subscription: Access 12+ Courses. Pay once, unlock unlimited learning. Dive into diverse topics, from coding to business skills, with our comprehensive course bundle.</p>
+            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">Professional Internship Programs</h3>
+            <p className="mt-6 text-base leading-relaxed text-slate-600 font-medium">Gain hands-on corporate training, construct complex full-scale projects, and receive professional mentorship along with government-recognized experience credentials. Total 3 Months Internship (2 Months Learning + 1 Month Dedicated capstone project work).</p>
             <div className="mt-10 flex items-center gap-x-4">
               <h4 className="flex-none text-sm font-bold uppercase tracking-wider text-indigo-600">What's included</h4>
               <div className="h-px flex-auto bg-gray-100"></div>
@@ -203,48 +207,48 @@ function CoursesOffered() {
                 <svg className="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
                 </svg>
-                Subscription to unlimited access to all our courses
+                3-Month structured remote internship track
               </li>
               <li className="flex gap-x-3">
                 <svg className="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
                 </svg>
-                1,000+ hours of learning
+                ISO 9001:2015 Certified & Govt OPC Approved Credentials
               </li>
               <li className="flex gap-x-3">
                 <svg className="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
                 </svg>
-                ISO Certified
+                Month 3 dedicated live Capstone project work
               </li>
               <li className="flex gap-x-3">
                 <svg className="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
                 </svg>
-                Access to 100+ upcoming courses in 2025
+                Live class sessions + recorded archives
               </li>
               <li className="flex gap-x-3">
                 <svg className="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                   <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
                 </svg>
-                E-books worth ₹9,999
+                E-books & developer notes worth ₹9,999
               </li>
             </ul>
           </div>
           <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
-            <div onClick={handleClickMulti} className="cursor-pointer flex-shrink-0 p-10 relative overflow-hidden bg-white rounded-lg max-w-md shadow-lg transition-all duration-1000 hover:bg-blue-100 hover:shadow-xl z-40 group">
+            <div onClick={handleClickInternship} className="cursor-pointer flex-shrink-0 p-10 relative overflow-hidden bg-white rounded-lg max-w-md shadow-lg transition-all duration-1000 hover:bg-blue-100 hover:shadow-xl z-40 group border border-slate-100">
               <svg className="absolute bottom-0 left-0 mb-8" viewBox="0 0 375 283" fill="none" style={{ transform: 'scale(1.5)', opacity: 0.1 }}>
                 <rect x="159.52" y="175" width="152" height="152" rx="8" transform="rotate(-45 159.52 175)" fill="blue" />
                 <rect y="107.48" width="152" height="152" rx="8" transform="rotate(-45 0 107.48)" fill="blue" />
               </svg>
-              <div className="mx-auto max-w-xs px-8">
-                <p className="text-base font-bold text-slate-600">EdLernity's Lifetime subscription</p>
+              <div className="mx-auto max-w-xs px-8 text-center">
+                <p className="text-base font-bold text-slate-600">EdLernity Professional Internship</p>
                 <p className="mt-6 flex items-baseline justify-center gap-x-2">
-                  <span className="text-5xl font-extrabold tracking-tight text-slate-900">₹ 899</span>
+                  <span className="text-5xl font-extrabold tracking-tight text-slate-900">₹5,599</span>
                   <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600">INR</span>
                 </p>
-                <span className="mt-10 block w-full rounded-md bg-gray-900 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Explore</span>
-                <p className="mt-6 text-xs leading-5 text-gray-600">Pay once, own it forever</p>
+                <span className="mt-10 block w-full rounded-md bg-gray-900 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Explore Tracks</span>
+                <p className="mt-6 text-xs leading-5 text-gray-600">3 Months Training & Certification</p>
               </div>
             </div>
           </div>
