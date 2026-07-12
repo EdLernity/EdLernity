@@ -78,7 +78,7 @@ function MyCourses() {
     },
     {
       id: "courses",
-      label: "Academics",
+      label: "Courses",
       count: myCourses?.length || 0,
     },
   ];
@@ -119,7 +119,7 @@ function MyCourses() {
                   </p>
                 )}
                 <p className="text-slate-600 font-medium mt-2 text-sm sm:text-base">
-                  Your learning hub for internships and academics in one place.
+                  Your learning hub for internships and courses in one place.
                 </p>
 
                 <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-5 mt-4 text-sm text-slate-600">
@@ -181,7 +181,7 @@ function MyCourses() {
             <div className="rounded-2xl bg-white border border-slate-100 px-4 py-3 text-center sm:text-left">
               <p className="text-2xl font-extrabold text-[#181FC5]">{courseCount}</p>
               <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mt-1">
-                Academics
+                Courses
               </p>
             </div>
             <div className="rounded-2xl bg-white border border-slate-100 px-4 py-3 text-center sm:text-left">
@@ -317,21 +317,21 @@ function MyCourses() {
           </section>
         )}
 
-        {/* Academics tab */}
+        {/* Courses tab */}
         {activeTab === "courses" && (
           <section>
             <h2 className="text-lg md:text-xl font-extrabold text-slate-800 mb-5">
-              {myCourses?.length === 0 ? "My Academics" : "Enrolled Academics"}
+              {myCourses?.length === 0 ? "My Courses" : "Enrolled Courses"}
             </h2>
 
             {(!myCourses || myCourses.length === 0) && (
               <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-5 py-8 text-center">
-                <p className="text-slate-600 font-medium mb-3">No academics enrolled yet.</p>
+                <p className="text-slate-600 font-medium mb-3">No courses enrolled yet.</p>
                 <Link
-                  to="/courses"
+                  to="/courses/overview"
                   className="inline-flex px-5 py-2.5 rounded-full bg-[#181FC5] text-white text-sm font-bold hover:bg-[#1418a0]"
                 >
-                  Browse Academics
+                  Browse Courses
                 </Link>
               </div>
             )}
