@@ -12,6 +12,7 @@ const LINKS = [
       { label: "About Us", url: "/about" },
       { label: "Careers", url: "/careers" },
       { label: "Contact Us", url: "/contact" },
+      { label: "Verify Certificate", url: "/verify-certificate" },
       { label: "Help and Support", url: "/contact" },
     ],
   },

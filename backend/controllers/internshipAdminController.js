@@ -4,10 +4,11 @@ const InternshipTrainerAssignment = require("../models/internshipTrainerAssignme
 const InternshipStudentAssignment = require("../models/internshipStudentAssignmentSchema");
 const InternshipProgramConfig = require("../models/internshipProgramConfigSchema");
 const InternshipCertificate = require("../models/internshipCertificateSchema");
-const { INTERNSHIP_CATALOG, getInternshipBySlug } = require("../utils/internshipCatalog");
+const { INTERNSHIP_CATALOG, getInternshipBySlug, listCatalogPrograms, listCareersProgramsAsync, resolveProgramTitle } = require("../utils/internshipCatalog");
 const { buildDefaultProgramConfig } = require("../utils/internshipConfigDefaults");
 const { enrollInternshipRecord } = require("./controller.enroll");
-const { v4: uuidv4 } = require("uuid");
+const { generateUniqueCertificateId } = require("../utils/certificateIdGenerator");
+const { resolveCertificateTemplateForProgram } = require("../utils/programTemplateService");
 
 async function findUserByEmail(email) {
   return UserModel.findOne({ email: email.trim().toLowerCase() });
@@ -25,7 +26,13 @@ async function getOrCreateProgramConfig(slug) {
 
 const listPrograms = async (req, res) => {
   try {
-    const programs = Object.values(INTERNSHIP_CATALOG);
+    const { track } = req.query;
+    let programs = listCatalogPrograms();
+    if (track === "careers") {
+      programs = await listCareersProgramsAsync();
+    } else if (track === "paid-tech") {
+      programs = programs.filter((p) => p.track === "paid-tech");
+    }
     res.status(200).json({ programs });
   } catch (err) {
     console.error(err);
@@ -221,7 +228,7 @@ const assignStudent = async (req, res) => {
 const promoteUserRole = async (req, res) => {
   try {
     const { email, role } = req.body;
-    if (!email || !["trainer", "admin", "student"].includes(role)) {
+    if (!email || !["trainer", "admin", "student", "manager"].includes(role)) {
       return res.status(400).json({ message: "Valid email and role are required" });
     }
 
@@ -286,12 +293,18 @@ const issueInternshipCertificate = async (req, res) => {
       });
     }
 
+    const certificateTemplate = await resolveCertificateTemplateForProgram(internshipSlug);
+
     const certificate = await InternshipCertificate.create({
       userId: student._id,
       internshipSlug,
-      programTitle: program.title,
+      programTitle: resolveProgramTitle(internshipSlug, {
+        enrollmentTitle: enrollment.title,
+        storedTitle: program?.title,
+      }),
       studentName: studentName.trim(),
-      uuid: uuidv4(),
+      uuid: await generateUniqueCertificateId("internship"),
+      certificateTemplateId: certificateTemplate?._id || null,
       issuedBy: req.user._id,
     });
 

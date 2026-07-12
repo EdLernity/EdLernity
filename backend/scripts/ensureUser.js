@@ -31,8 +31,8 @@ async function main() {
     process.exit(1);
   }
 
-  if (!["student", "trainer", "admin"].includes(role)) {
-    console.error("Role must be student, trainer, or admin");
+  if (!["student", "trainer", "admin", "manager"].includes(role)) {
+    console.error("Role must be student, trainer, manager, or admin");
     process.exit(1);
   }
 

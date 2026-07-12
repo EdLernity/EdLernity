@@ -88,6 +88,14 @@ export const PAGE_SEO = {
     path: "/cancellation-and-refund-policy",
     keywords: "EdLernity refund policy, cancellation policy",
   },
+  verifyCertificate: {
+    title: "Verify EdLernity Certificate – Authenticity Check",
+    description:
+      "Verify the genuineness of an EdLernity course or internship certificate using the certificate ID.",
+    path: "/verify-certificate",
+    keywords:
+      "verify EdLernity certificate, certificate authenticity, certificate validation, EdLernity credential check",
+  },
 };
 
 export const buildCanonicalUrl = (path) => {

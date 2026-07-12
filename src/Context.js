@@ -27,9 +27,13 @@ export const Context = ({ children }) => {
    if(isLogin)
    {
      apiInstancePrivate.get("/api/v1/enroll/fetch").then((response) => {
-    //console.log(response);
-    setProfile(response.data[0].userId);
-    setCourses(response.data[0].courseIds)
+    const first = Array.isArray(response.data) ? response.data[0] : null;
+    if (first) {
+      setProfile(first.userId);
+      setCourses(first.courseIds || []);
+    } else {
+      setCourses([]);
+    }
      }).catch((error) => {
 
      })
@@ -41,8 +45,14 @@ export const Context = ({ children }) => {
   
        })
      apiInstancePrivate.get("/auth/user-details").then((response) => {
-       
-        setUserProfile(response.data.user)
+        const profile = response.data.user;
+        if (profile?.role === "intern") {
+          const crmUrl = (process.env.REACT_APP_CRM_URL || "http://localhost:3001").replace(/\/$/, "");
+          localStorage.removeItem("_userAuth");
+          window.location.href = `${crmUrl}/signin`;
+          return;
+        }
+        setUserProfile(profile);
          }).catch((error) => {
     
          })

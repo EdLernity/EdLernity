@@ -38,7 +38,7 @@ const userInternshipSchema = new mongoose.Schema(
     },
     enrollmentSource: {
       type: String,
-      enum: ["payment", "admin_grant"],
+      enum: ["payment", "admin_grant", "invite"],
       default: "payment",
     },
   },

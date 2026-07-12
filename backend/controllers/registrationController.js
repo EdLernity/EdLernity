@@ -149,6 +149,14 @@ const loginUser = async (req, res) => {
         .status(401)
         .json({ success: false, message: "Account not verified!", redirectTo: "/reverify-email", text: "to verify again." });
     }
+    if (user.IsBlocked) {
+      return res.status(403).json({
+        success: false,
+        message: "Your account has been blocked. Contact admin or manager for access.",
+        redirectTo: "/auth/login",
+        text: "to login again.",
+      });
+    }
 if(password&&user.isGoogleAuth)
 {
   return res
@@ -172,7 +180,7 @@ if(password&&user.isGoogleAuth)
       );
 
       // Send the token in the response
-      return res.json({ success: true, token, redirectTo: "/", text: "", token });
+      return res.json({ success: true, token, role: user.role, redirectTo: "/", text: "", token });
     } else if (googleSignUp) {
       // If email and password are valid, generate a JWT token
       const token = jwt.sign(
@@ -182,7 +190,7 @@ if(password&&user.isGoogleAuth)
       );
 
       // Send the token in the response
-      return res.json({ success: true, token, redirectTo: "/", text: "", token });
+      return res.json({ success: true, token, role: user.role, redirectTo: "/", text: "", token });
     }
   } catch (error) {
     console.error("Error:", error);

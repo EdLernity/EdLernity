@@ -10,7 +10,7 @@ const { createUserCourse } = require("../utils/userCourseUtils");
 const Transaction = require("../models/transactionSchema");
 const Certificate = require("../models/model.certfication");
 const { getInternshipBySlug } = require("../utils/internshipCatalog");
-const { v4: uuidv4 } = require('uuid');
+const { generateUniqueCertificateId } = require("../utils/certificateIdGenerator");
 
 dotenv.config();
 
@@ -41,7 +41,7 @@ const getCertificationCoursesList = async (req, res) => {
 
 
     // Generate a UID for the certificate
-    const uuid = uuidv4();
+    const uuid = await generateUniqueCertificateId("course");
 
     // Create a new certificate document
     const certification = new Certificate({

@@ -6,11 +6,13 @@ import { Store } from "../../Context.js";
 import BaseLayout from "../../Layout/BaseLayout.jsx";
 import SeoHead from "../SEO/SeoHead.jsx";
 import { fetchMyInternshipsFromBackend } from "../InternshipPrograms/internshipCartUtils.js";
+import { apiInstancePrivate } from "../../Utils/AxiosInstance";
 import UserAvatar from "../../assets/user.png";
 
 function MyCourses() {
   const { myCourses, userProfile } = useContext(Store);
   const [myInternships, setMyInternships] = useState([]);
+  const [offerLetters, setOfferLetters] = useState([]);
   const [activeTab, setActiveTab] = useState("internships");
   const navigate = useNavigate();
 
@@ -31,6 +33,7 @@ function MyCourses() {
   const userRole = userProfile?.effectiveRole || userProfile?.role || "student";
   const isAdmin = userRole === "admin";
   const isTrainer = userRole === "trainer" || isAdmin;
+  const crmUrl = process.env.REACT_APP_CRM_URL || "http://localhost:3001";
 
   useEffect(() => {
     const token = localStorage.getItem("_userAuth");
@@ -43,11 +46,23 @@ function MyCourses() {
     fetchMyInternshipsFromBackend().then((list) => {
       if (active) setMyInternships(list);
     });
+    apiInstancePrivate.get("/api/v1/onboard/my-offer-letters", {
+      skipAuthRedirect: true,
+      skipErrorToast: true,
+    }).then(({ data }) => {
+      if (active) setOfferLetters(data.offerLetters || []);
+    }).catch(() => {});
 
     return () => {
       active = false;
     };
   }, [navigate]);
+
+  useEffect(() => {
+    if (myInternships.length === 0 && courseCount > 0) {
+      setActiveTab("courses");
+    }
+  }, [myInternships.length, courseCount]);
 
   const handleClick = (course) => {
     navigate(`/mycourses/${course._id}`, {
@@ -136,13 +151,13 @@ function MyCourses() {
           {(isAdmin || isTrainer) && (
             <div className="flex flex-wrap gap-3 mt-6">
               {isAdmin && (
-                <Link
-                  to="/admin/internships"
+                <a
+                  href={crmUrl}
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800"
                 >
                   <Shield className="w-4 h-4" />
                   Command Center
-                </Link>
+                </a>
               )}
               {isTrainer && (
                 <Link
@@ -239,6 +254,21 @@ function MyCourses() {
               </div>
             ) : (
               <div className="space-y-4">
+                {offerLetters.length > 0 && (
+                  <div className="rounded-2xl border border-emerald-100 bg-emerald-50 p-5">
+                    <h3 className="text-sm font-extrabold text-emerald-900 mb-3">Your Offer Letters</h3>
+                    <div className="space-y-2">
+                      {offerLetters.map((letter) => (
+                        <div key={letter.id} className="rounded-xl bg-white px-4 py-3 text-sm">
+                          <p className="font-bold text-slate-900">{letter.templateLabel || "Offer Letter"} — {letter.candidateName}</p>
+                          <p className="text-slate-500 text-xs mt-1">
+                            {letter.internshipSlug} · Issued {new Date(letter.issuedAt).toLocaleDateString("en-IN")}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {myInternships.map((item) => (
                   <div
                     key={item.slug}

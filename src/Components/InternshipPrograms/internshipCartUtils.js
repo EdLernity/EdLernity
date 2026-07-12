@@ -78,7 +78,10 @@ export function loadMyInternships() {
 export async function fetchMyInternshipsFromBackend() {
   try {
     const { apiInstancePrivate } = await import("../../Utils/AxiosInstance");
-    const { data } = await apiInstancePrivate.get("/api/v1/enroll/internships");
+    const { data } = await apiInstancePrivate.get("/api/v1/enroll/internships", {
+      skipAuthRedirect: true,
+      skipErrorToast: true,
+    });
     const list = Array.isArray(data?.internships) ? data.internships : [];
     localStorage.setItem(MY_INTERNSHIPS_KEY, JSON.stringify(list));
     return list;

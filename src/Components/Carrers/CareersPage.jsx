@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -14,9 +14,40 @@ import BaseLayout from "../../Layout/BaseLayout";
 import SeoHead from "../SEO/SeoHead";
 import { PAGE_SEO } from "../../Utils/seoConfig";
 import { careerPerks, internshipRoles } from "../../StaticObj/careersData";
+import { BACKEND_URL } from "../../URL_Config";
+
+function mapProgramToRole(program) {
+  return {
+    id: program.slug,
+    title: program.title,
+    category: program.category || "",
+    track: program.trackLabel || "Internship Track",
+    image: program.coverImage || "/Image/technical_internship.png",
+    imageClass: "object-cover",
+    location: program.location || "Remote",
+    duration: program.duration || "2 Months",
+    applyUrl: program.applyUrl || "",
+    highlights: program.highlights || [],
+    description: program.description || "",
+    preferred: Boolean(program.preferred),
+    preferredNote: program.preferredNote || "",
+  };
+}
 
 function CareersPage() {
   const currentYear = new Date().getFullYear();
+  const [roles, setRoles] = useState(internshipRoles);
+
+  useEffect(() => {
+    fetch(`${BACKEND_URL}/api/v1/careers/programs`)
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => {
+        if (Array.isArray(data.programs) && data.programs.length > 0) {
+          setRoles(data.programs.map(mapProgramToRole));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <BaseLayout>
@@ -118,7 +149,7 @@ function CareersPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {internshipRoles.map((role) => (
+            {roles.map((role) => (
               <article
                 key={role.id}
                 className="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-[#181FC5]/10 transition-all overflow-hidden flex flex-col"

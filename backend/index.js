@@ -15,12 +15,16 @@ const path = require('path');
 const enrollment = require('./routes/enroll.routes');
 const internshipAdminRoutes = require('./routes/internshipAdmin.routes');
 const internshipTrainerRoutes = require('./routes/internshipTrainer.routes');
+const crmRoutes = require('./routes/crm.routes');
+const careersRoutes = require('./routes/careers.routes');
+const { ensureCareersReady } = require('./utils/careersProgramService');
 const courseModel = require('./models/userCourseSchema');
 
 const app = express();
 
 // Connect to MongoDB 
 connectDB();
+ensureCareersReady().catch((err) => console.error("Careers program seed failed:", err));
 
 app.use((req, res, next) => {
     if (req.url.includes('/Image/')) {
@@ -53,6 +57,11 @@ app.use('/api/v1/course-access', courseaccessRoutes);
 app.use('/api/v1/enroll', enrollment);
 app.use('/api/v1/internship-admin', internshipAdminRoutes);
 app.use('/api/v1/internship-trainer', internshipTrainerRoutes);
+app.use('/api/v1/crm', crmRoutes);
+app.use('/api/v1/careers', careersRoutes);
+app.use('/api/v1/certificates', require('./routes/certificateVerify.routes'));
+app.use('/api/v1/onboard', require('./routes/onboard.routes'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', contactRoutes);
 
 app.get("/", (req, res) => {

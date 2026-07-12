@@ -12,8 +12,8 @@ const authMiddleware = async (req, res, next) => {
 
     const [, token] = authHeader?.split(' ');
 
-    if (!token) {
-        return sendErrorResponse(res, 401, "Unauthorized request");
+    if (!token || token === "null" || token === "undefined") {
+        return sendErrorResponse(res, 401, "No Token Provided");
       }
 
     try {
@@ -27,6 +27,10 @@ const authMiddleware = async (req, res, next) => {
           if (!user) {
            
             return sendErrorResponse(res, 401, "Session Expired");
+          }
+
+          if (user.IsBlocked) {
+            return sendErrorResponse(res, 403, "Your account has been blocked. Contact admin or manager for access.");
           }
         req.user = user;
         next();

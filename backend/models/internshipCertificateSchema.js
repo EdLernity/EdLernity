@@ -24,6 +24,15 @@ const internshipCertificateSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    certificateTemplateId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "CertificateTemplate",
+      default: null,
+    },
+    certificateType: {
+      type: String,
+      default: "internship-completion",
+    },
     issuedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -33,6 +42,9 @@ const internshipCertificateSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-internshipCertificateSchema.index({ userId: 1, internshipSlug: 1 }, { unique: true });
+internshipCertificateSchema.index(
+  { userId: 1, internshipSlug: 1, certificateTemplateId: 1 },
+  { unique: true, sparse: true }
+);
 
 module.exports = mongoose.model("InternshipCertificate", internshipCertificateSchema);

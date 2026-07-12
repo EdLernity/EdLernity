@@ -1,0 +1,30 @@
+---
+description: Do not start, restart, or kill local dev servers unless the user explicitly asks in the current message.
+alwaysApply: true
+---
+
+# Manual dev servers only
+
+The user runs EdLernity locally themselves. **Never** auto-start or restart services.
+
+## Do NOT run unless the user explicitly asks in this message
+
+- `npm start`, `npm run dev`, `nodemon`, `node index.js`
+- `lsof -ti:5001 | xargs kill`, or any kill/restart on ports **3000**, **3001**, **5001**
+- Background shells (`block_until_ms: 0`) to keep servers running
+- ngrok or other tunnels
+
+## Allowed without asking
+
+- Read-only checks: `curl`, build once (`npm run build`), lint, tests
+- Explain how the user can start servers in their own terminal
+
+## Ports (reference)
+
+| Service | Port |
+|---------|------|
+| React app | 3000 |
+| CRM (Next.js) | 3001 |
+| Backend API | 5001 |
+
+If verification needs a running server, tell the user which command to run — do not run it for them.

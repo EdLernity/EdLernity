@@ -92,9 +92,9 @@ function ReviewPage() {
               <div className="absolute inset-0 bg-pink-500/5 rounded-full filter blur-3xl pointer-events-none"></div>
               <div className="relative bg-white/50 backdrop-blur border border-white/60 p-4 rounded-3xl shadow-2xl overflow-hidden hover:scale-[1.01] transition-transform duration-300">
                 <img
-                  src="/Image/online-learning-concept.svg"
-                  alt="EdLernity internship and learning"
-                  className="w-full max-w-md lg:max-w-lg rounded-2xl"
+                  src="/Image/IMG_8847.PNG"
+                  alt="EdLernity learning journey — internships, mentorship, and certificates"
+                  className="w-full max-w-md lg:max-w-lg rounded-2xl object-cover"
                 />
               </div>
             </div>

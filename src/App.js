@@ -20,7 +20,8 @@ import Member from './Components/Memberpage/Member.jsx';
 import InternshipPrograms from './Components/InternshipPrograms/InternshipPrograms.jsx';
 import InternshipTrackDetail from './Components/InternshipPrograms/InternshipTrackDetail.jsx';
 import InternshipDashboard from './Components/InternshipPrograms/InternshipDashboard.jsx';
-import AdminInternshipDashboard from './Components/InternshipPrograms/AdminInternshipDashboard.jsx';
+import InternOnboard from './Components/InternshipPrograms/InternOnboard.jsx';
+import AdminInternshipsRedirect from './Components/Admin/AdminInternshipsRedirect.jsx';
 import TrainerInternshipDashboard from './Components/InternshipPrograms/TrainerInternshipDashboard.jsx';
 import TrainerProgramEditor from './Components/InternshipPrograms/TrainerProgramEditor.jsx';
 import InternshipCart from './Components/InternshipPrograms/InternshipCart.jsx';
@@ -35,6 +36,7 @@ import ScrollToTop from './Utils/ScrollToTop.jsx';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CertificateVerifyPage from './Components/CertificateVerify/CertificateVerifyPage.jsx';
 import TransactionData from './Components/Admin/TransactionData.jsx';
 import ReVerifyMail from './Components/Auth/SuccessPage/ReVerifyMail.jsx';
 import VerifyMail from './Components/Auth/SuccessPage/VerifyMail.jsx';
@@ -90,7 +92,8 @@ function App() {
             <Route path='/internship-programs' element={<InternshipPrograms />} />
             <Route path='/internship-programs/:slug' element={<InternshipTrackDetail />} />
             <Route path='/my-internships/:slug' element={<InternshipDashboard />} />
-            <Route path='/admin/internships' element={<AdminInternshipDashboard />} />
+            <Route path='/intern-onboard/:token' element={<InternOnboard />} />
+            <Route path='/admin/internships' element={<AdminInternshipsRedirect />} />
             <Route path='/trainer/internships' element={<TrainerInternshipDashboard />} />
             <Route path='/trainer/internships/:slug' element={<TrainerProgramEditor />} />
             <Route path='/cart' element={<InternshipCart />} />
@@ -99,6 +102,7 @@ function App() {
             <Route path='/mycourses' element={<MyCourses />} />
             <Route path='/careers' element={<CareersPage />} />
             <Route path='/internship' element={<InternShip />} />
+            <Route path='/verify-certificate' element={<CertificateVerifyPage />} />
             <Route path='/get-transaction/:name/:secretKeys' element={<TransactionData />} />
           </Routes>
           <ToastContainer position="bottom-center" autoClose={5000} />

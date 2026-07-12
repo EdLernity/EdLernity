@@ -33,6 +33,18 @@ function Login() {;
   const { course, cart, message } = location?.state ?? {};
   const redirectUrl = location?.state?.redirectUrl || '/';
 
+  const crmUrl = (process.env.REACT_APP_CRM_URL || "http://localhost:3001").replace(/\/$/, "");
+
+  const finishLogin = (token, role) => {
+    if (role === "intern") {
+      showSnackbar("Career interns sign in at the intern portal", "info", "top");
+      window.location.href = `${crmUrl}/signin`;
+      return;
+    }
+    localStorage.setItem("_userAuth", token);
+    showSnackbar("Login Successful", "success", "top");
+    goAfterLogin();
+  };
   const goAfterLogin = () => {
     if (cart) {
       try {
@@ -71,9 +83,7 @@ function Login() {;
         let res = await axiosInstanceWithoutToken.post("/auth/login", googleSignInData);
         
         if (res?.data?.success) {
-          localStorage.setItem("_userAuth", res?.data?.token);
-          showSnackbar("Login Successful", "success", "top");
-          goAfterLogin();
+          finishLogin(res?.data?.token, res?.data?.role);
         }
       } catch (error) {
         console.error("Error during signup:", error.response.message);
@@ -114,9 +124,7 @@ function Login() {;
       try {
         let res = await axiosInstanceWithoutToken.post("/auth/login", data);
         if (res?.data?.success) {
-          localStorage.setItem("_userAuth", res?.data?.token);
-          showSnackbar("Login Successful", "success", "top");
-          goAfterLogin();
+          finishLogin(res?.data?.token, res?.data?.role);
         }
       } catch (error) {
         console.error("Error during signup:", error.message);
