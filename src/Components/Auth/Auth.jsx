@@ -9,7 +9,6 @@ function Auth() {
 
   const location = useLocation();
 
-  let isLogin = location.pathname.includes("/login");
   let isForget = location.pathname.includes("/reset");
   let isUpdatePassword = location.pathname.includes("/updatePassword");
 
@@ -34,9 +33,9 @@ function Auth() {
           
           <div className="relative text-center space-y-6 z-10 flex flex-col items-center">
             <img 
-              src={isLogin ? "/Image/IMG_8831.PNG" : "/Image/auth_mascot_illustration.png"}
-              alt="loginIllustration" 
-              className="w-full max-w-xs lg:max-w-sm h-auto rounded-2xl"
+              src="/Image/IMG_8841.PNG"
+              alt="EdLernity authentication"
+              className="w-full max-w-xs lg:max-w-sm h-auto rounded-2xl object-contain"
             />
             <div className="space-y-2">
               <h2 className="text-2xl font-extrabold text-slate-800">Secure & Seamless</h2>
@@ -48,7 +47,7 @@ function Auth() {
         {/* Content Column: Forms */}
         <div className="w-full md:w-1/2 flex items-center justify-center p-8 sm:p-12 bg-white relative">
           <div className="w-full max-w-md">
-            {isLogin ? <Login /> : isForget ? <ForgetPasswordComponent /> : isUpdatePassword ? <UpdatePassword/> : <Signup/> }
+            {location.pathname.includes("/login") ? <Login /> : isForget ? <ForgetPasswordComponent /> : isUpdatePassword ? <UpdatePassword/> : <Signup/> }
           </div>
         </div>
       </div>
