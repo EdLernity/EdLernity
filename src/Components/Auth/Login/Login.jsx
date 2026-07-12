@@ -30,8 +30,23 @@ function Login() {;
   const navigate = useNavigate();
   // const history = useHistory();
   const location = useLocation();
-  const { course } = location?.state ?? {};
+  const { course, cart, message } = location?.state ?? {};
   const redirectUrl = location?.state?.redirectUrl || '/';
+
+  const goAfterLogin = () => {
+    if (cart) {
+      try {
+        sessionStorage.setItem("_internshipCart", JSON.stringify(cart));
+      } catch (_) {}
+      navigate("/cart", { state: { cart } });
+      return;
+    }
+    if (course) {
+      navigate(redirectUrl, { state: { course } });
+      return;
+    }
+    navigate(redirectUrl || "/");
+  };
   const handlePassord = (password) => {
     if ( password.length <8 ) {
       setPasswordError('Minimum 8  characters are required');
@@ -58,11 +73,7 @@ function Login() {;
         if (res?.data?.success) {
           localStorage.setItem("_userAuth", res?.data?.token);
           showSnackbar("Login Successful", "success", "top");
-
-          navigate(redirectUrl)
-          navigate(redirectUrl, {
-            state: {course:course }
-        });
+          goAfterLogin();
         }
       } catch (error) {
         console.error("Error during signup:", error.response.message);
@@ -105,8 +116,7 @@ function Login() {;
         if (res?.data?.success) {
           localStorage.setItem("_userAuth", res?.data?.token);
           showSnackbar("Login Successful", "success", "top");
-
-          navigate(redirectUrl)
+          goAfterLogin();
         }
       } catch (error) {
         console.error("Error during signup:", error.message);
@@ -119,7 +129,9 @@ function Login() {;
       {/* Header */}
       <div className="text-center md:text-left mb-8">
         <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">Welcome Back</h2>
-        <p className="text-sm text-slate-500 font-medium animate-pulse">Please enter your details to sign in</p>
+        <p className="text-sm text-slate-500 font-medium animate-pulse">
+          {message || "Please enter your details to sign in"}
+        </p>
       </div>
 
       <div className="space-y-5">

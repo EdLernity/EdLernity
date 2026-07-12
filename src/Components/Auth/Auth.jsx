@@ -34,9 +34,9 @@ function Auth() {
           
           <div className="relative text-center space-y-6 z-10 flex flex-col items-center">
             <img 
-              src="/Image/auth_mascot_illustration.png" 
+              src={isLogin ? "/Image/IMG_8831.PNG" : "/Image/auth_mascot_illustration.png"}
               alt="loginIllustration" 
-              className="w-full max-w-xs h-auto animate-bounce-slow"
+              className="w-full max-w-xs lg:max-w-sm h-auto rounded-2xl"
             />
             <div className="space-y-2">
               <h2 className="text-2xl font-extrabold text-slate-800">Secure & Seamless</h2>

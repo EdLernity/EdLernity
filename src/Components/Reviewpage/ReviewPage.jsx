@@ -344,7 +344,7 @@ function ReviewPage() {
                 <div>
                   <StarRating rating={review.rating} />
                   <p className="text-slate-600 mt-6 mb-8 leading-relaxed text-sm sm:text-base italic">
-                    "${review.comment}"
+                    "{review.comment}"
                   </p>
                 </div>
                 

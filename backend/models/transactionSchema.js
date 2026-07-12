@@ -31,6 +31,14 @@ const transactionSchema = new mongoose.Schema({
   subscribedAllCourse:{
     type: Boolean,
     default: false
+  },
+  internshipSlug: {
+    type: String,
+    default: null
+  },
+  notes: {
+    type: String,
+    default: null
   }
 });
 

@@ -236,19 +236,52 @@ function CoursesOffered() {
             </ul>
           </div>
           <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
-            <div onClick={handleClickInternship} className="cursor-pointer flex-shrink-0 p-10 relative overflow-hidden bg-white rounded-lg max-w-md shadow-lg transition-all duration-1000 hover:bg-blue-100 hover:shadow-xl z-40 group border border-slate-100">
-              <svg className="absolute bottom-0 left-0 mb-8" viewBox="0 0 375 283" fill="none" style={{ transform: 'scale(1.5)', opacity: 0.1 }}>
-                <rect x="159.52" y="175" width="152" height="152" rx="8" transform="rotate(-45 159.52 175)" fill="blue" />
-                <rect y="107.48" width="152" height="152" rx="8" transform="rotate(-45 0 107.48)" fill="blue" />
+            <div
+              onClick={handleClickInternship}
+              className="cursor-pointer flex-shrink-0 p-10 relative overflow-hidden bg-white rounded-lg max-w-md shadow-lg transition-all duration-1000 hover:bg-blue-100 hover:shadow-xl z-40 group"
+            >
+              <svg
+                className="absolute bottom-0 left-0 mb-8"
+                viewBox="0 0 375 283"
+                fill=""
+                style={{ transform: "scale(1.5)", opacity: 0.1 }}
+              >
+                <rect
+                  x="159.52"
+                  y="175"
+                  width="152"
+                  height="152"
+                  rx="8"
+                  transform="rotate(-45 159.52 175)"
+                  fill="blue"
+                />
+                <rect
+                  y="107.48"
+                  width="152"
+                  height="152"
+                  rx="8"
+                  transform="rotate(-45 0 107.48)"
+                  fill="blue"
+                />
               </svg>
-              <div className="mx-auto max-w-xs px-8 text-center">
-                <p className="text-base font-bold text-slate-600">EdLernity Professional Internship</p>
-                <p className="mt-6 flex items-baseline justify-center gap-x-2">
-                  <span className="text-5xl font-extrabold tracking-tight text-slate-900">₹5,599</span>
-                  <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600">INR</span>
+              <div className="mx-auto max-w-xs px-8">
+                <p className="text-base font-bold text-center text-slate-600">
+                  EdLernity Professional Internship
                 </p>
-                <span className="mt-10 block w-full rounded-md bg-gray-900 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Explore Tracks</span>
-                <p className="mt-6 text-xs leading-5 text-gray-600">3 Months Training & Certification</p>
+                <p className="mt-6 flex items-baseline justify-center gap-x-2">
+                  <span className="text-5xl font-extrabold tracking-tight text-slate-900">
+                    ₹5,599
+                  </span>
+                  <span className="text-sm font-semibold leading-6 tracking-wide text-gray-600">
+                    INR
+                  </span>
+                </p>
+                <span className="mt-10 block w-full rounded-md bg-gray-900 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                  Explore Tracks
+                </span>
+                <p className="mt-6 text-xs leading-5 text-gray-600">
+                  3 Months Training & Certification
+                </p>
               </div>
             </div>
           </div>

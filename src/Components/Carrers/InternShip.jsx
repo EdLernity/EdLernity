@@ -131,7 +131,7 @@ function InternShip() {
   ];
 
   return (
-    <BaseLayout>
+     <BaseLayout>
       <SeoHead
         title={PAGE_SEO.careers?.title || "Careers & Internships - EdLernity"}
         description={PAGE_SEO.careers?.description || "Explore and apply for remote internships in Business, Marketing, HR, and Tech."}
@@ -170,16 +170,16 @@ function InternShip() {
                 <div className="bg-white/80 backdrop-blur border border-slate-100 shadow-sm rounded-xl px-4 py-2.5 flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                   <span className="text-sm font-semibold text-slate-700">ISO 9001:2015 Certified</span>
-                </div>
+          </div>
                 <div className="bg-white/80 backdrop-blur border border-slate-100 shadow-sm rounded-xl px-4 py-2.5 flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                   <span className="text-sm font-semibold text-slate-700">Government Approved</span>
-                </div>
+        </div>
                 <div className="bg-white/80 backdrop-blur border border-slate-100 shadow-sm rounded-xl px-4 py-2.5 flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-[#181FC5]" />
                   <span className="text-sm font-semibold text-slate-700">100% Remote / Flexible</span>
                 </div>
-              </div>
+            </div>
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
@@ -197,7 +197,7 @@ function InternShip() {
                 >
                   Explore Tracks
                 </a>
-              </div>
+</div>
             </div>
 
             {/* Right Column (Premium 3D Image Representation) */}
@@ -209,10 +209,10 @@ function InternShip() {
                   alt="EdLernity Internship Drive 2026"
                   className="w-full max-w-md lg:max-w-full rounded-2xl drop-shadow-[0_15px_30px_rgba(24,31,197,0.12)]"
                 />
-              </div>
+                </div>
             </div>
 
-          </div>
+            </div>
         </div>
       </section>
 
@@ -228,7 +228,7 @@ function InternShip() {
             <p className="text-slate-600 text-lg max-w-2xl mx-auto font-medium">
               Select the professional track that aligns with your domain interests and career trajectory.
             </p>
-          </div>
+                        </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             
@@ -243,18 +243,18 @@ function InternShip() {
                   />
                   <div className="absolute top-4 right-4 bg-amber-500 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full tracking-wide">
                     2 Months
-                  </div>
-                </div>
-                
+    </div>
+</div>
+
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-[#181FC5] transition-colors leading-snug">
                     Business Development
                   </h3>
                   <p className="text-slate-500 text-sm mb-6 leading-relaxed font-medium">
                     Drive strategic partnerships, lead corporate outreach campaigns, compile market analysis, and architect client relationship strategies.
-                  </p>
-                </div>
-              </div>
+        </p>
+    </div>
+</div>
 
               <div className="p-6 pt-0 border-t border-slate-50 flex flex-col gap-2">
                 <a
@@ -271,8 +271,8 @@ function InternShip() {
                 >
                   View Details & Curriculum
                 </Button>
-              </div>
-            </div>
+    </div>
+</div>
 
             {/* Track 2: Sales & Marketing */}
             <div className="group bg-white rounded-3xl border border-slate-100 shadow-md hover:shadow-xl hover:border-[#181FC5]/20 transition-all duration-300 overflow-hidden flex flex-col justify-between">
@@ -285,9 +285,9 @@ function InternShip() {
                   />
                   <div className="absolute top-4 right-4 bg-amber-500 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full tracking-wide">
                     2 Months
-                  </div>
-                </div>
-                
+</div>
+</div>
+
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-slate-800 mb-3 group-hover:text-[#181FC5] transition-colors leading-snug">
                     Sales & Marketing
@@ -296,7 +296,7 @@ function InternShip() {
                     Plan social outreach, curate campaign visuals, analyze marketing analytics dashboards, and assist in business growth lead conversion.
                   </p>
                 </div>
-              </div>
+            </div>
 
               <div className="p-6 pt-0 border-t border-slate-50 flex flex-col gap-2">
                 <a
@@ -397,7 +397,7 @@ function InternShip() {
                 >
                   View Details & Curriculum
                 </Button>
-              </div>
+</div>
             </div>
 
           </div>
@@ -473,7 +473,7 @@ function InternShip() {
               <span className="text-sm font-bold uppercase tracking-wider text-[#181FC5] bg-[#181FC5]/10 px-3 py-1 rounded-full">CREDENTIAL</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-4 mb-6 leading-tight">
                 Government-Approved & Internationally Recognized Certification
-              </h2>
+            </h2>
               
               <p className="text-slate-600 mb-8 leading-relaxed font-medium">
                 Unlock career doors worldwide. Upon successful completion of project work, you get certified under global standardization policies.
@@ -511,9 +511,9 @@ function InternShip() {
                   <p className="text-slate-600 font-medium">
                     <strong className="text-slate-800">Govt. Registered OPC</strong> verification guaranteeing the legitimacy of your completion certificate.
                   </p>
-                </div>
-              </div>
-            </div>
+        </div>
+    </div>
+</div>
 
             <div className="lg:order-1 flex justify-center relative">
               <div className="absolute inset-0 bg-indigo-500/5 rounded-3xl filter blur-3xl transform pointer-events-none"></div>
@@ -524,7 +524,7 @@ function InternShip() {
                   className="w-full max-w-md rounded-2xl"
                 />
               </div>
-            </div>
+    </div>
 
           </div>
         </div>
@@ -554,9 +554,9 @@ function InternShip() {
                 <p className="text-slate-600 text-sm leading-relaxed font-medium whitespace-pre-line">
                   {module.description}
                 </p>
-              </div>
-            ))}
-          </div>
+        </div>
+      ))}
+  </div>
         </DialogBody>
         <DialogFooter className="px-8 py-4 bg-slate-50 border-t border-slate-100 gap-3 font-sans">
           <button

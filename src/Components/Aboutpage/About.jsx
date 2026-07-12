@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CountUp from "react-countup";
-import { Star } from "lucide-react";
+import { BookOpen, GraduationCap, ShoppingCart, Star } from "lucide-react";
 import BaseLayout from "../../Layout/BaseLayout";
 import SeoHead from "../SEO/SeoHead";
 import { PAGE_SEO } from "../../Utils/seoConfig";
@@ -161,13 +161,11 @@ function About() {
 
             <div className="flex justify-center relative">
               <div className="absolute inset-0 bg-[#181FC5]/5 rounded-3xl filter blur-2xl transform rotate-3 pointer-events-none"></div>
-              <div className="relative bg-white/50 backdrop-blur border border-white/60 p-4 rounded-3xl shadow-2xl overflow-hidden hover:scale-[1.01] transition-transform duration-300">
-                <img
-                  src="/Image/about-us.svg"
-                  alt="About EdLernity"
-                  className="w-full max-w-md lg:max-w-lg rounded-2xl drop-shadow-[0_15px_30px_rgba(24,31,197,0.1)]"
-                />
-              </div>
+              <img
+                src="/Image/IMG_8829.PNG"
+                alt="Welcome to EdLernity Tech"
+                className="relative w-full max-w-md lg:max-w-lg hover:scale-[1.01] transition-transform duration-300"
+              />
             </div>
 
           </div>
@@ -201,7 +199,7 @@ function About() {
             <div className="lg:col-span-6 lg:order-1 flex justify-center relative">
               <div className="absolute inset-0 bg-pink-500/5 rounded-full filter blur-3xl pointer-events-none"></div>
               <img
-                src="/Image/employees-are-busy-doing-work.svg"
+                src="/Image/IMG_8712.PNG"
                 alt="Special Offering"
                 className="w-full max-w-md lg:max-w-lg hover:scale-[1.01] transition-transform"
               />
@@ -228,13 +226,11 @@ function About() {
           </div>
 
           <div className="flex justify-center">
-            <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 max-w-sm mx-auto hover:scale-[1.02] transition-transform duration-300">
-              <img
-                src="/Image/Image_20240430_131514_0000.jpg"
-                alt="ISO Certification"
-                className="w-full rounded-2xl object-contain shadow-sm"
-              />
-            </div>
+            <img
+              src="/Image/Image_20240430_131514_0000.jpg"
+              alt="ISO Certification"
+              className="w-full max-w-2xl object-contain hover:scale-[1.01] transition-transform duration-300"
+            />
           </div>
 
         </div>
@@ -247,7 +243,7 @@ function About() {
             
             <div className="lg:col-span-5 flex justify-center">
               <img
-                src="/Image/about-us.svg"
+                src="/Image/IMG_8711.PNG"
                 alt="Who We Are"
                 className="w-full max-w-md lg:max-w-lg"
               />
@@ -336,12 +332,8 @@ function About() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
             <div className="bg-white rounded-3xl border border-slate-100 p-8 text-center shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-14 h-14 bg-blue-50 text-[#181FC5] rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
-                <img
-                  src="/Image/Book.png"
-                  className="w-7 h-7 object-contain"
-                  alt="Choose Any Courses"
-                />
+              <div className="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <BookOpen className="w-7 h-7 text-[#181FC5]" strokeWidth={2} />
               </div>
               <h4 className="text-xl font-bold text-slate-800 mb-3">
                 Choose Any Course
@@ -352,12 +344,8 @@ function About() {
             </div>
 
             <div className="bg-white rounded-3xl border border-slate-100 p-8 text-center shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-14 h-14 bg-pink-50 text-pink-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
-                <img
-                  src="/Image/Book4.png"
-                  className="w-7 h-7 object-contain"
-                  alt="Purchase Your Course"
-                />
+              <div className="w-14 h-14 bg-pink-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <ShoppingCart className="w-7 h-7 text-pink-600" strokeWidth={2} />
               </div>
               <h4 className="text-xl font-bold text-slate-800 mb-3">
                 Purchase Your Course
@@ -368,12 +356,8 @@ function About() {
             </div>
 
             <div className="bg-white rounded-3xl border border-slate-100 p-8 text-center shadow-sm hover:shadow-md transition-shadow">
-              <div className="w-14 h-14 bg-violet-50 text-violet-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
-                <img
-                  src="/Image/Book2.png"
-                  className="w-7 h-7 object-contain"
-                  alt="Great! Start Learn"
-                />
+              <div className="w-14 h-14 bg-violet-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                <GraduationCap className="w-7 h-7 text-violet-600" strokeWidth={2} />
               </div>
               <h4 className="text-xl font-bold text-slate-800 mb-3">
                 Great! Start Learning
@@ -402,9 +386,9 @@ function About() {
             <div className="flex justify-center relative">
               <div className="absolute inset-0 bg-[#181FC5]/5 rounded-3xl filter blur-2xl transform rotate-3 pointer-events-none"></div>
               <img
-                src="/Image/Astronaut with space shuttle.gif"
+                src="/Image/IMG_8706.PNG"
                 alt="Our Mission"
-                className="w-full max-w-sm rounded-3xl shadow-xl relative"
+                className="w-full max-w-sm rounded-3xl relative"
               />
             </div>
             <div>
@@ -422,7 +406,7 @@ function About() {
             <div className="lg:order-2 flex justify-center relative">
               <div className="absolute inset-0 bg-pink-500/5 rounded-3xl filter blur-2xl transform -rotate-3 pointer-events-none"></div>
               <img
-                src="/Image/employee-predicts-business-vision.svg"
+                src="/Image/IMG_8829.PNG"
                 alt="Our Vision"
                 className="w-full max-w-sm rounded-3xl relative"
               />
@@ -449,7 +433,7 @@ function About() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 text-center">
             <div>
               <p className="text-5xl sm:text-6xl font-extrabold mb-2">
-                <CountUp end={1000} duration={3} />+
+                <CountUp end={10000} duration={3} />+
               </p>
               <p className="text-blue-100 text-lg font-semibold uppercase tracking-wider">Active Users</p>
             </div>
@@ -485,7 +469,7 @@ function About() {
                 <div>
                   <StarRating rating={testimonial.rating} />
                   <p className="text-slate-600 mt-6 mb-8 leading-relaxed text-sm sm:text-base italic">
-                    "${testimonial.comment}"
+                    "{testimonial.comment}"
                   </p>
                 </div>
                 

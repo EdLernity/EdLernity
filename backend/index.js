@@ -13,6 +13,8 @@ const userCourse =  require('./routes/userCourseRoutes');
 const contactRoutes =  require('./routes/ContactRoutes');
 const path = require('path');
 const enrollment = require('./routes/enroll.routes');
+const internshipAdminRoutes = require('./routes/internshipAdmin.routes');
+const internshipTrainerRoutes = require('./routes/internshipTrainer.routes');
 const courseModel = require('./models/userCourseSchema');
 
 const app = express();
@@ -49,6 +51,8 @@ app.use('/api', gcsRoutes);
 app.use('/api/v1/course', courseRoutes);
 app.use('/api/v1/course-access', courseaccessRoutes);
 app.use('/api/v1/enroll', enrollment);
+app.use('/api/v1/internship-admin', internshipAdminRoutes);
+app.use('/api/v1/internship-trainer', internshipTrainerRoutes);
 app.use('/api', contactRoutes);
 
 app.get("/", (req, res) => {

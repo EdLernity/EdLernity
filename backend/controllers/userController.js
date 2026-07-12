@@ -16,7 +16,20 @@ const getUserDetails = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Unauthorized: User not found in the database' });
     }
 
-    return res.json({ success: true, user });
+    const adminEmails = (process.env.ADMIN_EMAILS || "")
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+    const userEmail = (user.email || "").toLowerCase();
+    const effectiveRole =
+      user.role === "admin" || adminEmails.includes(userEmail)
+        ? "admin"
+        : user.role || "student";
+
+    const userPayload = user.toObject();
+    userPayload.effectiveRole = effectiveRole;
+
+    return res.json({ success: true, user: userPayload });
   } catch (error) {
     console.error('Error fetching user details:', error);
     return res.status(500).json({ success: false, message: 'Internal server error' });

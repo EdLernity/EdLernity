@@ -155,34 +155,22 @@ console.log(videosObject)
 };
 const sendOfferLetter = async (req, res) => {
   try {
-    // Check if user is authenticated
-    
     if (!req.user) return res.status(401).json({ message: "Unauthorized" });
-    // Check if user is authorized
-    if (
-      req.user._id.toString() !== "66032b6104c13e9447dc9403" &&
-      req.user._id.toString() !== "661cc83c2de92ebfe267b717" &&
-      req.user._id.toString() !== "67adaf347da882ef744c6dbc" &&
-      req.user._id.toString() !== "660ab2f14daa3637459eabbd" 
 
-    ) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    
-
-    // Validate presence of required fields
     const { email, mail, subject } = req.body;
     if (!email || !mail || !subject) {
       return res.status(400).json({ message: "Please provide all required fields." });
     }
 
-    // Check if email is valid (you can add more robust email validation if needed)
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ message: "Please provide a valid email address." });
     }
 
-    // Access FormData fields from req.body
+    if (!req.file) {
+      return res.status(400).json({ message: "Offer letter PDF is required." });
+    }
+
     await sendEmail.sendOfferEmail(subject, email, mail, mail, req.file)
       .then((result) => {
         console.log(result);

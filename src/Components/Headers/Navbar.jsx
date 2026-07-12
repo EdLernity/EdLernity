@@ -50,7 +50,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                   to="/mycourses"
                   className="py-2 px-7 hidden md:block text-white font-bold bg-gradient-to-r hover:-translate-y-1 transition-all duration-500 from-blue-500 to-pink-200 rounded-3xl group relative overflow-hidden"
                 >
-                  My Courses
+                  My Learning
                 </Link>&nbsp;
                 <div onClick={handleLogout} class="group flex cursor-pointer items-center justify-center rounded-3xl bg-[#7c44e3] px-4 py-1 text-white transition">
   <span class="group flex w-full items-center justify-center rounded-xl py-1 text-center font-bold text-white">Logout</span>
@@ -119,15 +119,6 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
               </li>
               <li>
                 <Link
-                  to="/contact"
-                  class={location.pathname==="/contact"?"block py-2 pr-4 pl-3 text-white rounded bg-blue-700 lg:bg-transparent lg:text-blue-700 lg:p-0 dark:text-white":"block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"}
-                  
-                >
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link
                   to="/careers"
                   class={location.pathname==="/careers"?"block py-2 pr-4 pl-3 text-white rounded bg-blue-700 lg:bg-transparent lg:text-blue-700 lg:p-0 dark:text-white":"block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"}
                 >
@@ -147,7 +138,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
                   to="/blog"
                   class={location.pathname==="/blog"?"block py-2 pr-4 pl-3 text-white rounded bg-blue-700 lg:bg-transparent lg:text-blue-700 lg:p-0 dark:text-white":"block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"}
                 >
-                  EdLernity Academics
+                  Academics
                 </Link>
               </li>
             </ul>
@@ -245,19 +236,6 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
               fontWeight: "400",
             }}
           >
-            <NavLink to="/contact">Contact</NavLink>
-          </Typography>
-          <hr className="border border-gray-200" />
-          <Typography
-            color="gray"
-            className="font-bold"
-            style={{
-              fontFamily: "Tenor Sans, sans-serif",
-              textTransform: "uppercase",
-              color: "#000",
-              fontWeight: "400",
-            }}
-          >
             <NavLink to="/careers">Careers</NavLink>
           </Typography>
           <hr className="border border-gray-200" />
@@ -284,7 +262,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
               fontWeight: "400",
             }}
           >
-            <NavLink to="/blog">EdLernity Academics</NavLink>
+            <NavLink to="/blog">Academics</NavLink>
           </Typography>
         {localStorage.getItem("_userAuth") ? (
             <>
@@ -299,7 +277,7 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
               fontWeight: "400",
             }}
           >
-            <NavLink to="/mycourses">My Courses</NavLink>
+            <NavLink to="/mycourses">My Learning</NavLink>
           </Typography>
           <hr className="border border-gray-200" />
           <Typography

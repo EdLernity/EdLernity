@@ -18,6 +18,12 @@ import PrivacyPolicy from './Components/Legal/PrivacyPolicy.jsx';
 import TermAndCondition from './Components/Legal/TermAndCondition.jsx';
 import Member from './Components/Memberpage/Member.jsx';
 import InternshipPrograms from './Components/InternshipPrograms/InternshipPrograms.jsx';
+import InternshipTrackDetail from './Components/InternshipPrograms/InternshipTrackDetail.jsx';
+import InternshipDashboard from './Components/InternshipPrograms/InternshipDashboard.jsx';
+import AdminInternshipDashboard from './Components/InternshipPrograms/AdminInternshipDashboard.jsx';
+import TrainerInternshipDashboard from './Components/InternshipPrograms/TrainerInternshipDashboard.jsx';
+import TrainerProgramEditor from './Components/InternshipPrograms/TrainerProgramEditor.jsx';
+import InternshipCart from './Components/InternshipPrograms/InternshipCart.jsx';
 import MyCourses from './Components/MyCourses/MyCourses.jsx';
 import PageNotFound from './Components/PageNotFound/PageNotFound';
 import Payment from './Components/Paymentpage/Payment.jsx';
@@ -82,6 +88,12 @@ function App() {
             <Route path='/paytm' element={<Paytm />} />
             <Route path='/member' element={<Member />} />
             <Route path='/internship-programs' element={<InternshipPrograms />} />
+            <Route path='/internship-programs/:slug' element={<InternshipTrackDetail />} />
+            <Route path='/my-internships/:slug' element={<InternshipDashboard />} />
+            <Route path='/admin/internships' element={<AdminInternshipDashboard />} />
+            <Route path='/trainer/internships' element={<TrainerInternshipDashboard />} />
+            <Route path='/trainer/internships/:slug' element={<TrainerProgramEditor />} />
+            <Route path='/cart' element={<InternshipCart />} />
             <Route path='/verify-email' element={<VerifyMail/>} />
             <Route path='/reverify-email' element={<ReVerifyMail/>} />
             <Route path='/mycourses' element={<MyCourses />} />

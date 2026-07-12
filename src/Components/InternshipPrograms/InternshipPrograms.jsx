@@ -1,538 +1,94 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Brain,
-  Code,
-  Cpu,
-  Database,
-  Terminal,
-  Shield,
-  CheckSquare,
-  Cloud,
-  Globe,
-  BarChart2,
-  Briefcase,
   Calendar,
   BookOpenCheck,
   CheckCircle2,
   Users,
   Mail,
-  ArrowLeft
+  Star,
+  Clock,
+  Zap,
+  Award,
+  ShieldCheck,
+  Briefcase,
+  Sparkles,
+  ChevronDown
 } from "lucide-react";
 import BaseLayout from '../../Layout/BaseLayout';
 import SeoHead from '../SEO/SeoHead';
 import { PAGE_SEO } from '../../Utils/seoConfig';
-import axios from 'axios';
-import { BACKEND_URL } from '../../URL_Config';
-import { showSnackbar } from '../Utils/enQueSnackBar';
+import { internshipTracks } from './internshipTracksData';
 
-const internshipTracks = [
+const internshipFaqs = [
   {
-    id: 1,
-    title: "Artificial Intelligence & Machine Learning",
-    category: "AI & Machine Learning",
-    icon: Brain,
-    iconColor: "text-purple-600 bg-purple-50 border-purple-100",
-    desc: "Master neural networks, predictive modeling, deep learning architectures, and deploy real-world AI/ML production pipelines.",
-    highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
-    formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/ai_machine_learning_banner.png",
-    curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "Machine Learning Foundations, Supervised/Unsupervised Algorithms & Regressions" },
-      { week: "Month 2 (Week 5-8)", topic: "Deep Learning, Neural Networks & Computer Vision Architectures" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Deploying custom neural predictive pipelines in production" }
-    ],
-    tools: ["Python", "TensorFlow/PyTorch", "Scikit-Learn", "Keras", "Pandas", "NumPy"]
+    q: "How much time should I set aside each week?",
+    a: "Most interns spend about 6-10 hours a week across live sessions, recordings, and practice. Prefer to move faster or fit learning around college and work? EdLernity supports both - join mentor-led live classes when you can, and catch up with recordings and notes at your own pace without falling behind the cohort."
   },
   {
-    id: 12,
-    title: "GenAI & Prompt Engineering",
-    category: "Generative AI",
-    icon: Brain,
-    iconColor: "text-pink-600 bg-pink-50 border-pink-100",
-    desc: "Dive deep into LLMs, prompt patterns, fine-tuning, RAG frameworks, and build customized Generative AI workflows.",
-    highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
-    formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/genai_prompt_eng_banner.png",
-    curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "Transformer Architectures, GPT models, & API integrations" },
-      { week: "Month 2 (Week 5-8)", topic: "Advanced Prompt Engineering, LangChain & RAG (Retrieval-Augmented Generation) frameworks" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Architecting & deploying a custom Generative AI agent service in production" }
-    ],
-    tools: ["OpenAI API", "HuggingFace", "LangChain", "LlamaIndex", "Vector Databases", "Prompt Engineering"]
+    q: "Who can join the EdLernity Internship Program?",
+    a: "Students, fresh graduates, and early-career professionals who want hands-on industry exposure. If you are ready to learn by building real projects, you are a fit - prior job experience is not required."
   },
   {
-    id: 2,
-    title: "Full Stack MERN/MEAN with AI",
-    category: "Full Stack Tech",
-    icon: Code,
-    iconColor: "text-blue-600 bg-blue-50 border-blue-100",
-    desc: "Build highly responsive web applications using React, Node, Express, MongoDB and integrate AI models.",
-    highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
-    formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/full_stack_dev_banner.png",
-    curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "Frontend React.js/Angular & Responsive UI Layouts" },
-      { week: "Month 2 (Week 5-8)", topic: "Backend Node.js/Express Services & MongoDB SQL Database" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Constructing and launching a full-scale AI-powered web app" }
-    ],
-    tools: ["React", "Node.js", "Express", "MongoDB", "GitHub"]
+    q: "How long is the internship and what is the format?",
+    a: "The program runs for 3 months: core live learning in the first phase, then a dedicated live capstone project month. You get live classes, recordings, notes, and mentor support throughout."
   },
   {
-    id: 3,
-    title: "Salesforce Cloud with AI",
-    category: "Salesforce & AI",
-    icon: Cloud,
-    iconColor: "text-cyan-600 bg-cyan-50 border-cyan-100",
-    desc: "Learn Salesforce administration, developer flows, Apex programming, and integrating Einstein AI tools.",
-    highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
-    formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/salesforce_cloud_ai_banner.png",
-    curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "Salesforce CRM Administration & Customization Foundations" },
-      { week: "Month 2 (Week 5-8)", topic: "Apex Development, Visualforce, and Salesforce Einstein AI Customizations" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Deploying AI-powered Salesforce Service Cloud automated pipelines" }
-    ],
-    tools: ["Salesforce", "Apex", "Einstein AI", "SOQL", "Lightning Web Components"]
+    q: "What are the timings of the classes?",
+    a: "Classes are tailored for convenience, kicking off after 6 PM to suit your busy schedules and commitments. Dive in when you're ready to learn!"
   },
   {
-    id: 5,
-    title: "Python Developer with AI",
-    category: "Tech Development",
-    icon: Terminal,
-    iconColor: "text-amber-600 bg-amber-50 border-amber-100",
-    desc: "Write modular Python script templates, scrape web databases, and build backend AI automations.",
-    highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
-    formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/python_developer_ai_banner.png",
-    curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "Python scripts programming & OOP architectures" },
-      { week: "Month 2 (Week 5-8)", topic: "Web scraping systems, Django/FastAPI backend servers" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Developing and hosting automated Python scripting and AI services" }
-    ],
-    tools: ["Python", "FastAPI", "Django", "BeautifulSoup", "Git"]
+    q: "Is this a remote internship?",
+    a: "Yes. EdLernity internships are designed for remote participation so you can learn from anywhere while still working in a structured cohort with live sessions and project deadlines."
   },
   {
-    id: 8,
-    title: "Cloud Computing & DevOps",
-    category: "Infrastructure",
-    icon: Cpu,
-    iconColor: "text-sky-600 bg-sky-50 border-sky-100",
-    desc: "Understand AWS/Azure operations, docker container deployment, and building automated CI/CD pipelines.",
-    highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
-    formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/cloud_devops_banner.png",
-    curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "AWS/Azure cloud resources configuration & networking" },
-      { week: "Month 2 (Week 5-8)", topic: "Docker containers, Kubernetes, & Jenkins CI/CD automation" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Architecting automated auto-scaling cloud cluster environments" }
-    ],
-    tools: ["AWS", "Docker", "Kubernetes", "Jenkins", "Terraform"]
+    q: "What certificate will I receive?",
+    a: "On successful completion - including project work and hands-on skill evaluation - you receive an EdLernity Certificate of Internship. It is issued under our ISO 9001:2015 quality framework and government-registered OPC credentials."
   },
   {
-    id: 10,
-    title: "Power BI & Business Analytics",
-    category: "Data & Analytics",
-    icon: BarChart2,
-    iconColor: "text-orange-600 bg-orange-50 border-orange-100",
-    desc: "Construct highly interactive dashboard metrics, custom DAX query scripts, and model business data.",
-    highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
-    formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/power_bi_analytics_banner.png",
-    curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "Data cleaning, business query structures & modeling in Excel" },
-      { week: "Month 2 (Week 5-8)", topic: "Dax calculations, metrics design & dashboard dashboards" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Deploying complete corporate business insights reporting model" }
-    ],
-    tools: ["Power BI", "Excel", "DAX", "SQL", "Tableau"]
+    q: "How do I earn the certification?",
+    a: "Complete your track modules, deliver your live capstone project, and demonstrate skills through hands-on sessions. Meeting EdLernity’s practical benchmarks confirms certification under our quality standards."
   },
   {
-    id: 11,
-    title: "Project Management Certification Program",
-    category: "Management",
-    icon: Briefcase,
-    iconColor: "text-rose-600 bg-rose-50 border-rose-100",
-    desc: "Learn agile development sprints, client requirement tracking, and certified project lifecycle planning.",
-    highlights: ["Live classes + Recordings", "All program notes & recordings", "E-Book included"],
-    formUrl: "https://forms.gle/4JeqCsAveQRqWWq48",
-    coverImage: "/Image/project_management_banner.png",
-    curriculum: [
-      { week: "Month 1 (Week 1-4)", topic: "Agile & Scrum frameworks, scheduling & lifecycle stages" },
-      { week: "Month 2 (Week 5-8)", topic: "Cost budgeting, risk assessment, quality audits & planning" },
-      { week: "Month 3 (Project Phase)", topic: "Live Capstone Project: Coordinating team sprints and product delivery roadmap simulation" }
-    ],
-    tools: ["Jira", "Trello", "MS Project", "Asana", "Miro"]
+    q: "Do I get GenAI workshop access with every track?",
+    a: "Yes. Enrolling in any internship track includes complimentary access to the GenAI & Prompt Engineering workshop - covering LLMs, prompt patterns, and RAG-style workflows."
+  },
+  {
+    q: "What is Reznio and do interns get it?",
+    a: "Yes. Right after you enroll in any EdLernity internship, you get complimentary Reznio access - one platform for ATS-ready resumes, interview practice, company research, job tracking, and offer negotiation. Skills from your internship, strategy for your job search."
+  },
+  {
+    q: "Will I get placement or career support?",
+    a: "You build portfolio-ready project work, receive mentor feedback, and earn a credential employers recognize. With Reznio included, you also get tools to tailor applications, practice interviews, and track offers - plus our hiring and internship partner network."
   }
 ];
 
 function InternshipPrograms() {
   const currentYear = new Date().getFullYear();
   const navigate = useNavigate();
-  const [selectedTrack, setSelectedTrack] = useState(null);
 
-  const [formName, setFormName] = useState("");
-  const [formPhone, setFormPhone] = useState("");
-  const [formEmail, setFormEmail] = useState("");
-  const [formCollege, setFormCollege] = useState("");
-  const [activeAccordion, setActiveAccordion] = useState(0);
+  const [openFaq, setOpenFaq] = useState(0);
 
-  const getTrackStats = (title) => {
-    if (title.includes("Artificial Intelligence") || title.includes("GenAI")) {
-      return { jobs: "35K+", market: "$180 Billion", salary: "₹8 - 18 Lakh" };
-    }
-    if (title.includes("Full Stack")) {
-      return { jobs: "45K+", market: "$120 Billion", salary: "₹6 - 14 Lakh" };
-    }
-    if (title.includes("Salesforce")) {
-      return { jobs: "20K+", market: "$85 Billion", salary: "₹7 - 15 Lakh" };
-    }
-    if (title.includes("Python")) {
-      return { jobs: "30K+", market: "$98 Billion", salary: "₹5 - 12 Lakh" };
-    }
-    if (title.includes("Cloud") || title.includes("DevOps")) {
-      return { jobs: "28K+", market: "$150 Billion", salary: "₹7 - 16 Lakh" };
-    }
-    if (title.includes("Power BI") || title.includes("Analytics")) {
-      return { jobs: "25K+", market: "$70 Billion", salary: "₹5 - 11 Lakh" };
-    }
-    return { jobs: "22K+", market: "$60 Billion", salary: "₹5 - 10 Lakh" };
-  };
+  const batchMonth = new Date().toLocaleString("en-US", { month: "long" });
+  const seatsLeft = 60;
 
-  const handleEnquirySubmit = async (e) => {
-    e.preventDefault();
-    if (!formName.trim() || !formPhone.trim() || !formEmail.trim() || !formCollege.trim()) {
-      showSnackbar("Please fill in all fields", "info", "top");
-      return;
-    }
-    if (!/^\d{10}$/.test(formPhone.trim())) {
-      showSnackbar("Phone number must be exactly 10 digits", "error", "top");
-      return;
-    }
-    try {
-      const payload = {
-        name: formName.trim(),
-        email: formEmail.trim(),
-        phone: formPhone.trim(),
-        subject: `Internship Enquiry: ${selectedTrack.title}`,
-        message: `Enquiry submitted for student. College Name: ${formCollege.trim()}`
-      };
-      await axios.post(BACKEND_URL + "/api/contact", payload);
-      showSnackbar("Enquiry submitted successfully!", "success", "top");
-      setFormName("");
-      setFormPhone("");
-      setFormEmail("");
-      setFormCollege("");
-    } catch (err) {
-      console.error("Enquiry submission error:", err);
-      showSnackbar("Successfully submitted enquiry!", "success", "top");
-    }
-  };
+  const alumniCompanies = [
+    { name: "Google", src: "/Image/companies/google.svg" },
+    { name: "Microsoft", src: "/Image/companies/microsoft.svg" },
+    { name: "Amazon", src: "/Image/companies/amazon.svg" },
+    { name: "Meta", src: "/Image/companies/meta.svg" },
+    { name: "Apple", src: "/Image/companies/apple.svg" },
+    { name: "Netflix", src: "/Image/companies/netflix.svg" },
+    { name: "IBM", src: "/Image/companies/ibm.svg" },
+    { name: "Accenture", src: "/Image/companies/accenture.svg" },
+    { name: "Salesforce", src: "/Image/companies/salesforce.svg" },
+    { name: "Adobe", src: "/Image/companies/adobe.svg" },
+    { name: "Uber", src: "/Image/companies/uber.svg" },
+    { name: "LinkedIn", src: "/Image/companies/linkedin.svg" },
+  ];
+  const alumniLogoStrip = [...alumniCompanies, ...alumniCompanies];
 
-  // If a track is selected, render the dedicated inline details view
-  if (selectedTrack) {
-    const IconComponent = selectedTrack.icon;
-    return (
-      <BaseLayout>
-        <SeoHead
-          title={`${selectedTrack.title} - EdLernity Internship`}
-          description={selectedTrack.desc}
-          path={`/internship-programs/${selectedTrack.id}`}
-        />
 
-        {/* Back navigation bar */}
-        <div className="bg-slate-50 border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <button
-              onClick={() => setSelectedTrack(null)}
-              className="inline-flex items-center gap-2 text-slate-600 hover:text-[#181FC5] text-sm font-semibold transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Internship Programs
-            </button>
-          </div>
-        </div>
-
-        {/* Detailed Program view */}
-        <section className="bg-white py-12 lg:py-16 font-sans">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-              
-              {/* Left Column: Detail Info & Curriculum */}
-              <div className="lg:col-span-8 space-y-8">
-                <div>
-                  <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#181FC5]/10 text-[#181FC5] text-xs font-bold uppercase tracking-wider mb-4">
-                    {selectedTrack.category}
-                  </span>
-                  <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4 leading-tight">
-                    {selectedTrack.title}
-                  </h1>
-                  <p className="text-slate-600 text-base leading-relaxed font-medium">
-                    {selectedTrack.desc}
-                  </p>
-                </div>
-
-                {/* Cover Image inside details */}
-                <div className="rounded-3xl overflow-hidden border border-slate-100 shadow-md">
-                  <img
-                    src={selectedTrack.coverImage}
-                    alt={selectedTrack.title}
-                    className="w-full h-auto max-h-[350px] object-cover"
-                  />
-                </div>
-
-                {/* Program Highlights bullet list (Corizo style) */}
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
-                  <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-700">
-                    Program Highlights
-                  </h3>
-                  <p className="text-xs text-slate-500 font-semibold mb-2">Transform Your Skills with Our Comprehensive Program</p>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <li className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                      <CheckCircle2 className="w-5 h-5 text-[#181FC5] shrink-0" />
-                      <span>Designed for students & job seekers</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                      <CheckCircle2 className="w-5 h-5 text-[#181FC5] shrink-0" />
-                      <span>ISO 9001:2015 Certification</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                      <CheckCircle2 className="w-5 h-5 text-[#181FC5] shrink-0" />
-                      <span>Government OPC Approved Credentials</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                      <CheckCircle2 className="w-5 h-5 text-[#181FC5] shrink-0" />
-                      <span>Fosters expertise & live capstone project work</span>
-                    </li>
-                    <li className="flex items-center gap-3 text-sm font-bold text-slate-600 col-span-1 md:col-span-2">
-                      <CheckCircle2 className="w-5 h-5 text-[#181FC5] shrink-0" />
-                      <span>100+ Hiring and Internship Corporate Partners</span>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Key Tools Learned */}
-                <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
-                    Key Tools & Technologies Learned
-                  </h3>
-                  <div className="flex flex-wrap gap-2.5">
-                    {selectedTrack.tools.map((tool) => (
-                      <span
-                        key={tool}
-                        className="px-3.5 py-1.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl"
-                      >
-                        {tool}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Syllabus Roadmap Accordion */}
-                <div className="space-y-4">
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-800 mb-2">
-                    Syllabus
-                  </h2>
-                  <p className="text-slate-500 text-xs sm:text-sm mb-4 font-semibold">
-                    Note: The first 2 months focus on advanced core lessons. The final 3rd month is dedicated entirely to comprehensive Live Capstone Project execution.
-                  </p>
-                  <div className="space-y-3">
-                    {selectedTrack.curriculum.map((step, idx) => (
-                      <div
-                        key={step.week}
-                        className="bg-white border border-slate-200 rounded-2xl overflow-hidden transition-all duration-300 shadow-sm"
-                      >
-                        <button
-                          onClick={() => setActiveAccordion(activeAccordion === idx ? -1 : idx)}
-                          className="w-full flex items-center justify-between p-5 text-left font-extrabold text-slate-800 hover:bg-slate-50 transition-colors"
-                        >
-                          <span className="flex items-center gap-3">
-                            <span className="px-2.5 py-1 bg-indigo-50 border border-indigo-100 text-indigo-600 text-xs font-bold rounded-lg shrink-0">
-                              {step.week}
-                            </span>
-                            <span className="text-sm sm:text-base">{step.topic.split(":")[0] || step.topic}</span>
-                          </span>
-                          <svg
-                            className={`w-5 h-5 text-slate-400 transform transition-transform duration-300 ${
-                              activeAccordion === idx ? "rotate-180" : ""
-                            }`}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </button>
-                        
-                        {activeAccordion === idx && (
-                          <div className="px-5 pb-5 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-100 bg-slate-50/50">
-                            {step.topic}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Enquiry Form Card */}
-              <div className="lg:col-span-4 lg:sticky lg:top-8 bg-[#151B40] text-white rounded-3xl p-6 sm:p-8 shadow-lg border border-slate-800">
-                <h3 className="text-xl font-bold mb-2">
-                  Apply for {selectedTrack.title}
-                </h3>
-                
-                {/* Program Fee Badge */}
-                <div className="flex items-center gap-2 mb-4 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs font-semibold">
-                  <span className="text-slate-400 uppercase tracking-wider">Fee:</span>
-                  <span className="text-xl font-extrabold text-emerald-400">₹5,599</span>
-                  <span className="text-[10px] text-slate-400">INR</span>
-                </div>
-
-                <p className="text-xs text-slate-300 mb-6 font-medium">
-                  Fill out the form below to register and book a slot. Our learning advisor will contact you shortly.
-                </p>
-
-                <form onSubmit={handleEnquirySubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">First Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Enter your name"
-                      value={formName}
-                      onChange={(e) => setFormName(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all font-medium"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">Phone number *</label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="Enter 10-digit number"
-                      value={formPhone}
-                      onChange={(e) => setFormPhone(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all font-medium"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">Email ID *</label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="Enter email address"
-                      value={formEmail}
-                      onChange={(e) => setFormEmail(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all font-medium"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">College name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Enter your college/university"
-                      value={formCollege}
-                      onChange={(e) => setFormCollege(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all font-medium"
-                    />
-                  </div>
-
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      className="w-full py-4 text-center text-white font-bold bg-[#181FC5] hover:bg-[#1418a0] rounded-xl transition-all shadow-md text-xs uppercase tracking-widest hover:scale-[1.01] active:scale-[0.99]"
-                    >
-                      Submit Enquiry
-                    </button>
-                  </div>
-                </form>
-
-                {/* Additional brief inclusions */}
-                <div className="mt-8 pt-6 border-t border-white/10 space-y-3">
-                  <div className="flex items-center gap-2.5 text-xs text-slate-300 font-semibold">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>ISO 9001:2015 Certified Certificate</span>
-                  </div>
-                  <div className="flex items-center gap-2.5 text-xs text-slate-300 font-semibold">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Govt. Approved Experience letter</span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* Dynamic Stats Section */}
-        <section className="bg-slate-50 py-16 border-t border-slate-100 font-sans">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 text-center mb-10">
-              Here's Why You Need to Master {selectedTrack.title}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              <div className="bg-white rounded-2xl border border-slate-100 p-6 text-center shadow-sm hover:scale-[1.01] transition-transform">
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#181FC5] block mb-2">
-                  {getTrackStats(selectedTrack.title).jobs}
-                </span>
-                <span className="text-sm font-bold text-slate-500 uppercase tracking-wider block">
-                  Active Job Openings
-                </span>
-              </div>
-              <div className="bg-white rounded-2xl border border-slate-100 p-6 text-center shadow-sm hover:scale-[1.01] transition-transform">
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#181FC5] block mb-2">
-                  {getTrackStats(selectedTrack.title).market}
-                </span>
-                <span className="text-sm font-bold text-slate-500 uppercase tracking-wider block">
-                  Global Market Size
-                </span>
-              </div>
-              <div className="bg-white rounded-2xl border border-slate-100 p-6 text-center shadow-sm hover:scale-[1.01] transition-transform">
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#181FC5] block mb-2">
-                  {getTrackStats(selectedTrack.title).salary}
-                </span>
-                <span className="text-sm font-bold text-slate-500 uppercase tracking-wider block">
-                  Average Annual Salary
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Logos Partners Grid */}
-        <section className="bg-white py-16 border-t border-slate-100 font-sans">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 text-center mb-10">
-              Partnering with 50+ leading universities and institutions
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 items-center justify-items-center opacity-85">
-              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-[#4285F4] transition-all min-h-[60px] cursor-pointer shadow-sm">
-                Meta
-              </div>
-              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-slate-950 transition-all min-h-[60px] cursor-pointer shadow-sm">
-                Similarweb
-              </div>
-              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-indigo-600 transition-all min-h-[60px] cursor-pointer shadow-sm">
-                Hootsuite
-              </div>
-              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-[#00A4EF] transition-all min-h-[60px] cursor-pointer shadow-sm">
-                Moz
-              </div>
-              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-emerald-600 transition-all min-h-[60px] cursor-pointer shadow-sm">
-                Sproutsocial
-              </div>
-              <div className="bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 w-full flex items-center justify-center font-bold text-slate-400 text-sm hover:bg-slate-100 hover:text-rose-500 transition-all min-h-[60px] cursor-pointer shadow-sm">
-                Buffer
-              </div>
-            </div>
-          </div>
-        </section>
-      </BaseLayout>
-    );
-  }
 
   // Otherwise, render the grid of all tracks
   return (
@@ -564,49 +120,167 @@ function InternshipPrograms() {
               </h1>
               
               <p className="text-lg sm:text-xl text-slate-600 font-medium mb-4">
-                Total 3 Months Internship (2 Months Learning + Last Month Dedicated Project Work)
+                Live mentor-led internship · Capstone project · ISO-backed certificate
               </p>
               
-              <p className="text-base text-slate-500 max-w-xl mx-auto lg:mx-0 leading-relaxed mb-8">
-                Gain hands-on corporate training, construct complex full-scale projects in the final month, and receive professional mentorship along with government-recognized certifications. 
+              <p className="text-base text-slate-500 max-w-xl mx-auto lg:mx-0 leading-relaxed mb-6">
+                Build portfolio-ready work with industry mentors, ship a live capstone in your final month, and walk away with government-recognized credentials - plus complimentary GenAI workshop and Reznio job-search access after enrollment.
               </p>
               
-              {/* Badges */}
-              <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8">
-                <div className="bg-white/80 backdrop-blur border border-slate-100 shadow-sm rounded-xl px-4 py-2.5 flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                  <span className="text-sm font-semibold text-slate-700">ISO 9001:2015 Certified</span>
+              {/* Urgency / demand proof */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 max-w-2xl mx-auto lg:mx-0">
+                <div className="relative overflow-hidden rounded-2xl bg-white border border-rose-100 shadow-sm px-4 py-3.5 text-left group hover:-translate-y-0.5 transition-transform sm:col-span-1">
+                  <div className="absolute -right-2 -top-2 w-16 h-16 bg-rose-500/10 rounded-full blur-xl group-hover:scale-125 transition-transform" />
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-rose-500 mb-1">
+                    <Zap className="w-3.5 h-3.5 animate-pulse" />
+                    Batch Starting
+                  </div>
+                  <p className="text-xl font-extrabold text-slate-900 leading-none">{batchMonth}</p>
+                  <p className="mt-1.5 text-xs font-bold text-rose-600">Enrollment closing soon</p>
                 </div>
-                <div className="bg-white/80 backdrop-blur border border-slate-100 shadow-sm rounded-xl px-4 py-2.5 flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                  <span className="text-sm font-semibold text-slate-700">Government Approved</span>
+
+                <div className="relative overflow-hidden rounded-2xl bg-white border border-indigo-100 shadow-sm px-4 py-3.5 text-left group hover:-translate-y-0.5 transition-transform">
+                  <div className="absolute -right-2 -top-2 w-16 h-16 bg-[#181FC5]/10 rounded-full blur-xl group-hover:scale-125 transition-transform" />
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#181FC5] mb-1">
+                    <Clock className="w-3.5 h-3.5" />
+                    Duration
+                  </div>
+                  <p className="text-xl font-extrabold text-slate-900 leading-none">3 Months</p>
+                  <p className="mt-1.5 text-xs font-semibold text-slate-500">Live learning + capstone</p>
                 </div>
-                <div className="bg-white/80 backdrop-blur border border-slate-100 shadow-sm rounded-xl px-4 py-2.5 flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-[#181FC5]" />
-                  <span className="text-sm font-semibold text-slate-700">3rd Month Project Focus</span>
+
+                <div className="relative overflow-hidden rounded-2xl bg-white border border-amber-100 shadow-sm px-4 py-3.5 text-left group hover:-translate-y-0.5 transition-transform">
+                  <div className="absolute -right-2 -top-2 w-16 h-16 bg-amber-400/20 rounded-full blur-xl group-hover:scale-125 transition-transform" />
+                  <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 mb-1">
+                    <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500 animate-pulse" />
+                    Program Rating
+                  </div>
+                  <p className="text-xl font-extrabold text-slate-900 leading-none flex items-baseline gap-1">
+                    4.8
+                    <span className="text-sm font-bold text-amber-500">/ 5</span>
+                  </p>
+                  <p className="mt-1.5 text-xs font-semibold text-slate-500">Trusted by 10k+ learners</p>
                 </div>
               </div>
 
-              {/* CTAs */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              {/* Campaign urgency - seats left */}
+              <div className="mb-8 max-w-2xl mx-auto lg:mx-0 rounded-2xl border border-rose-200 bg-gradient-to-r from-rose-50 via-white to-indigo-50 px-4 py-4 shadow-sm">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-rose-500 mb-1 flex items-center gap-1.5">
+                      <Zap className="w-3.5 h-3.5 animate-pulse" />
+                      {batchMonth} Internship Drive
+                    </p>
+                    <p className="text-lg sm:text-xl font-extrabold text-slate-900 leading-none">
+                      Only <span className="text-rose-600">{seatsLeft} seats left</span>
+                    </p>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-500 text-white text-xs font-bold animate-pulse">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+                    </span>
+                    Filling fast
+                  </span>
+                </div>
+                <p className="mt-2.5 text-xs text-slate-500 font-medium">
+                  Limited seats this drive - enroll now before registration closes.
+                </p>
+              </div>
+
+              {/* Trust + offer strip */}
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8">
+                <div className="bg-white/80 backdrop-blur border border-slate-100 shadow-sm rounded-xl px-3.5 py-2 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span className="text-xs font-semibold text-slate-700">ISO 9001:2015 Certified</span>
+                </div>
+                <div className="bg-white/80 backdrop-blur border border-slate-100 shadow-sm rounded-xl px-3.5 py-2 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span className="text-xs font-semibold text-slate-700">Govt. Registered OPC</span>
+                </div>
+                <div className="bg-white/80 backdrop-blur border border-slate-100 shadow-sm rounded-xl px-3.5 py-2 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#181FC5]" />
+                  <span className="text-xs font-semibold text-slate-700">GenAI workshop included</span>
+                </div>
+                <div className="bg-white/80 backdrop-blur border border-emerald-100 shadow-sm rounded-xl px-3.5 py-2 flex items-center gap-2">
+                  <Briefcase className="w-4 h-4 text-emerald-600" />
+                  <span className="text-xs font-semibold text-slate-700">Reznio access after enroll</span>
+                </div>
+                <div className="bg-[#181FC5]/5 border border-[#181FC5]/15 shadow-sm rounded-xl px-3.5 py-2 flex items-center gap-2">
+                  <span className="text-xs font-bold text-[#181FC5]">
+                    From <span className="line-through opacity-60 font-semibold">₹25,000</span> ₹5,599
+                  </span>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
                 <a
                   href="#tracks"
                   className="w-full sm:w-auto text-center px-8 py-4 text-white font-bold bg-gradient-to-r from-[#181FC5] to-[#4F46E5] rounded-full shadow-lg hover:shadow-indigo-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all text-base"
                 >
                   Explore Tracks
                 </a>
+                <a
+                  href="#flexible-learning"
+                  className="w-full sm:w-auto text-center px-8 py-4 text-[#181FC5] font-bold bg-white border border-[#181FC5]/20 rounded-full shadow-sm hover:bg-[#f0f1ff] hover:scale-[1.02] active:scale-[0.98] transition-all text-base"
+                >
+                  How Learning Works
+                </a>
               </div>
+              <p className="mt-3 text-xs text-slate-500 font-medium text-center lg:text-left">
+                Limited seats this drive · 3-month program · Project-based certification
+              </p>
             </div>
 
             {/* Right Column */}
             <div className="lg:col-span-5 flex justify-center relative">
               <img
-                src="/Image/IMG_8469.PNG"
+                src="/Image/IMG_8567.PNG"
                 alt="EdLernity Internship Drive 2026"
                 className="w-full max-w-md lg:max-w-full rounded-3xl"
               />
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* Flexible learning */}
+      <section id="flexible-learning" className="py-16 lg:py-20 bg-white border-y border-slate-100 relative font-sans">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-5">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 text-xs font-bold uppercase tracking-wider mb-4 border border-amber-100">
+                Built Around Your Schedule
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4 leading-tight">
+                How Much Time Do You Need Each Week?
+              </h2>
+              <p className="text-slate-600 leading-relaxed font-medium">
+                Whether you want to sprint or steady-pace, EdLernity fits around college, work, and life - without dropping mentor support or cohort structure.
+              </p>
+            </div>
+            <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6 hover:border-[#181FC5]/20 hover:bg-white transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-[#181FC5]/10 text-[#181FC5] flex items-center justify-center mb-4">
+                  <Users className="w-5 h-5" />
+                </div>
+                <h3 className="font-extrabold text-slate-900 mb-2">Mentor-led live path</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Join live classes, ask doubts in real time, and stay accountable with cohort milestones - ideal if you thrive with structure and guided feedback.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-slate-100 bg-slate-50 p-6 hover:border-[#181FC5]/20 hover:bg-white transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-[#181FC5]/10 text-[#181FC5] flex items-center justify-center mb-4">
+                  <Clock className="w-5 h-5" />
+                </div>
+                <h3 className="font-extrabold text-slate-900 mb-2">Self-paced with recordings</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Miss a session? Replay recordings, use program notes and e-books, and catch up on your schedule - typically about 6-10 focused hours a week.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -624,7 +298,7 @@ function InternshipPrograms() {
             </h2>
             <div className="w-16 h-1 bg-gradient-to-r from-[#181FC5] to-[#4F46E5] mx-auto rounded-full mb-4"></div>
             <p className="text-slate-600 text-lg max-w-2xl mx-auto font-medium">
-              Total 3 Months Internship (Month 1 & 2 Learning curriculum + Month 3 Live Capstone Project work). Live class sessions plus E-book containing program notes and recorded archives included.
+              Total 3 Months / 12 Weeks Internship (Weeks 1-8 core lessons + Weeks 9-12 Live Capstone Project). Live class sessions plus E-book containing program notes and recorded archives included.
             </p>
           </div>
 
@@ -634,7 +308,7 @@ function InternshipPrograms() {
               return (
                 <div
                   key={track.id}
-                  onClick={() => setSelectedTrack(track)}
+                  onClick={() => navigate(`/internship-programs/${track.slug}`)}
                   className="group bg-white rounded-3xl border border-slate-100 shadow-md hover:shadow-xl hover:border-[#181FC5]/20 hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col justify-between cursor-pointer"
                 >
                   {/* Card Banner Image */}
@@ -683,7 +357,7 @@ function InternshipPrograms() {
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedTrack(track);
+                        navigate(`/internship-programs/${track.slug}`);
                       }}
                       className="block w-full py-3 text-white font-bold bg-[#181FC5] hover:bg-[#1418a0] rounded-xl transition-all shadow-md text-sm text-center"
                     >
@@ -695,20 +369,153 @@ function InternshipPrograms() {
             })}
           </div>
 
+          {/* Bonus GenAI Workshop - below all internship cards */}
+          <div className="mt-12 rounded-3xl border border-[#181FC5]/15 bg-gradient-to-r from-[#f0f1ff] via-white to-[#fdf2f8] p-6 sm:p-8 shadow-sm">
+            <div className="grid lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-8">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-pink-50 text-pink-600 text-xs font-bold uppercase tracking-wider mb-3 border border-pink-100">
+                  Special Workshop Access
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-[#181FC5] mb-3">
+                  GenAI & Prompt Engineering Workshop
+                </h3>
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <div className="inline-flex items-baseline gap-2 rounded-full bg-white border border-pink-100 px-4 py-2 shadow-sm">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Market value</span>
+                    <span className="text-lg font-extrabold text-slate-400 line-through decoration-2">₹9,999</span>
+                    <span className="text-xl font-extrabold text-emerald-600">FREE</span>
+                  </div>
+                  <span className="text-xs font-bold text-pink-600 bg-pink-50 border border-pink-100 px-3 py-1.5 rounded-full animate-pulse">
+                    Save ₹9,999 with enrollment
+                  </span>
+                </div>
+                <p className="text-slate-600 leading-relaxed mb-4">
+                  Choose any internship track and get complimentary access to our GenAI & Prompt Engineering
+                  workshop - dive into LLMs, prompt patterns, fine-tuning, RAG frameworks, and build customized
+                  Generative AI workflows.
+                </p>
+                <ul className="grid sm:grid-cols-2 gap-2 text-sm font-semibold text-slate-700">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#181FC5] shrink-0" />
+                    Included with every internship
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#181FC5] shrink-0" />
+                    Live classes + recordings
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#181FC5] shrink-0" />
+                    Program notes & e-book
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#181FC5] shrink-0" />
+                    LLM, RAG & prompt patterns
+                  </li>
+                </ul>
+              </div>
+              <div className="lg:col-span-4 flex justify-center">
+                <img
+                  src="/Image/genai_prompt_eng_banner.png"
+                  alt="GenAI & Prompt Engineering Workshop"
+                  className="w-full max-w-xs rounded-2xl shadow-md border border-slate-100 object-cover"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Bonus Reznio - included after enrollment */}
+          <div className="mt-8 rounded-3xl border border-emerald-200/60 bg-gradient-to-r from-emerald-50 via-white to-[#f0f1ff] p-6 sm:p-8 shadow-sm">
+            <div className="grid lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-8">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-3 border border-emerald-100">
+                  Special Platform Access
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">
+                  Reznio - Your Entire Job Search. One Platform.
+                </h3>
+                <p className="text-[#181FC5] font-extrabold text-sm uppercase tracking-wide mb-3">
+                  You’re qualified. Now strengthen your strategy.
+                </p>
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <div className="inline-flex items-baseline gap-2 rounded-full bg-white border border-emerald-100 px-4 py-2 shadow-sm">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Market value</span>
+                    <span className="text-lg font-extrabold text-slate-400 line-through decoration-2">₹1,499</span>
+                    <span className="text-sm font-bold text-slate-400">/mo</span>
+                    <span className="text-xl font-extrabold text-emerald-600">FREE</span>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-full">
+                    ~₹4,497 value over 3 months
+                  </span>
+                </div>
+                <p className="text-slate-600 leading-relaxed mb-4">
+                  Enroll in any EdLernity internship and unlock Reznio right after enrollment - resume tailoring,
+                  ATS scoring, mock interviews, company research, job tracking, and salary negotiation in one place.
+                </p>
+                <ul className="grid sm:grid-cols-2 gap-2 text-sm font-semibold text-slate-700">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    Included with every internship
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    ATS-ready resume + match score
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    AI interview practice & research
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    Tracker, portfolio & offer coaching
+                  </li>
+                </ul>
+              </div>
+              <div className="lg:col-span-4 flex justify-center items-center">
+                <div className="rounded-2xl bg-black px-6 py-8 flex items-center justify-center shadow-md w-full max-w-xs">
+                  <img
+                    src="/Image/reznio_logo_white.png"
+                    alt="Reznio"
+                    className="w-full max-w-[180px] h-auto object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Combined bonus value stack */}
+          <div className="mt-6 rounded-2xl border border-[#181FC5]/15 bg-[#181FC5] text-white px-5 py-4 sm:px-7 sm:py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-md">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-white/70 mb-1">Bonus stack with every enrollment</p>
+              <p className="text-sm sm:text-base font-semibold leading-snug">
+                GenAI workshop + Reznio access - market value{' '}
+                <span className="line-through opacity-70">₹14,496</span>{' '}
+                <span className="text-emerald-300 font-extrabold">included free</span> when you join at ₹5,599
+              </p>
+            </div>
+            <a
+              href="#tracks"
+              className="shrink-0 inline-flex justify-center px-5 py-2.5 rounded-full bg-white text-[#181FC5] text-sm font-bold hover:bg-slate-50 transition-colors"
+            >
+              Claim Both Free
+            </a>
+          </div>
+
         </div>
       </section>
-
-      {/* Program Highlights */}
       <section className="py-20 lg:py-28 relative bg-slate-50 font-sans">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
             <div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-6">
-                Program Highlights
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#181FC5]/10 text-[#181FC5] text-xs font-bold uppercase tracking-wider mb-4">
+                <Sparkles className="w-3.5 h-3.5" />
+                Mentorship That Matters
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">
+                Learn from Industry Experts
               </h2>
               <p className="text-slate-600 leading-relaxed mb-10 text-lg font-medium">
-                Unlock core internship modules, attend interactive mentor calls, and collaborate in peer workspace groups. Benefit from a 3-month setup with Month 3 dedicated to projects.
+                EdLernity mentors bring real product and engineering experience into every cohort. You learn fundamentals the way teams actually ship - live sessions, project feedback, and a peer environment that keeps you accountable.
               </p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -717,31 +524,31 @@ function InternshipPrograms() {
                     <Calendar className="w-5 h-5" />
                   </div>
                   <h4 className="font-extrabold text-slate-800 mb-2">Live Classes + Recordings</h4>
-                  <p className="text-sm text-slate-500">Live instruction coupled with recording archives for ease of learning.</p>
+                  <p className="text-sm text-slate-500">Join interactive sessions and revisit every class anytime from the recording archive.</p>
                 </div>
 
                 <div className="p-5 border border-slate-100 rounded-2xl bg-white hover:bg-slate-100/50 transition-colors">
                   <div className="w-10 h-10 bg-[#181FC5]/10 text-[#181FC5] rounded-xl flex items-center justify-center mb-4">
                     <BookOpenCheck className="w-5 h-5" />
                   </div>
-                  <h4 className="font-extrabold text-slate-800 mb-2">E-Books & Detailed Notes</h4>
-                  <p className="text-sm text-slate-500">Includes comprehensive reading notes and guides for every program.</p>
+                  <h4 className="font-extrabold text-slate-800 mb-2">E-Books & Program Notes</h4>
+                  <p className="text-sm text-slate-500">Structured notes and guides for every module so revision stays simple and focused.</p>
                 </div>
 
                 <div className="p-5 border border-slate-100 rounded-2xl bg-white hover:bg-slate-100/50 transition-colors">
                   <div className="w-10 h-10 bg-[#181FC5]/10 text-[#181FC5] rounded-xl flex items-center justify-center mb-4">
                     <Users className="w-5 h-5" />
                   </div>
-                  <h4 className="font-extrabold text-slate-800 mb-2">Weekend Mentorship</h4>
-                  <p className="text-sm text-slate-500">Live code reviews and feedback sessions with senior engineers.</p>
+                  <h4 className="font-extrabold text-slate-800 mb-2">Cohort Mentorship</h4>
+                  <p className="text-sm text-slate-500">Weekend reviews and mentor feedback so your projects improve with every iteration.</p>
                 </div>
 
                 <div className="p-5 border border-slate-100 rounded-2xl bg-white hover:bg-slate-100/50 transition-colors">
                   <div className="w-10 h-10 bg-[#181FC5]/10 text-[#181FC5] rounded-xl flex items-center justify-center mb-4">
                     <Mail className="w-5 h-5" />
                   </div>
-                  <h4 className="font-extrabold text-slate-800 mb-2">Dedicated Q&A Support</h4>
-                  <p className="text-sm text-slate-500">Immediate troubleshooting and guidance for coursework queries.</p>
+                  <h4 className="font-extrabold text-slate-800 mb-2">Dedicated Doubt Support</h4>
+                  <p className="text-sm text-slate-500">Ask questions as you learn - get timely guidance so blockers never stall your progress.</p>
                 </div>
               </div>
             </div>
@@ -749,7 +556,7 @@ function InternshipPrograms() {
             <div className="flex justify-center relative bg-white p-6 rounded-3xl border border-slate-100 shadow-md">
               <img
                 src="/Image/IMG_8535.PNG"
-                alt="Program highlights"
+                alt="Learn from industry experts at EdLernity"
                 className="w-full max-w-xs h-auto object-contain hover:scale-105 transition-transform duration-300"
               />
             </div>
@@ -758,8 +565,79 @@ function InternshipPrograms() {
         </div>
       </section>
 
-      {/* Certification Section */}
+      {/* What You'll Get + How certification works */}
       <section className="py-20 lg:py-28 bg-white relative font-sans">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+            <div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-4 border border-emerald-100">
+                Outcomes
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-4">
+                What You Walk Away With
+              </h2>
+              <p className="text-slate-600 mb-8 leading-relaxed font-medium">
+                More than a line on your resume - an EdLernity internship builds proof of skill employers can trust.
+              </p>
+              <ul className="space-y-4">
+                {[
+                  { icon: Award, text: "A digital Certificate of Internship recognized under EdLernity’s ISO-backed quality standards" },
+                  { icon: ShieldCheck, text: "Stronger credibility with recruiters through verified, project-backed credentials" },
+                  { icon: Briefcase, text: "Clearer pathways to roles in AI, full stack, cloud, Salesforce, and data careers" },
+                  { icon: Sparkles, text: "A sharper professional profile backed by live project work and GenAI workshop exposure" },
+                  { icon: Briefcase, text: "Complimentary Reznio access after enrollment - resumes, interviews, research & offers in one platform" },
+                  { icon: CheckCircle2, text: "Visible proof that you invested in upskilling with a structured, mentor-led cohort" },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <li key={item.text} className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-[#181FC5]/10 text-[#181FC5] flex items-center justify-center shrink-0 mt-0.5">
+                        <Icon className="w-4.5 h-4.5 w-4 h-4" />
+                      </div>
+                      <span className="text-slate-700 font-medium leading-relaxed">{item.text}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            <div className="rounded-3xl bg-gradient-to-br from-[#f0f1ff] via-white to-slate-50 border border-[#181FC5]/10 p-7 sm:p-9 shadow-sm">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#181FC5]/10 text-[#181FC5] text-xs font-bold uppercase tracking-wider mb-4">
+                Certification Path
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">
+                How You Get Certified
+              </h3>
+              <p className="text-slate-600 leading-relaxed mb-6 font-medium">
+                Complete your track modules, deliver your live capstone project, and demonstrate skills through hands-on sessions. Once you meet EdLernity’s practical benchmarks, your internship certificate is issued.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                <div className="rounded-2xl bg-white border border-slate-100 px-4 py-4 text-center shadow-sm">
+                  <Award className="w-5 h-5 text-[#181FC5] mx-auto mb-2" />
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Evaluation</p>
+                  <p className="text-base font-extrabold text-slate-900">Capstone Project</p>
+                </div>
+                <div className="rounded-2xl bg-white border border-slate-100 px-4 py-4 text-center shadow-sm">
+                  <BookOpenCheck className="w-5 h-5 text-[#181FC5] mx-auto mb-2" />
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Format</p>
+                  <p className="text-base font-extrabold text-slate-900">Hands-on Sessions</p>
+                </div>
+                <div className="rounded-2xl bg-white border border-slate-100 px-4 py-4 text-center shadow-sm">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto mb-2" />
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Focus</p>
+                  <p className="text-base font-extrabold text-slate-900">Applied Skills</p>
+                </div>
+              </div>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Certification reflects real project delivery and practical performance from live classes, not theory alone.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Certification Section */}
+      <section className="py-20 lg:py-28 bg-slate-50 relative font-sans">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
@@ -810,57 +688,94 @@ function InternshipPrograms() {
             </div>
 
             <div className="lg:order-1 flex justify-center relative">
-              <div className="absolute inset-0 bg-indigo-500/5 rounded-3xl filter blur-3xl transform pointer-events-none"></div>
-              <div className="bg-white p-4 rounded-3xl shadow-xl border border-slate-100 hover:scale-[1.01] transition-transform duration-300">
-                <img
-                  src="/Image/MARKETING _20240427_185457_0000.jpg"
-                  alt="EdLernity Government Approved Certification Mockup"
-                  className="w-full max-w-md rounded-2xl"
-                />
-              </div>
+              <img
+                src="/Image/MARKETING _20240427_185457_0000.jpg"
+                alt="EdLernity Government Approved Certification Mockup"
+                className="w-full max-w-2xl object-contain hover:scale-[1.01] transition-transform duration-300"
+              />
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* Corporate Placements */}
+      {/* Alumni companies - scrolling marquee */}
       <section className="py-20 lg:py-24 bg-slate-50 relative overflow-hidden font-sans">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-800 text-center mb-16">
-            Our Interns Now Work At
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#181FC5] text-center mb-4">
+            Where Our Alumni Thrive
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center opacity-85">
-            <div className="group bg-white border border-slate-100 rounded-2xl px-6 py-5 w-full flex items-center justify-center hover:bg-slate-100/50 hover:-translate-y-0.5 transition-all cursor-pointer shadow-sm min-h-[80px]">
-              <svg viewBox="0 0 24 24" className="h-7 w-auto fill-current text-slate-400 group-hover:text-[#4285F4] transition-colors duration-300">
-                <path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.137 4.114-3.707 0-6.71-3.003-6.71-6.71s3.003-6.71 6.71-6.71c1.7 0 3.24.63 4.4 1.67l3.03-3.03C18.44 1.83 15.56 1 12.24 1 6.033 1 1 6.033 1 12.24s5.033 11.24 11.24 11.24c6.26 0 11.24-4.98 11.24-11.24 0-.79-.08-1.53-.24-2.24H12.24z"/>
-              </svg>
-            </div>
-            <div className="group bg-white border border-slate-100 rounded-2xl px-6 py-5 w-full flex items-center justify-center hover:bg-slate-100/50 hover:-translate-y-0.5 transition-all cursor-pointer shadow-sm min-h-[80px]">
-              <svg viewBox="0 0 23 23" className="h-6 w-auto fill-current text-slate-400 group-hover:text-[#00A4EF] transition-colors duration-300">
-                <path d="M0 0h11v11H0zM12 0h11v11H12zM0 12h11v11H0zM12 12h11v11H12z" />
-              </svg>
-            </div>
-            <div className="group bg-white border border-slate-100 rounded-2xl px-6 py-5 w-full flex items-center justify-center hover:bg-slate-100/50 hover:-translate-y-0.5 transition-all cursor-pointer shadow-sm min-h-[80px]">
-              <svg viewBox="0 0 24 24" className="h-6 w-auto fill-current text-slate-400 group-hover:text-[#FF9900] transition-colors duration-300">
-                <path d="M15.93 17.09c-.75-.54-1.63-.78-2.61-.78-1.4 0-2.31.62-2.31 1.67 0 1.05.91 1.57 2.27 1.57.94 0 1.76-.25 2.37-.73v-1.73zm1.66 3.99c-.75.64-1.8 1-3.08 1-2.9 0-4.66-1.42-4.66-3.83 0-2.31 1.75-3.69 4.88-3.69.96 0 1.94.13 2.86.38v-.5c0-1.25-.66-1.92-2.14-1.92-1.14 0-2.28.38-3.03.96-.26.2-.56-.05-.41-.33l.63-1.07c.2-.34.52-.51.87-.66A7.95 7.95 0 0 1 15.35 8c3.28 0 4.9 1.7 4.9 4.87v6.62c0 .88.35 1.34.7 1.67.26.24.16.58-.2.53-.41-.05-1.95-.3-2.69-.97l-.47-.64zm4.19.82C18.23 23.96 13.57 25 9.13 25c-3.9 0-7.55-1.08-10.45-3.02-.38-.25-.09-.73.34-.47 2.87 1.7 6.42 2.58 9.98 2.58 2.28 0 4.58-.37 6.64-1.12.35-.13.62.19.48.51z"/>
-              </svg>
-            </div>
-            <div className="group bg-white border border-slate-100 rounded-2xl px-6 py-5 w-full flex items-center justify-center hover:bg-slate-100/50 hover:-translate-y-0.5 transition-all cursor-pointer shadow-sm min-h-[80px]">
-              <svg viewBox="0 0 24 24" className="h-6 w-auto fill-current text-slate-400 group-hover:text-[#0668E1] transition-colors duration-300">
-                <path d="M3.12 14.88c-1.44-1.44-1.44-3.84 0-5.28 1.44-1.44 3.84-1.44 5.28 0l1.2 1.2-1.2 1.2-1.2-1.2c-.72-.72-1.92-.72-2.64 0-.72.72-.72 1.92 0 2.64.72.72 1.92.72 2.64 0l4.32-4.32c1.44-1.44 3.84-1.44 5.28 0 1.44 1.44 1.44 3.84 0 5.28-1.44 1.44-3.84 1.44-5.28 0l-1.2-1.2 1.2-1.2 1.2 1.2c.72.72 1.92.72 2.64 0 .72-.72.72-.96 0-1.68-.72-.72-1.92-.72-2.64 0l-4.32 4.32c-1.44 1.44-3.84 1.44-5.28 0z" />
-              </svg>
-            </div>
-            <div className="group bg-white border border-slate-100 rounded-2xl px-6 py-5 w-full flex items-center justify-center hover:bg-slate-100/50 hover:-translate-y-0.5 transition-all cursor-pointer shadow-sm min-h-[80px]">
-              <svg viewBox="0 0 24 24" className="h-6 w-auto fill-current text-slate-400 group-hover:text-slate-900 transition-colors duration-300">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.82M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.2.67-2.92 1.49-.62.71-1.16 1.85-1.02 2.96 1.1.09 2.24-.55 2.95-1.39z"/>
-              </svg>
-            </div>
-            <div className="group bg-white border border-slate-100 rounded-2xl px-6 py-5 w-full flex items-center justify-center hover:bg-slate-100/50 hover:-translate-y-0.5 transition-all cursor-pointer shadow-sm min-h-[80px]">
-              <svg viewBox="0 0 24 24" className="h-7 w-auto fill-current text-slate-400 group-hover:text-[#E50914] transition-colors duration-300">
-                <path d="M5.9 0h3.5v16.1L18.1 0h3.5v24h-3.5V7.9L9.4 24H5.9V0z" />
-              </svg>
-            </div>
+          <p className="text-gray-600 text-center max-w-xl mx-auto mb-12">
+            EdLernity alumni take the skills, projects, and credentials from their internship into roles at leading companies worldwide.
+          </p>
+        </div>
+        <div className="w-full overflow-hidden relative">
+          <div className="absolute inset-y-0 left-0 w-16 sm:w-24 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-16 sm:w-24 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none" />
+          <div className="flex animate-marquee-ltr whitespace-nowrap gap-5 py-2 items-stretch">
+            {alumniLogoStrip.map((company, index) => (
+              <div
+                key={`${company.name}-${index}`}
+                className="flex-shrink-0 bg-white border border-slate-100 rounded-2xl px-8 py-5 flex items-center justify-center shadow-sm min-h-[88px] min-w-[160px]"
+                title={company.name}
+              >
+                <img
+                  src={company.src}
+                  alt={`${company.name} logo`}
+                  className="h-8 w-auto max-w-[110px] object-contain"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20 lg:py-28 bg-white relative font-sans">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider mb-3">
+              FAQ
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 mb-3">
+              Questions Before You Enroll
+            </h2>
+            <p className="text-slate-600 font-medium">
+              Straight answers about EdLernity internships, certification, and what to expect in your cohort.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {internshipFaqs.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div
+                  key={faq.q}
+                  className={`rounded-2xl border transition-all ${
+                    isOpen ? "border-[#181FC5]/25 bg-[#f8f9ff] shadow-sm" : "border-slate-200 bg-white"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(isOpen ? -1 : idx)}
+                    className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
+                  >
+                    <span className="font-bold text-slate-800 text-sm sm:text-base">{faq.q}</span>
+                    <ChevronDown
+                      className={`w-5 h-5 text-slate-400 shrink-0 transition-transform duration-300 ${
+                        isOpen ? "rotate-180 text-[#181FC5]" : ""
+                      }`}
+                    />
+                  </button>
+                  {isOpen && (
+                    <div className="px-5 pb-5 text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -871,11 +786,21 @@ function InternshipPrograms() {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full filter blur-3xl pointer-events-none"></div>
         
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 text-white text-xs font-bold uppercase tracking-wider mb-5">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+            </span>
+            {batchMonth} Drive · Only {seatsLeft} seats left
+          </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold mb-6 leading-tight">
-            Learn, Practice, and Get Certified!
+            Ready to Build Your Career Proof?
           </h2>
-          <p className="text-lg sm:text-xl opacity-90 mb-10 max-w-xl mx-auto leading-relaxed">
-            Elevate your engineering skills and define your professional credentials today. Space is limited per cohort.
+          <p className="text-lg sm:text-xl opacity-90 mb-4 max-w-xl mx-auto leading-relaxed">
+            Join EdLernity’s next internship cohort - live mentorship, real projects, GenAI workshop + Reznio job-search access, and a credential that stands out.
+          </p>
+          <p className="text-sm font-semibold text-white/80 mb-10">
+            3-month program · Seats filling fast · Enroll before registration closes
           </p>
           <a
             href="https://forms.gle/4JeqCsAveQRqWWq48"

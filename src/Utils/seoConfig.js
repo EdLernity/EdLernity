@@ -46,10 +46,10 @@ export const PAGE_SEO = {
   careers: {
     title: "Careers & Internships at EdLernity",
     description:
-      "Explore EdLernity careers and remote internships in Business Development, Sales & Marketing, Human Resources, and Technical tracks. Apply and grow with expert mentorship.",
+      "Explore EdLernity careers and remote internships in Business Development, Sales & Marketing, Lead Generation, Human Resources, and Technical tracks.",
     path: "/careers",
     keywords:
-      "EdLernity careers, business development internship, sales marketing internship, HR internship, technical internship",
+      "EdLernity careers, business development internship, sales marketing internship, lead generation internship, HR internship, technical internship",
   },
   reviews: {
     title: "EdLernity Reviews – Learner & Internship Testimonials",

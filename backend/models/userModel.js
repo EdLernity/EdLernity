@@ -37,6 +37,11 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false
       },
+    role: {
+        type: String,
+        enum: ["student", "trainer", "admin"],
+        default: "student",
+    },
 },{timestamps:true});
 
 const UserModel = mongoose.model('User', userSchema);

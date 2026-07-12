@@ -4,9 +4,12 @@ const Razorpay = require("razorpay");
 const courseModel = require("../models/courseModel");
 const UserModel = require("../models/userModel");
 const UserCourseModel = require('../models/userCourseSchema');
+const UserInternship = require("../models/userInternshipSchema");
+const InternshipStudentAssignment = require("../models/internshipStudentAssignmentSchema");
 const { createUserCourse } = require("../utils/userCourseUtils");
 const Transaction = require("../models/transactionSchema");
 const Certificate = require("../models/model.certfication");
+const { getInternshipBySlug } = require("../utils/internshipCatalog");
 const { v4: uuidv4 } = require('uuid');
 
 dotenv.config();
@@ -95,14 +98,122 @@ const getEnrolledCoursesList = async (req, res) => {
   }
 };
 
+const enrollInternshipRecord = async ({
+  userId,
+  slug,
+  paymentId,
+  amount,
+  transactionId = null,
+  enrollmentSource = "payment",
+}) => {
+  const internship = getInternshipBySlug(slug);
+  if (!internship) {
+    throw new Error(`Unknown internship slug: ${slug}`);
+  }
+
+  const existing = await UserInternship.findOne({ userId, internshipSlug: slug });
+  if (existing) {
+    await InternshipStudentAssignment.findOneAndUpdate(
+      { studentId: userId, internshipSlug: slug },
+      { $set: { active: true } },
+      { upsert: true }
+    );
+    return existing;
+  }
+
+  const record = await UserInternship.create({
+    userId,
+    internshipSlug: slug,
+    title: internship.title,
+    category: internship.category,
+    coverImage: internship.coverImage,
+    transactionId,
+    paymentId,
+    amount: amount != null ? String(amount) : null,
+    enrollmentSource,
+  });
+
+  await InternshipStudentAssignment.findOneAndUpdate(
+    { studentId: userId, internshipSlug: slug },
+    { $set: { active: true } },
+    { upsert: true }
+  );
+
+  return record;
+};
+
+const getInternshipEnrollments = async (req, res) => {
+  if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+
+  try {
+    const internships = await UserInternship.find({ userId: req.user._id })
+      .sort({ createdAt: -1 })
+      .select("internshipSlug title category coverImage createdAt enrollmentSource");
+
+    res.status(200).json({
+      internships: internships.map((item) => ({
+        slug: item.internshipSlug,
+        title: item.title,
+        category: item.category,
+        coverImage: item.coverImage,
+        enrolledAt: item.createdAt,
+        enrollmentSource: item.enrollmentSource,
+      })),
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went Wrong" });
+  }
+};
+
 const EnrollCourses = async (req, res) => {
   if (!req.user) return res.status(401).json({ message: "Unauthorized" });
 
   try {
-    const { courseId, enrollingAllCourses } = req.body;
+    const { courseId, enrollingAllCourses, enrollingInternship, internshipSlug } = req.body;
 
+    // Internship program checkout (₹5,599) - includes GenAI workshop + Reznio as bonuses
+    if (enrollingInternship === true || (courseId && String(courseId).startsWith("internship-"))) {
+      const internshipAmountPaise = Number(5599) * 100;
+      const slug = internshipSlug || String(courseId).replace(/^internship-/, "");
 
+      const existingInternship = await UserInternship.findOne({
+        userId: req.user._id,
+        internshipSlug: slug,
+      });
+      if (existingInternship) {
+        return res.status(200).json({ data: "enrolled", userData: req.user });
+      }
 
+      if (!getInternshipBySlug(slug)) {
+        return res.status(400).json({ message: "Invalid internship program" });
+      }
+
+      var internshipInstance = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY,
+        key_secret: process.env.RAZORPAY_SECRET,
+      });
+
+      var internshipOptions = {
+        amount: internshipAmountPaise,
+        currency: "INR",
+        receipt: (`Intern-${slug}`).slice(0, 40),
+        notes: {
+          type: "internship",
+          slug,
+          includes: "genai-workshop,reznio-access",
+        },
+      };
+
+      internshipInstance.orders.create(internshipOptions, function (err, order) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: "Unable to create internship order" });
+        }
+        res.status(200).json({ data: order, userData: req.user });
+      });
+      return;
+    }
 
     if (enrollingAllCourses === true && courseId === "lifeTimeFinalPrice") {
       let lifeTimeFinalPrice = Number(899) + '00';
@@ -162,8 +273,30 @@ const EnrollCourses = async (req, res) => {
   }
 };
 
-const createOrder = async (courseId, uid, response) => {
+const createOrder = async (courseId, uid, response, internshipSlug) => {
   //console.log(courseId)
+  if (courseId && String(courseId).startsWith("internship-")) {
+    const slug = internshipSlug || String(courseId).replace(/^internship-/, "");
+    const transactionObj = new Transaction({
+      userId: uid,
+      paymentMethod: "Online",
+      paymentId: response.razorpay_payment_id,
+      amount: "5599",
+      internshipSlug: slug,
+      notes: "Internship enrollment includes GenAI workshop + Reznio access",
+    });
+    const transaction = await transactionObj.save();
+    await enrollInternshipRecord({
+      userId: uid,
+      slug,
+      paymentId: response.razorpay_payment_id,
+      amount: "5599",
+      transactionId: transaction._id,
+      enrollmentSource: "payment",
+    });
+    return;
+  }
+
   if (courseId === "lifeTimeFinalPrice") {
     const courses = await courseModel.find();
     if (!courses || courses.length === 0) {
@@ -246,13 +379,13 @@ const verify = async (req, res) => {
   if (!req.user) return res.status(401).json({ message: "Unauthorized" });
 
   try {
-    const { response, courseId } = req.body;
+    const { response, courseId, internshipSlug } = req.body;
     const sign = response.razorpay_order_id + "|" + response.razorpay_payment_id;
     const expectedSign = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET)
       .update(sign.toString()).digest("hex");
 
     if (response.razorpay_signature === expectedSign) {
-      createOrder(courseId, req.user._id, response);
+      createOrder(courseId, req.user._id, response, internshipSlug);
       return res.status(200).json({ message: "Payment verified successfully" });
     } else {
       return res.status(400).json({ message: "Invalid signature sent!" });
@@ -263,4 +396,12 @@ const verify = async (req, res) => {
   }
 };
 
-module.exports = { getEnrollCoursesList, EnrollCourses, verify, getEnrolledCoursesList, getCertificationCoursesList };
+module.exports = {
+  getEnrollCoursesList,
+  EnrollCourses,
+  verify,
+  getEnrolledCoursesList,
+  getCertificationCoursesList,
+  getInternshipEnrollments,
+  enrollInternshipRecord,
+};
