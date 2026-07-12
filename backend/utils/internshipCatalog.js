@@ -9,19 +9,19 @@ const INTERNSHIP_CATALOG = {
     slug: "full-stack-ai",
     title: "Full Stack Development with AI",
     category: "Full Stack",
-    coverImage: "/Image/full_stack_banner.png",
+    coverImage: "/Image/full_stack_dev_banner.png",
   },
   "salesforce-cloud-ai": {
     slug: "salesforce-cloud-ai",
     title: "Salesforce Cloud with AI",
     category: "Salesforce & Cloud",
-    coverImage: "/Image/salesforce_banner.png",
+    coverImage: "/Image/salesforce_cloud_ai_banner.png",
   },
   "python-data-science-ml": {
     slug: "python-data-science-ml",
     title: "Python for Data Science & Machine Learning",
     category: "Data Science",
-    coverImage: "/Image/python_data_science_banner.png",
+    coverImage: "/Image/python_developer_ai_banner.png",
   },
   "cloud-computing-devops": {
     slug: "cloud-computing-devops",

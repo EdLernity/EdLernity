@@ -96,7 +96,7 @@ const getStudentDashboard = async (req, res) => {
         slug: config.internshipSlug,
         title: config.title || enrollment.title,
         category: config.category || enrollment.category,
-        coverImage: config.coverImage || catalogEntry?.coverImage || enrollment.coverImage,
+        coverImage: catalogEntry?.coverImage || config.coverImage || enrollment.coverImage,
         duration: `${totalWeeks || 12} Weeks`,
         batchLabel: "Current Batch",
         syllabusNote: config.syllabusNote,

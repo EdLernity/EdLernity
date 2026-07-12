@@ -55,8 +55,19 @@ function TrainerInternshipDashboard() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {programs.map((program) => (
               <div key={program.slug} className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
-                {program.coverImage && (
-                  <img src={program.coverImage} alt={program.title} className="w-full h-32 object-cover rounded-2xl mb-4" />
+                {program.coverImage ? (
+                  <img
+                    src={program.coverImage}
+                    alt={program.title}
+                    className="w-full h-32 object-cover rounded-2xl mb-4"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-32 rounded-2xl mb-4 bg-gradient-to-br from-[#181FC5]/10 to-slate-100 flex items-center justify-center text-[#181FC5] font-bold text-sm">
+                    {program.title}
+                  </div>
                 )}
                 <p className="text-xs font-bold uppercase tracking-wider text-[#181FC5] mb-1">{program.category}</p>
                 <h2 className="text-lg font-extrabold text-slate-900 mb-2">{program.title}</h2>

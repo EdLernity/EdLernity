@@ -5,6 +5,10 @@ const { getOrCreateProgramConfig } = require("./internshipAdminController");
 const { INTERNSHIP_CATALOG } = require("../utils/internshipCatalog");
 const { resolveBonuses } = require("../utils/internshipConfigDefaults");
 
+function resolveProgramCoverImage(slug, configCoverImage) {
+  return INTERNSHIP_CATALOG[slug]?.coverImage || configCoverImage || "";
+}
+
 const getMyPrograms = async (req, res) => {
   try {
     if (req.userRole === "admin") {
@@ -26,7 +30,7 @@ const getMyPrograms = async (req, res) => {
           slug,
           title: configMap[slug]?.title || INTERNSHIP_CATALOG[slug]?.title || slug,
           category: configMap[slug]?.category || INTERNSHIP_CATALOG[slug]?.category || "",
-          coverImage: configMap[slug]?.coverImage || INTERNSHIP_CATALOG[slug]?.coverImage || "",
+          coverImage: resolveProgramCoverImage(slug, configMap[slug]?.coverImage),
           studentCount: countMap[slug] || 0,
         })),
       });
@@ -56,7 +60,7 @@ const getMyPrograms = async (req, res) => {
         slug: a.internshipSlug,
         title: configMap[a.internshipSlug]?.title || a.internshipSlug,
         category: configMap[a.internshipSlug]?.category || "",
-        coverImage: configMap[a.internshipSlug]?.coverImage || "",
+        coverImage: resolveProgramCoverImage(a.internshipSlug, configMap[a.internshipSlug]?.coverImage),
         studentCount: countMap[a.internshipSlug] || 0,
       })),
     });
