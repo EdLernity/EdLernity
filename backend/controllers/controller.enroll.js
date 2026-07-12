@@ -6,7 +6,7 @@ const UserModel = require("../models/userModel");
 const UserCourseModel = require('../models/userCourseSchema');
 const UserInternship = require("../models/userInternshipSchema");
 const InternshipStudentAssignment = require("../models/internshipStudentAssignmentSchema");
-const { createUserCourse } = require("../utils/userCourseUtils");
+const { grantSingleCourseAccess, grantAllCoursesAccess } = require("../utils/userCourseUtils");
 const Transaction = require("../models/transactionSchema");
 const Certificate = require("../models/model.certfication");
 const { getInternshipBySlug } = require("../utils/internshipCatalog");
@@ -68,14 +68,17 @@ const getEnrollCoursesList = async (req, res) => {
   if (!req.user) return res.status(401).json({ message: "Unauthorized" });
 
   try {
-    const enrollList = await UserCourseModel.find({ userId: req.user._id })
-      .populate({ path: "userId", select: ["firstName", "lastName"] })
-      .populate({ path: "courseIds", select: ["courseTitle", "courseBanner", "courseScore"] });
-    if (!enrollList) {
-      return res.status(400).json({});
+    const { consolidateUserCourseRecords } = require("../utils/userCourseUtils");
+    const enrollment = await consolidateUserCourseRecords(req.user._id);
+    if (!enrollment) {
+      return res.status(200).json([]);
     }
 
-    res.status(200).json(enrollList);
+    const populated = await UserCourseModel.findById(enrollment._id)
+      .populate({ path: "userId", select: ["firstName", "lastName"] })
+      .populate({ path: "courseIds", select: ["courseTitle", "courseBanner", "courseScore"] });
+
+    res.status(200).json([populated]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Something went Wrong" });
@@ -85,13 +88,14 @@ const getEnrolledCoursesList = async (req, res) => {
   if (!req.user) return res.status(401).json({ message: "Unauthorized" });
 
   try {
-    const enrollList = await UserCourseModel.findOne({ userId: req.user._id })
+    const { getMergedUserCourseState } = require("../utils/userCourseUtils");
+    const state = await getMergedUserCourseState(req.user._id);
 
-    if (!enrollList) {
+    if (!state) {
       return res.status(200).json({ enrollList: [] });
     }
 
-    res.status(200).json({ enrollList: enrollList.courseIds });
+    res.status(200).json({ enrollList: state.mergedCourseIds });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Something went Wrong" });
@@ -300,79 +304,44 @@ const createOrder = async (courseId, uid, response, internshipSlug) => {
   if (courseId === "lifeTimeFinalPrice") {
     const courses = await courseModel.find();
     if (!courses || courses.length === 0) {
-      return res.status(404).json({ message: "No courses found" });
+      throw new Error("No courses found");
     }
 
-    await Promise.all(courses.map(async course => {
+    await Promise.all(courses.map(async (course) => {
       course.enrollmentCount += 1;
       await course.save();
     }));
-    // Extracting _id values from courses
-    const courseIds = courses.map(course => course._id);
-    // Fetch UserCourseModel by userId
+
+    const courseIds = courses.map((course) => course._id);
     const transactionObj = new Transaction({
       userId: uid,
       paymentMethod: "Online",
       paymentId: response.razorpay_payment_id,
       subscribedAllCourse: true,
-      amount: 986
-    })
-    const trans = await transactionObj.save();
-    const existingUserCourses = await UserCourseModel.findOne({ userId: uid });
-    //console.log(existingUserCourses)
-    let newCourseIds = [];
-
-    if (existingUserCourses) {
-      // Extract existing courseIds from UserCourseModel
-      const existingCourseIds = existingUserCourses.courseIds;
-
-      // Add only unique courseIds to newCourseIds
-      newCourseIds = courseIds.filter(courseId => !existingCourseIds.includes(courseId));
-      const existingUserCourses = await UserCourseModel.findOneAndUpdate(
-        { userId: uid },
-        { $addToSet: { courseIds: { $each: newCourseIds } }, paid: true, transactionId: trans._id,isAllCourse:true },
-        { upsert: true, new: true }
-      );
-
-    } else {
-      newCourseIds = courseIds;
-      const userCourseObj = new UserCourseModel({
-        userId: uid,
-        courseIds: newCourseIds,
-        paid: true,
-        transactionId: trans._id,
-        isAllCourse:true
-      });
-      await userCourseObj.save(); // No existing UserCourseModel, add all courseIds
-    }
-
-
-
-  }
-  else {
-    const course = await courseModel.findById(courseId);
-    course.enrollmentCount += 1;
-    await course.save();
-
-
-    const transactionObj = new Transaction({
-      courseId: courseId,
-      userId: uid,
-      paymentMethod: "Online",
-      paymentId: response.razorpay_payment_id,
-      amount: Number(course.offeredPrice)
-    })
-    const trans = await transactionObj.save();
-
-    const userCourseObj = new UserCourseModel({
-      userId: uid,
-      courseIds: courseId,
-      paid: true,
-      transactionId: trans._id,
+      amount: 899,
     });
-    await userCourseObj.save();
+    const trans = await transactionObj.save();
+    await grantAllCoursesAccess(uid, courseIds, trans._id);
+    return;
   }
-  // if (!userCourse) return res.status(401).send({ message: "Failed to add courses" });
+
+  const course = await courseModel.findById(courseId);
+  if (!course) {
+    throw new Error("Course not found");
+  }
+
+  course.enrollmentCount += 1;
+  await course.save();
+
+  const transactionObj = new Transaction({
+    courseId,
+    userId: uid,
+    paymentMethod: "Online",
+    paymentId: response.razorpay_payment_id,
+    amount: Number(course.offeredPrice),
+  });
+  const trans = await transactionObj.save();
+  await grantSingleCourseAccess(uid, courseId, trans._id);
 };
 
 const verify = async (req, res) => {
@@ -385,7 +354,7 @@ const verify = async (req, res) => {
       .update(sign.toString()).digest("hex");
 
     if (response.razorpay_signature === expectedSign) {
-      createOrder(courseId, req.user._id, response, internshipSlug);
+      await createOrder(courseId, req.user._id, response, internshipSlug);
       return res.status(200).json({ message: "Payment verified successfully" });
     } else {
       return res.status(400).json({ message: "Invalid signature sent!" });

@@ -2,6 +2,7 @@ const courseModel = require("../models/courseModel");
 const UserModel = require("../models/userModel");
 const UserCourseModel = require('../models/userCourseSchema');
 const Transaction = require("../models/transactionSchema");
+const { grantSingleCourseAccess, grantAllCoursesAccess } = require("../utils/userCourseUtils");
 exports.getAllCoursesAndUsers = async (req, res) => {
   try {
     if (!req.user) return res.status(401).json({ message: "Unauthorized" });
@@ -59,33 +60,7 @@ exports.addCoursesToUsers = async (req, res) => {
         amount: 986
       })
       const trans = await transactionObj.save();
-      let existingUserCourses = await UserCourseModel.findOne({ userId: userName });
-  
-      let newCourseIds = [];
-  
-      if (existingUserCourses) {
-        // Extract existing courseIds from UserCourseModel
-        const existingCourseIds = existingUserCourses.courseIds;
-  
-        // Add only unique courseIds to newCourseIds
-        newCourseIds = courseIds.filter(courseId => !existingCourseIds.includes(courseId));
-        existingUserCourses = await UserCourseModel.findOneAndUpdate(
-          { userId: userName },
-          { $addToSet: { courseIds: { $each: newCourseIds } }, paid: true, transactionId: trans._id,isAllCourse:true },
-          { upsert: true, new: true }
-        );
-  
-      } else {
-        newCourseIds = courseIds;
-        const userCourseObj = new UserCourseModel({
-          userId: userName,
-          courseIds: newCourseIds,
-          paid: true,
-          transactionId: trans._id,
-          isAllCourse:true
-        });
-        await userCourseObj.save(); // No existing UserCourseModel, add all courseIds
-      }
+      await grantAllCoursesAccess(userName, courseIds, trans._id);
     }
     else {
       const course = await courseModel.findById(courseId);
@@ -100,14 +75,7 @@ exports.addCoursesToUsers = async (req, res) => {
         amount: Number(course.offeredPrice)
       })
       const trans = await transactionObj.save();
-  
-      const userCourseObj = new UserCourseModel({
-        userId: userName,
-        courseIds: courseId,
-        paid: true,
-        transactionId: trans._id,
-      });
-      await userCourseObj.save();
+      await grantSingleCourseAccess(userName, courseId, trans._id);
     }
     res.status(200).json({ message:"Course access has been provided to user!" });
   } catch (err) {

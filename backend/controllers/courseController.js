@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const courseModel = require("../models/courseModel");
 const userCourseSchema = require("../models/userCourseSchema");
+const { getMergedUserCourseState } = require("../utils/userCourseUtils");
 const modelPlayer = require("../models/model.player");
 const Player = require("../models/model.player");
 const { sendSuccessResponse, sendErrorResponse } = require("../utils/ApiReqRes");
@@ -214,9 +215,11 @@ const getEnrolledCourses = async (req, res) => {
     const { courseId } = req.body;
     console.log(req.user._id)
     if (!req.user) return res.status(401).json({ message: "Unauthorized" });
-    const isEnrolled = await userCourseSchema.findOne({ courseIds: { $in: courseId },userId:req.user._id.toString() });
-    if(!isEnrolled)
-    {
+    const state = await getMergedUserCourseState(req.user._id);
+    const isEnrolled = state?.mergedCourseIds?.some(
+      (id) => String(id) === String(courseId)
+    );
+    if (!isEnrolled) {
       return res.status(404).json({ success: false, message: "You have not enrolled for this Course" });
     }
 
