@@ -41,6 +41,8 @@ export interface IssuedInternCertificate {
   templateLabel: string;
   certificateType: string;
   issuedAt: string;
+  fromDate?: string | null;
+  toDate?: string | null;
 }
 
 export interface InternProfileRow {
@@ -51,7 +53,9 @@ export interface InternProfileRow {
     lastName: string;
     email: string;
     phone?: string;
+    role?: string;
     isBlocked: boolean;
+    isActive?: boolean;
     joinedAt: string;
   };
   kyc: InternKycProfile | null;
@@ -60,14 +64,21 @@ export interface InternProfileRow {
     programTitle: string;
     enrolledAt: string;
     enrollmentSource: string;
+    active?: boolean;
     certificateTemplateId?: string | null;
     certificateTemplateLabel?: string | null;
   } | null;
   certificates?: IssuedInternCertificate[];
   certificateEligibleAt?: string | null;
   certificateUnlocked?: boolean;
+  courseCompletionUnlocked?: boolean;
   certificateLockDaysRemaining?: number;
   certificateLockDays?: number;
+  internshipCompleted?: boolean;
+  internshipCompletedAt?: string | null;
+  internshipCompletedOverride?: boolean;
+  awaitingInternshipCertificate?: boolean;
+  completionCertificate?: IssuedInternCertificate | null;
   certificate: {
     issued: boolean;
     uuid?: string;
@@ -281,9 +292,22 @@ export async function updateUserBlock(userId: string, blocked: boolean) {
   return data;
 }
 
-export async function fetchInterns() {
-  const { data } = await api.get("/api/v1/crm/interns");
+export async function fetchInterns(includeInactive = false) {
+  const { data } = await api.get("/api/v1/crm/interns", {
+    params: includeInactive ? { includeInactive: true } : undefined,
+  });
   return (data.interns || []) as InternProfileRow[];
+}
+
+/** Trainer-completed students awaiting manager certificate issue (all roles). */
+export async function fetchInternshipApprovals(status: "pending" | "issued" | "all" = "pending") {
+  const { data } = await api.get("/api/v1/crm/internship-approvals", {
+    params: { status },
+  });
+  return data as {
+    approvals: InternProfileRow[];
+    summary: { pending: number; issued: number };
+  };
 }
 
 export async function blockIntern(userId: string, blocked: boolean) {
@@ -291,8 +315,22 @@ export async function blockIntern(userId: string, blocked: boolean) {
   return data;
 }
 
-export async function deleteIntern(userId: string) {
-  const { data } = await api.delete(`/api/v1/crm/interns/${userId}`);
+export async function deactivateIntern(userId: string, internshipSlug?: string) {
+  const { data } = await api.delete(`/api/v1/crm/interns/${userId}`, {
+    data: internshipSlug ? { internshipSlug } : undefined,
+  });
+  return data;
+}
+
+/** @deprecated Use deactivateIntern */
+export async function deleteIntern(userId: string, internshipSlug?: string) {
+  return deactivateIntern(userId, internshipSlug);
+}
+
+export async function reactivateIntern(userId: string, internshipSlug?: string) {
+  const { data } = await api.post(`/api/v1/crm/interns/${userId}/reactivate`, {
+    internshipSlug,
+  });
   return data;
 }
 
@@ -310,14 +348,33 @@ export async function approveInternCertificate(
   userId: string,
   studentName?: string,
   internshipSlug?: string,
-  certificateTemplateId?: string
+  certificateTemplateId?: string,
+  issuedAt?: string,
+  options?: { fromDate?: string; toDate?: string }
 ) {
   const { data } = await api.post(`/api/v1/crm/interns/${userId}/approve-certificate`, {
     studentName,
     internshipSlug,
     certificateTemplateId,
+    issuedAt: options?.toDate || issuedAt,
+    fromDate: options?.fromDate,
+    toDate: options?.toDate,
   });
   return data;
+}
+
+export async function previewInternshipCertificateDraft(payload: {
+  studentId: string;
+  internshipSlug: string;
+  certificateTemplateId: string;
+  studentName: string;
+  fromDate: string;
+  toDate: string;
+}) {
+  const response = await api.post("/api/v1/crm/internship-approvals/preview-pdf", payload, {
+    responseType: "blob",
+  });
+  return response.data as Blob;
 }
 
 export async function fetchOfferLetterPdfBlob(offerLetterId: string) {
@@ -551,11 +608,47 @@ export function groupProgramsByTrack(
 
 export async function fetchAdminTrainers() {
   const { data } = await api.get("/api/v1/internship-admin/trainers");
-  return data.trainers as Array<{ _id: string; firstName: string; lastName: string; email: string }>;
+  return data.trainers as Array<{
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role?: string;
+  }>;
+}
+
+export interface TrainerAssignmentRow {
+  id: string;
+  internshipSlug: string;
+  programTitle: string;
+  active: boolean;
+  assignedAt: string;
+  updatedAt: string;
+  trainer: {
+    id: string;
+    email: string;
+    name: string;
+    role?: string;
+  };
+  assignedBy: { email: string; name: string } | null;
+}
+
+export async function fetchTrainerAssignments() {
+  const { data } = await api.get("/api/v1/internship-admin/trainer-assignments");
+  return (data.assignments || []) as TrainerAssignmentRow[];
 }
 
 export async function assignTrainer(payload: { trainerEmail: string; internshipSlug: string }) {
   const { data } = await api.post("/api/v1/internship-admin/assign-trainer", payload);
+  return data;
+}
+
+export async function unassignTrainer(payload: {
+  assignmentId?: string;
+  trainerEmail?: string;
+  internshipSlug?: string;
+}) {
+  const { data } = await api.post("/api/v1/internship-admin/unassign-trainer", payload);
   return data;
 }
 
@@ -628,6 +721,21 @@ export async function createInvite(payload: {
   return data;
 }
 
+export async function createInviteBulk(payload: {
+  emails: string[];
+  firstName?: string;
+  lastName?: string;
+  internshipSlug?: string;
+  inviteMessage?: string;
+}) {
+  const { data } = await api.post("/api/v1/crm/invites/bulk", payload);
+  return data as {
+    message: string;
+    sent: Array<{ id: string; email: string; inviteUrl: string }>;
+    failed: Array<{ email: string; reason: string }>;
+  };
+}
+
 export async function deleteInvite(inviteId: string) {
   const { data } = await api.delete(`/api/v1/crm/invites/${inviteId}`);
   return data;
@@ -689,3 +797,418 @@ export async function resubmitKyc(formData: FormData) {
   });
   return data;
 }
+
+export interface TrainerProgramRow {
+  slug: string;
+  title: string;
+  category?: string;
+  coverImage?: string;
+  studentCount?: number;
+}
+
+export interface TrainerStudentRow {
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+}
+
+export type TrainerProgramConfig = Record<string, any>;
+
+export async function fetchTrainerPrograms() {
+  const { data } = await api.get("/api/v1/internship-trainer/programs");
+  return (data.programs || []) as TrainerProgramRow[];
+}
+
+export async function fetchTrainerProgramConfig(slug: string) {
+  const { data } = await api.get(`/api/v1/internship-trainer/programs/${slug}/config`);
+  return data.config as TrainerProgramConfig;
+}
+
+export async function saveTrainerProgramConfig(slug: string, payload: Record<string, unknown>) {
+  const { data } = await api.put(`/api/v1/internship-trainer/programs/${slug}/config`, payload);
+  return data.config as TrainerProgramConfig;
+}
+
+export async function fetchTrainerStudents(slug: string) {
+  const { data } = await api.get(`/api/v1/internship-trainer/programs/${slug}/students`);
+  return (data.students || []) as TrainerStudentRow[];
+}
+
+export interface TrainerProgressStudent {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  assignedAt?: string;
+  assignmentsDone: number;
+  assignmentsSubmitted?: number;
+  assignmentsTotal: number;
+  projectsDone: number;
+  projectsSubmitted?: number;
+  projectsTotal: number;
+  attendanceDone?: number;
+  attendanceTotal?: number;
+  assignmentCompletionPercent: number;
+  projectCompletionPercent: number;
+  internshipCompleted?: boolean;
+  internshipCompletedAt?: string | null;
+  internshipCompletedOverride?: boolean;
+  eligibleForCompletion?: boolean;
+  assignments: Array<{
+    key: string;
+    weekIndex: number;
+    classId: string;
+    title: string;
+    weekLabel: string;
+    classTitle: string;
+    submitted: boolean;
+    submittedAt?: string | null;
+    mcqScore?: number | null;
+    mcqTotal?: number | null;
+    passingScore?: number | null;
+    passed?: boolean | null;
+    status?: "pending" | "passed" | "failed";
+  }>;
+  projects: Array<{
+    key: string;
+    weekIndex: number;
+    title: string;
+    weekLabel: string;
+    topic?: string;
+    submitted: boolean;
+    submittedAt?: string | null;
+    githubUrl?: string;
+    reviewStatus?: "pending" | "approved" | "rejected" | null;
+    reviewReason?: string;
+    reviewedAt?: string | null;
+    approved?: boolean;
+  }>;
+  attendance?: Array<{
+    key: string;
+    weekIndex: number;
+    classId: string;
+    title: string;
+    weekLabel: string;
+    attended: boolean;
+    joinedAt?: string | null;
+    lastJoinedAt?: string | null;
+    joinCount?: number;
+  }>;
+}
+
+export async function fetchTrainerProgramProgress(slug: string) {
+  const { data } = await api.get(`/api/v1/internship-trainer/programs/${slug}/progress`);
+  return data as {
+    summary: {
+      studentCount: number;
+      assignmentCount: number;
+      projectCount: number;
+      studentsWithAllAssignments: number;
+      studentsWithAllProjects: number;
+      internshipCompletedCount?: number;
+      eligibleForCompletionCount?: number;
+    };
+    expected: {
+      assignments: any[];
+      projects: any[];
+    };
+    students: TrainerProgressStudent[];
+  };
+}
+
+export async function reviewTrainerProject(
+  slug: string,
+  payload: {
+    studentId: string;
+    weekIndex: number;
+    status: "approved" | "rejected" | "pending";
+    reason?: string;
+  }
+) {
+  const { data } = await api.post(
+    `/api/v1/internship-trainer/programs/${slug}/projects/review`,
+    payload
+  );
+  return data;
+}
+
+export async function completeTrainerInternship(
+  slug: string,
+  studentId: string,
+  options?: { override?: boolean }
+) {
+  const { data } = await api.post(
+    `/api/v1/internship-trainer/programs/${slug}/complete-internship`,
+    { studentId, override: Boolean(options?.override) }
+  );
+  return data;
+}
+
+export async function completeTrainerInternshipBulk(
+  slug: string,
+  studentIds: string[],
+  options?: { override?: boolean }
+) {
+  const { data } = await api.post(
+    `/api/v1/internship-trainer/programs/${slug}/complete-internship/bulk`,
+    { studentIds, override: Boolean(options?.override) }
+  );
+  return data as {
+    message: string;
+    completed: Array<{
+      studentId: string;
+      internshipCompletedAt?: string;
+      internshipCompletedOverride?: boolean;
+    }>;
+    skipped: Array<{ studentId: string; reason: string }>;
+  };
+}
+
+export interface TrainerAssessmentProgramSummary {
+  slug: string;
+  title: string;
+  category?: string;
+  coverImage?: string;
+  studentCount: number;
+  assignmentCount: number;
+  submissionTotal: number;
+  submittedCount: number;
+  pendingCount: number;
+  completionPercent: number;
+}
+
+export interface TrainerAssessmentRow {
+  id: string;
+  internshipSlug: string;
+  programTitle: string;
+  studentId: string;
+  studentName: string;
+  studentEmail: string;
+  phone?: string;
+  weekIndex: number;
+  weekLabel: string;
+  topic?: string;
+  classId: string;
+  classTitle: string;
+  assignmentTitle: string;
+  questionCount: number;
+  submitted: boolean;
+  submittedAt?: string | null;
+  mcqScore?: number | null;
+  mcqTotal?: number | null;
+  passingScore?: number | null;
+  passed?: boolean | null;
+  status?: "pending" | "passed" | "failed";
+}
+
+export interface TrainerAssessmentClassOption {
+  key: string;
+  slug: string;
+  programTitle: string;
+  weekIndex: number;
+  weekLabel: string;
+  topic?: string;
+  classId: string;
+  classTitle: string;
+  assignmentTitle: string;
+  questionCount?: number;
+}
+
+export interface TrainerAssessmentDetail {
+  internshipSlug: string;
+  programTitle: string;
+  student: { id: string; name: string; email: string; phone?: string };
+  assignment: {
+    weekIndex: number;
+    weekLabel: string;
+    topic?: string;
+    classId: string;
+    classTitle: string;
+    title: string;
+    instructions?: string;
+    dueLabel?: string;
+  };
+  submitted: boolean;
+  submittedAt?: string | null;
+  mcqScore?: number | null;
+  mcqTotal?: number | null;
+  passingScore?: number | null;
+  passed?: boolean | null;
+  questions: Array<{
+    id: string;
+    type: "mcq" | "text";
+    prompt: string;
+    options: string[];
+    correctOptionIndex: number;
+    selectedIndex: number | null;
+    textAnswer: string;
+    isCorrect: boolean | null;
+  }>;
+}
+
+export async function fetchTrainerAssessments(params?: {
+  slug?: string;
+  status?: "all" | "submitted" | "pending";
+  classKey?: string;
+  q?: string;
+}) {
+  const { data } = await api.get("/api/v1/internship-trainer/assessments", {
+    params: {
+      slug: params?.slug || undefined,
+      status: params?.status || "all",
+      classKey: params?.classKey || undefined,
+      q: params?.q || undefined,
+    },
+  });
+  return data as {
+    programs: TrainerAssessmentProgramSummary[];
+    classes: TrainerAssessmentClassOption[];
+    summary: { total: number; submitted: number; pending: number };
+    rows: TrainerAssessmentRow[];
+  };
+}
+
+export interface TrainerProjectAssessmentProgramSummary {
+  slug: string;
+  title: string;
+  category?: string;
+  coverImage?: string;
+  studentCount: number;
+  projectCount: number;
+  submissionTotal: number;
+  submittedCount: number;
+  pendingCount: number;
+  approvedCount: number;
+  awaitingReviewCount: number;
+  rejectedCount: number;
+  completionPercent: number;
+}
+
+export interface TrainerProjectAssessmentOption {
+  key: string;
+  slug: string;
+  programTitle: string;
+  weekIndex: number;
+  weekLabel: string;
+  topic?: string;
+  title: string;
+  documentUrl?: string;
+  documentTitle?: string;
+  spanWeeks?: number;
+}
+
+export interface TrainerProjectAssessmentRow {
+  id: string;
+  internshipSlug: string;
+  programTitle: string;
+  studentId: string;
+  studentName: string;
+  studentEmail: string;
+  phone?: string;
+  weekIndex: number;
+  weekLabel: string;
+  topic?: string;
+  title: string;
+  documentUrl?: string;
+  documentTitle?: string;
+  spanWeeks?: number;
+  submitted: boolean;
+  submittedAt?: string | null;
+  githubUrl?: string;
+  reviewStatus?: "pending" | "approved" | "rejected" | null;
+  reviewReason?: string;
+  reviewedAt?: string | null;
+  approved?: boolean;
+}
+
+export async function fetchTrainerProjectAssessments(params?: {
+  slug?: string;
+  status?:
+    | "all"
+    | "submitted"
+    | "pending"
+    | "awaiting_review"
+    | "approved"
+    | "rejected";
+  projectKey?: string;
+  q?: string;
+}) {
+  const { data } = await api.get("/api/v1/internship-trainer/assessments/projects", {
+    params: {
+      slug: params?.slug || undefined,
+      status: params?.status || "all",
+      projectKey: params?.projectKey || undefined,
+      q: params?.q || undefined,
+    },
+  });
+  return data as {
+    programs: TrainerProjectAssessmentProgramSummary[];
+    projects: TrainerProjectAssessmentOption[];
+    summary: {
+      total: number;
+      submitted: number;
+      pending: number;
+      awaitingReview: number;
+      approved: number;
+      rejected: number;
+    };
+    rows: TrainerProjectAssessmentRow[];
+  };
+}
+
+export async function fetchTrainerAssessmentDetail(params: {
+  slug: string;
+  studentId: string;
+  weekIndex: number;
+  classId: string;
+}) {
+  const { data } = await api.get(
+    `/api/v1/internship-trainer/assessments/${params.slug}/detail`,
+    {
+      params: {
+        studentId: params.studentId,
+        weekIndex: params.weekIndex,
+        classId: params.classId,
+      },
+    }
+  );
+  return data as TrainerAssessmentDetail;
+}
+
+export async function generateTrainerClassQuestions(
+  slug: string,
+  classId: string,
+  payload: {
+    weekIndex: number;
+    numMcq: number;
+    numText: number;
+    difficulty: string;
+    focus?: string;
+    contextText?: string;
+    contextPdf?: File | null;
+  }
+) {
+  const formData = new FormData();
+  formData.append("weekIndex", String(payload.weekIndex));
+  formData.append("numMcq", String(payload.numMcq));
+  formData.append("numText", String(payload.numText));
+  formData.append("difficulty", payload.difficulty || "medium");
+  if (payload.focus) formData.append("focus", payload.focus);
+  if (payload.contextText) formData.append("contextText", payload.contextText);
+  if (payload.contextPdf) formData.append("contextPdf", payload.contextPdf);
+
+  const { data } = await api.post(
+    `/api/v1/internship-trainer/programs/${slug}/classes/${encodeURIComponent(classId)}/generate-questions`,
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } }
+  );
+  return data as {
+    questions: any[];
+    classId: string;
+    weekIndex: number;
+    usedContext?: { hasText: boolean; hasPdf: boolean };
+  };
+}
+

@@ -38,6 +38,21 @@ const internshipCertificateSchema = new mongoose.Schema(
       ref: "User",
       default: null,
     },
+    /** Manager-chosen date printed on the certificate (falls back to createdAt / toDate). */
+    issuedAt: {
+      type: Date,
+      default: null,
+    },
+    /** Internship period start printed on the certificate. */
+    fromDate: {
+      type: Date,
+      default: null,
+    },
+    /** Internship period end printed on the certificate. */
+    toDate: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

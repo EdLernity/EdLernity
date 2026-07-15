@@ -46,7 +46,7 @@ export const Context = ({ children }) => {
        })
      apiInstancePrivate.get("/auth/user-details").then((response) => {
         const profile = response.data.user;
-        if (profile?.role === "intern") {
+        if (profile?.role === "intern" || profile?.role === "trainer" || profile?.effectiveRole === "trainer") {
           const crmUrl = (process.env.REACT_APP_CRM_URL || "http://localhost:3001").replace(/\/$/, "");
           localStorage.removeItem("_userAuth");
           window.location.href = `${crmUrl}/signin`;

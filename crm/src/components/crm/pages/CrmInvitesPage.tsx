@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { ReactMultiEmail } from "react-multi-email";
+import "react-multi-email/dist/style.css";
 import {
   approveIntern,
-  createInvite,
+  createInviteBulk,
   deleteInvite,
   fetchCareersPrograms,
   fetchInvites,
@@ -12,6 +14,10 @@ import {
 } from "@/lib/crmApi";
 import { formatDate, inputClass, selectClass } from "@/lib/crmUtils";
 import { useAuth } from "@/context/AuthContext";
+
+function isGmailAddress(email: string) {
+  return /^[^\s@]+@gmail\.com$/i.test(String(email || "").trim());
+}
 
 function isImageUrl(url: string) {
   return /\.(jpe?g|png|webp)(\?|$)/i.test(url);
@@ -61,8 +67,8 @@ export default function CrmInvitesPage() {
   } | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
+  const [emails, setEmails] = useState<string[]>([]);
   const [form, setForm] = useState({
-    email: "",
     firstName: "",
     lastName: "",
     internshipSlug: "sales-marketing",
@@ -137,15 +143,44 @@ export default function CrmInvitesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const uniqueEmails = [...new Set(emails.map((e) => e.trim().toLowerCase()).filter(Boolean))];
+    if (!uniqueEmails.length) {
+      setMessage("Add at least one Gmail address (press Enter or comma after each email)");
+      return;
+    }
+    if (uniqueEmails.length > 50) {
+      setMessage("Maximum 50 emails per bulk invite");
+      return;
+    }
+
     setSubmitting(true);
     setMessage("");
     try {
-      const result = await createInvite(form);
-      setMessage(result.message || "Invite sent");
-      setForm((prev) => ({ ...prev, email: "", firstName: "", lastName: "" }));
-      load();
-    } catch {
-      setMessage("Failed to send invite");
+      const result = await createInviteBulk({
+        emails: uniqueEmails,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        internshipSlug: form.internshipSlug,
+        inviteMessage: form.inviteMessage,
+      });
+      const failHint = result.failed?.length
+        ? ` Failed: ${result.failed
+            .slice(0, 5)
+            .map((f) => `${f.email} (${f.reason})`)
+            .join("; ")}${result.failed.length > 5 ? "…" : ""}`
+        : "";
+      setMessage(`${result.message || "Invites sent."}${failHint}`);
+      if (result.sent?.length) {
+        setEmails([]);
+        setForm((prev) => ({ ...prev, firstName: "", lastName: "" }));
+        load();
+      }
+    } catch (err: unknown) {
+      const apiMessage =
+        err && typeof err === "object" && "response" in err
+          ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
+          : null;
+      setMessage(apiMessage || "Failed to send invites");
     } finally {
       setSubmitting(false);
     }
@@ -166,34 +201,65 @@ export default function CrmInvitesPage() {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] p-6 space-y-4 max-w-2xl"
+        className="max-w-2xl space-y-4 rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]"
       >
-        <h2 className="font-semibold text-gray-900 dark:text-white">Send invite</h2>
-        <input
-          type="email"
-          required
-          placeholder="Intern Gmail address *"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className={inputClass()}
-        />
-        <p className="text-xs text-gray-500 -mt-2">Only Gmail addresses are allowed</p>
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div>
+          <h2 className="font-semibold text-gray-900 dark:text-white">Send invites (bulk)</h2>
+          <p className="mt-1 text-xs text-gray-500">
+            Type a Gmail, then press <strong>Enter</strong> or <strong>,</strong> to add a chip.
+            Paste multiple emails separated by commas or spaces.
+          </p>
+        </div>
+
+        <label className="block">
+          <span className="mb-1 block text-xs font-medium text-gray-500">
+            Intern Gmail addresses * ({emails.length} added)
+          </span>
+          <ReactMultiEmail
+            className="crm-invite-multi-email"
+            emails={emails}
+            onChange={setEmails}
+            allowDuplicate={false}
+            placeholder="name@gmail.com"
+            validateEmail={(email) => isGmailAddress(email)}
+            getLabel={(email, index, removeEmail) => (
+              <div data-tag key={email} className="crm-invite-chip">
+                <span data-tag-item>{email}</span>
+                <span
+                  data-tag-handle
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => removeEmail(index)}
+                  onKeyDown={(ev) => {
+                    if (ev.key === "Enter" || ev.key === " ") removeEmail(index);
+                  }}
+                >
+                  ×
+                </span>
+              </div>
+            )}
+          />
+          <p className="mt-1.5 text-xs text-gray-500">
+            Only @gmail.com addresses. Up to 50 per send.
+          </p>
+        </label>
+
+        <div className="grid gap-4 sm:grid-cols-2">
           <input
-            placeholder="First name"
+            placeholder="First name (optional, shared)"
             value={form.firstName}
             onChange={(e) => setForm({ ...form, firstName: e.target.value })}
             className={inputClass()}
           />
           <input
-            placeholder="Last name"
+            placeholder="Last name (optional, shared)"
             value={form.lastName}
             onChange={(e) => setForm({ ...form, lastName: e.target.value })}
             className={inputClass()}
           />
         </div>
         <label className="block">
-          <span className="text-xs font-medium text-gray-500 mb-1 block">Careers internship *</span>
+          <span className="mb-1 block text-xs font-medium text-gray-500">Careers internship *</span>
           <select
             value={form.internshipSlug}
             onChange={(e) => setForm({ ...form, internshipSlug: e.target.value })}
@@ -215,10 +281,12 @@ export default function CrmInvitesPage() {
         />
         <button
           type="submit"
-          disabled={submitting}
-          className="px-5 py-2.5 rounded-lg bg-brand-500 text-white text-sm font-medium disabled:opacity-60"
+          disabled={submitting || emails.length === 0}
+          className="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-60"
         >
-          {submitting ? "Sending..." : "Send onboarding link"}
+          {submitting
+            ? `Sending ${emails.length} invite${emails.length === 1 ? "" : "s"}…`
+            : `Send ${emails.length || ""} invite${emails.length === 1 ? "" : "s"}`}
         </button>
       </form>
 

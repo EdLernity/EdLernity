@@ -7,8 +7,11 @@ const {
   updateUserRole,
   updateUserBlock,
   getInterns,
+  getInternshipApprovals,
+  previewInternshipCertificateDraft,
   blockInternProfile,
   deleteInternProfile,
+  reactivateInternProfile,
   approveInternKyc,
   rejectInternKyc,
   approveInternCertificate,
@@ -28,6 +31,7 @@ const {
   listTransactions,
   listInvites,
   createInvite,
+  createInviteBulk,
   deleteInvite,
   deleteUser,
   recordOfferLetter,
@@ -75,14 +79,21 @@ router.use(authMiddleware);
 
 router.get("/overview", adminOnly, getOverview);
 router.get("/interns", staff, getInterns);
+router.get("/internship-approvals", staff, getInternshipApprovals);
+router.post(
+  "/internship-approvals/preview-pdf",
+  staff,
+  previewInternshipCertificateDraft
+);
 router.patch("/interns/:id/block", adminOnly, blockInternProfile);
 router.delete("/interns/:id", adminOnly, deleteInternProfile);
+router.post("/interns/:id/reactivate", adminOnly, reactivateInternProfile);
 router.post("/interns/:id/approve", staff, approveInternKyc);
 router.post("/interns/:id/reject", staff, rejectInternKyc);
 router.post("/interns/:id/approve-certificate", staff, approveInternCertificate);
 router.get("/certificates", adminOnly, listCertificates);
-router.get("/certificates/:id/preview", adminOnly, previewIssuedCertificate);
-router.delete("/certificates/:id", adminOnly, deleteIssuedCertificate);
+router.get("/certificates/:id/preview", staff, previewIssuedCertificate);
+router.delete("/certificates/:id", staff, deleteIssuedCertificate);
 router.get("/certificate-types", staff, listCertificateTypes);
 router.post("/certificate-types", adminOnly, createCertificateType);
 router.patch("/certificate-types/:id", adminOnly, updateCertificateType);
@@ -116,6 +127,7 @@ router.patch("/users/:id/block", adminOnly, updateUserBlock);
 router.delete("/users/:id", adminOnly, deleteUser);
 router.get("/invites", staff, listInvites);
 router.post("/invites", staff, createInvite);
+router.post("/invites/bulk", staff, createInviteBulk);
 router.delete("/invites/:id", staff, deleteInvite);
 
 module.exports = router;

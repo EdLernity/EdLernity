@@ -117,6 +117,14 @@ const enrollInternshipRecord = async ({
 
   const existing = await UserInternship.findOne({ userId, internshipSlug: slug });
   if (existing) {
+    if (existing.active === false) {
+      existing.active = true;
+      if (paymentId) existing.paymentId = paymentId;
+      if (amount != null) existing.amount = String(amount);
+      if (transactionId) existing.transactionId = transactionId;
+      if (enrollmentSource) existing.enrollmentSource = enrollmentSource;
+      await existing.save();
+    }
     await InternshipStudentAssignment.findOneAndUpdate(
       { studentId: userId, internshipSlug: slug },
       { $set: { active: true } },
@@ -150,7 +158,10 @@ const getInternshipEnrollments = async (req, res) => {
   if (!req.user) return res.status(401).json({ message: "Unauthorized" });
 
   try {
-    const internships = await UserInternship.find({ userId: req.user._id })
+    const internships = await UserInternship.find({
+      userId: req.user._id,
+      active: { $ne: false },
+    })
       .sort({ createdAt: -1 })
       .select("internshipSlug title category coverImage createdAt enrollmentSource");
 

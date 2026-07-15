@@ -436,7 +436,7 @@ const getMyCertificates = async (req, res) => {
           internshipSlug: row.internshipSlug,
           templateLabel: template?.label || "Internship Certificate",
           certificateType: row.certificateType || template?.type || "internship-completion",
-          issuedAt: row.createdAt,
+          issuedAt: row.issuedAt || row.createdAt,
         };
       }),
     });
@@ -477,7 +477,7 @@ const getMyCertificatePdf = async (req, res) => {
       studentName: certificate.studentName,
       programTitle,
       uuid: certificate.uuid,
-      issuedAt: certificate.createdAt,
+      issuedAt: certificate.issuedAt || certificate.createdAt,
       fromDate,
       toDate,
     });

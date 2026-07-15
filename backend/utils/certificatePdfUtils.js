@@ -50,6 +50,11 @@ function buildInternshipDateRange(fromDate, toDate) {
   return `[${formatCertificateDate(fromDate)}] to [${formatCertificateDate(toDate)}]`;
 }
 
+/** Compact period for Tech COMPLETED ON column: DD/MM/YYYY - DD/MM/YYYY */
+function buildInternshipDateRangeShort(fromDate, toDate) {
+  return `${formatCertificateDate(fromDate)} - ${formatCertificateDate(toDate)}`;
+}
+
 function resolveDefaultFromDate(toDate, layout) {
   const months = Number(layout?.durationMonths) > 0 ? Number(layout.durationMonths) : 2;
   return moment(toDate || new Date())
@@ -66,6 +71,7 @@ function buildFieldValues({ studentName, programTitle, uuid, issuedAt, fromDate,
     programTitle: String(programTitle || "").trim(),
     issuedDate: formatCertificateDate(to),
     internshipDateRange: buildInternshipDateRange(from, to),
+    internshipDateRangeShort: buildInternshipDateRangeShort(from, to),
     certificateId: String(uuid || "").trim(),
   };
 }
@@ -74,7 +80,19 @@ async function resolveInternshipCertificateDates(certificate) {
   const UserInternship = require("../models/userInternshipSchema");
   const { findKycForProgram } = require("./internKycService");
 
-  const toDate = certificate.createdAt || new Date();
+  // Prefer manager-set from/to dates stored on the certificate record.
+  if (certificate?.fromDate && certificate?.toDate) {
+    return {
+      fromDate: new Date(certificate.fromDate),
+      toDate: new Date(certificate.toDate),
+    };
+  }
+
+  const toDate =
+    certificate?.toDate ||
+    certificate?.issuedAt ||
+    certificate?.createdAt ||
+    new Date();
   const [enrollment, kyc] = await Promise.all([
     UserInternship.findOne({
       userId: certificate.userId,
@@ -84,9 +102,12 @@ async function resolveInternshipCertificateDates(certificate) {
   ]);
 
   const fromDate =
-    kyc?.approvedAt || enrollment?.createdAt || resolveDefaultFromDate(toDate, { durationMonths: 2 });
+    certificate?.fromDate ||
+    kyc?.approvedAt ||
+    enrollment?.createdAt ||
+    resolveDefaultFromDate(toDate, { durationMonths: 2 });
 
-  return { fromDate, toDate };
+  return { fromDate: new Date(fromDate), toDate: new Date(toDate) };
 }
 
 async function buildInternshipCompletionPdf({

@@ -61,6 +61,7 @@ app.use('/api/v1/crm', crmRoutes);
 app.use('/api/v1/careers', careersRoutes);
 app.use('/api/v1/certificates', require('./routes/certificateVerify.routes'));
 app.use('/api/v1/onboard', require('./routes/onboard.routes'));
+app.use('/api/v1/eddy', require('./routes/eddy.routes'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', contactRoutes);
 

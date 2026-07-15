@@ -32,6 +32,9 @@ const authMiddleware = async (req, res, next) => {
           if (user.IsBlocked) {
             return sendErrorResponse(res, 403, "Your account has been blocked. Contact admin or manager for access.");
           }
+          if (user.isActive === false) {
+            return sendErrorResponse(res, 403, "Your account is inactive. Contact admin or manager for access.");
+          }
         req.user = user;
         next();
         

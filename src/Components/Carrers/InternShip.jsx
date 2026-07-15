@@ -519,7 +519,7 @@ function InternShip() {
               <div className="absolute inset-0 bg-indigo-500/5 rounded-3xl filter blur-3xl transform pointer-events-none"></div>
               <div className="bg-white p-4 rounded-3xl shadow-xl border border-slate-100 hover:scale-[1.01] transition-transform duration-300">
                 <img
-                  src="/Image/MARKETING _20240427_185457_0000.jpg"
+                  src="/Image/tech-internship-certificate.jpg"
                   alt="EdLernity Government Approved Certification Mockup"
                   className="w-full max-w-md rounded-2xl"
                 />

@@ -11,6 +11,16 @@ const internshipStudentAssignmentSchema = new mongoose.Schema(
     trainerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
     assignedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     active: { type: Boolean, default: true },
+    /** Set when trainer marks internship completed for this student. */
+    internshipCompleted: { type: Boolean, default: false },
+    internshipCompletedAt: { type: Date, default: null },
+    internshipCompletedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    /** True when trainer forced completion before all work passed/approved. */
+    internshipCompletedOverride: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

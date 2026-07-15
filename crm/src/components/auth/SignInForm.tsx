@@ -31,9 +31,11 @@ export default function SignInForm() {
       const defaultRedirect =
         result.role === "intern"
           ? "/my-offer-letters"
-          : result.role === "manager"
-            ? "/interns"
-            : "/";
+          : result.role === "trainer"
+            ? "/trainer"
+            : result.role === "manager"
+              ? "/interns"
+              : "/";
       const redirect = result.redirectTo || searchParams.get("redirect") || defaultRedirect;
       router.replace(redirect);
     } catch {
@@ -52,7 +54,7 @@ export default function SignInForm() {
               EdLernity CRM
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Staff and career interns sign in here. Interns can view offer letters and certificates.
+              Staff, trainers, and career interns sign in here.
             </p>
           </div>
           <form onSubmit={handleSubmit}>

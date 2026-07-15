@@ -41,6 +41,10 @@ const userInternshipSchema = new mongoose.Schema(
       enum: ["payment", "admin_grant", "invite"],
       default: "payment",
     },
+    active: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

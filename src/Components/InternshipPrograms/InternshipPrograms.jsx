@@ -688,11 +688,14 @@ function InternshipPrograms() {
             </div>
 
             <div className="lg:order-1 flex justify-center relative">
-              <img
-                src="/Image/MARKETING _20240427_185457_0000.jpg"
-                alt="EdLernity Government Approved Certification Mockup"
-                className="w-full max-w-2xl object-contain hover:scale-[1.01] transition-transform duration-300"
-              />
+              <div className="absolute inset-0 bg-[#181FC5]/5 rounded-3xl blur-3xl pointer-events-none" />
+              <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl hover:scale-[1.01] transition-transform duration-300">
+                <img
+                  src="/Image/tech-internship-certificate.jpg"
+                  alt="EdLernity internship completion certificate — government-approved and internationally recognized"
+                  className="w-full h-auto object-contain"
+                />
+              </div>
             </div>
 
           </div>

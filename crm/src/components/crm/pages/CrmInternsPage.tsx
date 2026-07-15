@@ -8,7 +8,8 @@ import {
   approveIntern,
   approveInternCertificate,
   blockIntern,
-  deleteIntern,
+  deactivateIntern,
+  reactivateIntern,
   fetchCertificateTemplates,
   fetchInterns,
   rejectIntern,
@@ -114,13 +115,30 @@ function pickDefaultCertificateTemplateId(
 function isSelectedTemplateIssueBlocked(
   templateId: string,
   templates: CertificateTemplateRow[],
-  completionUnlocked: boolean
+  options: {
+    internshipCompleted: boolean;
+    courseCompletionUnlocked: boolean;
+  }
 ) {
   if (!templateId) return true;
   const selected = templates.find((template) => template.id === templateId);
   if (!selected) return true;
-  if (isCompletionCertificateTemplate(selected) && !completionUnlocked) return true;
+  if (selected.type === "internship-completion" && !options.internshipCompleted) return true;
+  if (selected.type === "course-completion" && !options.courseCompletionUnlocked) return true;
   return false;
+}
+
+function toDateInputValue(d = new Date()) {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function monthsAgoDateInput(months: number) {
+  const d = new Date();
+  d.setMonth(d.getMonth() - months);
+  return toDateInputValue(d);
 }
 
 export default function CrmInternsPage() {
@@ -133,9 +151,11 @@ export default function CrmInternsPage() {
   const [kycFilter, setKycFilter] = useState("all");
   const [approvalFilter, setApprovalFilter] = useState("all");
   const [certFilter, setCertFilter] = useState("all");
+  const [pageTab, setPageTab] = useState<"all" | "internship-certs">("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [actionId, setActionId] = useState<string | null>(null);
+  const [showInactive, setShowInactive] = useState(false);
   const [modal, setModal] = useState<{
     studentId: string;
     studentEmail: string;
@@ -143,7 +163,12 @@ export default function CrmInternsPage() {
     programTitle: string;
     studentName: string;
     certificateTemplateId: string;
+    issuedAt: string;
+    fromDate: string;
+    toDate: string;
     certificateUnlocked: boolean;
+    courseCompletionUnlocked: boolean;
+    internshipCompleted: boolean;
     certificateLockDaysRemaining: number;
     certificateEligibleAt?: string | null;
     issuedTemplateIds: string[];
@@ -160,10 +185,10 @@ export default function CrmInternsPage() {
   } | null>(null);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
 
-  const load = () => {
+  const load = (includeInactive = showInactive) => {
     setLoading(true);
     Promise.all([
-      fetchInterns(),
+      fetchInterns(includeInactive),
       fetchCertificateTemplates({ issuable: true }).then((data) => data.templates),
     ])
       .then(([internRows, templateRows]) => {
@@ -175,8 +200,9 @@ export default function CrmInternsPage() {
   };
 
   useEffect(() => {
-    load();
-  }, []);
+    load(showInactive);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showInactive]);
 
   const programs = useMemo(() => {
     const slugs = new Set<string>();
@@ -192,8 +218,16 @@ export default function CrmInternsPage() {
     }));
   }, [interns]);
 
+  const awaitingInternshipCount = useMemo(
+    () => interns.filter((row) => row.awaitingInternshipCertificate).length,
+    [interns]
+  );
+
   const filtered = useMemo(() => {
     return interns.filter((row) => {
+      if (pageTab === "internship-certs" && !row.awaitingInternshipCertificate) {
+        return false;
+      }
       const term = search.trim().toLowerCase();
       const name = displayName(row).toLowerCase();
       const email = row.student.email?.toLowerCase() || "";
@@ -216,7 +250,7 @@ export default function CrmInternsPage() {
         (certFilter === "pending" && !hasIssuedCertificates(row));
       return matchesSearch && matchesProgram && matchesKyc && matchesApproval && matchesCert;
     });
-  }, [interns, search, programFilter, kycFilter, approvalFilter, certFilter]);
+  }, [interns, search, programFilter, kycFilter, approvalFilter, certFilter, pageTab]);
 
   const handleApprove = async (row: InternProfileRow) => {
     setActionId(row.id);
@@ -249,15 +283,19 @@ export default function CrmInternsPage() {
   const handleIssue = async () => {
     if (!modal) return;
     if (
-      isSelectedTemplateIssueBlocked(
-        modal.certificateTemplateId,
-        certificateTemplates,
-        modal.certificateUnlocked
-      )
+      isSelectedTemplateIssueBlocked(modal.certificateTemplateId, certificateTemplates, {
+        internshipCompleted: modal.internshipCompleted,
+        courseCompletionUnlocked: modal.courseCompletionUnlocked,
+      })
     ) {
-      if (!modal.certificateUnlocked) {
+      const selected = certificateTemplates.find((t) => t.id === modal.certificateTemplateId);
+      if (selected?.type === "internship-completion" && !modal.internshipCompleted) {
         setMessage(
-          `Completion certificate unlocks in ${modal.certificateLockDaysRemaining} day(s) (${formatDate(modal.certificateEligibleAt || undefined)}). Recognition certificates can be issued now.`
+          "Internship completion certificate waits until the trainer marks the internship completed."
+        );
+      } else if (selected?.type === "course-completion" && !modal.courseCompletionUnlocked) {
+        setMessage(
+          `Course completion unlocks in ${modal.certificateLockDaysRemaining} day(s) (${formatDate(modal.certificateEligibleAt || undefined)}).`
         );
       } else {
         setMessage("Select a certificate type to issue");
@@ -268,6 +306,23 @@ export default function CrmInternsPage() {
       setMessage("Select a certificate type to issue");
       return;
     }
+    const selectedTemplate = certificateTemplates.find(
+      (t) => t.id === modal.certificateTemplateId
+    );
+    const isInternshipCompletion = selectedTemplate?.type === "internship-completion";
+    if (isInternshipCompletion) {
+      if (!modal.fromDate || !modal.toDate) {
+        setMessage("Enter from date and to date");
+        return;
+      }
+      if (modal.fromDate > modal.toDate) {
+        setMessage("From date must be on or before the to date");
+        return;
+      }
+    } else if (!modal.issuedAt) {
+      setMessage("Enter the certificate issue date");
+      return;
+    }
 
     setIssuing(true);
     try {
@@ -275,7 +330,11 @@ export default function CrmInternsPage() {
         modal.studentId,
         modal.studentName.trim(),
         modal.internshipSlug,
-        modal.certificateTemplateId
+        modal.certificateTemplateId,
+        isInternshipCompletion ? modal.toDate : modal.issuedAt,
+        isInternshipCompletion
+          ? { fromDate: modal.fromDate, toDate: modal.toDate }
+          : undefined
       );
       setMessage("Certificate issued and available in intern portal");
       setModal(null);
@@ -305,17 +364,39 @@ export default function CrmInternsPage() {
     }
   };
 
-  const handleDelete = async (row: InternProfileRow) => {
+  const handleDeactivate = async (row: InternProfileRow) => {
     const name = displayName(row);
-    if (!window.confirm(`Delete intern ${name} (${row.student.email})? This cannot be undone.`)) return;
+    const programLabel = row.enrollment?.programTitle
+      ? ` for ${row.enrollment.programTitle}`
+      : "";
+    if (
+      !window.confirm(
+        `Mark intern ${name} (${row.student.email})${programLabel} as inactive? Records are kept and can be reactivated later.`
+      )
+    ) {
+      return;
+    }
     setActionId(row.id);
     try {
-      await deleteIntern(row.student.id);
-      setMessage("Intern deleted");
+      await deactivateIntern(row.student.id, row.enrollment?.internshipSlug);
+      setMessage("Intern marked inactive");
       if (expandedId === row.id) setExpandedId(null);
-      load();
+      load(showInactive);
     } catch {
-      setMessage("Failed to delete intern");
+      setMessage("Failed to mark intern inactive");
+    } finally {
+      setActionId(null);
+    }
+  };
+
+  const handleReactivate = async (row: InternProfileRow) => {
+    setActionId(row.id);
+    try {
+      await reactivateIntern(row.student.id, row.enrollment?.internshipSlug);
+      setMessage("Intern reactivated");
+      load(showInactive);
+    } catch {
+      setMessage("Failed to reactivate intern");
     } finally {
       setActionId(null);
     }
@@ -328,6 +409,13 @@ export default function CrmInternsPage() {
       .map((certificate) => certificate.templateId)
       .filter(Boolean) as string[];
     const programTemplateId = row.enrollment?.certificateTemplateId || null;
+    const internshipCompleted = Boolean(row.internshipCompleted);
+    const completionUnlocked =
+      internshipCompleted || Boolean(row.courseCompletionUnlocked ?? row.certificateUnlocked);
+
+    const enrolledAt = row.enrollment?.enrolledAt
+      ? toDateInputValue(new Date(row.enrollment.enrolledAt))
+      : monthsAgoDateInput(2);
 
     setModal({
       studentId: row.student.id,
@@ -335,13 +423,20 @@ export default function CrmInternsPage() {
       internshipSlug: slug,
       programTitle,
       studentName: displayName(row),
+      issuedAt: toDateInputValue(),
+      fromDate: enrolledAt,
+      toDate: toDateInputValue(),
       certificateTemplateId: pickDefaultCertificateTemplateId(
         certificateTemplates,
         issuedTemplateIds,
         programTemplateId,
-        Boolean(row.certificateUnlocked)
+        completionUnlocked
       ),
       certificateUnlocked: Boolean(row.certificateUnlocked),
+      courseCompletionUnlocked: Boolean(
+        row.courseCompletionUnlocked ?? row.certificateUnlocked
+      ),
+      internshipCompleted,
       certificateLockDaysRemaining: row.certificateLockDaysRemaining || 0,
       certificateEligibleAt: row.certificateEligibleAt,
       issuedTemplateIds,
@@ -365,11 +460,10 @@ export default function CrmInternsPage() {
   }, [availableTemplatesForModal]);
 
   const issueBlockedForSelection = modal
-    ? isSelectedTemplateIssueBlocked(
-        modal.certificateTemplateId,
-        certificateTemplates,
-        modal.certificateUnlocked
-      )
+    ? isSelectedTemplateIssueBlocked(modal.certificateTemplateId, certificateTemplates, {
+        internshipCompleted: modal.internshipCompleted,
+        courseCompletionUnlocked: modal.courseCompletionUnlocked,
+      })
     : true;
 
   return (
@@ -383,6 +477,46 @@ export default function CrmInternsPage() {
 
       {message && (
         <p className="text-sm text-brand-600 bg-brand-50 dark:bg-brand-500/10 rounded-lg px-4 py-2">{message}</p>
+      )}
+
+      <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-1 dark:border-gray-800">
+        <button
+          type="button"
+          onClick={() => setPageTab("all")}
+          className={`rounded-t-lg px-4 py-2 text-sm font-semibold ${
+            pageTab === "all"
+              ? "bg-brand-50 text-brand-600 dark:bg-brand-500/10"
+              : "text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
+          }`}
+        >
+          All interns
+        </button>
+        <button
+          type="button"
+          onClick={() => setPageTab("internship-certs")}
+          className={`rounded-t-lg px-4 py-2 text-sm font-semibold ${
+            pageTab === "internship-certs"
+              ? "bg-brand-50 text-brand-600 dark:bg-brand-500/10"
+              : "text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
+          }`}
+        >
+          Internship certificates
+          {awaitingInternshipCount > 0 ? (
+            <span className="ml-2 inline-flex min-w-[1.25rem] justify-center rounded-full bg-amber-500 px-1.5 text-[11px] font-bold text-white">
+              {awaitingInternshipCount}
+            </span>
+          ) : null}
+        </button>
+      </div>
+
+      {pageTab === "internship-certs" && (
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          Prefer the dedicated{" "}
+          <a href="/internship-approvals" className="font-semibold text-brand-500 hover:underline">
+            Internship Approvals
+          </a>{" "}
+          tab — it lists every trainer-completed student (including override / non-intern roles).
+        </p>
       )}
 
       <div className="flex flex-wrap gap-3">
@@ -414,6 +548,17 @@ export default function CrmInternsPage() {
           <option value="issued">Issued</option>
           <option value="pending">Pending</option>
         </select>
+        {isAdmin && (
+          <label className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 px-1">
+            <input
+              type="checkbox"
+              checked={showInactive}
+              onChange={(e) => setShowInactive(e.target.checked)}
+              className="rounded border-gray-300 text-brand-500 focus:ring-brand-500"
+            />
+            Show inactive
+          </label>
+        )}
       </div>
 
       {loading ? (
@@ -461,6 +606,11 @@ export default function CrmInternsPage() {
                           Blocked
                         </span>
                       )}
+                      {row.student.isActive === false && (
+                        <span className="text-xs font-semibold text-gray-600 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
+                          Inactive
+                        </span>
+                      )}
                       {row.kyc ? (
                         <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-full">
                           KYC submitted
@@ -483,6 +633,16 @@ export default function CrmInternsPage() {
                           Rejected
                         </span>
                       ) : null}
+                      {row.awaitingInternshipCertificate && (
+                        <span className="text-xs font-semibold text-violet-700 bg-violet-50 dark:bg-violet-500/10 px-2 py-0.5 rounded-full">
+                          Ready for internship certificate
+                        </span>
+                      )}
+                      {row.internshipCompleted && !row.awaitingInternshipCertificate && (
+                        <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                          Trainer completed
+                        </span>
+                      )}
                       {issuedCertificates(row).map((certificate) => (
                         <span
                           key={certificate.id}
@@ -491,11 +651,16 @@ export default function CrmInternsPage() {
                           Issued: {certificate.templateLabel}
                         </span>
                       ))}
-                      {approvalStatus(row) === "approved" && !row.certificateUnlocked ? (
+                      {approvalStatus(row) === "approved" &&
+                      !row.internshipCompleted &&
+                      !row.courseCompletionUnlocked &&
+                      !row.certificateUnlocked ? (
                         <span className="text-xs font-semibold text-amber-600 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded-full">
-                          Completion locked ({row.certificateLockDaysRemaining || 0}d left)
+                          Awaiting trainer completion
                         </span>
-                      ) : approvalStatus(row) === "approved" && !hasIssuedCertificates(row) ? (
+                      ) : approvalStatus(row) === "approved" &&
+                        !hasIssuedCertificates(row) &&
+                        !row.awaitingInternshipCertificate ? (
                         <span className="text-xs font-semibold text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
                           No certificate issued
                         </span>
@@ -550,14 +715,25 @@ export default function CrmInternsPage() {
                         >
                           {busy ? "..." : row.student.isBlocked ? "Unblock" : "Block"}
                         </button>
-                        <button
-                          type="button"
-                          disabled={busy}
-                          onClick={() => handleDelete(row)}
-                          className="px-3 py-1.5 text-xs font-medium rounded-lg border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-500/30 dark:hover:bg-red-500/10 disabled:opacity-60"
-                        >
-                          {busy ? "..." : "Delete"}
-                        </button>
+                        {row.student.isActive === false ? (
+                          <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => handleReactivate(row)}
+                            className="px-3 py-1.5 text-xs font-medium rounded-lg border border-brand-200 text-brand-600 hover:bg-brand-50 dark:border-brand-500/30 dark:hover:bg-brand-500/10 disabled:opacity-60"
+                          >
+                            {busy ? "..." : "Reactivate"}
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => handleDeactivate(row)}
+                            className="px-3 py-1.5 text-xs font-medium rounded-lg border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-500/30 dark:hover:bg-red-500/10 disabled:opacity-60"
+                          >
+                            {busy ? "..." : "Deactivate"}
+                          </button>
+                        )}
                       </>
                     )}
                     <button
@@ -683,14 +859,20 @@ export default function CrmInternsPage() {
               {modal.programTitle} · {modal.studentEmail}
             </p>
 
-            {!modal.certificateUnlocked && completionTemplatesForModal.length > 0 ? (
+            {!modal.internshipCompleted ? (
               <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
-                Completion certificates unlock after a 60-day internship period.{" "}
+                Internship completion certificate unlocks after the trainer marks the internship
+                completed. Recognition certificates can be issued anytime.
+              </div>
+            ) : null}
+            {!modal.courseCompletionUnlocked && completionTemplatesForModal.some((t) => t.type === "course-completion") ? (
+              <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
+                Course completion unlocks after a 60-day period.{" "}
                 <strong>{modal.certificateLockDaysRemaining} day(s)</strong> remaining
                 {modal.certificateEligibleAt
                   ? ` (eligible ${formatDate(modal.certificateEligibleAt)})`
                   : ""}
-                . Recognition certificates can be issued anytime.
+                .
               </div>
             ) : null}
 
@@ -734,16 +916,23 @@ export default function CrmInternsPage() {
                   <>
                     {completionTemplatesForModal.length > 0 ? (
                       <optgroup label="Completion certificates">
-                        {completionTemplatesForModal.map((template) => (
-                          <option
-                            key={template.id}
-                            value={template.id}
-                            disabled={!modal.certificateUnlocked}
-                          >
-                            {template.label}
-                            {!modal.certificateUnlocked ? " (locked)" : ""}
-                          </option>
-                        ))}
+                        {completionTemplatesForModal.map((template) => {
+                          const locked =
+                            (template.type === "internship-completion" &&
+                              !modal.internshipCompleted) ||
+                            (template.type === "course-completion" &&
+                              !modal.courseCompletionUnlocked);
+                          return (
+                            <option
+                              key={template.id}
+                              value={template.id}
+                              disabled={locked}
+                            >
+                              {template.label}
+                              {locked ? " (locked)" : ""}
+                            </option>
+                          );
+                        })}
                       </optgroup>
                     ) : null}
                     {specialTemplatesForModal.length > 0 ? (
@@ -769,6 +958,49 @@ export default function CrmInternsPage() {
               />
             </label>
 
+            {certificateTemplates.find((t) => t.id === modal.certificateTemplateId)?.type ===
+            "internship-completion" ? (
+              <div className="mb-4 grid gap-3 sm:grid-cols-2">
+                <label className="block">
+                  <span className="mb-1 block text-xs font-medium text-gray-500">
+                    From date (printed)
+                  </span>
+                  <input
+                    type="date"
+                    value={modal.fromDate}
+                    onChange={(e) => setModal({ ...modal, fromDate: e.target.value })}
+                    className={inputClass()}
+                    required
+                  />
+                </label>
+                <label className="block">
+                  <span className="mb-1 block text-xs font-medium text-gray-500">
+                    To date (printed)
+                  </span>
+                  <input
+                    type="date"
+                    value={modal.toDate}
+                    onChange={(e) => setModal({ ...modal, toDate: e.target.value })}
+                    className={inputClass()}
+                    required
+                  />
+                </label>
+              </div>
+            ) : (
+              <label className="mb-4 block">
+                <span className="mb-1 block text-xs font-medium text-gray-500">
+                  Issue date (printed on certificate)
+                </span>
+                <input
+                  type="date"
+                  value={modal.issuedAt}
+                  onChange={(e) => setModal({ ...modal, issuedAt: e.target.value })}
+                  className={inputClass()}
+                  required
+                />
+              </label>
+            )}
+
             <div className="flex gap-3 justify-end">
               <button type="button" onClick={() => setModal(null)} className="px-4 py-2 text-sm rounded-lg border border-gray-200">
                 Cancel
@@ -779,6 +1011,10 @@ export default function CrmInternsPage() {
                 disabled={
                   issuing ||
                   !modal.certificateTemplateId ||
+                  (certificateTemplates.find((t) => t.id === modal.certificateTemplateId)?.type ===
+                  "internship-completion"
+                    ? !modal.fromDate || !modal.toDate
+                    : !modal.issuedAt) ||
                   availableTemplatesForModal.length === 0 ||
                   issueBlockedForSelection
                 }

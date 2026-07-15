@@ -1,6 +1,7 @@
 const UserModel = require("../models/userModel");
 const UserInternship = require("../models/userInternshipSchema");
 const InternshipCertificate = require("../models/internshipCertificateSchema");
+const InternshipStudentAssignment = require("../models/internshipStudentAssignmentSchema");
 const Transaction = require("../models/transactionSchema");
 const UserCourse = require("../models/userCourseSchema");
 const InternInvite = require("../models/internInviteSchema");
@@ -71,10 +72,43 @@ function mapKycSummary(kyc, viewerRole) {
   return summary;
 }
 
+function resolveCertificateType(row, templateMap) {
+  const template = row.certificateTemplateId
+    ? templateMap.get(String(row.certificateTemplateId))
+    : null;
+  return String(row.certificateType || template?.type || "").trim();
+}
+
+function resolveCertificateTemplateLabel(row, templateMap) {
+  const template = row.certificateTemplateId
+    ? templateMap.get(String(row.certificateTemplateId))
+    : null;
+  return String(template?.label || "").trim();
+}
+
+/** True for internship completion PDFs (Tech / Non Tech), not recognition/offer letters. */
+function isInternshipCompletionCertificate(row, templateMap) {
+  const type = resolveCertificateType(row, templateMap);
+  if (type === "course-completion" || type.startsWith("offer-letter")) return false;
+  if (type === "internship-completion") return true;
+
+  const label = resolveCertificateTemplateLabel(row, templateMap);
+  if (/tech\s*internship|non[\s-]*tech|internship\s*completion/i.test(label)) return true;
+
+  // Manager-issued completion certs store an internship period (from/to).
+  if (row.fromDate && row.toDate) {
+    if (/appreciation|participation|best\s*performer|recognition/i.test(label)) return false;
+    return true;
+  }
+
+  return false;
+}
+
 function mapIssuedCertificate(row, templateMap) {
   const template = row.certificateTemplateId
     ? templateMap.get(String(row.certificateTemplateId))
     : null;
+  const certificateType = resolveCertificateType(row, templateMap) || "other";
   return {
     id: row._id,
     uuid: row.uuid,
@@ -82,15 +116,45 @@ function mapIssuedCertificate(row, templateMap) {
     programTitle: row.programTitle,
     templateId: row.certificateTemplateId ? String(row.certificateTemplateId) : null,
     templateLabel: template?.label || "Internship Certificate",
-    certificateType: row.certificateType || template?.type || "internship-completion",
-    issuedAt: row.createdAt,
+    certificateType,
+    issuedAt: row.issuedAt || row.toDate || row.createdAt,
+    fromDate: row.fromDate || null,
+    toDate: row.toDate || row.issuedAt || row.createdAt || null,
   };
 }
 
-function buildCertificateMeta(programCertificates, kyc, enrollment) {
+function parseManualIssuedAt(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return null;
+  // YYYY-MM-DD → local noon so timezone does not shift the printed day
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+    const [y, m, d] = raw.split("-").map(Number);
+    const date = new Date(y, m - 1, d, 12, 0, 0);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+  const date = new Date(raw);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function buildCertificateMeta(programCertificates, kyc, enrollment, trainerProgress = null) {
   const lockStart = getCertificateLockStartDate(kyc, enrollment);
   const certificateEligibleAt = getCertificateEligibleAt(lockStart);
-  const certificateUnlocked = isCertificateUnlocked(certificateEligibleAt);
+  const courseCompletionUnlocked = isCertificateUnlocked(certificateEligibleAt);
+  const internshipCompleted = Boolean(trainerProgress?.internshipCompleted);
+  // Count Tech / Non Tech / internship-completion (not recognition certificates).
+  const hasInternshipCompletionCert = programCertificates.some((c) => {
+    if (c.certificateType === "internship-completion") return true;
+    const label = String(c.templateLabel || "");
+    if (/tech\s*internship|non[\s-]*tech|internship\s*completion/i.test(label)) return true;
+    if (c.fromDate && c.toDate) {
+      return !/appreciation|participation|best\s*performer|recognition/i.test(label);
+    }
+    return false;
+  });
+  const awaitingInternshipCertificate =
+    internshipCompleted && !hasInternshipCompletionCert;
+  // Internship completion unlocks when trainer marks complete; other completion types use 60-day lock.
+  const certificateUnlocked = internshipCompleted || courseCompletionUnlocked;
   const primary = programCertificates[0] || null;
 
   return {
@@ -106,9 +170,18 @@ function buildCertificateMeta(programCertificates, kyc, enrollment) {
       : { issued: false },
     certificateEligibleAt,
     certificateUnlocked,
+    courseCompletionUnlocked,
     certificateLockDaysRemaining: getCertificateLockDaysRemaining(certificateEligibleAt),
     certificateLockDays: CERTIFICATE_ISSUE_LOCK_DAYS,
+    internshipCompleted,
+    internshipCompletedAt: trainerProgress?.internshipCompletedAt || null,
+    internshipCompletedOverride: Boolean(trainerProgress?.internshipCompletedOverride),
+    awaitingInternshipCertificate,
   };
+}
+
+function effectiveCertificateIssuedAt(row) {
+  return row?.issuedAt || row?.createdAt || null;
 }
 
 const getOverview = async (req, res) => {
@@ -283,24 +356,49 @@ const updateUserBlock = async (req, res) => {
 
 const getInterns = async (req, res) => {
   try {
-    const internUsers = await UserModel.find({ role: "intern" })
-      .select("firstName lastName email phone role IsBlocked createdAt")
+    const includeInactive = String(req.query.includeInactive || "") === "true";
+    const internQuery = { role: "intern" };
+    if (!includeInactive) {
+      internQuery.isActive = { $ne: false };
+    }
+
+    const internUsers = await UserModel.find(internQuery)
+      .select("firstName lastName email phone role IsBlocked isActive createdAt")
       .sort({ createdAt: -1 });
 
     const userIds = internUsers.map((user) => user._id);
 
     const issuableTypeSlugs = await getIssuableCertificateTypeSlugs();
-    const [kycRecords, enrollments, certificates, certificateTemplates] = await Promise.all([
-      InternKyc.find({ userId: { $in: userIds } }),
-      UserInternship.find({ userId: { $in: userIds } }).sort({ createdAt: -1 }),
-      InternshipCertificate.find({ userId: { $in: userIds } }),
-      CertificateTemplate.find({
-        type: { $in: issuableTypeSlugs },
-        active: true,
-      }).select("_id label type"),
-    ]);
+    const enrollmentQuery = { userId: { $in: userIds } };
+    if (!includeInactive) {
+      enrollmentQuery.active = { $ne: false };
+    }
+
+    const [kycRecords, enrollments, certificates, certificateTemplates, trainerAssignments] =
+      await Promise.all([
+        InternKyc.find({ userId: { $in: userIds } }),
+        UserInternship.find(enrollmentQuery).sort({ createdAt: -1 }),
+        InternshipCertificate.find({ userId: { $in: userIds } }),
+        CertificateTemplate.find({
+          type: { $in: issuableTypeSlugs },
+          active: true,
+        }).select("_id label type"),
+        InternshipStudentAssignment.find({
+          studentId: { $in: userIds },
+          active: { $ne: false },
+        })
+          .select(
+            "studentId internshipSlug internshipCompleted internshipCompletedAt internshipCompletedOverride"
+          )
+          .lean(),
+      ]);
 
     const templateMap = new Map(certificateTemplates.map((row) => [String(row._id), row]));
+
+    const trainerByKey = new Map();
+    for (const row of trainerAssignments) {
+      trainerByKey.set(`${row.studentId}:${row.internshipSlug}`, row);
+    }
 
     const enrollmentsByUser = new Map();
     for (const enrollment of enrollments) {
@@ -313,13 +411,15 @@ const getInterns = async (req, res) => {
     for (const user of internUsers) {
       const userKey = String(user._id);
       const userEnrollments = enrollmentsByUser.get(userKey) || [];
+      const isActive = user.isActive !== false;
 
       if (!userEnrollments.length) {
+        if (!includeInactive && !isActive) continue;
         const kyc = kycRecords.find((row) => String(row.userId) === userKey) || null;
         const programCertificates = certificates
           .filter((row) => String(row.userId) === userKey)
           .map((row) => mapIssuedCertificate(row, templateMap));
-        const certificateMeta = buildCertificateMeta(programCertificates, kyc, null);
+        const certificateMeta = buildCertificateMeta(programCertificates, kyc, null, null);
         interns.push({
           id: userKey,
           student: {
@@ -329,6 +429,7 @@ const getInterns = async (req, res) => {
             email: user.email,
             phone: user.phone || kyc?.phone || "",
             isBlocked: user.IsBlocked,
+            isActive,
             joinedAt: user.createdAt,
           },
           kyc: mapKycSummary(kyc, req.userRole),
@@ -339,6 +440,9 @@ const getInterns = async (req, res) => {
       }
 
       for (const enrollment of userEnrollments) {
+        const enrollmentActive = enrollment.active !== false;
+        if (!includeInactive && !enrollmentActive) continue;
+
         const program = getInternshipBySlug(enrollment.internshipSlug);
         const programTemplateId = program?.certificateTemplateId
           ? String(program.certificateTemplateId)
@@ -351,7 +455,14 @@ const getInterns = async (req, res) => {
           enrollment.internshipSlug
         );
         const programCertificates = issuedRows.map((row) => mapIssuedCertificate(row, templateMap));
-        const certificateMeta = buildCertificateMeta(programCertificates, kyc, enrollment);
+        const trainerProgress =
+          trainerByKey.get(`${userKey}:${enrollment.internshipSlug}`) || null;
+        const certificateMeta = buildCertificateMeta(
+          programCertificates,
+          kyc,
+          enrollment,
+          trainerProgress
+        );
 
         interns.push({
           id: `${userKey}-${enrollment.internshipSlug}`,
@@ -362,6 +473,7 @@ const getInterns = async (req, res) => {
             email: user.email,
             phone: user.phone || kyc?.phone || "",
             isBlocked: user.IsBlocked,
+            isActive: isActive && enrollmentActive,
             joinedAt: user.createdAt,
           },
           kyc: mapKycSummary(kyc, req.userRole),
@@ -370,6 +482,7 @@ const getInterns = async (req, res) => {
             programTitle: program?.title || enrollment.title || enrollment.internshipSlug,
             enrolledAt: enrollment.createdAt,
             enrollmentSource: enrollment.enrollmentSource || "invite",
+            active: enrollmentActive,
             certificateTemplateId: programTemplateId,
             certificateTemplateLabel: programTemplate?.label || null,
           },
@@ -385,6 +498,147 @@ const getInterns = async (req, res) => {
   }
 };
 
+/**
+ * Manager queue: students trainers marked internship-complete (incl. override),
+ * regardless of user role (student/intern/…).
+ * status=pending (default) | issued | all
+ */
+const getInternshipApprovals = async (req, res) => {
+  try {
+    const status = String(req.query.status || "pending").toLowerCase();
+    const completedRows = await InternshipStudentAssignment.find({
+      internshipCompleted: true,
+      active: { $ne: false },
+    })
+      .populate("studentId", "firstName lastName email phone role IsBlocked isActive createdAt")
+      .sort({ internshipCompletedAt: -1 })
+      .lean();
+
+    if (!completedRows.length) {
+      return res.status(200).json({ approvals: [], summary: { pending: 0, issued: 0 } });
+    }
+
+    const studentIds = completedRows
+      .map((row) => row.studentId?._id || row.studentId)
+      .filter(Boolean);
+
+    const [certificates, certificateTemplates, enrollments, kycRecords] = await Promise.all([
+      InternshipCertificate.find({ userId: { $in: studentIds } }).lean(),
+      // All templates so Tech / Non Tech labels resolve even if type slug differs
+      CertificateTemplate.find({}).select("_id label type active"),
+      UserInternship.find({
+        userId: { $in: studentIds },
+        active: { $ne: false },
+      }).lean(),
+      InternKyc.find({ userId: { $in: studentIds } }).lean(),
+    ]);
+
+    const templateMap = new Map(certificateTemplates.map((row) => [String(row._id), row]));
+    const enrollmentByKey = new Map(
+      enrollments.map((row) => [`${String(row.userId)}:${row.internshipSlug}`, row])
+    );
+
+    const filter = ["pending", "issued", "all"].includes(status) ? status : "pending";
+    const approvals = [];
+    let pendingCount = 0;
+    let issuedCount = 0;
+
+    for (const row of completedRows) {
+      const user = row.studentId;
+      if (!user?._id) continue;
+      const userId = String(user._id);
+      const slug = row.internshipSlug;
+      const enrollment =
+        enrollmentByKey.get(`${userId}:${slug}`) ||
+        enrollments.find(
+          (e) => String(e.userId) === userId && e.internshipSlug === slug
+        ) ||
+        null;
+
+      const program = getInternshipBySlug(slug);
+      const programTitle =
+        program?.title || enrollment?.title || slug;
+      const programTemplateId = program?.certificateTemplateId
+        ? String(program.certificateTemplateId)
+        : null;
+      const programTemplate = programTemplateId
+        ? templateMap.get(programTemplateId)
+        : null;
+
+      const issuedRows = pickCertificatesFromList(certificates, user._id, slug);
+      const programCertificates = issuedRows.map((cert) =>
+        mapIssuedCertificate(cert, templateMap)
+      );
+      const hasInternshipCompletionCert = issuedRows.some((cert) =>
+        isInternshipCompletionCertificate(cert, templateMap)
+      );
+      const awaitingInternshipCertificate = !hasInternshipCompletionCert;
+
+      if (awaitingInternshipCertificate) pendingCount += 1;
+      else issuedCount += 1;
+
+      if (filter === "pending" && !awaitingInternshipCertificate) continue;
+      if (filter === "issued" && awaitingInternshipCertificate) continue;
+
+      const kyc = pickKycFromList(kycRecords, user._id, slug);
+      const certificateMeta = buildCertificateMeta(
+        programCertificates,
+        kyc,
+        enrollment,
+        row
+      );
+      const completionCertificate =
+        programCertificates.find((c) => {
+          if (c.certificateType === "internship-completion") return true;
+          const label = String(c.templateLabel || "");
+          if (/tech\s*internship|non[\s-]*tech|internship\s*completion/i.test(label)) {
+            return true;
+          }
+          return Boolean(c.fromDate && c.toDate);
+        }) || null;
+
+      approvals.push({
+        id: `${userId}-${slug}`,
+        student: {
+          id: userId,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phone: user.phone || kyc?.phone || "",
+          role: user.role,
+          isBlocked: user.IsBlocked,
+          isActive: user.isActive !== false,
+          joinedAt: user.createdAt,
+        },
+        kyc: mapKycSummary(kyc, req.userRole),
+        enrollment: {
+          internshipSlug: slug,
+          programTitle,
+          enrolledAt: enrollment?.createdAt || null,
+          enrollmentSource: enrollment?.enrollmentSource || "trainer",
+          active: enrollment ? enrollment.active !== false : true,
+          certificateTemplateId: programTemplateId,
+          certificateTemplateLabel: programTemplate?.label || null,
+        },
+        ...certificateMeta,
+        completionCertificate,
+        internshipCompleted: true,
+        internshipCompletedAt: row.internshipCompletedAt || null,
+        internshipCompletedOverride: Boolean(row.internshipCompletedOverride),
+        awaitingInternshipCertificate,
+      });
+    }
+
+    res.status(200).json({
+      approvals,
+      summary: { pending: pendingCount, issued: issuedCount },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to load internship approvals" });
+  }
+};
+
 async function findInternUser(userId, res) {
   const user = await UserModel.findById(userId);
   if (!user) {
@@ -393,6 +647,16 @@ async function findInternUser(userId, res) {
   }
   if (user.role !== "intern") {
     res.status(400).json({ message: "This action is only available for career intern accounts" });
+    return null;
+  }
+  return user;
+}
+
+/** Any enrolled student/intern account (trainer progress uses non-intern roles too). */
+async function findCertificateRecipient(userId, res) {
+  const user = await UserModel.findById(userId);
+  if (!user) {
+    res.status(404).json({ message: "Student not found" });
     return null;
   }
   return user;
@@ -427,24 +691,104 @@ const deleteInternProfile = async (req, res) => {
     if (!user) return;
 
     if (String(user._id) === String(req.user._id)) {
-      return res.status(400).json({ message: "You cannot delete your own account" });
+      return res.status(400).json({ message: "You cannot deactivate your own account" });
     }
 
-    const kycRecords = await InternKyc.find({ userId: user._id });
-    const kycFileUrls = kycRecords.flatMap((row) => collectKycFileUrls(row));
+    const internshipSlug = req.body?.internshipSlug || req.query?.internshipSlug || null;
+
+    if (internshipSlug) {
+      await Promise.all([
+        UserInternship.updateMany(
+          { userId: user._id, internshipSlug },
+          { $set: { active: false } }
+        ),
+        InternshipStudentAssignment.updateMany(
+          { studentId: user._id, internshipSlug },
+          { $set: { active: false } }
+        ),
+      ]);
+
+      const remainingActive = await UserInternship.countDocuments({
+        userId: user._id,
+        active: { $ne: false },
+      });
+      if (remainingActive === 0) {
+        user.isActive = false;
+        await user.save();
+      }
+
+      return res.status(200).json({
+        message: "Intern enrollment marked inactive",
+        intern: {
+          id: user._id,
+          email: user.email,
+          internshipSlug,
+          isActive: user.isActive !== false,
+        },
+      });
+    }
 
     await Promise.all([
-      UserInternship.deleteMany({ userId: user._id }),
-      InternInvite.updateMany({ userId: user._id }, { $set: { userId: null } }),
-      UserCourse.deleteMany({ userId: user._id }),
-      InternshipCertificate.deleteMany({ userId: user._id }),
-      IssuedOfferLetter.deleteMany({ userId: user._id }),
-      InternKyc.deleteMany({ userId: user._id }),
+      UserInternship.updateMany({ userId: user._id }, { $set: { active: false } }),
+      InternshipStudentAssignment.updateMany(
+        { studentId: user._id },
+        { $set: { active: false } }
+      ),
     ]);
 
-    await deleteStoredFiles(kycFileUrls);
-    await user.deleteOne();
-    res.status(200).json({ message: "Intern deleted successfully" });
+    user.isActive = false;
+    await user.save();
+
+    res.status(200).json({
+      message: "Intern marked inactive",
+      intern: { id: user._id, email: user.email, isActive: false },
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const reactivateInternProfile = async (req, res) => {
+  try {
+    const user = await findInternUser(req.params.id, res);
+    if (!user) return;
+
+    const internshipSlug = req.body?.internshipSlug || null;
+
+    user.isActive = true;
+    await user.save();
+
+    if (internshipSlug) {
+      await Promise.all([
+        UserInternship.updateMany(
+          { userId: user._id, internshipSlug },
+          { $set: { active: true } }
+        ),
+        InternshipStudentAssignment.updateMany(
+          { studentId: user._id, internshipSlug },
+          { $set: { active: true } }
+        ),
+      ]);
+    } else {
+      await Promise.all([
+        UserInternship.updateMany({ userId: user._id }, { $set: { active: true } }),
+        InternshipStudentAssignment.updateMany(
+          { studentId: user._id },
+          { $set: { active: true } }
+        ),
+      ]);
+    }
+
+    res.status(200).json({
+      message: "Intern reactivated",
+      intern: {
+        id: user._id,
+        email: user.email,
+        isActive: true,
+        internshipSlug: internshipSlug || null,
+      },
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Something went wrong" });
@@ -567,26 +911,38 @@ const rejectInternKyc = async (req, res) => {
 
 const approveInternCertificate = async (req, res) => {
   try {
-    const user = await findInternUser(req.params.id, res);
+    const user = await findCertificateRecipient(req.params.id, res);
     if (!user) return;
 
-    const internshipSlug = await resolveInternshipSlugForUser(user._id, req.body?.internshipSlug);
+    let internshipSlug = String(req.body?.internshipSlug || "").trim();
     if (!internshipSlug) {
-      return res.status(400).json({ message: "Intern is not enrolled in a program" });
+      internshipSlug = await resolveInternshipSlugForUser(user._id, req.body?.internshipSlug);
+    }
+    if (!internshipSlug) {
+      return res.status(400).json({ message: "internshipSlug is required" });
+    }
+
+    const trainerAssignment = await InternshipStudentAssignment.findOne({
+      studentId: user._id,
+      internshipSlug,
+      active: { $ne: false },
+    }).lean();
+
+    let enrollment = await UserInternship.findOne({ userId: user._id, internshipSlug });
+    if (!enrollment && !trainerAssignment) {
+      return res.status(400).json({ message: "Student is not enrolled in this program" });
     }
 
     const kyc = await findKycForProgram(user._id, internshipSlug);
-    if (!kyc || (kyc.approvalStatus || "pending") !== "approved") {
-      return res.status(400).json({ message: "Intern must be approved for this program before certificate can be issued" });
+    // Internship completion (after trainer mark) may issue without KYC; other templates need approved KYC.
+    if (kyc && (kyc.approvalStatus || "pending") === "rejected") {
+      return res.status(400).json({
+        message: "KYC was rejected for this student. Resolve KYC before issuing a certificate.",
+      });
     }
 
-    const enrollment = await UserInternship.findOne({ userId: user._id, internshipSlug });
-    if (!enrollment) {
-      return res.status(400).json({ message: "Intern is not enrolled in this program" });
-    }
-
-    const program = getInternshipBySlug(enrollment.internshipSlug);
-    if (!program) {
+    const program = getInternshipBySlug(internshipSlug);
+    if (!program && !enrollment) {
       return res.status(400).json({ message: "Invalid internship program" });
     }
 
@@ -598,34 +954,86 @@ const approveInternCertificate = async (req, res) => {
     const certificateTemplate = await CertificateTemplate.findOne({
       _id: certificateTemplateId,
       active: true,
-      type: { $in: await getIssuableCertificateTypeSlugs() },
     });
     if (!certificateTemplate) {
       return res.status(400).json({ message: "Valid active certificate template is required" });
     }
+    if (String(certificateTemplate.type || "").startsWith("offer-letter")) {
+      return res.status(400).json({ message: "Offer letter templates cannot be issued here" });
+    }
 
-    if (requiresCompletionLock(certificateTemplate.type)) {
-      const certificateEligibleAt = getCertificateEligibleAt(
-        getCertificateLockStartDate(kyc, enrollment)
-      );
-      if (!isCertificateUnlocked(certificateEligibleAt)) {
-        const daysLeft = getCertificateLockDaysRemaining(certificateEligibleAt);
+    const issuableTypeSlugs = await getIssuableCertificateTypeSlugs();
+    const fromDate = parseManualIssuedAt(req.body?.fromDate);
+    const toDate = parseManualIssuedAt(req.body?.toDate);
+    const issuedAt =
+      parseManualIssuedAt(req.body?.issuedAt) || toDate || fromDate;
+
+    // Internship Approvals always sends from/to; also treat typed internship-completion the same.
+    const isInternshipCompletionFlow =
+      certificateTemplate.type === "internship-completion" || Boolean(fromDate && toDate);
+
+    if (
+      !isInternshipCompletionFlow &&
+      !issuableTypeSlugs.includes(certificateTemplate.type)
+    ) {
+      return res.status(400).json({ message: "Valid active certificate template is required" });
+    }
+
+    if (isInternshipCompletionFlow) {
+      if (!trainerAssignment?.internshipCompleted) {
         return res.status(400).json({
-          message: `Completion certificate issue is locked for ${CERTIFICATE_ISSUE_LOCK_DAYS} days after approval. ${daysLeft} day(s) remaining.`,
-          certificateEligibleAt,
-          certificateLockDaysRemaining: daysLeft,
+          message:
+            "Trainer must mark this internship completed before the manager can issue the internship completion certificate",
         });
+      }
+      if (!fromDate || !toDate) {
+        return res.status(400).json({
+          message: "From date and to date are required (YYYY-MM-DD)",
+        });
+      }
+      if (fromDate.getTime() > toDate.getTime()) {
+        return res.status(400).json({
+          message: "From date must be on or before the to date",
+        });
+      }
+    } else {
+      if (!issuedAt) {
+        return res.status(400).json({
+          message: "Certificate issue date is required (YYYY-MM-DD)",
+        });
+      }
+      if (!kyc || (kyc.approvalStatus || "pending") !== "approved") {
+        return res.status(400).json({
+          message: "Intern must be approved for this program before this certificate can be issued",
+        });
+      }
+      if (requiresCompletionLock(certificateTemplate.type)) {
+        const certificateEligibleAt = getCertificateEligibleAt(
+          getCertificateLockStartDate(kyc, enrollment)
+        );
+        if (!isCertificateUnlocked(certificateEligibleAt)) {
+          const daysLeft = getCertificateLockDaysRemaining(certificateEligibleAt);
+          return res.status(400).json({
+            message: `Completion certificate issue is locked for ${CERTIFICATE_ISSUE_LOCK_DAYS} days after approval. ${daysLeft} day(s) remaining.`,
+            certificateEligibleAt,
+            certificateLockDaysRemaining: daysLeft,
+          });
+        }
       }
     }
 
-    const studentName = (req.body?.studentName || kyc.fullName || `${user.firstName} ${user.lastName}`).trim();
+    const studentName = (
+      req.body?.studentName ||
+      kyc?.fullName ||
+      `${user.firstName || ""} ${user.lastName || ""}`
+    ).trim();
     if (!studentName) {
       return res.status(400).json({ message: "Student name is required" });
     }
 
     const existing = await InternshipCertificate.findOne({
       userId: user._id,
-      internshipSlug: enrollment.internshipSlug,
+      internshipSlug,
       certificateTemplateId: certificateTemplate._id,
     });
     if (existing) {
@@ -637,16 +1045,16 @@ const approveInternCertificate = async (req, res) => {
           studentName: existing.studentName,
           programTitle: existing.programTitle,
           templateLabel: certificateTemplate.label,
-          issuedAt: existing.createdAt,
+          issuedAt: effectiveCertificateIssuedAt(existing),
         },
       });
     }
 
     const certificate = await InternshipCertificate.create({
       userId: user._id,
-      internshipSlug: enrollment.internshipSlug,
-      programTitle: resolveProgramTitle(enrollment.internshipSlug, {
-        enrollmentTitle: enrollment.title,
+      internshipSlug,
+      programTitle: resolveProgramTitle(internshipSlug, {
+        enrollmentTitle: enrollment?.title,
         storedTitle: program?.title,
       }),
       studentName,
@@ -654,6 +1062,9 @@ const approveInternCertificate = async (req, res) => {
       certificateTemplateId: certificateTemplate._id,
       certificateType: certificateTemplate.type,
       issuedBy: req.user._id,
+      issuedAt: issuedAt || toDate || new Date(),
+      fromDate: fromDate || null,
+      toDate: toDate || issuedAt || null,
     });
 
     res.status(200).json({
@@ -665,7 +1076,9 @@ const approveInternCertificate = async (req, res) => {
         programTitle: certificate.programTitle,
         templateLabel: certificateTemplate.label,
         certificateType: certificate.certificateType,
-        issuedAt: certificate.createdAt,
+        issuedAt: effectiveCertificateIssuedAt(certificate),
+        fromDate: certificate.fromDate,
+        toDate: certificate.toDate,
       },
     });
   } catch (err) {
@@ -905,7 +1318,7 @@ const listCertificates = async (req, res) => {
         studentName: c.studentName,
         programTitle: c.programTitle,
         internshipSlug: c.internshipSlug,
-        issuedAt: c.createdAt,
+        issuedAt: effectiveCertificateIssuedAt(c),
         student: c.userId
           ? {
               id: c.userId._id,
@@ -965,15 +1378,25 @@ const listCertificates = async (req, res) => {
 const deleteIssuedCertificate = async (req, res) => {
   try {
     const { recordType } = req.query;
+    const role = req.userRole || req.user?.role;
+
     if (recordType === "course-completion") {
+      if (role !== "admin") {
+        return res.status(403).json({ message: "Only admins can delete course certificates" });
+      }
       const deleted = await CourseCertificate.findByIdAndDelete(req.params.id);
       if (!deleted) return res.status(404).json({ message: "Certificate not found" });
       return res.status(200).json({ message: "Course certificate deleted" });
     }
 
+    // Internship completion — managers and admins can unissue
+    if (role !== "admin" && role !== "manager") {
+      return res.status(403).json({ message: "Not allowed to unissue certificates" });
+    }
+
     const deleted = await InternshipCertificate.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ message: "Certificate not found" });
-    res.status(200).json({ message: "Internship certificate deleted" });
+    res.status(200).json({ message: "Internship certificate unissued" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Something went wrong" });
@@ -1029,6 +1452,73 @@ const previewCertificateTemplate = async (req, res) => {
   } catch (err) {
     console.error("previewCertificateTemplate error:", err);
     res.status(500).json({ message: "Failed to generate template preview" });
+  }
+};
+
+/** Manager draft preview before issuing (does not save a certificate). */
+const previewInternshipCertificateDraft = async (req, res) => {
+  try {
+    const internshipSlug = String(req.body?.internshipSlug || "").trim();
+    const studentId = String(req.body?.studentId || "").trim();
+    const certificateTemplateId = req.body?.certificateTemplateId;
+    const studentName = String(req.body?.studentName || "").trim();
+    const fromDate = parseManualIssuedAt(req.body?.fromDate);
+    const toDate = parseManualIssuedAt(req.body?.toDate);
+
+    if (!internshipSlug || !studentId || !certificateTemplateId || !studentName) {
+      return res.status(400).json({
+        message: "studentId, internshipSlug, certificateTemplateId, and studentName are required",
+      });
+    }
+    if (!fromDate || !toDate) {
+      return res.status(400).json({ message: "From date and to date are required" });
+    }
+    if (fromDate.getTime() > toDate.getTime()) {
+      return res.status(400).json({ message: "From date must be on or before the to date" });
+    }
+
+    const user = await UserModel.findById(studentId).select("firstName lastName email");
+    if (!user) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const template = await CertificateTemplate.findOne({
+      _id: certificateTemplateId,
+      active: true,
+    });
+    if (!template?.pdfUrl) {
+      return res.status(404).json({ message: "Certificate template not found" });
+    }
+
+    const enrollment = await UserInternship.findOne({
+      userId: studentId,
+      internshipSlug,
+    }).select("title");
+    const programTitle = resolveProgramTitle(internshipSlug, {
+      enrollmentTitle: enrollment?.title,
+      storedTitle: getInternshipBySlug(internshipSlug)?.title,
+    });
+
+    const pdfBytes = await buildInternshipCompletionPdf({
+      pdfUrl: template.pdfUrl,
+      templateLabel: template.label,
+      studentName,
+      programTitle,
+      uuid: "PREVIEW",
+      issuedAt: toDate,
+      fromDate,
+      toDate,
+    });
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename="${studentName.replace(/\s+/g, "_")}_certificate_preview.pdf"`
+    );
+    res.send(Buffer.from(pdfBytes));
+  } catch (err) {
+    console.error("previewInternshipCertificateDraft error:", err);
+    res.status(500).json({ message: "Failed to generate certificate preview" });
   }
 };
 
@@ -1115,7 +1605,7 @@ const previewIssuedCertificate = async (req, res) => {
       studentName: certificate.studentName,
       programTitle,
       uuid: certificate.uuid,
-      issuedAt: certificate.createdAt,
+      issuedAt: effectiveCertificateIssuedAt(certificate),
       fromDate,
       toDate,
     });
@@ -1386,6 +1876,82 @@ const listInvites = async (req, res) => {
   }
 };
 
+async function createAndSendInvite({
+  email,
+  firstName,
+  lastName,
+  internshipSlug,
+  inviteMessage,
+  invitedBy,
+  program,
+}) {
+  const normalizedEmail = String(email || "").trim().toLowerCase();
+  if (!normalizedEmail) {
+    return { ok: false, email: normalizedEmail, reason: "Email is required" };
+  }
+  if (!isGmailAddress(normalizedEmail)) {
+    return {
+      ok: false,
+      email: normalizedEmail,
+      reason: "Only Gmail addresses are allowed",
+    };
+  }
+
+  const existingPending = await InternInvite.findOne({
+    email: normalizedEmail,
+    internshipSlug,
+    status: "pending",
+    expiresAt: { $gt: new Date() },
+  });
+  if (existingPending) {
+    return {
+      ok: false,
+      email: normalizedEmail,
+      reason: "A pending invite already exists for this email",
+    };
+  }
+
+  const token = uuidv4();
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const invite = await InternInvite.create({
+    email: normalizedEmail,
+    firstName: String(firstName || "").trim(),
+    lastName: String(lastName || "").trim(),
+    internshipSlug,
+    token,
+    invitedBy,
+    expiresAt,
+    inviteMessage: String(inviteMessage || "").trim(),
+  });
+
+  const inviteUrl = buildInviteUrl(token);
+  const html = inviteEmailHtml({
+    firstName: invite.firstName,
+    inviteUrl,
+    message: invite.inviteMessage,
+    programTitle: program.title,
+  });
+
+  await sendEmail.sendEmail(
+    `EdLernity Internship Invite — ${program.title}`,
+    normalizedEmail,
+    html,
+    `Complete onboarding: ${inviteUrl}`
+  );
+
+  return {
+    ok: true,
+    email: normalizedEmail,
+    invite: {
+      id: invite._id,
+      email: invite.email,
+      inviteUrl,
+      expiresAt: invite.expiresAt,
+      programTitle: program.title,
+    },
+  };
+}
+
 const createInvite = async (req, res) => {
   try {
     const { email, firstName, lastName, internshipSlug, inviteMessage } = req.body;
@@ -1402,57 +1968,83 @@ const createInvite = async (req, res) => {
       return res.status(400).json({ message: "Invites are only for careers internships" });
     }
 
-    const normalizedEmail = email.trim().toLowerCase();
-    if (!isGmailAddress(normalizedEmail)) {
-      return res.status(400).json({ message: "Only Gmail addresses are allowed for intern invites" });
-    }
-    const existingPending = await InternInvite.findOne({
-      email: normalizedEmail,
+    const result = await createAndSendInvite({
+      email,
+      firstName,
+      lastName,
       internshipSlug: slug,
-      status: "pending",
-      expiresAt: { $gt: new Date() },
-    });
-    if (existingPending) {
-      return res.status(400).json({ message: "A pending invite already exists for this email" });
-    }
-
-    const token = uuidv4();
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    const invite = await InternInvite.create({
-      email: normalizedEmail,
-      firstName: firstName?.trim() || "",
-      lastName: lastName?.trim() || "",
-      internshipSlug: slug,
-      token,
+      inviteMessage,
       invitedBy: req.user._id,
-      expiresAt,
-      inviteMessage: inviteMessage?.trim() || "",
+      program,
     });
 
-    const inviteUrl = buildInviteUrl(token);
-    const html = inviteEmailHtml({
-      firstName: invite.firstName,
-      inviteUrl,
-      message: invite.inviteMessage,
-      programTitle: program.title,
-    });
-
-    await sendEmail.sendEmail(
-      `EdLernity Internship Invite — ${program.title}`,
-      normalizedEmail,
-      html,
-      `Complete onboarding: ${inviteUrl}`
-    );
+    if (!result.ok) {
+      return res.status(400).json({ message: result.reason });
+    }
 
     res.status(201).json({
       message: "Invite sent successfully",
-      invite: {
-        id: invite._id,
-        email: invite.email,
-        inviteUrl,
-        expiresAt: invite.expiresAt,
-        programTitle: program.title,
-      },
+      invite: result.invite,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const createInviteBulk = async (req, res) => {
+  try {
+    const { emails, internshipSlug, inviteMessage, firstName, lastName } = req.body;
+    const list = Array.isArray(emails)
+      ? emails.map((e) => String(e || "").trim().toLowerCase()).filter(Boolean)
+      : [];
+    // Deduplicate while preserving order
+    const uniqueEmails = [...new Set(list)];
+
+    if (!uniqueEmails.length) {
+      return res.status(400).json({ message: "Add at least one email address" });
+    }
+    if (uniqueEmails.length > 50) {
+      return res.status(400).json({ message: "Maximum 50 emails per bulk invite" });
+    }
+
+    const slug = internshipSlug || "sales-marketing";
+    const program = getInternshipBySlug(slug);
+    if (!program) {
+      return res.status(400).json({ message: "Invalid internship program" });
+    }
+    if (program.track !== "careers") {
+      return res.status(400).json({ message: "Invites are only for careers internships" });
+    }
+
+    const sent = [];
+    const failed = [];
+
+    for (const email of uniqueEmails) {
+      try {
+        const result = await createAndSendInvite({
+          email,
+          firstName,
+          lastName,
+          internshipSlug: slug,
+          inviteMessage,
+          invitedBy: req.user._id,
+          program,
+        });
+        if (result.ok) sent.push(result.invite);
+        else failed.push({ email: result.email || email, reason: result.reason });
+      } catch (err) {
+        console.error("Bulk invite error for", email, err);
+        failed.push({ email, reason: "Failed to send invite" });
+      }
+    }
+
+    res.status(sent.length ? 201 : 400).json({
+      message: `Sent ${sent.length} invite(s)${
+        failed.length ? `, ${failed.length} failed` : ""
+      }`,
+      sent,
+      failed,
     });
   } catch (err) {
     console.error(err);
@@ -1602,8 +2194,11 @@ module.exports = {
   updateUserRole,
   updateUserBlock,
   getInterns,
+  getInternshipApprovals,
+  previewInternshipCertificateDraft,
   blockInternProfile,
   deleteInternProfile,
+  reactivateInternProfile,
   approveInternKyc,
   rejectInternKyc,
   approveInternCertificate,
@@ -1623,6 +2218,7 @@ module.exports = {
   listTransactions,
   listInvites,
   createInvite,
+  createInviteBulk,
   deleteInvite,
   deleteUser,
   recordOfferLetter,

@@ -32,7 +32,7 @@ function MyCourses() {
   const internshipCount = myInternships.length;
   const userRole = userProfile?.effectiveRole || userProfile?.role || "student";
   const isAdmin = userRole === "admin";
-  const isTrainer = userRole === "trainer" || isAdmin;
+  const isTrainer = userRole === "trainer";
   const crmUrl = process.env.REACT_APP_CRM_URL || "http://localhost:3001";
 
   useEffect(() => {
@@ -159,14 +159,14 @@ function MyCourses() {
                   Command Center
                 </a>
               )}
-              {isTrainer && (
-                <Link
-                  to="/trainer/internships"
+              {(isTrainer || isAdmin) && (
+                <a
+                  href={`${crmUrl.replace(/\/$/, "")}/trainer`}
                   className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#181FC5] text-white text-sm font-bold hover:bg-[#1418a0]"
                 >
                   <GraduationCap className="w-4 h-4" />
                   Trainer Dashboard
-                </Link>
+                </a>
               )}
             </div>
           )}

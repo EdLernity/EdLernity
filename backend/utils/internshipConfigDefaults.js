@@ -10,10 +10,10 @@ const DEFAULT_CURRICULUM = {
     "Unsupervised Learning",
     "Neural Networks & Deep Learning",
     "NLP, Generative AI & MLOps Basics",
-    "Capstone Kickoff",
-    "Capstone Build",
-    "Capstone Deploy",
-    "Capstone Showcase",
+    "Project Kickoff",
+    "Project Build",
+    "Project Deploy",
+    "Project Showcase",
   ],
   "full-stack-ai": [
     "Modern Web Foundations",
@@ -24,10 +24,10 @@ const DEFAULT_CURRICULUM = {
     "Databases & Auth",
     "AI Product Features",
     "Full-Stack Delivery",
-    "Capstone Kickoff",
-    "Capstone Build",
-    "Capstone Harden & Deploy",
-    "Capstone Showcase",
+    "Project Kickoff",
+    "Project Build",
+    "Project Harden & Deploy",
+    "Project Showcase",
   ],
   "salesforce-cloud-ai": [
     "Salesforce CRM Foundations",
@@ -38,10 +38,10 @@ const DEFAULT_CURRICULUM = {
     "Apex Advanced",
     "Einstein AI & Automation",
     "Integration Basics",
-    "Capstone Kickoff",
-    "Capstone Build",
-    "Capstone Test & Harden",
-    "Capstone Showcase",
+    "Project Kickoff",
+    "Project Build",
+    "Project Test & Harden",
+    "Project Showcase",
   ],
   "python-data-science-ml": [
     "Python Fundamentals",
@@ -52,10 +52,10 @@ const DEFAULT_CURRICULUM = {
     "Stats & SQL",
     "Scikit-Learn Core",
     "Classical ML & Tuning",
-    "Capstone Kickoff",
-    "Capstone Build",
-    "Capstone Validate",
-    "Capstone Showcase",
+    "Project Kickoff",
+    "Project Build",
+    "Project Validate",
+    "Project Showcase",
   ],
   "cloud-computing-devops": [
     "Cloud Foundations",
@@ -66,44 +66,51 @@ const DEFAULT_CURRICULUM = {
     "Kubernetes Intro",
     "CI/CD Pipelines",
     "IaC & Observability",
-    "Capstone Kickoff",
-    "Capstone Build",
-    "Capstone Scale & Harden",
-    "Capstone Showcase",
+    "Project Kickoff",
+    "Project Build",
+    "Project Scale & Harden",
+    "Project Showcase",
   ],
 };
 
+const {
+  createDefaultLiveClasses,
+} = require("./internshipLiveClasses");
+
 function buildDefaultModules(slug) {
   const topics = DEFAULT_CURRICULUM[slug] || [];
-  return topics.map((topic, index) => ({
-    weekIndex: index,
-    week: `Week ${index + 1}`,
-    topic,
-    isCapstone: index >= 8,
-    published: true,
-    liveClass: {
-      title: `Week ${index + 1} Live Session`,
-      meetingLink: "",
-      scheduleDay: index % 2 === 0 ? "Tuesday" : "Friday",
-      scheduleTime: "7:00 PM - 9:00 PM IST",
-    },
-    recording: {
-      title: `Week ${index + 1} Recording`,
-      url: "",
-      duration: "1h 45m",
-    },
-    notes: [
-      { title: `Week ${index + 1} Session Notes (PDF)`, url: "", type: "pdf" },
-      { title: `Week ${index + 1} Slide Deck`, url: "", type: "slides" },
-    ],
-    assignment: {
-      title: index >= 8 ? `Capstone Milestone - Week ${index + 1}` : `Week ${index + 1} Practice Assignment`,
-      dueLabel: "Submit before next live class",
-      instructions: "",
-      type: index >= 8 ? "project" : "assignment",
-    },
-    resources: [],
-  }));
+  return topics.map((topic, index) => {
+    const week = `Week ${index + 1}`;
+    const liveClasses = createDefaultLiveClasses(week);
+    return {
+      weekIndex: index,
+      week,
+      topic,
+      isCapstone: index >= 8,
+      published: true,
+      liveClasses,
+      liveClass: {
+        title: liveClasses[0].title,
+        meetingLink: "",
+        scheduleDay: liveClasses[0].scheduleDay,
+        scheduleTime: liveClasses[0].scheduleTime,
+      },
+      recording: {
+        title: `Week ${index + 1} Recording`,
+        url: "",
+        duration: "1h 45m",
+      },
+      notes: [],
+      assignment: {
+        title: index >= 8 ? `Project Milestone - Week ${index + 1}` : "",
+        dueLabel: "Submit before next live class",
+        instructions: "",
+        type: index >= 8 ? "project" : "assignment",
+        githubRequired: index >= 8,
+      },
+      resources: [],
+    };
+  });
 }
 
 const DEFAULT_REZNIO_LOGIN_URL = "https://reznio.com";
@@ -129,7 +136,7 @@ const STATIC_BONUSES = [
 
 const STATIC_CERTIFICATE = {
   title: "ISO 9001:2015 Internship Certificate",
-  requirement: "Complete all 12 weeks, capstone project, and hands-on assessments.",
+  requirement: "Complete all 12 weeks, projects, and hands-on assessments.",
 };
 
 function resolveBonuses(saved = []) {
@@ -163,10 +170,11 @@ function buildDefaultProgramConfig(slug) {
     category: internship.category,
     coverImage: internship.coverImage,
     syllabusNote:
-      "Total 12 weeks: Weeks 1-8 focus on core lessons. Weeks 9-12 are dedicated entirely to Live Capstone Project execution.",
+      "Total 12 weeks: Weeks 1-8 focus on core lessons. Weeks 9-12 are dedicated entirely to live project execution.",
     liveSchedule: [
-      { day: "Tuesday", time: "7:00 PM - 9:00 PM IST" },
-      { day: "Friday", time: "7:00 PM - 9:00 PM IST" },
+      { day: "Monday", time: "7:00 PM - 8:30 PM IST" },
+      { day: "Wednesday", time: "7:00 PM - 8:30 PM IST" },
+      { day: "Friday", time: "7:00 PM - 8:30 PM IST" },
     ],
     bonuses: STATIC_BONUSES,
     announcements: [

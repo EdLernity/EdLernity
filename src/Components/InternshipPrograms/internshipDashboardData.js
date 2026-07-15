@@ -76,7 +76,7 @@ export function buildInternshipDashboard(track, enrollment = {}) {
       ],
       assignment: {
         title: isCapstone
-          ? `Capstone Milestone - ${item.week}`
+          ? `Project Milestone - ${item.week}`
           : `${item.week} Practice Assignment`,
         dueLabel: "Submit before next live class",
         instructions: "",
@@ -110,7 +110,7 @@ export function buildInternshipDashboard(track, enrollment = {}) {
     bonuses: mergeBonuses(BONUS_ITEMS),
     certificate: {
       title: "ISO 9001:2015 Internship Certificate",
-      requirement: "Complete all 12 weeks, capstone project, and hands-on assessments.",
+      requirement: "Complete all 12 weeks, projects, and hands-on assessments.",
       progressLabel: `${modules.length} week program`,
     },
     announcements: [

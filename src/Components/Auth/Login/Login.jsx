@@ -36,8 +36,14 @@ function Login() {;
   const crmUrl = (process.env.REACT_APP_CRM_URL || "http://localhost:3001").replace(/\/$/, "");
 
   const finishLogin = (token, role) => {
-    if (role === "intern") {
-      showSnackbar("Career interns sign in at the intern portal", "info", "top");
+    if (role === "intern" || role === "trainer") {
+      showSnackbar(
+        role === "trainer"
+          ? "Trainers sign in at the CRM portal"
+          : "Career interns sign in at the intern portal",
+        "info",
+        "top"
+      );
       window.location.href = `${crmUrl}/signin`;
       return;
     }

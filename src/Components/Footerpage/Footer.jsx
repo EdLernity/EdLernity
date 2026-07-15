@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import ChatBot from "./ChatBot";
-import Whatsapp from "./Whatsapp";
+import React from "react";
+import EddyChat from "./EddyChat";
 
 const LINKS = [
   {
@@ -39,16 +38,6 @@ const LINKS = [
 const currentYear = new Date().getFullYear();
 
 function Footer() {
-  const [isChatBotOpen, setIsChatBotOpen] = useState(false);
-
-  const openChatBot = () => {
-    window.location.replace("https://api.whatsapp.com/send?phone=918073306479");
-  };
-
-  const closeChatBot = () => {
-    setIsChatBotOpen(false);
-  };
-
   return (
     <>
       <footer className="w-full bg-[#f8fafc] text-slate-600 border-t border-slate-200 font-sans">
@@ -183,8 +172,7 @@ function Footer() {
         </div>
       </footer>
       
-      <Whatsapp onOpenChatBot={openChatBot} />
-      {isChatBotOpen && <ChatBot onClose={closeChatBot} />}
+      <EddyChat />
     </>
   );
 }

@@ -6,9 +6,10 @@
  * 3. If label is not mapped → uses "default"
  *
  * Fields: x, yFromTop, size per field. enabledFields = which fields to draw.
- * Optional per layout/field: font ("helvetica" | "poppins" | "poppins-regular" | "canva-sans" | "canva-sans-bold" | "libre-baskerville-italic"), uppercase (true for ALL CAPS name).
+ * Optional per layout/field: font ("helvetica" | "poppins" | "poppins-regular" | "canva-sans" | "canva-sans-bold" | "libre-baskerville-italic" | "cormorant-garamond" | "cormorant-garamond-bold" | "cormorant-garamond-semibold" | "cormorant-garamond-italic" | "dm-sans"), uppercase (true for ALL CAPS name).
  * centerX horizontally centers single-line text at that x coordinate.
  * internshipDateRange renders as [DD/MM/YYYY] to [DD/MM/YYYY] (see durationMonths).
+ * internshipDateRangeShort renders as DD/MM/YYYY - DD/MM/YYYY (Tech COMPLETED ON).
  */
 
 const TEXT_COLOR_BLACK = { r: 0, g: 0, b: 0 };
@@ -17,6 +18,13 @@ const TEXT_COLOR_BRAND_BLUE = {
   r: 24 / 255,
   g: 31 / 255,
   b: 197 / 255,
+};
+
+/** Tech cert date & credential: #000e41 */
+const TEXT_COLOR_NAVY = {
+  r: 0 / 255,
+  g: 14 / 255,
+  b: 65 / 255,
 };
 
 const TEXT_COLOR_DEFAULT = {
@@ -30,6 +38,8 @@ const TEXT_COLOR_DEFAULT = {
  */
 const LAYOUT_BY_TEMPLATE_LABEL = {
   "Non Tech": "internship1",
+  "Tech Internship": "internshipTech",
+  "new Tech Internship": "internshipTech",
   "Certificate of Appreciation": "appreciation",
   "Certificate of Participation": "participation",
   "Best Performer Certificate": "bestPerformer",
@@ -59,6 +69,45 @@ const CERTIFICATE_PDF_LAYOUTS = {
       programTitle: { x: 54, yFromTop: 368, size: 16, uppercase: true, font: "poppins-regular" },
       internshipDateRange: { x: 163, yFromTop: 412, size: 16, font: "poppins-regular" },
       certificateId: { x: 86, yFromTop: 456, size: 16, font: "poppins-regular" },
+    },
+  },
+
+  /** Landscape Tech template (1152×768) — name, program between laurels, from–to + CREDENTIAL ID. */
+  internshipTech: {
+    key: "internshipTech",
+    font: "cormorant-garamond",
+    durationMonths: 3,
+    enabledFields: ["studentName", "programTitle", "internshipDateRangeShort", "certificateId"],
+    textColor: TEXT_COLOR_DEFAULT,
+    fields: {
+      studentName: {
+        centerX: 621,
+        yFromTop: 272,
+        size: 80,
+        font: "cormorant-garamond-bold",
+      },
+      programTitle: {
+        centerX: 621,
+        yFromTop: 374,
+        size: 25,
+        font: "cormorant-garamond-bold",
+        color: TEXT_COLOR_BRAND_BLUE,
+      },
+      /** COMPLETED ON — manager from/to dates */
+      internshipDateRangeShort: {
+        centerX: 367,
+        yFromTop: 552,
+        size: 12.4,
+        font: "dm-sans",
+        color: TEXT_COLOR_NAVY,
+      },
+      certificateId: {
+        centerX: 850,
+        yFromTop: 551,
+        size: 12.4,
+        font: "dm-sans",
+        color: TEXT_COLOR_NAVY,
+      },
     },
   },
 
@@ -120,6 +169,7 @@ const FIELD_LABELS = {
   programTitle: "Program title",
   issuedDate: "Issue date (DD/MM/YYYY)",
   internshipDateRange: "Internship period [from] to [to]",
+  internshipDateRangeShort: "Internship period from - to (DD/MM/YYYY - DD/MM/YYYY)",
   certificateId: "Certificate ID / UUID",
 };
 

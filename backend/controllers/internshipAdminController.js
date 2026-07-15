@@ -42,10 +42,93 @@ const listPrograms = async (req, res) => {
 
 const listTrainers = async (req, res) => {
   try {
-    const trainers = await UserModel.find({ role: "trainer" }).select(
-      "firstName lastName email role"
-    );
+    const trainers = await UserModel.find({ role: { $in: ["trainer", "admin"] } })
+      .select("firstName lastName email role")
+      .sort({ firstName: 1 });
     res.status(200).json({ trainers });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const listTrainerAssignments = async (req, res) => {
+  try {
+    const rows = await InternshipTrainerAssignment.find({})
+      .populate("trainerId", "firstName lastName email role")
+      .populate("assignedBy", "firstName lastName email")
+      .sort({ updatedAt: -1 });
+
+    res.status(200).json({
+      assignments: rows
+        .filter((row) => row.trainerId)
+        .map((row) => {
+          const program = getInternshipBySlug(row.internshipSlug);
+          return {
+            id: row._id,
+            internshipSlug: row.internshipSlug,
+            programTitle: program?.title || row.internshipSlug,
+            active: row.active !== false,
+            assignedAt: row.createdAt,
+            updatedAt: row.updatedAt,
+            trainer: {
+              id: row.trainerId._id,
+              email: row.trainerId.email,
+              name: `${row.trainerId.firstName || ""} ${row.trainerId.lastName || ""}`.trim(),
+              role: row.trainerId.role,
+            },
+            assignedBy: row.assignedBy
+              ? {
+                  email: row.assignedBy.email,
+                  name: `${row.assignedBy.firstName || ""} ${row.assignedBy.lastName || ""}`.trim(),
+                }
+              : null,
+          };
+        }),
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+const unassignTrainer = async (req, res) => {
+  try {
+    const { trainerEmail, internshipSlug, assignmentId } = req.body;
+    let assignment = null;
+
+    if (assignmentId) {
+      assignment = await InternshipTrainerAssignment.findById(assignmentId);
+    } else if (trainerEmail && internshipSlug) {
+      const trainer = await findUserByEmail(trainerEmail);
+      if (!trainer) {
+        return res.status(404).json({ message: "Trainer user not found" });
+      }
+      assignment = await InternshipTrainerAssignment.findOne({
+        trainerId: trainer._id,
+        internshipSlug,
+      });
+    } else {
+      return res.status(400).json({
+        message: "assignmentId or trainerEmail + internshipSlug is required",
+      });
+    }
+
+    if (!assignment) {
+      return res.status(404).json({ message: "Trainer assignment not found" });
+    }
+
+    assignment.active = false;
+    await assignment.save();
+
+    res.status(200).json({
+      message: "Trainer unassigned from internship program",
+      assignment: {
+        id: assignment._id,
+        internshipSlug: assignment.internshipSlug,
+        active: assignment.active,
+      },
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Something went wrong" });
@@ -252,10 +335,27 @@ const promoteUserRole = async (req, res) => {
 
 const issueInternshipCertificate = async (req, res) => {
   try {
-    const { studentEmail, internshipSlug, studentName } = req.body;
+    const { studentEmail, internshipSlug, studentName, issuedAt: issuedAtRaw } = req.body;
     if (!studentEmail || !internshipSlug || !studentName?.trim()) {
       return res.status(400).json({
         message: "studentEmail, internshipSlug, and studentName are required",
+      });
+    }
+
+    let issuedAt = null;
+    if (issuedAtRaw) {
+      const raw = String(issuedAtRaw).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+        const [y, m, d] = raw.split("-").map(Number);
+        issuedAt = new Date(y, m - 1, d, 12, 0, 0);
+      } else {
+        issuedAt = new Date(raw);
+      }
+      if (Number.isNaN(issuedAt.getTime())) issuedAt = null;
+    }
+    if (!issuedAt) {
+      return res.status(400).json({
+        message: "Certificate issue date is required (YYYY-MM-DD)",
       });
     }
 
@@ -277,6 +377,18 @@ const issueInternshipCertificate = async (req, res) => {
       return res.status(400).json({ message: "Student is not enrolled in this program" });
     }
 
+    const trainerAssignment = await InternshipStudentAssignment.findOne({
+      studentId: student._id,
+      internshipSlug,
+      active: { $ne: false },
+    }).lean();
+    if (!trainerAssignment?.internshipCompleted) {
+      return res.status(400).json({
+        message:
+          "Trainer must mark this internship completed before the internship certificate can be issued",
+      });
+    }
+
     const existing = await InternshipCertificate.findOne({
       userId: student._id,
       internshipSlug,
@@ -288,7 +400,7 @@ const issueInternshipCertificate = async (req, res) => {
           uuid: existing.uuid,
           studentName: existing.studentName,
           programTitle: existing.programTitle,
-          issuedAt: existing.createdAt,
+          issuedAt: existing.issuedAt || existing.createdAt,
         },
       });
     }
@@ -305,7 +417,9 @@ const issueInternshipCertificate = async (req, res) => {
       studentName: studentName.trim(),
       uuid: await generateUniqueCertificateId("internship"),
       certificateTemplateId: certificateTemplate?._id || null,
+      certificateType: certificateTemplate?.type || "internship-completion",
       issuedBy: req.user._id,
+      issuedAt,
     });
 
     res.status(200).json({
@@ -314,7 +428,7 @@ const issueInternshipCertificate = async (req, res) => {
         uuid: certificate.uuid,
         studentName: certificate.studentName,
         programTitle: certificate.programTitle,
-        issuedAt: certificate.createdAt,
+        issuedAt: certificate.issuedAt || certificate.createdAt,
       },
     });
   } catch (err) {
@@ -326,8 +440,10 @@ const issueInternshipCertificate = async (req, res) => {
 module.exports = {
   listPrograms,
   listTrainers,
+  listTrainerAssignments,
   listEnrollments,
   assignTrainer,
+  unassignTrainer,
   assignStudent,
   promoteUserRole,
   issueInternshipCertificate,

@@ -20,6 +20,7 @@ import Member from './Components/Memberpage/Member.jsx';
 import InternshipPrograms from './Components/InternshipPrograms/InternshipPrograms.jsx';
 import InternshipTrackDetail from './Components/InternshipPrograms/InternshipTrackDetail.jsx';
 import InternshipDashboard from './Components/InternshipPrograms/InternshipDashboard.jsx';
+import InternshipAssignmentPage from './Components/InternshipPrograms/InternshipAssignmentPage.jsx';
 import InternOnboard from './Components/InternshipPrograms/InternOnboard.jsx';
 import AdminInternshipsRedirect from './Components/Admin/AdminInternshipsRedirect.jsx';
 import TrainerInternshipDashboard from './Components/InternshipPrograms/TrainerInternshipDashboard.jsx';
@@ -91,6 +92,11 @@ function App() {
             <Route path='/member' element={<Member />} />
             <Route path='/internship-programs' element={<InternshipPrograms />} />
             <Route path='/internship-programs/:slug' element={<InternshipTrackDetail />} />
+            <Route
+              path='/my-internships/:slug/assignments/:weekIndex/:classId'
+              element={<InternshipAssignmentPage />}
+            />
+            <Route path='/my-internships/:slug/:section' element={<InternshipDashboard />} />
             <Route path='/my-internships/:slug' element={<InternshipDashboard />} />
             <Route path='/intern-onboard/:token' element={<InternOnboard />} />
             <Route path='/admin/internships' element={<AdminInternshipsRedirect />} />

@@ -28,8 +28,10 @@ const allNavItems: NavItem[] = [
   { icon: <GridIcon />, name: "Overview", path: "/", adminOnly: true },
   { icon: <UserCircleIcon />, name: "Users", path: "/users", adminOnly: true },
   { icon: <TableIcon />, name: "Interns", path: "/interns" },
+  { icon: <TaskIcon />, name: "Internship Approvals", path: "/internship-approvals" },
   { icon: <TaskIcon />, name: "Certificates", path: "/certificates", adminOnly: true },
   { icon: <ListIcon />, name: "Careers Programs", path: "/careers-programs", adminOnly: true },
+  { icon: <PlugInIcon />, name: "Trainer Assignments", path: "/trainer-assignments", adminOnly: true },
   { icon: <DollarLineIcon />, name: "Transactions", path: "/transactions", adminOnly: true },
   { icon: <PlugInIcon />, name: "Operations", path: "/operations", adminOnly: true },
   { icon: <MailIcon />, name: "Offer Letters", path: "/offer-letters", adminOnly: true },
@@ -41,15 +43,48 @@ const internNavItems: NavItem[] = [
   { icon: <TaskIcon />, name: "My Certificates", path: "/my-certificates" },
 ];
 
+const trainerNavItems: NavItem[] = [
+  { icon: <TaskIcon />, name: "My Programs", path: "/trainer" },
+  { icon: <TableIcon />, name: "Assessments", path: "/trainer/assessments" },
+];
+
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
-  const { isAdmin, isIntern } = useAuth();
+  const { isAdmin, isIntern, isTrainer } = useAuth();
   const pathname = usePathname();
-  const isActive = useCallback((path: string) => path === pathname, [pathname]);
+  const isActive = useCallback(
+    (path: string) => {
+      if (path === "/trainer/assessments") {
+        return pathname === "/trainer/assessments" || pathname.startsWith("/trainer/assessments/");
+      }
+      if (path === "/trainer") {
+        if (pathname.startsWith("/trainer/assessments")) return false;
+        return pathname === "/trainer" || pathname.startsWith("/trainer/");
+      }
+      if (path === "/internship-approvals") {
+        return (
+          pathname === "/internship-approvals" ||
+          pathname.startsWith("/internship-approvals/")
+        );
+      }
+      return path === pathname;
+    },
+    [pathname]
+  );
 
   const navItems = isIntern
     ? internNavItems
-    : allNavItems.filter((item) => !item.adminOnly || isAdmin);
+    : isTrainer
+      ? trainerNavItems
+      : allNavItems.filter((item) => !item.adminOnly || isAdmin);
+
+  const sectionLabel = isIntern
+    ? "Intern Portal"
+    : isTrainer
+      ? "Trainer"
+      : isAdmin
+        ? "Admin"
+        : "Manager";
 
   return (
     <aside
@@ -63,8 +98,8 @@ const AppSidebar: React.FC = () => {
       <div
         className={`py-8 flex ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"}`}
       >
-        <Link href="/">
-          {(isExpanded || isHovered || isMobileOpen) ? (
+        <Link href={isTrainer ? "/trainer" : isIntern ? "/my-offer-letters" : "/"}>
+          {isExpanded || isHovered || isMobileOpen ? (
             <span className="text-xl font-bold text-brand-500">EdLernity CRM</span>
           ) : (
             <span className="text-lg font-bold text-brand-500">EL</span>
@@ -78,7 +113,7 @@ const AppSidebar: React.FC = () => {
               !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
             }`}
           >
-            {isExpanded || isHovered || isMobileOpen ? (isIntern ? "Intern Portal" : isAdmin ? "Admin" : "Manager") : <HorizontaLDots />}
+            {isExpanded || isHovered || isMobileOpen ? sectionLabel : <HorizontaLDots />}
           </h2>
           <ul className="flex flex-col gap-2">
             {navItems.map((nav) => (

@@ -62,3 +62,37 @@ export async function fetchTrainerStudents(slug) {
   const { data } = await apiInstancePrivate.get(`/api/v1/internship-trainer/programs/${slug}/students`);
   return data.students || [];
 }
+
+export async function submitClassAssignment(slug, classId, payload) {
+  const { data } = await apiInstancePrivate.post(
+    `/api/v1/enroll/internships/${slug}/assignments/${encodeURIComponent(classId)}/submit`,
+    payload
+  );
+  return data;
+}
+
+export async function submitProjectGithub(slug, weekIndex, githubUrl) {
+  const { data } = await apiInstancePrivate.post(
+    `/api/v1/enroll/internships/${slug}/projects/${weekIndex}/submit`,
+    { githubUrl }
+  );
+  return data;
+}
+
+/** Mark attendance when the student clicks Join Live Class. */
+export async function markLiveClassAttendance(slug, classId, weekIndex) {
+  const { data } = await apiInstancePrivate.post(
+    `/api/v1/enroll/internships/${slug}/classes/${encodeURIComponent(classId)}/attend`,
+    { weekIndex }
+  );
+  return data;
+}
+
+/** Issued internship certificate filled onto the manager/admin PDF template. */
+export async function fetchStudentCertificatePdfBlob(slug) {
+  const response = await apiInstancePrivate.get(
+    `/api/v1/enroll/internships/${slug}/certificate/pdf`,
+    { responseType: "blob" }
+  );
+  return response.data;
+}

@@ -4,7 +4,7 @@ import React from "react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { loading, isStaff, isIntern, user } = useAuth();
+  const { loading, isStaff, isIntern, isTrainer, user } = useAuth();
 
   if (loading) {
     return (
@@ -14,7 +14,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!user || (!isStaff && !isIntern)) {
+  if (!user || (!isStaff && !isIntern && !isTrainer)) {
     return null;
   }
 
