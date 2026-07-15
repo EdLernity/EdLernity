@@ -57,6 +57,10 @@
     "@react-jvectormap/world": {
       "react": "^16.8.0 || ^17 || ^18 || ^19",
       "react-dom": "^16.8.0 || ^17 || ^18 || ^19"
+    },
+    "react-multi-email": {
+      "react": "^19.2.0",
+      "react-dom": "^19.2.0"
     }
   }
 }
