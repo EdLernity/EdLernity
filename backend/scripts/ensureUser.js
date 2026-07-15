@@ -1,6 +1,6 @@
 /**
- * Create or update a user with a role.
- * Usage: node backend/scripts/ensureUser.js <email> <role> [firstName]
+ * Create or update a user with a role (and optional password reset).
+ * Usage: node backend/scripts/ensureUser.js <email> <role> [firstName] [password]
  */
 const path = require("path");
 const dotenv = require("dotenv");
@@ -24,15 +24,18 @@ async function generateUserId() {
 async function main() {
   const email = process.argv[2]?.trim().toLowerCase();
   const role = process.argv[3] || "trainer";
-  const firstName = process.argv[4] || "Trainer";
+  const firstName = process.argv[4] || "User";
+  const passwordArg = process.argv[5];
 
   if (!email) {
-    console.error("Usage: node backend/scripts/ensureUser.js <email> <role> [firstName]");
+    console.error(
+      "Usage: node backend/scripts/ensureUser.js <email> <role> [firstName] [password]"
+    );
     process.exit(1);
   }
 
-  if (!["student", "trainer", "admin", "manager"].includes(role)) {
-    console.error("Role must be student, trainer, manager, or admin");
+  if (!["student", "trainer", "admin", "manager", "intern"].includes(role)) {
+    console.error("Role must be student, trainer, manager, admin, or intern");
     process.exit(1);
   }
 
@@ -43,10 +46,11 @@ async function main() {
   await mongoose.connect(process.env.MONGODB_URI);
 
   let user = await UserModel.findOne({ email });
-  const defaultPassword = process.env.SEED_USER_PASSWORD || "Trainer@123";
+  const password =
+    passwordArg || process.env.SEED_USER_PASSWORD || "ChangeMe@EdLernity2026!";
 
   if (!user) {
-    const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     user = await UserModel.create({
       userId: await generateUserId(),
       firstName,
@@ -54,17 +58,25 @@ async function main() {
       email,
       password: hashedPassword,
       isVerified: true,
+      IsBlocked: false,
+      isActive: true,
       role,
     });
     console.log(`Created ${email} with role: ${role}`);
-    console.log(`Temporary password: ${defaultPassword} (change after first login)`);
   } else {
     user.role = role;
-    if (!user.isVerified) user.isVerified = true;
+    user.isVerified = true;
+    user.IsBlocked = false;
+    user.isActive = true;
+    if (firstName) user.firstName = firstName;
+    if (passwordArg || process.env.SEED_USER_PASSWORD) {
+      user.password = await bcrypt.hash(password, 10);
+    }
     await user.save();
     console.log(`Updated ${email} -> role: ${role}`);
   }
 
+  console.log(`Password: ${password}`);
   await mongoose.disconnect();
 }
 
