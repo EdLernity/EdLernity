@@ -46,6 +46,7 @@ const defaultCorsOrigins = [
     "http://localhost:3000",
     "http://localhost:3001",
     "https://monopoly-autistic-cadmium.ngrok-free.dev",
+    "https://portal.edlernity.com"
 ];
 
 const allowedCorsOrigins = new Set([
