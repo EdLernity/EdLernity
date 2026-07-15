@@ -33,17 +33,50 @@ app.use((req, res, next) => {
     next();
 });
 
+function parseEnvOrigins(value) {
+    return (value || "")
+        .split(",")
+        .map((s) => s.trim().replace(/\/$/, ""))
+        .filter(Boolean);
+}
+
+const defaultCorsOrigins = [
+    "https://www.edlernity.com",
+    "https://edlernity.com",
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://monopoly-autistic-cadmium.ngrok-free.dev",
+];
+
+const allowedCorsOrigins = new Set([
+    ...defaultCorsOrigins,
+    ...parseEnvOrigins(process.env.CORS_ORIGINS),
+    ...parseEnvOrigins(process.env.CRM_URL),
+    ...parseEnvOrigins(process.env.FRONTEND_URL),
+    ...parseEnvOrigins(process.env.APPLICATION_URL),
+]);
+
 const corsOptions = {
-    origin: [
-        'https://www.edlernity.com',
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'https://monopoly-autistic-cadmium.ngrok-free.dev',
-    ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin(origin, callback) {
+        // Non-browser clients (curl, server) have no Origin header
+        if (!origin) {
+            return callback(null, true);
+        }
+        if (allowedCorsOrigins.has(origin)) {
+            return callback(null, true);
+        }
+        // Vercel CRM / preview deployments (e.g. https://edlernity-xxx.vercel.app)
+        if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)) {
+            return callback(null, true);
+        }
+        return callback(null, false);
+    },
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    allowedHeaders: ["Content-Type", "Authorization"],
 };
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(bodyParser.json()); // Add this line to parse JSON data
 
