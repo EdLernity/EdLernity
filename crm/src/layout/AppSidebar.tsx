@@ -100,7 +100,9 @@ const AppSidebar: React.FC = () => {
       >
         <Link href={isTrainer ? "/trainer" : isIntern ? "/my-offer-letters" : "/"}>
           {isExpanded || isHovered || isMobileOpen ? (
-            <span className="text-xl font-bold text-brand-500">EdLernity CRM</span>
+            <span className="text-xl font-bold text-brand-500">
+              {isIntern ? "Intern Portal" : "EdLernity CRM"}
+            </span>
           ) : (
             <span className="text-lg font-bold text-brand-500">EL</span>
           )}

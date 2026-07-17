@@ -943,28 +943,10 @@ function InternshipDashboard() {
                 ID: {dashboard.certificate.uuid}
               </p>
             )}
-            <div className="mt-4 flex flex-wrap gap-3">
-              {certificatePdfUrl && (
-                <a
-                  href={certificatePdfUrl}
-                  download={`${(dashboard.certificate.studentName || "certificate").replace(/\s+/g, "_")}_internship_certificate.pdf`}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#181FC5] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#1418a0]"
-                >
-                  <Download className="h-4 w-4" />
-                  Download PDF
-                </a>
-              )}
-              {certificatePdfUrl && (
-                <a
-                  href={certificatePdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-[#181FC5]/30 px-4 py-2.5 text-sm font-bold text-[#181FC5] hover:bg-[#181FC5]/5"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  Open in new tab
-                </a>
-              )}
+            <div className="mt-4">
+              <p className="text-sm font-semibold text-emerald-800">
+                Preview your certificate below.
+              </p>
             </div>
           </div>
 
@@ -978,7 +960,7 @@ function InternshipDashboard() {
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
               <iframe
                 title="Internship certificate PDF"
-                src={certificatePdfUrl}
+                src={`${certificatePdfUrl}#toolbar=0&navpanes=0`}
                 className="h-[70vh] min-h-[480px] w-full bg-white"
               />
             </div>
@@ -989,13 +971,13 @@ function InternshipDashboard() {
           <p className="mb-1 text-sm font-bold text-amber-900">Awaiting manager</p>
           <p className="text-sm text-amber-800">
             Your trainer has marked the internship completed. The manager will issue your
-            certificate next — it will appear here as a downloadable PDF.
+            certificate next — it will appear here for on-page preview.
           </p>
         </div>
       ) : (
         <p className="text-sm text-slate-500">
           Complete assignments and projects. After your trainer marks you complete, the manager
-          will issue your certificate PDF here.
+          will issue your certificate PDF here for preview.
         </p>
       )}
     </div>
