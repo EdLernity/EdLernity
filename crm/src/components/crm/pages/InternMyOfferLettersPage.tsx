@@ -23,7 +23,7 @@ export default function InternMyOfferLettersPage() {
     fetchMyOfferLetters()
       .then((rows) => {
         setLetters(rows);
-        if (rows[0]) setSelectedId(rows[0].id);
+        if (rows[0]) setSelectedId(String(rows[0].id));
       })
       .catch(() => setError("Failed to load offer letters"))
       .finally(() => setLoading(false));
@@ -35,8 +35,10 @@ export default function InternMyOfferLettersPage() {
     const loadPreview = async () => {
       if (!selectedId) {
         setPreviewBlob(null);
+        setPreviewLoading(false);
         return;
       }
+      setPreviewBlob(null);
       setPreviewLoading(true);
       setError("");
       try {
@@ -58,7 +60,6 @@ export default function InternMyOfferLettersPage() {
     };
   }, [selectedId]);
 
-  const selected = letters.find((row) => row.id === selectedId) || null;
   const displayName =
     `${user?.firstName || ""} ${user?.lastName || ""}`.trim() || user?.email || "Intern";
 
@@ -70,7 +71,7 @@ export default function InternMyOfferLettersPage() {
         </p>
         <h1 className="mt-2 text-2xl font-bold sm:text-3xl">My Offer Letters</h1>
         <p className="mt-2 max-w-2xl text-sm text-white/85 sm:text-base">
-          Welcome, {displayName}. Tap an offer letter to preview it on this page.
+          Welcome, {displayName}. Tap an offer letter to preview it below that card.
         </p>
         <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium backdrop-blur">
           <span className="h-2 w-2 rounded-full bg-sky-300" />
@@ -98,20 +99,23 @@ export default function InternMyOfferLettersPage() {
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 xl:grid-cols-[300px_minmax(0,1fr)]">
-          <div className="space-y-3">
-            {letters.map((row) => {
-              const active = row.id === selectedId;
-              return (
+        <div className="space-y-3">
+          {letters.map((row) => {
+            const id = String(row.id);
+            const active = id === selectedId;
+            return (
+              <div
+                key={id}
+                className={`overflow-hidden rounded-2xl border transition ${
+                  active
+                    ? "border-brand-500 bg-brand-50 shadow-sm ring-1 ring-brand-500/30 dark:border-brand-400 dark:bg-brand-500/10"
+                    : "border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
+                }`}
+              >
                 <button
-                  key={row.id}
                   type="button"
-                  onClick={() => setSelectedId(row.id)}
-                  className={`w-full rounded-2xl border p-4 text-left transition ${
-                    active
-                      ? "border-brand-500 bg-brand-50 shadow-sm ring-1 ring-brand-500/30 dark:border-brand-400 dark:bg-brand-500/10"
-                      : "border-gray-200 bg-white hover:border-brand-200 dark:border-gray-800 dark:bg-white/[0.03]"
-                  }`}
+                  onClick={() => setSelectedId(id)}
+                  className="w-full p-4 text-left"
                 >
                   <p className="text-sm font-semibold text-gray-900 dark:text-white">
                     {row.templateLabel || "Offer letter"}
@@ -120,29 +124,20 @@ export default function InternMyOfferLettersPage() {
                     Issued {formatDate(row.issuedAt)} · {row.candidateName}
                   </p>
                 </button>
-              );
-            })}
-          </div>
 
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-            <div className="border-b border-gray-100 px-5 py-4 dark:border-gray-800">
-              <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                {selected?.templateLabel || "Offer letter preview"}
-              </p>
-              <p className="mt-0.5 text-xs text-gray-500">
-                {selected?.candidateName || "—"}
-                {selected?.issuedAt ? ` · ${formatDate(selected.issuedAt)}` : ""}
-              </p>
-            </div>
-
-            <div className="p-3 sm:p-4">
-              <PdfPreviewPane
-                blob={previewBlob}
-                loading={previewLoading}
-                emptyLabel="Select an offer letter to preview"
-              />
-            </div>
-          </div>
+                {active ? (
+                  <div className="border-t border-brand-100 bg-white p-3 dark:border-brand-500/20 dark:bg-white/[0.03] sm:p-4">
+                    <PdfPreviewPane
+                      key={id}
+                      blob={previewBlob}
+                      loading={previewLoading}
+                      emptyLabel="Loading offer letter preview…"
+                    />
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

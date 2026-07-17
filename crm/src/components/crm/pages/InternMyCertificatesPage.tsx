@@ -23,7 +23,7 @@ export default function InternMyCertificatesPage() {
     fetchMyCertificates()
       .then((rows) => {
         setCertificates(rows);
-        if (rows[0]) setSelectedId(rows[0].id);
+        if (rows[0]) setSelectedId(String(rows[0].id));
       })
       .catch(() => setError("Failed to load certificates"))
       .finally(() => setLoading(false));
@@ -35,8 +35,10 @@ export default function InternMyCertificatesPage() {
     const loadPreview = async () => {
       if (!selectedId) {
         setPreviewBlob(null);
+        setPreviewLoading(false);
         return;
       }
+      setPreviewBlob(null);
       setPreviewLoading(true);
       setError("");
       try {
@@ -58,7 +60,6 @@ export default function InternMyCertificatesPage() {
     };
   }, [selectedId]);
 
-  const selected = certificates.find((row) => row.id === selectedId) || null;
   const displayName =
     `${user?.firstName || ""} ${user?.lastName || ""}`.trim() || user?.email || "Intern";
 
@@ -70,7 +71,7 @@ export default function InternMyCertificatesPage() {
         </p>
         <h1 className="mt-2 text-2xl font-bold sm:text-3xl">My Certificates</h1>
         <p className="mt-2 max-w-2xl text-sm text-white/85 sm:text-base">
-          Hi {displayName}. Tap a certificate to preview it on this page.
+          Hi {displayName}. Tap a certificate to preview it below that card.
         </p>
         <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium backdrop-blur">
           <span className="h-2 w-2 rounded-full bg-emerald-300" />
@@ -98,63 +99,53 @@ export default function InternMyCertificatesPage() {
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 xl:grid-cols-[300px_minmax(0,1fr)]">
-          <div className="space-y-3">
-            {certificates.map((row) => {
-              const active = row.id === selectedId;
-              return (
+        <div className="space-y-3">
+          {certificates.map((row) => {
+            const id = String(row.id);
+            const active = id === selectedId;
+            return (
+              <div
+                key={id}
+                className={`overflow-hidden rounded-2xl border transition ${
+                  active
+                    ? "border-brand-500 bg-brand-50 shadow-sm ring-1 ring-brand-500/30 dark:border-brand-400 dark:bg-brand-500/10"
+                    : "border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
+                }`}
+              >
                 <button
-                  key={row.id}
                   type="button"
-                  onClick={() => setSelectedId(row.id)}
-                  className={`w-full rounded-2xl border p-4 text-left transition ${
-                    active
-                      ? "border-brand-500 bg-brand-50 shadow-sm ring-1 ring-brand-500/30 dark:border-brand-400 dark:bg-brand-500/10"
-                      : "border-gray-200 bg-white hover:border-brand-200 dark:border-gray-800 dark:bg-white/[0.03]"
-                  }`}
+                  onClick={() => setSelectedId(id)}
+                  className="w-full p-4 text-left"
                 >
                   <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                    {row.programTitle}
-                  </p>
-                  <p className="mt-1 text-xs text-gray-500">
                     {row.templateLabel || "Internship Certificate"}
                   </p>
+                  <p className="mt-1 text-xs text-gray-500">{row.programTitle}</p>
                   <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-gray-500">
                     <span className="rounded-full bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
                       Issued {formatDate(row.issuedAt)}
                     </span>
+                    {active && row.uuid ? (
+                      <span className="rounded-lg bg-white/80 px-2 py-0.5 font-mono text-[11px] text-gray-600 dark:bg-white/5 dark:text-gray-300">
+                        ID: {row.uuid}
+                      </span>
+                    ) : null}
                   </div>
                 </button>
-              );
-            })}
-          </div>
 
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-            <div className="flex flex-wrap items-start justify-between gap-3 border-b border-gray-100 px-5 py-4 dark:border-gray-800">
-              <div>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {selected?.templateLabel || "Certificate preview"}
-                </p>
-                <p className="mt-0.5 text-xs text-gray-500">
-                  Issued to {selected?.studentName || "—"}
-                  {selected?.issuedAt ? ` · ${formatDate(selected.issuedAt)}` : ""}
-                </p>
+                {active ? (
+                  <div className="border-t border-brand-100 bg-white p-3 dark:border-brand-500/20 dark:bg-white/[0.03] sm:p-4">
+                    <PdfPreviewPane
+                      key={id}
+                      blob={previewBlob}
+                      loading={previewLoading}
+                      emptyLabel="Loading certificate preview…"
+                    />
+                  </div>
+                ) : null}
               </div>
-              {selected?.uuid && (
-                <p className="rounded-lg bg-gray-50 px-2.5 py-1 font-mono text-[11px] text-gray-600 dark:bg-white/5 dark:text-gray-300">
-                  ID: {selected.uuid}
-                </p>
-              )}
-            </div>
-
-            <div className="p-3 sm:p-4">
-              <PdfPreviewPane
-                blob={previewBlob}
-                loading={previewLoading}
-                emptyLabel="Select a certificate to preview"
-              />
-            </div>
-          </div>
+            );
+          })}
         </div>
       )}
     </div>

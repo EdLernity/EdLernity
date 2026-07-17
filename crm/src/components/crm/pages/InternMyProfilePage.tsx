@@ -10,55 +10,6 @@ function isImageUrl(url: string) {
   return /\.(jpe?g|png|gif|webp|bmp|svg)(\?|$)/i.test(url) || url.includes("image");
 }
 
-function statusBadge(status?: string) {
-  if (status === "approved") {
-    return "text-emerald-700 bg-emerald-50 dark:text-emerald-300 dark:bg-emerald-500/10";
-  }
-  if (status === "rejected") {
-    return "text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-500/10";
-  }
-  return "text-amber-700 bg-amber-50 dark:text-amber-300 dark:bg-amber-500/10";
-}
-
-function ProfileDoc({ label, url }: { label: string; url: string }) {
-  if (!url) {
-    return (
-      <div className="rounded-2xl border border-dashed border-gray-200 dark:border-gray-700 p-4">
-        <p className="text-xs font-medium text-gray-500">{label}</p>
-        <p className="mt-1 text-xs text-gray-400">Not uploaded</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 space-y-3">
-      <p className="text-xs font-medium text-gray-500">{label}</p>
-      {isImageUrl(url) ? (
-        <a href={url} target="_blank" rel="noopener noreferrer" className="block">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={url}
-            alt={label}
-            className="h-36 w-full rounded-xl object-cover border border-gray-100 dark:border-gray-800"
-          />
-        </a>
-      ) : (
-        <div className="flex h-36 items-center justify-center rounded-xl border border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-800/50">
-          <p className="text-xs text-gray-500">Document file</p>
-        </div>
-      )}
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex text-xs font-semibold text-brand-500 hover:text-brand-600"
-      >
-        Open document
-      </a>
-    </div>
-  );
-}
-
 function Detail({ label, value }: { label: string; value?: string | null }) {
   return (
     <div>
@@ -92,7 +43,6 @@ export default function InternMyProfilePage() {
     user?.email ||
     "Intern";
   const photoUrl = kyc?.photoUrl || "";
-  const approval = kyc?.approvalStatus || "pending";
 
   if (loading) {
     return (
@@ -134,18 +84,13 @@ export default function InternMyProfilePage() {
             <p className="mt-1 text-sm text-white/85">
               {kyc?.programName || "Your internship profile"}
             </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <span
-                className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusBadge(approval)}`}
-              >
-                KYC {approval}
-              </span>
-              {kyc?.collegeName ? (
+            {kyc?.collegeName ? (
+              <div className="mt-3">
                 <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
                   {kyc.collegeName}
                 </span>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
@@ -156,7 +101,7 @@ export default function InternMyProfilePage() {
         </div>
       ) : (
         <>
-          {approval === "rejected" && kyc.rejectionReason ? (
+          {kyc.approvalStatus === "rejected" && kyc.rejectionReason ? (
             <div className="rounded-3xl border border-red-200 bg-red-50 p-5 dark:border-red-500/30 dark:bg-red-500/10">
               <p className="text-sm font-semibold text-red-800 dark:text-red-200">
                 Application needs updates
@@ -183,21 +128,6 @@ export default function InternMyProfilePage() {
               <Detail label="College" value={kyc.collegeName} />
               <Detail label="Program" value={kyc.programName} />
               <Detail label="Submitted" value={formatDate(kyc.submittedAt)} />
-              {kyc.approvedAt ? <Detail label="Approved" value={formatDate(kyc.approvedAt)} /> : null}
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Uploaded documents</h2>
-            <p className="mt-1 text-sm text-gray-500">
-              Documents you submitted during KYC verification.
-            </p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <ProfileDoc label="Photo" url={kyc.photoUrl || ""} />
-              <ProfileDoc label="12th certificate" url={kyc.twelfthCertificateUrl || ""} />
-              <ProfileDoc label="Aadhaar (front)" url={kyc.aadharFrontUrl || ""} />
-              <ProfileDoc label="Aadhaar (back)" url={kyc.aadharBackUrl || ""} />
-              <ProfileDoc label="College ID" url={kyc.collegeIdUrl || ""} />
             </div>
           </div>
         </>
