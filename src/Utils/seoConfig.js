@@ -91,7 +91,7 @@ export const PAGE_SEO = {
   verifyCertificate: {
     title: "Verify EdLernity Certificate – Authenticity Check",
     description:
-      "Verify any EdLernity internship, workshop, or course certificate worldwide using the certificate ID or original PDF.",
+      "Verify any EdLernity internship, workshop, or course certificate worldwide using the certificate ID.",
     path: "/verify-certificate",
     keywords:
       "verify EdLernity certificate, certificate authenticity, certificate validation, EdLernity credential check",

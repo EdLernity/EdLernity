@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   ShieldCheck,
   Search,
   AlertCircle,
   CheckCircle2,
-  Upload,
   BadgeCheck,
   Lock,
   Globe2,
-  FileText,
-  CalendarRange,
+  ArrowRight,
+  ExternalLink,
 } from "lucide-react";
 import BaseLayout from "../../Layout/BaseLayout";
 import SeoHead from "../SEO/SeoHead";
@@ -40,10 +39,8 @@ export default function CertificateVerifyPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [certificateId, setCertificateId] = useState("");
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
-  const [mode, setMode] = useState("id");
 
   const runVerify = async (uuid) => {
     const cleaned = String(uuid || "").trim();
@@ -88,39 +85,6 @@ export default function CertificateVerifyPage() {
     runVerify(certificateId);
   };
 
-  const handlePdfUpload = async (e) => {
-    const file = e.target.files?.[0];
-    e.target.value = "";
-    if (!file) return;
-
-    setUploading(true);
-    setError("");
-    setResult(null);
-    try {
-      const formData = new FormData();
-      formData.append("certificate", file);
-      const response = await fetch(`${BACKEND_URL}/api/v1/certificates/verify/upload`, {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      if (!response.ok || !data.valid) {
-        setError(data.message || "Certificate could not be verified.");
-        setResult(data);
-        return;
-      }
-      setResult(data);
-      if (data.certificate?.uuid) {
-        setCertificateId(data.certificate.uuid);
-        setSearchParams({ id: data.certificate.uuid }, { replace: true });
-      }
-    } catch {
-      setError("Upload failed. Please try again with the original PDF.");
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const cert = result?.certificate;
   const typeLabel =
     cert?.templateLabel ||
@@ -152,7 +116,6 @@ export default function CertificateVerifyPage() {
             "radial-gradient(1200px 500px at 10% -10%, rgba(24,31,197,0.12), transparent 55%), radial-gradient(900px 420px at 90% 0%, rgba(14,165,233,0.10), transparent 50%), linear-gradient(180deg, #f4f7fb 0%, #ffffff 42%, #eef2f8 100%)",
         }}
       >
-        {/* Hero */}
         <section className="relative overflow-hidden px-4 pt-14 pb-10 sm:pt-20 sm:pb-14">
           <div
             className="pointer-events-none absolute inset-0 opacity-[0.35]"
@@ -178,7 +141,7 @@ export default function CertificateVerifyPage() {
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
               Confirm any EdLernity internship, workshop, or course credential worldwide using the
-              certificate ID printed on the document — or upload the original PDF.
+              certificate ID printed on the document.
             </p>
 
             <div className="mx-auto mt-8 grid max-w-3xl gap-3 sm:grid-cols-3">
@@ -202,94 +165,44 @@ export default function CertificateVerifyPage() {
           </div>
         </section>
 
-        {/* Verify panel */}
         <section className="relative z-10 mx-auto max-w-3xl px-4 pb-20">
           <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_24px_60px_-28px_rgba(24,31,197,0.35)]">
-            <div className="flex border-b border-slate-100">
-              <button
-                type="button"
-                onClick={() => setMode("id")}
-                className={`flex flex-1 items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold transition ${
-                  mode === "id"
-                    ? "bg-[#181FC5] text-white"
-                    : "bg-slate-50 text-slate-600 hover:bg-slate-100"
-                }`}
-              >
-                <Search size={16} />
-                Certificate ID
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode("upload")}
-                className={`flex flex-1 items-center justify-center gap-2 px-4 py-3.5 text-sm font-semibold transition ${
-                  mode === "upload"
-                    ? "bg-[#181FC5] text-white"
-                    : "bg-slate-50 text-slate-600 hover:bg-slate-100"
-                }`}
-              >
-                <Upload size={16} />
-                Upload PDF
-              </button>
+            <div className="flex items-center gap-2 border-b border-slate-100 bg-[#181FC5] px-6 py-3.5 text-white sm:px-8">
+              <Search size={16} />
+              <span className="text-sm font-semibold">Verify by Certificate ID</span>
             </div>
 
             <div className="p-6 sm:p-8">
-              {mode === "id" ? (
-                <form onSubmit={handleIdVerify}>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Certificate ID
-                  </label>
-                  <div className="flex flex-col gap-3 sm:flex-row">
-                    <input
-                      type="text"
-                      value={certificateId}
-                      onChange={(e) => setCertificateId(e.target.value)}
-                      placeholder="e.g. EDL-INT-2026-A7K9M2P4"
-                      className="w-full flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 font-mono text-sm text-slate-900 outline-none ring-[#181FC5]/30 transition focus:border-[#181FC5] focus:bg-white focus:ring-4"
-                      autoComplete="off"
-                      spellCheck={false}
-                    />
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#181FC5] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#1418a8] disabled:opacity-60 sm:min-w-[160px]"
-                    >
-                      <ShieldCheck size={18} />
-                      {loading ? "Verifying…" : "Verify"}
-                    </button>
-                  </div>
-                  <p className="mt-3 text-xs text-slate-500">
-                    Find the ID near the bottom of your certificate (CREDENTIAL ID / Certificate ID).
-                  </p>
-                </form>
-              ) : (
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Original PDF certificate
-                  </label>
-                  <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center transition hover:border-[#181FC5]/40 hover:bg-indigo-50/40">
-                    <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#181FC5]/10 text-[#181FC5]">
-                      <FileText size={22} />
-                    </div>
-                    <p className="text-sm font-bold text-slate-900">
-                      {uploading ? "Reading PDF…" : "Drop or choose a PDF"}
-                    </p>
-                    <p className="mt-1 text-xs text-slate-500">
-                      We extract the certificate ID and check it against the registry.
-                    </p>
-                    <input
-                      type="file"
-                      accept="application/pdf,.pdf"
-                      className="hidden"
-                      disabled={uploading}
-                      onChange={handlePdfUpload}
-                    />
-                  </label>
+              <form onSubmit={handleIdVerify}>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Certificate ID
+                </label>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <input
+                    type="text"
+                    value={certificateId}
+                    onChange={(e) => setCertificateId(e.target.value)}
+                    placeholder="e.g. EDL-INT-2026-A7K9M2P4"
+                    className="w-full flex-1 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 font-mono text-sm text-slate-900 outline-none ring-[#181FC5]/30 transition focus:border-[#181FC5] focus:bg-white focus:ring-4"
+                    autoComplete="off"
+                    spellCheck={false}
+                  />
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#181FC5] px-6 py-3.5 text-sm font-bold text-white transition hover:bg-[#1418a8] disabled:opacity-60 sm:min-w-[160px]"
+                  >
+                    <ShieldCheck size={18} />
+                    {loading ? "Verifying…" : "Verify"}
+                  </button>
                 </div>
-              )}
+                <p className="mt-3 text-xs text-slate-500">
+                  Find the ID near the bottom of your certificate (CREDENTIAL ID / Certificate ID).
+                </p>
+              </form>
             </div>
           </div>
 
-          {/* Result */}
           {(error || result) && (
             <div
               className={`mt-8 overflow-hidden rounded-3xl border ${
@@ -301,9 +214,7 @@ export default function CertificateVerifyPage() {
               <div className="flex items-start gap-4 p-6 sm:p-8">
                 <div
                   className={`mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
-                    result?.valid
-                      ? "bg-emerald-500 text-white"
-                      : "bg-rose-500 text-white"
+                    result?.valid ? "bg-emerald-500 text-white" : "bg-rose-500 text-white"
                   }`}
                 >
                   {result?.valid ? <CheckCircle2 size={22} /> : <AlertCircle size={22} />}
@@ -331,14 +242,28 @@ export default function CertificateVerifyPage() {
                       <ResultField
                         label={hasPeriod ? "Internship period" : "Issued on"}
                         value={
-                          hasPeriod
-                            ? `${formatDate(cert.fromDate)} → ${formatDate(cert.toDate)}`
-                            : formatDate(cert.issuedAt)
+                          hasPeriod ? (
+                            <span className="inline-flex flex-wrap items-center gap-1.5">
+                              {formatDate(cert.fromDate)}
+                              <ArrowRight size={14} className="shrink-0 text-[#181FC5]" aria-hidden />
+                              {formatDate(cert.toDate)}
+                            </span>
+                          ) : (
+                            formatDate(cert.issuedAt)
+                          )
                         }
-                        icon={hasPeriod ? CalendarRange : null}
                       />
                       <div className="sm:col-span-2">
                         <ResultField label="Certificate ID" value={cert.uuid} mono />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <Link
+                          to={`/credential/${encodeURIComponent(cert.uuid)}`}
+                          className="inline-flex items-center gap-2 rounded-2xl bg-[#181FC5] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#1418a8]"
+                        >
+                          View shareable credential page
+                          <ExternalLink size={14} />
+                        </Link>
                       </div>
                     </div>
                   )}

@@ -2,9 +2,14 @@ const multer = require("multer");
 const InternshipCertificate = require("../models/internshipCertificateSchema");
 const UserInternship = require("../models/userInternshipSchema");
 const CourseCertificate = require("../models/model.certfication");
-const CertificateTemplate = require("../models/certificateTemplateSchema");
+const { CertificateTemplate } = require("../models/certificateTemplateSchema");
 const { resolveProgramTitle } = require("../utils/internshipCatalog");
 const { normalizeUuid, extractUuidFromPdfBuffer } = require("../utils/extractPdfUuid");
+const {
+  buildInternshipCompletionPdf,
+  resolveInternshipCertificateDates,
+} = require("../utils/certificatePdfUtils");
+const { resolveCertificateTemplateForProgram } = require("../utils/programTemplateService");
 
 const uploadCertificatePdf = multer({
   storage: multer.memoryStorage(),
@@ -98,6 +103,95 @@ async function lookupCertificate(uuid) {
   return null;
 }
 
+function safeFilename(name) {
+  return String(name || "EdLernity_Certificate")
+    .trim()
+    .replace(/[^\w\-]+/g, "_")
+    .replace(/_+/g, "_")
+    .slice(0, 80);
+}
+
+async function buildPdfBytesForUuid(uuid) {
+  const internship = await InternshipCertificate.findOne({ uuid });
+  if (internship) {
+    let template = await resolveCertificateTemplateForProgram(
+      internship.internshipSlug,
+      internship.certificateTemplateId
+    );
+    if (!template?.pdfUrl) {
+      template = await CertificateTemplate.findOne({
+        type: internship.certificateType || "internship-completion",
+        active: true,
+      }).sort({ updatedAt: -1 });
+    }
+    if (!template?.pdfUrl) {
+      throw Object.assign(new Error("No active certificate template found"), { status: 404 });
+    }
+
+    const { fromDate, toDate } = await resolveInternshipCertificateDates(internship);
+    const enrollment = await UserInternship.findOne({
+      userId: internship.userId,
+      internshipSlug: internship.internshipSlug,
+    }).select("title");
+    const programTitle = resolveProgramTitle(internship.internshipSlug, {
+      enrollmentTitle: enrollment?.title,
+      storedTitle: internship.programTitle,
+    });
+    const issuedAt = internship.issuedAt || internship.toDate || internship.createdAt;
+
+    const pdfBytes = await buildInternshipCompletionPdf({
+      pdfUrl: template.pdfUrl,
+      templateLabel: template.label,
+      studentName: internship.studentName,
+      programTitle,
+      uuid: internship.uuid,
+      issuedAt,
+      fromDate,
+      toDate,
+    });
+
+    return {
+      pdfBytes,
+      filename: `${safeFilename(internship.studentName)}_EdLernity_Certificate.pdf`,
+    };
+  }
+
+  const course = await CourseCertificate.findOne({ uuid })
+    .populate("courseId", "courseTitle")
+    .populate("userId", "firstName lastName email");
+  if (!course) {
+    throw Object.assign(new Error("Certificate not found"), { status: 404 });
+  }
+
+  const template = await CertificateTemplate.findOne({
+    type: "course-completion",
+    active: true,
+  }).sort({ updatedAt: -1 });
+  if (!template?.pdfUrl) {
+    throw Object.assign(new Error("No active course certificate template"), { status: 404 });
+  }
+
+  const studentName =
+    `${course.userId?.firstName || ""} ${course.userId?.lastName || ""}`.trim() ||
+    course.userId?.email ||
+    "Student";
+  const programTitle = course.courseId?.courseTitle || "Course";
+
+  const pdfBytes = await buildInternshipCompletionPdf({
+    pdfUrl: template.pdfUrl,
+    templateLabel: template.label,
+    studentName,
+    programTitle,
+    uuid: course.uuid,
+    issuedAt: course.createdAt,
+  });
+
+  return {
+    pdfBytes,
+    filename: `${safeFilename(studentName)}_EdLernity_Certificate.pdf`,
+  };
+}
+
 const verifyCertificateByUuid = async (req, res) => {
   try {
     const uuid = normalizeUuid(req.params.uuid || req.body?.uuid);
@@ -125,6 +219,26 @@ const verifyCertificateByUuid = async (req, res) => {
   } catch (err) {
     console.error("verifyCertificateByUuid error:", err);
     res.status(500).json({ valid: false, message: "Verification failed. Please try again." });
+  }
+};
+
+const downloadCertificatePdfByUuid = async (req, res) => {
+  try {
+    const uuid = normalizeUuid(req.params.uuid);
+    if (!uuid) {
+      return res.status(400).json({ message: "Valid certificate ID is required" });
+    }
+
+    const { pdfBytes, filename } = await buildPdfBytesForUuid(uuid);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    return res.send(Buffer.from(pdfBytes));
+  } catch (err) {
+    console.error("downloadCertificatePdfByUuid error:", err);
+    const status = err.status || 500;
+    return res.status(status).json({
+      message: err.message || "Failed to download certificate PDF",
+    });
   }
 };
 
@@ -172,4 +286,5 @@ module.exports = {
   uploadCertificatePdf,
   verifyCertificateByUuid,
   verifyCertificateUpload,
+  downloadCertificatePdfByUuid,
 };
