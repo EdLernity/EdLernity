@@ -381,14 +381,46 @@ export async function fetchOfferLetterPdfBlob(offerLetterId: string) {
   const response = await api.get(`/api/v1/crm/my/offer-letters/${offerLetterId}/pdf`, {
     responseType: "blob",
   });
-  return response.data as Blob;
+  return ensurePdfBlob(response.data as Blob);
 }
 
 export async function fetchCertificatePdfBlob(certificateId: string) {
   const response = await api.get(`/api/v1/crm/my/certificates/${certificateId}/pdf`, {
     responseType: "blob",
   });
-  return response.data as Blob;
+  return ensurePdfBlob(response.data as Blob);
+}
+
+/** Axios blob responses may be JSON errors with the wrong MIME — normalize to a real PDF blob. */
+async function ensurePdfBlob(blob: Blob): Promise<Blob> {
+  const type = String(blob.type || "");
+  if (type.includes("application/json") || type.includes("text/")) {
+    const text = await blob.text();
+    let message = "Failed to load PDF";
+    try {
+      const parsed = JSON.parse(text) as { message?: string };
+      if (parsed?.message) message = parsed.message;
+    } catch {
+      // ignore
+    }
+    throw new Error(message);
+  }
+
+  const header = await blob.slice(0, 5).text();
+  if (!header.startsWith("%PDF")) {
+    const text = await blob.text();
+    let message = "Failed to load PDF";
+    try {
+      const parsed = JSON.parse(text) as { message?: string };
+      if (parsed?.message) message = parsed.message;
+    } catch {
+      // ignore
+    }
+    throw new Error(message);
+  }
+
+  if (type === "application/pdf") return blob;
+  return new Blob([blob], { type: "application/pdf" });
 }
 
 export async function fetchCertificates(params?: { type?: string }) {

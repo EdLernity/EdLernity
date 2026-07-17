@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import PdfPreviewPane from "@/components/crm/PdfPreviewPane";
 import {
   fetchMyCertificates,
   fetchCertificatePdfBlob,
@@ -14,7 +15,7 @@ export default function InternMyCertificatesPage() {
   const [certificates, setCertificates] = useState<MyCertificateRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [previewBlob, setPreviewBlob] = useState<Blob | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,25 +30,22 @@ export default function InternMyCertificatesPage() {
   }, []);
 
   useEffect(() => {
-    let objectUrl = "";
     let cancelled = false;
 
     const loadPreview = async () => {
       if (!selectedId) {
-        setPreviewUrl("");
+        setPreviewBlob(null);
         return;
       }
       setPreviewLoading(true);
       setError("");
       try {
         const blob = await fetchCertificatePdfBlob(selectedId);
-        if (cancelled) return;
-        objectUrl = URL.createObjectURL(blob);
-        setPreviewUrl(objectUrl);
-      } catch {
+        if (!cancelled) setPreviewBlob(blob);
+      } catch (err) {
         if (!cancelled) {
-          setPreviewUrl("");
-          setError("Could not load certificate preview");
+          setPreviewBlob(null);
+          setError(err instanceof Error ? err.message : "Could not load certificate preview");
         }
       } finally {
         if (!cancelled) setPreviewLoading(false);
@@ -55,10 +53,8 @@ export default function InternMyCertificatesPage() {
     };
 
     loadPreview();
-
     return () => {
       cancelled = true;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [selectedId]);
 
@@ -74,7 +70,7 @@ export default function InternMyCertificatesPage() {
         </p>
         <h1 className="mt-2 text-2xl font-bold sm:text-3xl">My Certificates</h1>
         <p className="mt-2 max-w-2xl text-sm text-white/85 sm:text-base">
-          Hi {displayName}. Select a certificate to preview it here — no download needed.
+          Hi {displayName}. Tap a certificate to preview it on this page.
         </p>
         <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium backdrop-blur">
           <span className="h-2 w-2 rounded-full bg-emerald-300" />
@@ -98,12 +94,11 @@ export default function InternMyCertificatesPage() {
             No certificate yet
           </p>
           <p className="mx-auto mt-2 max-w-md text-sm text-gray-500">
-            When your trainer completes review and a manager issues your certificate, it will
-            appear here with an on-page preview.
+            When a manager issues your certificate, it will appear here with a full on-page preview.
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
+        <div className="grid gap-6 xl:grid-cols-[300px_minmax(0,1fr)]">
           <div className="space-y-3">
             {certificates.map((row) => {
               const active = row.id === selectedId;
@@ -114,7 +109,7 @@ export default function InternMyCertificatesPage() {
                   onClick={() => setSelectedId(row.id)}
                   className={`w-full rounded-2xl border p-4 text-left transition ${
                     active
-                      ? "border-brand-500 bg-brand-50 shadow-sm dark:border-brand-400 dark:bg-brand-500/10"
+                      ? "border-brand-500 bg-brand-50 shadow-sm ring-1 ring-brand-500/30 dark:border-brand-400 dark:bg-brand-500/10"
                       : "border-gray-200 bg-white hover:border-brand-200 dark:border-gray-800 dark:bg-white/[0.03]"
                   }`}
                 >
@@ -128,11 +123,6 @@ export default function InternMyCertificatesPage() {
                     <span className="rounded-full bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
                       Issued {formatDate(row.issuedAt)}
                     </span>
-                    {row.uuid && (
-                      <span className="font-mono text-gray-400">
-                        {row.uuid.length > 18 ? `${row.uuid.slice(0, 18)}…` : row.uuid}
-                      </span>
-                    )}
                   </div>
                 </button>
               );
@@ -157,22 +147,12 @@ export default function InternMyCertificatesPage() {
               )}
             </div>
 
-            <div className="bg-gray-50 p-3 dark:bg-gray-900/40 sm:p-4">
-              {previewLoading ? (
-                <div className="flex h-[70vh] min-h-[420px] items-center justify-center text-sm text-gray-500">
-                  Loading preview…
-                </div>
-              ) : previewUrl ? (
-                <iframe
-                  title="Certificate PDF preview"
-                  src={`${previewUrl}#toolbar=0&navpanes=0`}
-                  className="h-[70vh] min-h-[420px] w-full rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700"
-                />
-              ) : (
-                <div className="flex h-[70vh] min-h-[420px] items-center justify-center text-sm text-gray-500">
-                  Select a certificate to preview
-                </div>
-              )}
+            <div className="p-3 sm:p-4">
+              <PdfPreviewPane
+                blob={previewBlob}
+                loading={previewLoading}
+                emptyLabel="Select a certificate to preview"
+              />
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import PdfPreviewPane from "@/components/crm/PdfPreviewPane";
 import {
   fetchMyOfferLetters,
   fetchOfferLetterPdfBlob,
@@ -14,7 +15,7 @@ export default function InternMyOfferLettersPage() {
   const [letters, setLetters] = useState<MyOfferLetterRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [previewBlob, setPreviewBlob] = useState<Blob | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -29,25 +30,22 @@ export default function InternMyOfferLettersPage() {
   }, []);
 
   useEffect(() => {
-    let objectUrl = "";
     let cancelled = false;
 
     const loadPreview = async () => {
       if (!selectedId) {
-        setPreviewUrl("");
+        setPreviewBlob(null);
         return;
       }
       setPreviewLoading(true);
       setError("");
       try {
         const blob = await fetchOfferLetterPdfBlob(selectedId);
-        if (cancelled) return;
-        objectUrl = URL.createObjectURL(blob);
-        setPreviewUrl(objectUrl);
-      } catch {
+        if (!cancelled) setPreviewBlob(blob);
+      } catch (err) {
         if (!cancelled) {
-          setPreviewUrl("");
-          setError("Could not load offer letter preview");
+          setPreviewBlob(null);
+          setError(err instanceof Error ? err.message : "Could not load offer letter preview");
         }
       } finally {
         if (!cancelled) setPreviewLoading(false);
@@ -55,10 +53,8 @@ export default function InternMyOfferLettersPage() {
     };
 
     loadPreview();
-
     return () => {
       cancelled = true;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [selectedId]);
 
@@ -74,7 +70,7 @@ export default function InternMyOfferLettersPage() {
         </p>
         <h1 className="mt-2 text-2xl font-bold sm:text-3xl">My Offer Letters</h1>
         <p className="mt-2 max-w-2xl text-sm text-white/85 sm:text-base">
-          Welcome, {displayName}. Open any offer letter below to preview the PDF on this page.
+          Welcome, {displayName}. Tap an offer letter to preview it on this page.
         </p>
         <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium backdrop-blur">
           <span className="h-2 w-2 rounded-full bg-sky-300" />
@@ -98,12 +94,11 @@ export default function InternMyOfferLettersPage() {
             No offer letters yet
           </p>
           <p className="mx-auto mt-2 max-w-md text-sm text-gray-500">
-            After your application is approved, your offer letter will show up here for on-page
-            preview.
+            After approval, your offer letter will show here with an on-page preview.
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
+        <div className="grid gap-6 xl:grid-cols-[300px_minmax(0,1fr)]">
           <div className="space-y-3">
             {letters.map((row) => {
               const active = row.id === selectedId;
@@ -114,7 +109,7 @@ export default function InternMyOfferLettersPage() {
                   onClick={() => setSelectedId(row.id)}
                   className={`w-full rounded-2xl border p-4 text-left transition ${
                     active
-                      ? "border-brand-500 bg-brand-50 shadow-sm dark:border-brand-400 dark:bg-brand-500/10"
+                      ? "border-brand-500 bg-brand-50 shadow-sm ring-1 ring-brand-500/30 dark:border-brand-400 dark:bg-brand-500/10"
                       : "border-gray-200 bg-white hover:border-brand-200 dark:border-gray-800 dark:bg-white/[0.03]"
                   }`}
                 >
@@ -141,22 +136,12 @@ export default function InternMyOfferLettersPage() {
               </p>
             </div>
 
-            <div className="bg-gray-50 p-3 dark:bg-gray-900/40 sm:p-4">
-              {previewLoading ? (
-                <div className="flex h-[70vh] min-h-[420px] items-center justify-center text-sm text-gray-500">
-                  Loading preview…
-                </div>
-              ) : previewUrl ? (
-                <iframe
-                  title="Offer letter PDF preview"
-                  src={`${previewUrl}#toolbar=0&navpanes=0`}
-                  className="h-[70vh] min-h-[420px] w-full rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700"
-                />
-              ) : (
-                <div className="flex h-[70vh] min-h-[420px] items-center justify-center text-sm text-gray-500">
-                  Select an offer letter to preview
-                </div>
-              )}
+            <div className="p-3 sm:p-4">
+              <PdfPreviewPane
+                blob={previewBlob}
+                loading={previewLoading}
+                emptyLabel="Select an offer letter to preview"
+              />
             </div>
           </div>
         </div>
