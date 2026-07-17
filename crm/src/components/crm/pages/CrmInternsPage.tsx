@@ -235,7 +235,11 @@ export default function CrmInternsPage() {
     ])
       .then(([internRows, templateRows]) => {
         setInterns(internRows);
-        setCertificateTemplates(templateRows.filter((template) => template.active !== false));
+        setCertificateTemplates(
+          templateRows
+            .filter((template) => template.active !== false)
+            .map((template) => ({ ...template, id: String(template.id) }))
+        );
       })
       .catch(() => setMessage("Failed to load intern profiles"))
       .finally(() => setLoading(false));
@@ -479,8 +483,11 @@ export default function CrmInternsPage() {
     const programTitle = row.enrollment?.programTitle || row.kyc?.programName || slug;
     const issuedTemplateIds = issuedCertificates(row)
       .map((certificate) => certificate.templateId)
-      .filter(Boolean) as string[];
-    const programTemplateId = row.enrollment?.certificateTemplateId || null;
+      .filter(Boolean)
+      .map((id) => String(id));
+    const programTemplateId = row.enrollment?.certificateTemplateId
+      ? String(row.enrollment.certificateTemplateId)
+      : null;
     const internshipCompleted = Boolean(row.internshipCompleted);
     const completionUnlocked =
       internshipCompleted || Boolean(row.courseCompletionUnlocked ?? row.certificateUnlocked);
@@ -493,15 +500,22 @@ export default function CrmInternsPage() {
 
     const preferredProgramTemplateId =
       programTemplateId &&
-      templatesForPicker.some((template) => template.id === programTemplateId) &&
+      templatesForPicker.some((template) => String(template.id) === programTemplateId) &&
       isNonTechTemplate(
-        templatesForPicker.find((template) => template.id === programTemplateId)!
+        templatesForPicker.find((template) => String(template.id) === programTemplateId)!
       )
         ? programTemplateId
         : null;
 
+    const defaultTemplateId = pickDefaultCertificateTemplateId(
+      templatesForPicker,
+      issuedTemplateIds,
+      preferredProgramTemplateId,
+      completionUnlocked
+    );
+
     setModal({
-      studentId: row.student.id,
+      studentId: String(row.student.id),
       studentEmail: row.student.email,
       internshipSlug: slug,
       programTitle,
@@ -512,12 +526,7 @@ export default function CrmInternsPage() {
       issuedAt: toDateInputValue(),
       fromDate: enrolledAt,
       toDate: toDateInputValue(),
-      certificateTemplateId: pickDefaultCertificateTemplateId(
-        templatesForPicker,
-        issuedTemplateIds,
-        preferredProgramTemplateId,
-        completionUnlocked
-      ),
+      certificateTemplateId: defaultTemplateId,
       certificateUnlocked: Boolean(row.certificateUnlocked),
       courseCompletionUnlocked: Boolean(
         row.courseCompletionUnlocked ?? row.certificateUnlocked
@@ -532,17 +541,40 @@ export default function CrmInternsPage() {
         preferredProgramTemplateId
           ? row.enrollment?.certificateTemplateLabel || null
           : null,
-      manualOverride: false,
+      manualOverride: Boolean(isAdmin) && !internshipCompleted,
     });
   };
 
   const availableTemplatesForModal = useMemo(() => {
     if (!modal) return [];
+    const issued = new Set(modal.issuedTemplateIds.map(String));
     return certificateTemplates.filter((template) => {
-      if (modal.issuedTemplateIds.includes(template.id)) return false;
+      if (issued.has(String(template.id))) return false;
       return isAllowedInternIssueTemplate(template);
     });
   }, [certificateTemplates, modal]);
+
+  // Keep select value valid — empty id was showing first option (Non Tech) but Issue date fields.
+  useEffect(() => {
+    if (!modal) return;
+    const currentId = String(modal.certificateTemplateId || "");
+    const stillValid = availableTemplatesForModal.some((t) => String(t.id) === currentId);
+    if (stillValid || availableTemplatesForModal.length === 0) return;
+    const fallback = availableTemplatesForModal[0];
+    setModal((prev) =>
+      prev
+        ? {
+            ...prev,
+            certificateTemplateId: String(fallback.id),
+            manualOverride:
+              Boolean(isAdmin) && !prev.internshipCompleted && isNonTechTemplate(fallback)
+                ? true
+                : prev.manualOverride,
+          }
+        : prev
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- sync only when id/list mismatch
+  }, [modal?.certificateTemplateId, availableTemplatesForModal, isAdmin]);
 
   const completionTemplatesForModal = useMemo(() => {
     return availableTemplatesForModal.filter(isCompletionCertificateTemplate);
@@ -1034,14 +1066,26 @@ export default function CrmInternsPage() {
               ) : null}
               <select
                 className={selectClass()}
-                value={modal.certificateTemplateId}
-                onChange={(e) =>
+                value={modal.certificateTemplateId ? String(modal.certificateTemplateId) : ""}
+                onChange={(e) => {
+                  const nextId = e.target.value;
+                  const nextTemplate = availableTemplatesForModal.find(
+                    (t) => String(t.id) === nextId
+                  );
+                  const keepAdminOverride =
+                    Boolean(isAdmin) &&
+                    !modal.internshipCompleted &&
+                    Boolean(nextTemplate && isNonTechTemplate(nextTemplate));
                   setModal({
                     ...modal,
-                    certificateTemplateId: e.target.value,
-                    manualOverride: false,
-                  })
-                }
+                    certificateTemplateId: nextId,
+                    manualOverride: keepAdminOverride
+                      ? true
+                      : nextTemplate && isNonTechTemplate(nextTemplate)
+                        ? modal.manualOverride
+                        : false,
+                  });
+                }}
                 disabled={availableTemplatesForModal.length === 0}
               >
                 {availableTemplatesForModal.length === 0 ? (
@@ -1056,7 +1100,7 @@ export default function CrmInternsPage() {
                             !isAdmin &&
                             !(isNonTechTemplate(template) && modal.manualOverride);
                           return (
-                            <option key={template.id} value={template.id}>
+                            <option key={template.id} value={String(template.id)}>
                               {template.label}
                               {locked ? " (needs trainer or override)" : ""}
                             </option>
@@ -1067,7 +1111,7 @@ export default function CrmInternsPage() {
                     {specialTemplatesForModal.length > 0 ? (
                       <optgroup label="Recognition certificates">
                         {specialTemplatesForModal.map((template) => (
-                          <option key={template.id} value={template.id}>
+                          <option key={template.id} value={String(template.id)}>
                             {template.label}
                           </option>
                         ))}
