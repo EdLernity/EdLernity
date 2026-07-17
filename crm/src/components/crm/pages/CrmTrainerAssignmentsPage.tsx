@@ -9,7 +9,8 @@ import {
   TrainerAssignmentRow,
   unassignTrainer,
 } from "@/lib/crmApi";
-import { formatDate, selectClass } from "@/lib/crmUtils";
+import SearchableSelect from "@/components/crm/SearchableSelect";
+import { formatDate } from "@/lib/crmUtils";
 
 export default function CrmTrainerAssignmentsPage() {
   const [programs, setPrograms] = useState<Array<{ slug: string; title: string }>>([]);
@@ -50,6 +51,31 @@ export default function CrmTrainerAssignmentsPage() {
   const visibleAssignments = useMemo(
     () => (showInactive ? assignments : assignments.filter((row) => row.active)),
     [assignments, showInactive]
+  );
+
+  const trainerOptions = useMemo(
+    () =>
+      trainers.map((trainer) => {
+        const name =
+          `${trainer.firstName || ""} ${trainer.lastName || ""}`.trim() || trainer.email;
+        const label = `${name} (${trainer.email})${trainer.role === "admin" ? " · admin" : ""}`;
+        return {
+          value: trainer.email,
+          label,
+          searchText: `${trainer.firstName} ${trainer.lastName} ${trainer.email} ${trainer.role || ""}`,
+        };
+      }),
+    [trainers]
+  );
+
+  const programOptions = useMemo(
+    () =>
+      programs.map((program) => ({
+        value: program.slug,
+        label: program.title,
+        searchText: `${program.title} ${program.slug}`,
+      })),
+    [programs]
   );
 
   const handleAssign = async (e: React.FormEvent) => {
@@ -116,21 +142,14 @@ export default function CrmTrainerAssignmentsPage() {
             <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500">
               Trainer
             </label>
-            <select
+            <SearchableSelect
               required
+              options={trainerOptions}
               value={form.trainerEmail}
-              onChange={(e) => setForm({ ...form, trainerEmail: e.target.value })}
-              className={selectClass()}
-            >
-              <option value="">Select trainer</option>
-              {trainers.map((trainer) => (
-                <option key={trainer._id} value={trainer.email}>
-                  {`${trainer.firstName || ""} ${trainer.lastName || ""}`.trim() || trainer.email} (
-                  {trainer.email})
-                  {trainer.role === "admin" ? " · admin" : ""}
-                </option>
-              ))}
-            </select>
+              onChange={(trainerEmail) => setForm({ ...form, trainerEmail })}
+              placeholder="Search trainer by name or email…"
+              emptyMessage="No trainers match your search"
+            />
             {trainers.length === 0 && (
               <p className="mt-1.5 text-xs text-gray-500">
                 No trainers yet. Set a user role to <strong>trainer</strong> in Users or Operations first.
@@ -141,19 +160,14 @@ export default function CrmTrainerAssignmentsPage() {
             <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500">
               Internship program
             </label>
-            <select
+            <SearchableSelect
               required
+              options={programOptions}
               value={form.internshipSlug}
-              onChange={(e) => setForm({ ...form, internshipSlug: e.target.value })}
-              className={selectClass()}
-            >
-              <option value="">Select program</option>
-              {programs.map((program) => (
-                <option key={program.slug} value={program.slug}>
-                  {program.title}
-                </option>
-              ))}
-            </select>
+              onChange={(internshipSlug) => setForm({ ...form, internshipSlug })}
+              placeholder="Search program…"
+              emptyMessage="No programs match your search"
+            />
           </div>
         </div>
         <button
@@ -198,59 +212,44 @@ export default function CrmTrainerAssignmentsPage() {
             ) : visibleAssignments.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-5 py-8 text-center text-gray-500">
-                  No trainer assignments yet
+                  No assignments yet
                 </td>
               </tr>
             ) : (
               visibleAssignments.map((row) => (
                 <tr key={row.id}>
                   <td className="px-5 py-3">
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      {row.trainer.name || row.trainer.email}
-                    </p>
-                    <p className="text-xs text-gray-500">{row.trainer.email}</p>
+                    <div className="font-medium text-gray-900 dark:text-white">
+                      {row.trainer.name || "—"}
+                    </div>
+                    <div className="text-xs text-gray-500">{row.trainer.email}</div>
                   </td>
                   <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{row.programTitle}</td>
                   <td className="px-5 py-3">
                     <span
-                      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
+                      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
                         row.active
                           ? "bg-success-50 text-success-600 dark:bg-success-500/10"
-                          : "bg-gray-100 text-gray-500 dark:bg-gray-800"
+                          : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"
                       }`}
                     >
                       {row.active ? "Active" : "Inactive"}
                     </span>
                   </td>
-                  <td className="px-5 py-3 text-gray-600">{formatDate(row.assignedAt)}</td>
+                  <td className="px-5 py-3 text-gray-600 dark:text-gray-400">
+                    {formatDate(row.assignedAt)}
+                  </td>
                   <td className="px-5 py-3 text-right">
                     {row.active ? (
                       <button
                         type="button"
                         onClick={() => handleUnassign(row)}
-                        className="text-xs font-medium text-error-500 hover:text-error-600"
+                        className="text-sm font-medium text-error-500 hover:underline"
                       >
                         Unassign
                       </button>
                     ) : (
-                      <button
-                        type="button"
-                        onClick={async () => {
-                          try {
-                            await assignTrainer({
-                              trainerEmail: row.trainer.email,
-                              internshipSlug: row.internshipSlug,
-                            });
-                            setMessage("Assignment reactivated");
-                            await load();
-                          } catch {
-                            setError("Failed to reactivate assignment");
-                          }
-                        }}
-                        className="text-xs font-medium text-brand-500 hover:text-brand-600"
-                      >
-                        Reactivate
-                      </button>
+                      <span className="text-xs text-gray-400">—</span>
                     )}
                   </td>
                 </tr>
