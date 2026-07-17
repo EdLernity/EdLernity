@@ -13,6 +13,7 @@ import {
 } from "@/lib/crmApi";
 import { formatDate, inputClass, selectClass } from "@/lib/crmUtils";
 import { useAuth } from "@/context/AuthContext";
+import CrmListPagination, { useClientPagination } from "@/components/crm/CrmListPagination";
 
 type ApprovalFilter = "pending" | "issued" | "all";
 
@@ -153,6 +154,16 @@ export default function CrmInternshipApprovalsPage() {
     });
   }, [approvals, search]);
 
+  const {
+    page: approvalsPage,
+    setPage: setApprovalsPage,
+    pageItems: pagedApprovals,
+    total: approvalsTotal,
+    totalPages: approvalsTotalPages,
+    from: approvalsFrom,
+    to: approvalsTo,
+  } = useClientPagination(filtered);
+
   const openPdfBlob = (blob: Blob, title: string) => {
     if (pdfUrl) URL.revokeObjectURL(pdfUrl);
     const url = URL.createObjectURL(blob);
@@ -173,7 +184,10 @@ export default function CrmInternshipApprovalsPage() {
       studentEmail: row.student.email,
       internshipSlug: slug,
       programTitle: row.enrollment?.programTitle || slug,
-      studentName: displayName(row),
+      studentName: (() => {
+        const name = displayName(row);
+        return name === "—" ? "" : name;
+      })(),
       certificateTemplateId: pickInternshipTemplateId(
         templatesForPicker,
         hideTechForManager ? null : row.enrollment?.certificateTemplateId,
@@ -190,6 +204,10 @@ export default function CrmInternshipApprovalsPage() {
     if (!modal) return;
     if (!modal.certificateTemplateId || !modal.fromDate || !modal.toDate) {
       setMessage("Select template and from/to dates to preview");
+      return;
+    }
+    if (!modal.studentName.trim()) {
+      setMessage("Enter the full name to print on the certificate");
       return;
     }
     if (modal.fromDate > modal.toDate) {
@@ -275,6 +293,10 @@ export default function CrmInternshipApprovalsPage() {
     if (!modal) return;
     if (!modal.certificateTemplateId) {
       setMessage("Select a certificate template");
+      return;
+    }
+    if (!modal.studentName.trim() || modal.studentName.trim() === "—") {
+      setMessage("Enter the full name to print on the certificate");
       return;
     }
     if (!modal.fromDate || !modal.toDate) {
@@ -447,7 +469,7 @@ export default function CrmInternshipApprovalsPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {filtered.map((row) => {
+          {pagedApprovals.map((row) => {
             const cert = row.completionCertificate;
             return (
               <div
@@ -522,6 +544,19 @@ export default function CrmInternshipApprovalsPage() {
         </div>
       )}
 
+      {!loading && filtered.length > 0 ? (
+        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+          <CrmListPagination
+            page={approvalsPage}
+            totalPages={approvalsTotalPages}
+            total={approvalsTotal}
+            from={approvalsFrom}
+            to={approvalsTo}
+            onPageChange={setApprovalsPage}
+          />
+        </div>
+      ) : null}
+
       {pdfUrl && (
         <div className="space-y-3 rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -575,6 +610,22 @@ export default function CrmInternshipApprovalsPage() {
 
             <label className="mb-4 block">
               <span className="mb-1 block text-xs font-medium text-gray-500">
+                Full name on certificate *
+              </span>
+              <input
+                value={modal.studentName}
+                onChange={(e) => setModal({ ...modal, studentName: e.target.value })}
+                className={inputClass()}
+                placeholder="Enter full name as it should appear on the PDF"
+                autoFocus
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Prefills from KYC — edit if the printed name should be different.
+              </p>
+            </label>
+
+            <label className="mb-4 block">
+              <span className="mb-1 block text-xs font-medium text-gray-500">
                 Certificate template
               </span>
               <select
@@ -614,17 +665,6 @@ export default function CrmInternshipApprovalsPage() {
                   </>
                 )}
               </p>
-            </label>
-
-            <label className="mb-4 block">
-              <span className="mb-1 block text-xs font-medium text-gray-500">
-                Name on certificate
-              </span>
-              <input
-                value={modal.studentName}
-                onChange={(e) => setModal({ ...modal, studentName: e.target.value })}
-                className={inputClass()}
-              />
             </label>
 
             <div className="mb-4 grid gap-3 sm:grid-cols-2">
@@ -671,6 +711,7 @@ export default function CrmInternshipApprovalsPage() {
                 onClick={handlePreviewDraft}
                 disabled={
                   previewing ||
+                  !modal.studentName.trim() ||
                   !modal.certificateTemplateId ||
                   !modal.fromDate ||
                   !modal.toDate
@@ -684,6 +725,7 @@ export default function CrmInternshipApprovalsPage() {
                 onClick={handleIssue}
                 disabled={
                   issuing ||
+                  !modal.studentName.trim() ||
                   !modal.certificateTemplateId ||
                   !modal.fromDate ||
                   !modal.toDate

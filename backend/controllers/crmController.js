@@ -980,10 +980,19 @@ const approveInternCertificate = async (req, res) => {
     }
 
     if (isInternshipCompletionFlow) {
-      if (!trainerAssignment?.internshipCompleted) {
+      const wantsOverride = Boolean(req.body?.manualOverride);
+      const isNonTech = /non[\s-]*tech/i.test(String(certificateTemplate.label || ""));
+
+      if (wantsOverride && !isNonTech) {
+        return res.status(400).json({
+          message: "Manual override is only allowed for Non Tech certificates",
+        });
+      }
+
+      if (!trainerAssignment?.internshipCompleted && !(wantsOverride && isNonTech)) {
         return res.status(400).json({
           message:
-            "Trainer must mark this internship completed before the manager can issue the internship completion certificate",
+            "Trainer must mark this internship completed before the manager can issue the internship completion certificate. Use Manual override for Non Tech only.",
         });
       }
       if (!fromDate || !toDate) {
@@ -1823,8 +1832,7 @@ const listInvites = async (req, res) => {
     const invites = await InternInvite.find({})
       .populate("invitedBy", "firstName lastName email")
       .populate("userId", "firstName lastName email")
-      .sort({ createdAt: -1 })
-      .limit(200);
+      .sort({ createdAt: -1 });
 
     const userIds = invites
       .map((row) => row.userId?._id || row.userId)
@@ -2101,28 +2109,33 @@ const recordOfferLetter = async (req, res) => {
 const listIssuedOfferLetters = async (req, res) => {
   try {
     const letters = await IssuedOfferLetter.find({})
-      .populate("userId", "firstName lastName email")
+      .populate("userId", "firstName lastName email phone")
       .populate("issuedBy", "firstName lastName email")
-      .sort({ createdAt: -1 })
-      .limit(200);
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       offerLetters: letters.map((row) => ({
         id: row._id,
         candidateName: row.candidateName,
         internshipSlug: row.internshipSlug,
-        templateLabel: row.templateLabel,
+        templateId: row.templateId || "",
+        templateLabel: row.templateLabel || "",
         issuedAt: row.createdAt,
         user: row.userId
           ? {
               email: row.userId.email,
+              phone: row.userId.phone || "",
               name: `${row.userId.firstName || ""} ${row.userId.lastName || ""}`.trim(),
             }
           : null,
         issuedBy: row.issuedBy
-          ? `${row.issuedBy.firstName || ""} ${row.issuedBy.lastName || ""}`.trim()
+          ? {
+              email: row.issuedBy.email,
+              name: `${row.issuedBy.firstName || ""} ${row.issuedBy.lastName || ""}`.trim(),
+            }
           : null,
       })),
+      total: letters.length,
     });
   } catch (err) {
     console.error(err);

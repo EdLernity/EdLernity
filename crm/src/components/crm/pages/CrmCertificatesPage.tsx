@@ -24,6 +24,7 @@ import {
 } from "@/lib/crmApi";
 import { formatDate, inputClass, selectClass } from "@/lib/crmUtils";
 import { useModalOverlay } from "@/context/ModalOverlayContext";
+import CrmListPagination, { useClientPagination } from "@/components/crm/CrmListPagination";
 
 type TabKey = "templates" | "types" | "issued";
 
@@ -262,6 +263,9 @@ export default function CrmCertificatesPage() {
     );
   }, [certificates, search]);
 
+  const issuedPagination = useClientPagination(filteredIssued);
+  const templatesPagination = useClientPagination(filteredTemplates);
+
   const templateCountByType = useMemo(() => {
     const counts: Record<string, number> = {};
     templates.forEach((t) => {
@@ -281,6 +285,8 @@ export default function CrmCertificatesPage() {
         type.description.toLowerCase().includes(term)
     );
   }, [certificateTypes, search, typeFilter]);
+
+  const typesPagination = useClientPagination(filteredTypes);
 
   const openCreate = () => {
     setEditing(null);
@@ -646,7 +652,7 @@ export default function CrmCertificatesPage() {
           ) : filteredTemplates.length === 0 ? (
             <p className="text-gray-500 col-span-full py-8 text-center">No PDF templates found</p>
           ) : (
-            filteredTemplates.map((row) => (
+            templatesPagination.pageItems.map((row) => (
               <div
                 key={row.id}
                 className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] p-5 flex flex-col gap-4"
@@ -690,6 +696,18 @@ export default function CrmCertificatesPage() {
               </div>
             ))
           )}
+          {filteredTemplates.length > 0 ? (
+            <div className="col-span-full rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+              <CrmListPagination
+                page={templatesPagination.page}
+                totalPages={templatesPagination.totalPages}
+                total={templatesPagination.total}
+                from={templatesPagination.from}
+                to={templatesPagination.to}
+                onPageChange={templatesPagination.setPage}
+              />
+            </div>
+          ) : null}
         </div>
       ) : tab === "types" ? (
         <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] overflow-x-auto">
@@ -718,7 +736,7 @@ export default function CrmCertificatesPage() {
                   </td>
                 </tr>
               ) : (
-                filteredTypes.map((type) => (
+                typesPagination.pageItems.map((type) => (
                   <tr key={type.id}>
                     <td className="px-5 py-3">
                       <p className="font-medium text-gray-900 dark:text-white">{type.label}</p>
@@ -772,9 +790,18 @@ export default function CrmCertificatesPage() {
               )}
             </tbody>
           </table>
+          <CrmListPagination
+            page={typesPagination.page}
+            totalPages={typesPagination.totalPages}
+            total={typesPagination.total}
+            from={typesPagination.from}
+            to={typesPagination.to}
+            onPageChange={typesPagination.setPage}
+          />
         </div>
       ) : (
-        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] overflow-x-auto">
+        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm min-w-[900px]">
             <thead className="bg-gray-50 dark:bg-gray-800/50">
               <tr>
@@ -800,7 +827,7 @@ export default function CrmCertificatesPage() {
                   </td>
                 </tr>
               ) : (
-                filteredIssued.map((c) => (
+                issuedPagination.pageItems.map((c) => (
                   <tr key={`${c.recordType}-${c.id}`}>
                     <td className="px-5 py-3 text-gray-700">
                       {certificateTypeLabel(c.recordType, certificateTypes)}
@@ -835,6 +862,15 @@ export default function CrmCertificatesPage() {
               )}
             </tbody>
           </table>
+          </div>
+          <CrmListPagination
+            page={issuedPagination.page}
+            totalPages={issuedPagination.totalPages}
+            total={issuedPagination.total}
+            from={issuedPagination.from}
+            to={issuedPagination.to}
+            onPageChange={issuedPagination.setPage}
+          />
         </div>
       )}
 

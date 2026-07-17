@@ -350,7 +350,7 @@ export async function approveInternCertificate(
   internshipSlug?: string,
   certificateTemplateId?: string,
   issuedAt?: string,
-  options?: { fromDate?: string; toDate?: string }
+  options?: { fromDate?: string; toDate?: string; manualOverride?: boolean }
 ) {
   const { data } = await api.post(`/api/v1/crm/interns/${userId}/approve-certificate`, {
     studentName,
@@ -359,6 +359,7 @@ export async function approveInternCertificate(
     issuedAt: options?.toDate || issuedAt,
     fromDate: options?.fromDate,
     toDate: options?.toDate,
+    manualOverride: Boolean(options?.manualOverride),
   });
   return data;
 }
@@ -731,9 +732,11 @@ export async function fetchIssuedOfferLetters() {
     id: string;
     candidateName: string;
     internshipSlug: string;
+    templateId?: string;
     templateLabel: string;
     issuedAt: string;
-    user: { email: string; name: string } | null;
+    user: { email: string; name: string; phone?: string } | null;
+    issuedBy?: { email?: string; name?: string } | string | null;
   }>;
 }
 

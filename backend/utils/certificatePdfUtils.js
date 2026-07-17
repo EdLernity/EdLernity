@@ -19,14 +19,19 @@ async function fetchPdfBuffer(pdfUrl) {
   return Buffer.from(await response.arrayBuffer());
 }
 
-function drawCertificateField(page, { value, position, height, fonts, layout, textColor }) {
+function drawCertificateField(page, { value, position, height, width, fonts, layout, textColor }) {
   const font = resolveFieldFont(fonts, position, layout);
   const size = position.size;
   let x = position.x;
 
-  if (position.centerX != null) {
+  // center: true → page horizontal midpoint; centerX → fixed anchor
+  if (position.center === true || position.centerX != null) {
     const textWidth = font.widthOfTextAtSize(value, size);
-    x = position.centerX - textWidth / 2;
+    const anchor =
+      position.center === true
+        ? (width != null ? width / 2 : position.centerX)
+        : position.centerX;
+    x = anchor - textWidth / 2;
   }
 
   const fieldColor = position.color
@@ -124,7 +129,7 @@ async function buildInternshipCompletionPdf({
   const pdfDoc = await PDFDocument.load(existingPdfBytes);
   const fonts = await embedCertificateFonts(pdfDoc);
   const firstPage = pdfDoc.getPages()[0];
-  const { height } = firstPage.getSize();
+  const { width, height } = firstPage.getSize();
 
   const layout = resolveCertificatePdfLayout({ templateLabel });
   const values = buildFieldValues({
@@ -151,6 +156,7 @@ async function buildInternshipCompletionPdf({
       value,
       position,
       height,
+      width,
       fonts,
       layout,
       textColor,

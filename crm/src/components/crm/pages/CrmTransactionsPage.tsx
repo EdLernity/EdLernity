@@ -9,6 +9,7 @@ import {
   TransactionsResponse,
 } from "@/lib/crmApi";
 import { formatCurrency, formatDate, inputClass, selectClass } from "@/lib/crmUtils";
+import CrmListPagination, { useClientPagination } from "@/components/crm/CrmListPagination";
 
 const SOURCE_OPTIONS = [
   { value: "", label: "All sources" },
@@ -74,6 +75,16 @@ export default function CrmTransactionsPage() {
     setSearchDate("");
     setSearchName("");
   };
+
+  const {
+    page: txPage,
+    setPage: setTxPage,
+    pageItems: pagedTransactions,
+    total: txTotal,
+    totalPages: txTotalPages,
+    from: txFrom,
+    to: txTo,
+  } = useClientPagination(transactions);
 
   const selectMonth = (key: string) => {
     setFilterMonth((prev) => (prev === key ? "" : key));
@@ -326,13 +337,14 @@ export default function CrmTransactionsPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] overflow-x-auto">
+      <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-800">
           <h2 className="font-semibold text-gray-900 dark:text-white">Payment records</h2>
           <p className="text-xs text-gray-500 mt-1">
             {transactions.length} record{transactions.length === 1 ? "" : "s"} matching current filters
           </p>
         </div>
+        <div className="overflow-x-auto">
         <table className="w-full text-sm min-w-[900px]">
           <thead className="bg-gray-50 dark:bg-gray-800/50">
             <tr>
@@ -358,7 +370,7 @@ export default function CrmTransactionsPage() {
                 </td>
               </tr>
             ) : (
-              transactions.map((t) => (
+              pagedTransactions.map((t) => (
                 <tr key={t.id}>
                   <td className="px-5 py-3 font-medium text-gray-900 dark:text-white">{t.name}</td>
                   <td className="px-5 py-3 text-gray-600">{t.email}</td>
@@ -371,6 +383,15 @@ export default function CrmTransactionsPage() {
             )}
           </tbody>
         </table>
+        </div>
+        <CrmListPagination
+          page={txPage}
+          totalPages={txTotalPages}
+          total={txTotal}
+          from={txFrom}
+          to={txTo}
+          onPageChange={setTxPage}
+        />
       </div>
     </div>
   );

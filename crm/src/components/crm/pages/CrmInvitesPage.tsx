@@ -14,6 +14,7 @@ import {
 } from "@/lib/crmApi";
 import { formatDate, inputClass, selectClass } from "@/lib/crmUtils";
 import { useAuth } from "@/context/AuthContext";
+import CrmListPagination, { useClientPagination } from "@/components/crm/CrmListPagination";
 
 function isGmailAddress(email: string) {
   return /^[^\s@]+@gmail\.com$/i.test(String(email || "").trim());
@@ -75,6 +76,16 @@ export default function CrmInvitesPage() {
     inviteMessage:
       "Welcome to EdLernity! Please complete your onboarding using the link below to receive your login credentials.",
   });
+
+  const {
+    page: invitesPage,
+    setPage: setInvitesPage,
+    pageItems: pagedInvites,
+    total: invitesTotal,
+    totalPages: invitesTotalPages,
+    from: invitesFrom,
+    to: invitesTo,
+  } = useClientPagination(invites);
 
   const load = () => {
     setLoading(true);
@@ -296,7 +307,7 @@ export default function CrmInvitesPage() {
         <p className="text-sm text-gray-500 py-8 text-center">No invites yet</p>
       ) : (
         <div className="space-y-4">
-          {invites.map((row) => {
+          {pagedInvites.map((row) => {
             const isExpanded = expandedId === row.id;
             const approval = row.kyc?.approvalStatus || row.approvalStatus;
             const busy = deletingId === row.id || approvingId === row.id || rejectingId === row.id;
@@ -445,6 +456,19 @@ export default function CrmInvitesPage() {
           })}
         </div>
       )}
+
+      {!loading && invites.length > 0 ? (
+        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+          <CrmListPagination
+            page={invitesPage}
+            totalPages={invitesTotalPages}
+            total={invitesTotal}
+            from={invitesFrom}
+            to={invitesTo}
+            onPageChange={setInvitesPage}
+          />
+        </div>
+      ) : null}
 
       {rejectModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">

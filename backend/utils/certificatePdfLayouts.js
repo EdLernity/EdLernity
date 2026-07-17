@@ -8,6 +8,7 @@
  * Fields: x, yFromTop, size per field. enabledFields = which fields to draw.
  * Optional per layout/field: font ("helvetica" | "poppins" | "poppins-regular" | "canva-sans" | "canva-sans-bold" | "libre-baskerville-italic" | "cormorant-garamond" | "cormorant-garamond-bold" | "cormorant-garamond-semibold" | "cormorant-garamond-italic" | "dm-sans"), uppercase (true for ALL CAPS name).
  * centerX horizontally centers single-line text at that x coordinate.
+ * center: true centers on the PDF page midpoint (preferred when template is full-bleed).
  * internshipDateRange renders as [DD/MM/YYYY] to [DD/MM/YYYY] (see durationMonths).
  * internshipDateRangeShort renders as DD/MM/YYYY - DD/MM/YYYY (Tech COMPLETED ON).
  */
@@ -119,7 +120,7 @@ const CERTIFICATE_PDF_LAYOUTS = {
     textColor: TEXT_COLOR_BLACK,
     fields: {
       studentName: {
-        centerX: 400,
+        center: true,
         yFromTop: 270,
         size: 28,
         font: "libre-baskerville-italic",
@@ -152,6 +153,7 @@ const CERTIFICATE_PDF_LAYOUTS = {
     },
   },
 
+  /** Landscape A4 (~842×595) — name centered on page (true center ≈ 421). */
   bestPerformer: {
     key: "bestPerformer",
     font: "canva-sans",
@@ -159,7 +161,7 @@ const CERTIFICATE_PDF_LAYOUTS = {
     textColor: TEXT_COLOR_BLACK,
     fields: {
       studentName: {
-        centerX: 500,
+        center: true,
         yFromTop: 300,
         size: 28,
         font: "canva-sans-bold",

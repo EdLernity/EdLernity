@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   CertificateTemplateRow,
   InternProfileRow,
@@ -16,6 +17,7 @@ import {
 } from "@/lib/crmApi";
 import { formatDate, inputClass, selectClass } from "@/lib/crmUtils";
 import { useAuth } from "@/context/AuthContext";
+import CrmListPagination, { useClientPagination } from "@/components/crm/CrmListPagination";
 
 function displayName(row: InternProfileRow) {
   const fromKyc = row.kyc?.fullName?.trim();
@@ -73,20 +75,35 @@ function hasIssuedCertificates(row: InternProfileRow) {
   return issuedCertificates(row).length > 0 || Boolean(row.certificate?.issued);
 }
 
-const COMPLETION_CERTIFICATE_TYPES = new Set(["internship-completion", "course-completion"]);
-
 function isTechInternshipTemplate(template: CertificateTemplateRow) {
   if (template.type === "tech-internship") return true;
   const label = String(template.label || "");
   return /tech/i.test(label) && !/non[\s-]*tech/i.test(label);
 }
 
+function isNonTechTemplate(template: CertificateTemplateRow) {
+  return /non[\s-]*tech/i.test(String(template.label || ""));
+}
+
+/** Interns Issue Certificate dropdown — only these templates. */
+function isAllowedInternIssueTemplate(template: CertificateTemplateRow) {
+  if (template.type === "course-completion") return false;
+  if (isTechInternshipTemplate(template)) return false;
+  if (isNonTechTemplate(template)) return true;
+  const label = String(template.label || "").trim().toLowerCase();
+  return (
+    label === "best performer certificate" ||
+    label === "certificate of appreciation" ||
+    label === "certificate of campus influencer"
+  );
+}
+
 function isCompletionCertificateTemplate(template: CertificateTemplateRow) {
-  return COMPLETION_CERTIFICATE_TYPES.has(template.type);
+  return isNonTechTemplate(template);
 }
 
 function isSpecialCertificateTemplate(template: CertificateTemplateRow) {
-  return !isCompletionCertificateTemplate(template);
+  return isAllowedInternIssueTemplate(template) && !isNonTechTemplate(template);
 }
 
 function pickDefaultCertificateTemplateId(
@@ -95,7 +112,10 @@ function pickDefaultCertificateTemplateId(
   programTemplateId?: string | null,
   completionUnlocked = true
 ) {
-  const available = templates.filter((template) => !issuedTemplateIds.includes(template.id));
+  const available = templates.filter(
+    (template) =>
+      isAllowedInternIssueTemplate(template) && !issuedTemplateIds.includes(template.id)
+  );
   if (!available.length) return "";
 
   const completionAvailable = available.filter(isCompletionCertificateTemplate);
@@ -105,15 +125,15 @@ function pickDefaultCertificateTemplateId(
     return specialAvailable[0]?.id || "";
   }
 
-  if (programTemplateId && available.some((template) => template.id === programTemplateId)) {
+  if (
+    programTemplateId &&
+    available.some((template) => template.id === programTemplateId)
+  ) {
     return programTemplateId;
   }
 
-  const completionTemplate = completionAvailable.find((template) => template.type === "internship-completion");
-  if (completionTemplate) return completionTemplate.id;
-
-  const courseTemplate = completionAvailable.find((template) => template.type === "course-completion");
-  if (courseTemplate) return courseTemplate.id;
+  const nonTech = completionAvailable.find((template) => isNonTechTemplate(template));
+  if (nonTech) return nonTech.id;
 
   return specialAvailable[0]?.id || "";
 }
@@ -123,14 +143,21 @@ function isSelectedTemplateIssueBlocked(
   templates: CertificateTemplateRow[],
   options: {
     internshipCompleted: boolean;
-    courseCompletionUnlocked: boolean;
+    manualOverride?: boolean;
   }
 ) {
   if (!templateId) return true;
   const selected = templates.find((template) => template.id === templateId);
   if (!selected) return true;
-  if (selected.type === "internship-completion" && !options.internshipCompleted) return true;
-  if (selected.type === "course-completion" && !options.courseCompletionUnlocked) return true;
+  if (selected.type === "course-completion") return true;
+  if (
+    (selected.type === "internship-completion" || isNonTechTemplate(selected)) &&
+    !options.internshipCompleted
+  ) {
+    // Manual override only for Non Tech
+    if (isNonTechTemplate(selected) && options.manualOverride) return false;
+    return true;
+  }
   return false;
 }
 
@@ -157,7 +184,6 @@ export default function CrmInternsPage() {
   const [kycFilter, setKycFilter] = useState("all");
   const [approvalFilter, setApprovalFilter] = useState("all");
   const [certFilter, setCertFilter] = useState("all");
-  const [pageTab, setPageTab] = useState<"all" | "internship-certs">("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [actionId, setActionId] = useState<string | null>(null);
@@ -181,6 +207,7 @@ export default function CrmInternsPage() {
     issuedCertificates: IssuedInternCertificate[];
     programTemplateId?: string | null;
     programTemplateLabel?: string | null;
+    manualOverride: boolean;
   } | null>(null);
   const [issuing, setIssuing] = useState(false);
   const [rejectModal, setRejectModal] = useState<{
@@ -231,9 +258,6 @@ export default function CrmInternsPage() {
 
   const filtered = useMemo(() => {
     return interns.filter((row) => {
-      if (pageTab === "internship-certs" && !row.awaitingInternshipCertificate) {
-        return false;
-      }
       const term = search.trim().toLowerCase();
       const name = displayName(row).toLowerCase();
       const email = row.student.email?.toLowerCase() || "";
@@ -256,7 +280,21 @@ export default function CrmInternsPage() {
         (certFilter === "pending" && !hasIssuedCertificates(row));
       return matchesSearch && matchesProgram && matchesKyc && matchesApproval && matchesCert;
     });
-  }, [interns, search, programFilter, kycFilter, approvalFilter, certFilter, pageTab]);
+  }, [interns, search, programFilter, kycFilter, approvalFilter, certFilter]);
+
+  const {
+    page: listPage,
+    setPage: setListPage,
+    pageItems: pagedInterns,
+    total: listTotal,
+    totalPages: listTotalPages,
+    from: listFrom,
+    to: listTo,
+  } = useClientPagination(
+    filtered,
+    20,
+    `${search}|${programFilter}|${kycFilter}|${approvalFilter}|${certFilter}|${showInactive}`
+  );
 
   const handleApprove = async (row: InternProfileRow) => {
     setActionId(row.id);
@@ -291,17 +329,19 @@ export default function CrmInternsPage() {
     if (
       isSelectedTemplateIssueBlocked(modal.certificateTemplateId, certificateTemplates, {
         internshipCompleted: modal.internshipCompleted,
-        courseCompletionUnlocked: modal.courseCompletionUnlocked,
+        manualOverride: modal.manualOverride,
       })
     ) {
       const selected = certificateTemplates.find((t) => t.id === modal.certificateTemplateId);
-      if (selected?.type === "internship-completion" && !modal.internshipCompleted) {
+      if (
+        selected &&
+        (selected.type === "internship-completion" || isNonTechTemplate(selected)) &&
+        !modal.internshipCompleted
+      ) {
         setMessage(
-          "Internship completion certificate waits until the trainer marks the internship completed."
-        );
-      } else if (selected?.type === "course-completion" && !modal.courseCompletionUnlocked) {
-        setMessage(
-          `Course completion unlocks in ${modal.certificateLockDaysRemaining} day(s) (${formatDate(modal.certificateEligibleAt || undefined)}).`
+          isNonTechTemplate(selected)
+            ? "Non Tech is locked until trainer completion — enable Manual override to issue now."
+            : "Internship completion waits until the trainer marks the internship completed."
         );
       } else {
         setMessage("Select a certificate type to issue");
@@ -312,10 +352,16 @@ export default function CrmInternsPage() {
       setMessage("Select a certificate type to issue");
       return;
     }
+    if (!modal.studentName.trim() || modal.studentName.trim() === "—") {
+      setMessage("Enter the full name to print on the certificate");
+      return;
+    }
     const selectedTemplate = certificateTemplates.find(
       (t) => t.id === modal.certificateTemplateId
     );
-    const isInternshipCompletion = selectedTemplate?.type === "internship-completion";
+    const isInternshipCompletion = Boolean(
+      selectedTemplate && isCompletionCertificateTemplate(selectedTemplate)
+    );
     if (isInternshipCompletion) {
       if (!modal.fromDate || !modal.toDate) {
         setMessage("Enter from date and to date");
@@ -332,6 +378,9 @@ export default function CrmInternsPage() {
 
     setIssuing(true);
     try {
+      const useOverride =
+        Boolean(modal.manualOverride) &&
+        Boolean(selectedTemplate && isNonTechTemplate(selectedTemplate));
       await approveInternCertificate(
         modal.studentId,
         modal.studentName.trim(),
@@ -339,10 +388,18 @@ export default function CrmInternsPage() {
         modal.certificateTemplateId,
         isInternshipCompletion ? modal.toDate : modal.issuedAt,
         isInternshipCompletion
-          ? { fromDate: modal.fromDate, toDate: modal.toDate }
+          ? {
+              fromDate: modal.fromDate,
+              toDate: modal.toDate,
+              manualOverride: useOverride,
+            }
           : undefined
       );
-      setMessage("Certificate issued and available in intern portal");
+      setMessage(
+        useOverride
+          ? "Non Tech certificate issued with manual override"
+          : "Certificate issued and available in intern portal"
+      );
       setModal(null);
       load();
     } catch (err: unknown) {
@@ -423,14 +480,14 @@ export default function CrmInternsPage() {
       ? toDateInputValue(new Date(row.enrollment.enrolledAt))
       : monthsAgoDateInput(2);
 
-    const templatesForPicker =
-      isManager && !isAdmin
-        ? certificateTemplates.filter((template) => !isTechInternshipTemplate(template))
-        : certificateTemplates;
+    const templatesForPicker = certificateTemplates.filter(isAllowedInternIssueTemplate);
 
     const preferredProgramTemplateId =
       programTemplateId &&
-      templatesForPicker.some((template) => template.id === programTemplateId)
+      templatesForPicker.some((template) => template.id === programTemplateId) &&
+      isNonTechTemplate(
+        templatesForPicker.find((template) => template.id === programTemplateId)!
+      )
         ? programTemplateId
         : null;
 
@@ -439,7 +496,10 @@ export default function CrmInternsPage() {
       studentEmail: row.student.email,
       internshipSlug: slug,
       programTitle,
-      studentName: displayName(row),
+      studentName: (() => {
+        const name = displayName(row);
+        return name === "—" ? "" : name;
+      })(),
       issuedAt: toDateInputValue(),
       fromDate: enrolledAt,
       toDate: toDateInputValue(),
@@ -463,6 +523,7 @@ export default function CrmInternsPage() {
         preferredProgramTemplateId
           ? row.enrollment?.certificateTemplateLabel || null
           : null,
+      manualOverride: false,
     });
   };
 
@@ -470,11 +531,9 @@ export default function CrmInternsPage() {
     if (!modal) return [];
     return certificateTemplates.filter((template) => {
       if (modal.issuedTemplateIds.includes(template.id)) return false;
-      // Managers issue Non Tech / recognition from Interns — Tech Internship is admin-only / Approvals.
-      if (isManager && !isAdmin && isTechInternshipTemplate(template)) return false;
-      return true;
+      return isAllowedInternIssueTemplate(template);
     });
-  }, [certificateTemplates, modal, isManager, isAdmin]);
+  }, [certificateTemplates, modal]);
 
   const completionTemplatesForModal = useMemo(() => {
     return availableTemplatesForModal.filter(isCompletionCertificateTemplate);
@@ -484,10 +543,18 @@ export default function CrmInternsPage() {
     return availableTemplatesForModal.filter(isSpecialCertificateTemplate);
   }, [availableTemplatesForModal]);
 
+  const selectedTemplateForModal = modal
+    ? certificateTemplates.find((t) => t.id === modal.certificateTemplateId) || null
+    : null;
+  const showNonTechOverride =
+    Boolean(modal) &&
+    Boolean(selectedTemplateForModal && isNonTechTemplate(selectedTemplateForModal)) &&
+    !modal!.internshipCompleted;
+
   const issueBlockedForSelection = modal
     ? isSelectedTemplateIssueBlocked(modal.certificateTemplateId, certificateTemplates, {
         internshipCompleted: modal.internshipCompleted,
-        courseCompletionUnlocked: modal.courseCompletionUnlocked,
+        manualOverride: modal.manualOverride,
       })
     : true;
 
@@ -505,25 +572,12 @@ export default function CrmInternsPage() {
       )}
 
       <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-1 dark:border-gray-800">
-        <button
-          type="button"
-          onClick={() => setPageTab("all")}
-          className={`rounded-t-lg px-4 py-2 text-sm font-semibold ${
-            pageTab === "all"
-              ? "bg-brand-50 text-brand-600 dark:bg-brand-500/10"
-              : "text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
-          }`}
-        >
+        <span className="rounded-t-lg bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-600 dark:bg-brand-500/10">
           All interns
-        </button>
-        <button
-          type="button"
-          onClick={() => setPageTab("internship-certs")}
-          className={`rounded-t-lg px-4 py-2 text-sm font-semibold ${
-            pageTab === "internship-certs"
-              ? "bg-brand-50 text-brand-600 dark:bg-brand-500/10"
-              : "text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
-          }`}
+        </span>
+        <Link
+          href="/internship-approvals"
+          className="rounded-t-lg px-4 py-2 text-sm font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.04] dark:hover:text-gray-200"
         >
           Internship certificates
           {awaitingInternshipCount > 0 ? (
@@ -531,18 +585,16 @@ export default function CrmInternsPage() {
               {awaitingInternshipCount}
             </span>
           ) : null}
-        </button>
+        </Link>
       </div>
 
-      {pageTab === "internship-certs" && (
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Prefer the dedicated{" "}
-          <a href="/internship-approvals" className="font-semibold text-brand-500 hover:underline">
-            Internship Approvals
-          </a>{" "}
-          tab — it lists every trainer-completed student (including override / non-intern roles).
-        </p>
-      )}
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        For trainer-completed students waiting on Non Tech certificates, open{" "}
+        <Link href="/internship-approvals" className="font-semibold text-brand-500 hover:underline">
+          Internship Approvals
+        </Link>
+        .
+      </p>
 
       <div className="flex flex-wrap gap-3">
         <input
@@ -592,7 +644,7 @@ export default function CrmInternsPage() {
         <p className="text-sm text-gray-500 py-8 text-center">No intern profiles found</p>
       ) : (
         <div className="space-y-4">
-          {filtered.map((row) => {
+          {pagedInterns.map((row) => {
             const isExpanded = expandedId === row.id;
             const busy = actionId === row.id;
             const name = displayName(row);
@@ -844,6 +896,19 @@ export default function CrmInternsPage() {
         </div>
       )}
 
+      {!loading && filtered.length > 0 ? (
+        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+          <CrmListPagination
+            page={listPage}
+            totalPages={listTotalPages}
+            total={listTotal}
+            from={listFrom}
+            to={listTo}
+            onPageChange={setListPage}
+          />
+        </div>
+      ) : null}
+
       {rejectModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-md rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-xl">
@@ -884,20 +949,26 @@ export default function CrmInternsPage() {
               {modal.programTitle} · {modal.studentEmail}
             </p>
 
-            {!modal.internshipCompleted ? (
+            <label className="block mb-4">
+              <span className="text-xs font-medium text-gray-500 mb-1 block">
+                Full name on certificate *
+              </span>
+              <input
+                value={modal.studentName}
+                onChange={(e) => setModal({ ...modal, studentName: e.target.value })}
+                className={inputClass()}
+                placeholder="Enter full name as it should appear on the PDF"
+                autoFocus
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Prefills from KYC — edit if the printed name should be different.
+              </p>
+            </label>
+
+            {!modal.internshipCompleted && !showNonTechOverride ? (
               <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
-                Internship completion certificate unlocks after the trainer marks the internship
-                completed. Recognition certificates can be issued anytime.
-              </div>
-            ) : null}
-            {!modal.courseCompletionUnlocked && completionTemplatesForModal.some((t) => t.type === "course-completion") ? (
-              <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
-                Course completion unlocks after a 60-day period.{" "}
-                <strong>{modal.certificateLockDaysRemaining} day(s)</strong> remaining
-                {modal.certificateEligibleAt
-                  ? ` (eligible ${formatDate(modal.certificateEligibleAt)})`
-                  : ""}
-                .
+                Internship completion unlocks after the trainer marks the internship completed.
+                Recognition certificates can be issued anytime.
               </div>
             ) : null}
 
@@ -932,7 +1003,13 @@ export default function CrmInternsPage() {
               <select
                 className={selectClass()}
                 value={modal.certificateTemplateId}
-                onChange={(e) => setModal({ ...modal, certificateTemplateId: e.target.value })}
+                onChange={(e) =>
+                  setModal({
+                    ...modal,
+                    certificateTemplateId: e.target.value,
+                    manualOverride: false,
+                  })
+                }
                 disabled={availableTemplatesForModal.length === 0}
               >
                 {availableTemplatesForModal.length === 0 ? (
@@ -940,28 +1017,22 @@ export default function CrmInternsPage() {
                 ) : (
                   <>
                     {completionTemplatesForModal.length > 0 ? (
-                      <optgroup label="Completion certificates">
+                      <optgroup label="Internship completion">
                         {completionTemplatesForModal.map((template) => {
                           const locked =
-                            (template.type === "internship-completion" &&
-                              !modal.internshipCompleted) ||
-                            (template.type === "course-completion" &&
-                              !modal.courseCompletionUnlocked);
+                            !modal.internshipCompleted &&
+                            !(isNonTechTemplate(template) && modal.manualOverride);
                           return (
-                            <option
-                              key={template.id}
-                              value={template.id}
-                              disabled={locked}
-                            >
+                            <option key={template.id} value={template.id}>
                               {template.label}
-                              {locked ? " (locked)" : ""}
+                              {locked && !modal.manualOverride ? " (needs trainer or override)" : ""}
                             </option>
                           );
                         })}
                       </optgroup>
                     ) : null}
                     {specialTemplatesForModal.length > 0 ? (
-                      <optgroup label="Recognition certificates (optional)">
+                      <optgroup label="Recognition certificates">
                         {specialTemplatesForModal.map((template) => (
                           <option key={template.id} value={template.id}>
                             {template.label}
@@ -974,17 +1045,28 @@ export default function CrmInternsPage() {
               </select>
             </label>
 
-            <label className="block mb-4">
-              <span className="text-xs font-medium text-gray-500 mb-1 block">Name on certificate</span>
-              <input
-                value={modal.studentName}
-                onChange={(e) => setModal({ ...modal, studentName: e.target.value })}
-                className={inputClass()}
-              />
-            </label>
+            {showNonTechOverride ? (
+              <label className="mb-4 flex cursor-pointer items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-500/30 dark:bg-amber-500/10">
+                <input
+                  type="checkbox"
+                  className="mt-1"
+                  checked={modal.manualOverride}
+                  onChange={(e) =>
+                    setModal({ ...modal, manualOverride: e.target.checked })
+                  }
+                />
+                <span>
+                  <span className="block text-sm font-semibold text-amber-900 dark:text-amber-100">
+                    Manual override (Non Tech only)
+                  </span>
+                  <span className="mt-0.5 block text-xs text-amber-800 dark:text-amber-200">
+                    Issue Non Tech now without waiting for the trainer to mark internship completed.
+                  </span>
+                </span>
+              </label>
+            ) : null}
 
-            {certificateTemplates.find((t) => t.id === modal.certificateTemplateId)?.type ===
-            "internship-completion" ? (
+            {selectedTemplateForModal && isCompletionCertificateTemplate(selectedTemplateForModal) ? (
               <div className="mb-4 grid gap-3 sm:grid-cols-2">
                 <label className="block">
                   <span className="mb-1 block text-xs font-medium text-gray-500">
@@ -1035,9 +1117,11 @@ export default function CrmInternsPage() {
                 onClick={handleIssue}
                 disabled={
                   issuing ||
+                  !modal.studentName.trim() ||
+                  modal.studentName.trim() === "—" ||
                   !modal.certificateTemplateId ||
-                  (certificateTemplates.find((t) => t.id === modal.certificateTemplateId)?.type ===
-                  "internship-completion"
+                  (selectedTemplateForModal &&
+                  isCompletionCertificateTemplate(selectedTemplateForModal)
                     ? !modal.fromDate || !modal.toDate
                     : !modal.issuedAt) ||
                   availableTemplatesForModal.length === 0 ||

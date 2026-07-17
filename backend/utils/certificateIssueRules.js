@@ -7,7 +7,8 @@ function isCompletionCertificateType(type) {
 }
 
 function requiresCompletionLock(type) {
-  return isCompletionCertificateType(type);
+  // 60-day lock applies only to course-completion (not Non Tech / Tech internship).
+  return String(type || "").trim() === "course-completion";
 }
 
 function getCertificateLockStartDate(kyc, enrollment) {
