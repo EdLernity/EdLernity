@@ -12,6 +12,7 @@ import {
   previewInternshipCertificateDraft,
 } from "@/lib/crmApi";
 import { formatDate, inputClass, selectClass } from "@/lib/crmUtils";
+import { useAuth } from "@/context/AuthContext";
 
 type ApprovalFilter = "pending" | "issued" | "all";
 
@@ -34,12 +35,18 @@ function monthsAgoDateInput(months: number) {
   return toDateInputValue(d);
 }
 
+function isTechInternshipTemplate(template: CertificateTemplateRow) {
+  if (template.type === "tech-internship") return true;
+  const label = String(template.label || "");
+  return /tech/i.test(label) && !/non[\s-]*tech/i.test(label);
+}
+
 /** Internship completion PDFs for Approvals (includes Tech / Non Tech even if type slug differs). */
 function isInternshipIssueTemplate(template: CertificateTemplateRow) {
   if (template.active === false) return false;
   const type = String(template.type || "");
   if (type === "course-completion" || type.startsWith("offer-letter")) return false;
-  if (type === "internship-completion") return true;
+  if (type === "internship-completion" || type === "tech-internship") return true;
   const label = String(template.label || "");
   return /tech\s*internship|non[\s-]*tech|internship\s*completion/i.test(label);
 }
@@ -81,6 +88,7 @@ function pickInternshipTemplateId(
 }
 
 export default function CrmInternshipApprovalsPage() {
+  const { isAdmin, isManager } = useAuth();
   const [status, setStatus] = useState<ApprovalFilter>("pending");
   const [approvals, setApprovals] = useState<InternProfileRow[]>([]);
   const [summary, setSummary] = useState({ pending: 0, issued: 0 });
@@ -104,6 +112,8 @@ export default function CrmInternshipApprovalsPage() {
     toDate: string;
     override: boolean;
   } | null>(null);
+
+  const hideTechForManager = isManager && !isAdmin;
 
   const load = () => {
     setLoading(true);
@@ -155,6 +165,9 @@ export default function CrmInternshipApprovalsPage() {
     const enrolledAt = row.enrollment?.enrolledAt
       ? toDateInputValue(new Date(row.enrollment.enrolledAt))
       : monthsAgoDateInput(2);
+    const templatesForPicker = hideTechForManager
+      ? templates.filter((template) => !isTechInternshipTemplate(template))
+      : templates;
     setModal({
       studentId: String(row.student.id),
       studentEmail: row.student.email,
@@ -162,8 +175,8 @@ export default function CrmInternshipApprovalsPage() {
       programTitle: row.enrollment?.programTitle || slug,
       studentName: displayName(row),
       certificateTemplateId: pickInternshipTemplateId(
-        templates,
-        row.enrollment?.certificateTemplateId,
+        templatesForPicker,
+        hideTechForManager ? null : row.enrollment?.certificateTemplateId,
         row.enrollment?.programTitle || slug,
         slug
       ),
@@ -298,14 +311,16 @@ export default function CrmInternshipApprovalsPage() {
   };
 
   const internshipTemplates = useMemo(() => {
-    const list = templates.filter(isInternshipIssueTemplate);
+    const list = templates
+      .filter(isInternshipIssueTemplate)
+      .filter((template) => !(hideTechForManager && isTechInternshipTemplate(template)));
     return [...list].sort((a, b) => {
       // Prefer completion templates, then label A–Z
       if (a.type === "internship-completion" && b.type !== "internship-completion") return -1;
       if (b.type === "internship-completion" && a.type !== "internship-completion") return 1;
       return a.label.localeCompare(b.label);
     });
-  }, [templates]);
+  }, [templates, hideTechForManager]);
 
   return (
     <div className="space-y-6">
@@ -587,9 +602,17 @@ export default function CrmInternshipApprovalsPage() {
                 )}
               </select>
               <p className="mt-1 text-xs text-gray-500">
-                Use <strong>Tech Internship</strong> for tech programs and{" "}
-                <strong>Non Tech</strong> for non-tech. Programs can also link a default in Careers
-                Programs.
+                {hideTechForManager ? (
+                  <>
+                    Managers issue <strong>Non Tech</strong> internship certificates here.
+                  </>
+                ) : (
+                  <>
+                    Use <strong>Tech Internship</strong> for tech programs and{" "}
+                    <strong>Non Tech</strong> for non-tech. Programs can also link a default in Careers
+                    Programs.
+                  </>
+                )}
               </p>
             </label>
 

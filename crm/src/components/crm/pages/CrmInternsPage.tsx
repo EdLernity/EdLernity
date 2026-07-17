@@ -75,6 +75,12 @@ function hasIssuedCertificates(row: InternProfileRow) {
 
 const COMPLETION_CERTIFICATE_TYPES = new Set(["internship-completion", "course-completion"]);
 
+function isTechInternshipTemplate(template: CertificateTemplateRow) {
+  if (template.type === "tech-internship") return true;
+  const label = String(template.label || "");
+  return /tech/i.test(label) && !/non[\s-]*tech/i.test(label);
+}
+
 function isCompletionCertificateTemplate(template: CertificateTemplateRow) {
   return COMPLETION_CERTIFICATE_TYPES.has(template.type);
 }
@@ -417,6 +423,17 @@ export default function CrmInternsPage() {
       ? toDateInputValue(new Date(row.enrollment.enrolledAt))
       : monthsAgoDateInput(2);
 
+    const templatesForPicker =
+      isManager && !isAdmin
+        ? certificateTemplates.filter((template) => !isTechInternshipTemplate(template))
+        : certificateTemplates;
+
+    const preferredProgramTemplateId =
+      programTemplateId &&
+      templatesForPicker.some((template) => template.id === programTemplateId)
+        ? programTemplateId
+        : null;
+
     setModal({
       studentId: row.student.id,
       studentEmail: row.student.email,
@@ -427,9 +444,9 @@ export default function CrmInternsPage() {
       fromDate: enrolledAt,
       toDate: toDateInputValue(),
       certificateTemplateId: pickDefaultCertificateTemplateId(
-        certificateTemplates,
+        templatesForPicker,
         issuedTemplateIds,
-        programTemplateId,
+        preferredProgramTemplateId,
         completionUnlocked
       ),
       certificateUnlocked: Boolean(row.certificateUnlocked),
@@ -441,15 +458,23 @@ export default function CrmInternsPage() {
       certificateEligibleAt: row.certificateEligibleAt,
       issuedTemplateIds,
       issuedCertificates: issuedCertificates(row),
-      programTemplateId,
-      programTemplateLabel: row.enrollment?.certificateTemplateLabel || null,
+      programTemplateId: preferredProgramTemplateId,
+      programTemplateLabel:
+        preferredProgramTemplateId
+          ? row.enrollment?.certificateTemplateLabel || null
+          : null,
     });
   };
 
   const availableTemplatesForModal = useMemo(() => {
     if (!modal) return [];
-    return certificateTemplates.filter((template) => !modal.issuedTemplateIds.includes(template.id));
-  }, [certificateTemplates, modal]);
+    return certificateTemplates.filter((template) => {
+      if (modal.issuedTemplateIds.includes(template.id)) return false;
+      // Managers issue Non Tech / recognition from Interns — Tech Internship is admin-only / Approvals.
+      if (isManager && !isAdmin && isTechInternshipTemplate(template)) return false;
+      return true;
+    });
+  }, [certificateTemplates, modal, isManager, isAdmin]);
 
   const completionTemplatesForModal = useMemo(() => {
     return availableTemplatesForModal.filter(isCompletionCertificateTemplate);
