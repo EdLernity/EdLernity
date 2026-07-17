@@ -30,7 +30,7 @@ export default function SignInForm() {
       }
       const defaultRedirect =
         result.role === "intern"
-          ? "/my-offer-letters"
+          ? "/my-profile"
           : result.role === "trainer"
             ? "/trainer"
             : result.role === "manager"

@@ -24,7 +24,8 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 const STAFF_ROLES = new Set(["admin", "manager"]);
 const INTERN_ROLE = "intern";
 const TRAINER_ROLE = "trainer";
-const INTERN_PATHS = ["/my-offer-letters", "/my-certificates", "/resubmit-kyc"];
+const INTERN_PATHS = ["/my-profile", "/my-offer-letters", "/my-certificates", "/resubmit-kyc"];
+const INTERN_HOME = "/my-profile";
 const ADMIN_ONLY_PREFIXES = [
   "/users",
   "/operations",
@@ -96,7 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return;
           }
           if (pathname.startsWith("/resubmit-kyc")) {
-            router.replace("/my-offer-letters");
+            router.replace(INTERN_HOME);
             return;
           }
           const onInternPage = INTERN_PATHS.some((path) => pathname.startsWith(path));
@@ -106,13 +107,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               pathname.startsWith(prefix)
             );
           if (onStaffPage || !onInternPage) {
-            router.replace("/my-offer-letters");
+            router.replace(INTERN_HOME);
           }
         })
         .catch(() => {
           if (cancelled) return;
           const onInternPage = INTERN_PATHS.some((path) => pathname.startsWith(path));
-          if (!onInternPage) router.replace("/my-offer-letters");
+          if (!onInternPage) router.replace(INTERN_HOME);
         });
       return () => {
         cancelled = true;

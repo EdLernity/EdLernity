@@ -508,20 +508,55 @@ const getMyKycStatus = async (req, res) => {
       kyc = await InternKyc.findOne({ userId: req.user._id }).sort({ updatedAt: -1 });
     }
 
+    const enrollments = await UserInternship.find({ userId: req.user._id })
+      .select("internshipSlug title createdAt")
+      .sort({ createdAt: -1 });
+
+    const account = {
+      id: req.user._id,
+      firstName: req.user.firstName || "",
+      lastName: req.user.lastName || "",
+      email: req.user.email || "",
+      phone: req.user.phone || "",
+      role: req.user.role || "intern",
+      createdAt: req.user.createdAt || null,
+    };
+
     if (!kyc) {
-      return res.status(200).json({ kyc: null });
+      return res.status(200).json({
+        kyc: null,
+        account,
+        enrollments: enrollments.map((row) => ({
+          internshipSlug: row.internshipSlug,
+          title: row.title || resolveProgramTitle(row.internshipSlug, {}),
+          enrolledAt: row.createdAt,
+        })),
+      });
     }
 
     res.status(200).json({
+      account,
+      enrollments: enrollments.map((row) => ({
+        internshipSlug: row.internshipSlug,
+        title: row.title || resolveProgramTitle(row.internshipSlug, {}),
+        enrolledAt: row.createdAt,
+      })),
       kyc: {
         fullName: kyc.fullName,
         email: kyc.email,
         phone: kyc.phone,
         collegeName: kyc.collegeName,
         programName: kyc.programName,
+        internshipSlug: kyc.internshipSlug || "",
+        photoUrl: kyc.photoUrl || "",
+        twelfthCertificateUrl: kyc.twelfthCertificateUrl || "",
+        aadharFrontUrl: kyc.aadharFrontUrl || "",
+        aadharBackUrl: kyc.aadharBackUrl || "",
+        collegeIdUrl: kyc.collegeIdUrl || "",
         approvalStatus: kyc.approvalStatus || "pending",
         rejectionReason: kyc.rejectionReason || "",
         rejectedAt: kyc.rejectedAt,
+        approvedAt: kyc.approvedAt,
         submittedAt: kyc.createdAt,
       },
     });

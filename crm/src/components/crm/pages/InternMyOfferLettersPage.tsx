@@ -114,10 +114,9 @@ export default function InternMyOfferLettersPage() {
                   }`}
                 >
                   <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                    {row.internshipSlug}
+                    {row.templateLabel || "Offer letter"}
                   </p>
-                  <p className="mt-1 text-xs text-gray-500">{row.templateLabel}</p>
-                  <p className="mt-3 text-[11px] text-gray-500">
+                  <p className="mt-1 text-xs text-gray-500">
                     Issued {formatDate(row.issuedAt)} · {row.candidateName}
                   </p>
                 </button>

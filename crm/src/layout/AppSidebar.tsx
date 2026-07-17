@@ -39,6 +39,7 @@ const allNavItems: NavItem[] = [
 ];
 
 const internNavItems: NavItem[] = [
+  { icon: <UserCircleIcon />, name: "My Profile", path: "/my-profile" },
   { icon: <MailIcon />, name: "My Offer Letters", path: "/my-offer-letters" },
   { icon: <TaskIcon />, name: "My Certificates", path: "/my-certificates" },
 ];
@@ -98,7 +99,7 @@ const AppSidebar: React.FC = () => {
       <div
         className={`py-8 flex ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"}`}
       >
-        <Link href={isTrainer ? "/trainer" : isIntern ? "/my-offer-letters" : "/"} className="flex items-center">
+        <Link href={isTrainer ? "/trainer" : isIntern ? "/my-profile" : "/"} className="flex items-center">
           {isExpanded || isHovered || isMobileOpen ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img

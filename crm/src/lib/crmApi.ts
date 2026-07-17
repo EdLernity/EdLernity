@@ -812,15 +812,53 @@ export interface MyKycStatus {
   phone: string;
   collegeName: string;
   programName: string;
+  internshipSlug?: string;
+  photoUrl?: string;
+  twelfthCertificateUrl?: string;
+  aadharFrontUrl?: string;
+  aadharBackUrl?: string;
+  collegeIdUrl?: string;
   approvalStatus: "pending" | "approved" | "rejected";
   rejectionReason?: string;
   rejectedAt?: string | null;
+  approvedAt?: string | null;
   submittedAt?: string;
+}
+
+export interface MyProfileEnrollment {
+  internshipSlug: string;
+  title: string;
+  enrolledAt?: string;
+}
+
+export interface MyProfileAccount {
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  role?: string;
+  createdAt?: string | null;
+}
+
+export interface MyProfile {
+  account: MyProfileAccount;
+  enrollments: MyProfileEnrollment[];
+  kyc: MyKycStatus | null;
 }
 
 export async function fetchMyKycStatus() {
   const { data } = await api.get("/api/v1/crm/my/kyc-status");
   return (data.kyc || null) as MyKycStatus | null;
+}
+
+export async function fetchMyProfile() {
+  const { data } = await api.get("/api/v1/crm/my/kyc-status");
+  return {
+    account: data.account || {},
+    enrollments: data.enrollments || [],
+    kyc: data.kyc || null,
+  } as MyProfile;
 }
 
 export async function resubmitKyc(formData: FormData) {
