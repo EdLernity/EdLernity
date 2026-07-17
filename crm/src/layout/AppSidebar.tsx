@@ -25,7 +25,7 @@ type NavItem = {
 };
 
 const allNavItems: NavItem[] = [
-  { icon: <GridIcon />, name: "Overview", path: "/", adminOnly: true },
+  { icon: <GridIcon />, name: "Dashboard", path: "/" },
   { icon: <UserCircleIcon />, name: "Users", path: "/users", adminOnly: true },
   { icon: <TableIcon />, name: "Intern Certificate", path: "/interns" },
   { icon: <TaskIcon />, name: "Tech Internship Approvals", path: "/internship-approvals" },
@@ -73,11 +73,14 @@ const AppSidebar: React.FC = () => {
     [pathname]
   );
 
-  const navItems = isIntern
+  const navItems = (isIntern
     ? internNavItems
     : isTrainer
       ? trainerNavItems
-      : allNavItems.filter((item) => !item.adminOnly || isAdmin);
+      : allNavItems.filter((item) => !item.adminOnly || isAdmin)
+  ).map((item) =>
+    item.path === "/" && isAdmin ? { ...item, name: "Overview" } : item
+  );
 
   const sectionLabel = isIntern
     ? "Intern Portal"

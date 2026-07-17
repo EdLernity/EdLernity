@@ -253,6 +253,157 @@ const getOverview = async (req, res) => {
   }
 };
 
+/**
+ * Manager dashboard: intern pipeline counts (KYC, tech/non-tech certificates, invites).
+ */
+const getManagerDashboard = async (req, res) => {
+  try {
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const [
+      roleInternCount,
+      kycPending,
+      kycApproved,
+      kycRejected,
+      pendingInvites,
+      offerLettersIssued,
+      certificatesThisMonth,
+      kycUserIds,
+      inviteUserIds,
+      enrollments,
+      trainerCompleted,
+      certificates,
+      certificateTemplates,
+      approvedKycRows,
+      recentPendingKyc,
+    ] = await Promise.all([
+      UserModel.countDocuments({ role: "intern", isActive: { $ne: false } }),
+      InternKyc.countDocuments({ approvalStatus: "pending" }),
+      InternKyc.countDocuments({ approvalStatus: "approved" }),
+      InternKyc.countDocuments({ approvalStatus: "rejected" }),
+      InternInvite.countDocuments({ status: "pending" }),
+      IssuedOfferLetter.countDocuments({}),
+      InternshipCertificate.countDocuments({ createdAt: { $gte: startOfMonth } }),
+      InternKyc.distinct("userId"),
+      UserInternship.distinct("userId", { enrollmentSource: "invite" }),
+      UserInternship.find({ active: { $ne: false } })
+        .select("userId internshipSlug title")
+        .lean(),
+      InternshipStudentAssignment.find({
+        internshipCompleted: true,
+        active: { $ne: false },
+      })
+        .select("studentId internshipSlug")
+        .lean(),
+      InternshipCertificate.find({})
+        .select("userId internshipSlug certificateType certificateTemplateId fromDate toDate")
+        .lean(),
+      CertificateTemplate.find({}).select("_id label type").lean(),
+      InternKyc.find({ approvalStatus: "approved" }).select("userId internshipSlug").lean(),
+      InternKyc.find({ approvalStatus: "pending" })
+        .sort({ createdAt: -1 })
+        .limit(8)
+        .populate("userId", "firstName lastName email")
+        .lean(),
+    ]);
+
+    const profileUserIds = new Set([
+      ...kycUserIds.map((id) => String(id)),
+      ...inviteUserIds.map((id) => String(id)),
+    ]);
+    const extraActive = profileUserIds.size
+      ? await UserModel.countDocuments({
+          _id: { $in: [...profileUserIds] },
+          role: { $ne: "intern" },
+          isActive: { $ne: false },
+        })
+      : 0;
+    const totalInterns = roleInternCount + extraActive;
+
+    const templateMap = new Map(certificateTemplates.map((row) => [String(row._id), row]));
+    const certKey = (userId, slug) => `${String(userId)}:${slug}`;
+    const hasCompletion = new Set();
+    for (const cert of certificates) {
+      if (isInternshipCompletionCertificate(cert, templateMap)) {
+        hasCompletion.add(certKey(cert.userId, cert.internshipSlug));
+      }
+    }
+
+    const trainerCompleteKeys = new Set(
+      trainerCompleted.map((row) => certKey(row.studentId, row.internshipSlug))
+    );
+
+    const approvedExact = new Set();
+    const usersWithLegacyApproved = new Set();
+    for (const row of approvedKycRows) {
+      const uid = String(row.userId);
+      if (!row.internshipSlug) {
+        usersWithLegacyApproved.add(uid);
+      } else {
+        approvedExact.add(certKey(uid, row.internshipSlug));
+      }
+    }
+
+    let techAwaitingCertificate = 0;
+    let businessAwaitingCertificate = 0;
+    let readyAfterTrainer = 0;
+    const seenEnrollment = new Set();
+
+    for (const enrollment of enrollments) {
+      const uid = String(enrollment.userId);
+      const slug = enrollment.internshipSlug;
+      const key = certKey(uid, slug);
+      if (seenEnrollment.has(key)) continue;
+      seenEnrollment.add(key);
+      if (hasCompletion.has(key)) continue;
+
+      const hasApprovedKyc = approvedExact.has(key) || usersWithLegacyApproved.has(uid);
+      const trainerDone = trainerCompleteKeys.has(key);
+      if (!trainerDone && !hasApprovedKyc) continue;
+
+      if (trainerDone) readyAfterTrainer += 1;
+      if (isTechInternshipProgram(slug, enrollment.title || "")) {
+        techAwaitingCertificate += 1;
+      } else {
+        businessAwaitingCertificate += 1;
+      }
+    }
+
+    const recentPending = recentPendingKyc.map((row) => {
+      const user = row.userId;
+      return {
+        id: String(row._id),
+        studentId: user?._id ? String(user._id) : String(row.userId),
+        name: row.fullName || `${user?.firstName || ""} ${user?.lastName || ""}`.trim() || "—",
+        email: row.email || user?.email || "",
+        program: row.internshipSlug || "",
+        submittedAt: row.createdAt,
+      };
+    });
+
+    res.status(200).json({
+      stats: {
+        totalInterns,
+        kycPending,
+        kycApproved,
+        kycRejected,
+        techAwaitingCertificate,
+        businessAwaitingCertificate,
+        readyAfterTrainer,
+        pendingInvites,
+        offerLettersIssued,
+        certificatesThisMonth,
+      },
+      recentPendingApprovals: recentPending,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to load manager dashboard" });
+  }
+};
+
 const listUsers = async (req, res) => {
   try {
     const page = Math.max(1, parseInt(req.query.page, 10) || 1);
@@ -521,15 +672,16 @@ const getInterns = async (req, res) => {
 };
 
 /**
- * Manager queue for internship certificates:
- * - Trainer marked internship-complete (any role)
- * - Admin/manager KYC-approved profiles still awaiting a completion certificate
+ * Manager queue for internship certificates.
+ * query.track = tech (default) | business | all
  * status=pending (default) | issued | all
  */
 const getInternshipApprovals = async (req, res) => {
   try {
     const status = String(req.query.status || "pending").toLowerCase();
+    const track = String(req.query.track || "tech").toLowerCase();
     const filter = ["pending", "issued", "all"].includes(status) ? status : "pending";
+    const trackFilter = ["tech", "business", "all"].includes(track) ? track : "tech";
 
     const [completedRows, approvedKycRows] = await Promise.all([
       InternshipStudentAssignment.find({
@@ -640,8 +792,10 @@ const getInternshipApprovals = async (req, res) => {
       const program = getInternshipBySlug(slug);
       const programTitle = program?.title || enrollment?.title || slug;
 
-      // Tech Internship Approvals: exclude business careers (HR, sales, BD, marketing)
-      if (!isTechInternshipProgram(slug, programTitle)) continue;
+      // track=tech → technical/paid-tech only; track=business → HR/sales/BD/marketing
+      const isTech = isTechInternshipProgram(slug, programTitle);
+      if (trackFilter === "tech" && !isTech) continue;
+      if (trackFilter === "business" && isTech) continue;
       const programTemplateId = program?.certificateTemplateId
         ? String(program.certificateTemplateId)
         : null;
@@ -2327,6 +2481,7 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
   getOverview,
+  getManagerDashboard,
   listUsers,
   updateUserRole,
   updateUserBlock,

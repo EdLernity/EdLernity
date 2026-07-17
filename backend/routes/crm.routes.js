@@ -3,6 +3,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 const {
   getOverview,
+  getManagerDashboard,
   listUsers,
   updateUserRole,
   updateUserBlock,
@@ -78,6 +79,7 @@ router.post("/my/kyc/resubmit", authMiddleware, internOnly, (req, res, next) => 
 router.use(authMiddleware);
 
 router.get("/overview", adminOnly, getOverview);
+router.get("/manager-dashboard", staff, getManagerDashboard);
 router.get("/interns", staff, getInterns);
 router.get("/internship-approvals", staff, getInternshipApprovals);
 router.post(

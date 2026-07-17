@@ -35,7 +35,7 @@ const ADMIN_ONLY_PREFIXES = [
   "/careers-programs",
   "/trainer-assignments",
 ];
-const MANAGER_HOME = "/interns";
+const MANAGER_HOME = "/";
 const TRAINER_HOME = "/trainer";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -136,7 +136,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (isManager) {
       const onAdminPage =
-        pathname === "/" ||
         ADMIN_ONLY_PREFIXES.some((prefix) => pathname.startsWith(prefix)) ||
         pathname.startsWith("/trainer");
       if (onAdminPage) {

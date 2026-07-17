@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   CertificateTemplateRow,
   InternProfileRow,
@@ -95,8 +96,13 @@ function pickInternshipTemplateId(
   return completion[0]?.id || list[0]?.id || "";
 }
 
-export default function CrmInternshipApprovalsPage() {
+export default function CrmInternshipApprovalsPage({
+  track = "tech",
+}: {
+  track?: "tech" | "business";
+}) {
   const { isAdmin, isManager } = useAuth();
+  const isBusinessTrack = track === "business";
   const [status, setStatus] = useState<ApprovalFilter>("pending");
   const [approvals, setApprovals] = useState<InternProfileRow[]>([]);
   const [summary, setSummary] = useState({ pending: 0, issued: 0 });
@@ -122,13 +128,13 @@ export default function CrmInternshipApprovalsPage() {
     internshipCompleted: boolean;
   } | null>(null);
 
-  const hideTechForManager = isManager && !isAdmin;
+  // Business queue issues Non Tech; managers never get Tech templates here either
+  const hideTechForManager = isBusinessTrack || (isManager && !isAdmin);
 
   const load = () => {
     setLoading(true);
     Promise.all([
-      fetchInternshipApprovals(status),
-      // Load all templates — filter client-side so Tech / Non Tech show even if type slug differs
+      fetchInternshipApprovals(status, track),
       fetchCertificateTemplates().then((data) => data.templates),
     ])
       .then(([data, templateRows]) => {
@@ -143,7 +149,7 @@ export default function CrmInternshipApprovalsPage() {
   useEffect(() => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
+  }, [status, track]);
 
   useEffect(() => {
     return () => {
@@ -154,22 +160,19 @@ export default function CrmInternshipApprovalsPage() {
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
     return approvals.filter((row) => {
-      // Defense in depth: never show business careers on this page
-      if (
-        !looksLikeTechProgram(
-          row.enrollment?.programTitle,
-          row.enrollment?.internshipSlug
-        )
-      ) {
-        return false;
-      }
+      const isTech = looksLikeTechProgram(
+        row.enrollment?.programTitle,
+        row.enrollment?.internshipSlug
+      );
+      if (isBusinessTrack && isTech) return false;
+      if (!isBusinessTrack && !isTech) return false;
       if (!term) return true;
       const name = displayName(row).toLowerCase();
       const email = row.student.email?.toLowerCase() || "";
       const program = row.enrollment?.programTitle?.toLowerCase() || "";
       return name.includes(term) || email.includes(term) || program.includes(term);
     });
-  }, [approvals, search]);
+  }, [approvals, search, isBusinessTrack]);
 
   const {
     page: approvalsPage,
@@ -179,7 +182,7 @@ export default function CrmInternshipApprovalsPage() {
     totalPages: approvalsTotalPages,
     from: approvalsFrom,
     to: approvalsTo,
-  } = useClientPagination(filtered);
+  } = useClientPagination(filtered, 20, `${search}|${status}|${track}`);
 
   const openPdfBlob = (blob: Blob, title: string) => {
     if (pdfUrl) URL.revokeObjectURL(pdfUrl);
@@ -380,13 +383,29 @@ export default function CrmInternshipApprovalsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Tech Internship Approvals
+          {isBusinessTrack ? "Business Internship Certificates" : "Tech Internship Approvals"}
         </h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Tech internship students only (excludes HR, sales, marketing, and other business
-          careers). Set from/to dates, preview the PDF, then issue.
+          {isBusinessTrack
+            ? "HR, sales, marketing, and other business careers awaiting Non Tech certificates."
+            : "Tech internship students only (excludes HR, sales, marketing, and other business careers)."}{" "}
+          Set from/to dates, preview the PDF, then issue.
         </p>
       </div>
+
+      {isBusinessTrack ? (
+        <div className="flex flex-wrap gap-2 border-b border-gray-200 pb-1 dark:border-gray-800">
+          <Link
+            href="/interns"
+            className="rounded-t-lg px-4 py-2 text-sm font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.04] dark:hover:text-gray-200"
+          >
+            All interns
+          </Link>
+          <span className="rounded-t-lg bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-600 dark:bg-brand-500/10">
+            Internship certificates
+          </span>
+        </div>
+      ) : null}
 
       {message && (
         <p className="rounded-lg bg-brand-50 px-4 py-2 text-sm text-brand-600 dark:bg-brand-500/10">

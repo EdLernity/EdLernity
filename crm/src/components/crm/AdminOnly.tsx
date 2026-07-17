@@ -10,7 +10,7 @@ export default function AdminOnly({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!loading && !isAdmin) {
-      router.replace("/interns");
+      router.replace("/");
     }
   }, [loading, isAdmin, router]);
 

@@ -76,6 +76,21 @@ function hasIssuedCertificates(row: InternProfileRow) {
 }
 
 /** Non Tech / internship-completion already issued (including admin override). */
+function looksLikeTechProgram(programTitle?: string, internshipSlug?: string) {
+  const haystack = `${programTitle || ""} ${internshipSlug || ""}`.toLowerCase();
+  if (/non[\s-]*tech/.test(haystack)) return false;
+  if (
+    /human-?resources|\bhr\b|business-?development|sales-?marketing|lead-?generation|marketing/.test(
+      haystack
+    )
+  ) {
+    return false;
+  }
+  return /tech|software|developer|coding|full[\s-]?stack|data|ai|ml|web|python|java|cloud|devops|salesforce/.test(
+    haystack
+  );
+}
+
 function hasInternshipCompletionCertificate(row: InternProfileRow) {
   return issuedCertificates(row).some((certificate) => {
     const label = String(certificate.templateLabel || "");
@@ -265,49 +280,89 @@ export default function CrmInternsPage() {
   }, [showInactive]);
 
   const programs = useMemo(() => {
-    const slugs = new Set<string>();
+    const bySlug = new Map<string, string>();
     interns.forEach((row) => {
-      if (row.enrollment?.internshipSlug) slugs.add(row.enrollment.internshipSlug);
-      if (row.kyc?.programName) slugs.add(row.kyc.programName);
+      const slug = row.enrollment?.internshipSlug;
+      if (!slug) return;
+      const title = row.enrollment?.programTitle || slug;
+      if (!bySlug.has(slug)) bySlug.set(slug, title);
     });
-    return [...slugs].map((slug) => ({
-      slug,
-      title:
-        interns.find((row) => row.enrollment?.internshipSlug === slug)?.enrollment?.programTitle ||
-        slug,
-    }));
+    return [...bySlug.entries()]
+      .map(([slug, title]) => ({ slug, title }))
+      .sort((a, b) => a.title.localeCompare(b.title));
   }, [interns]);
 
-  const awaitingInternshipCount = useMemo(
-    () => interns.filter((row) => row.awaitingInternshipCertificate).length,
+  const awaitingBusinessCertificateCount = useMemo(
+    () =>
+      interns.filter(
+        (row) =>
+          row.awaitingInternshipCertificate &&
+          !looksLikeTechProgram(row.enrollment?.programTitle, row.enrollment?.internshipSlug)
+      ).length,
     [interns]
   );
 
   const filtered = useMemo(() => {
+    const term = search.trim().toLowerCase();
     return interns.filter((row) => {
-      const term = search.trim().toLowerCase();
       const name = displayName(row).toLowerCase();
-      const email = row.student.email?.toLowerCase() || "";
-      const college = row.kyc?.collegeName?.toLowerCase() || "";
-      const matchesSearch = !term || name.includes(term) || email.includes(term) || college.includes(term);
-      const slug = row.enrollment?.internshipSlug || "";
-      const matchesProgram = programFilter === "all" || slug === programFilter;
+      const email = (row.student.email || "").toLowerCase();
+      const college = (row.kyc?.collegeName || "").toLowerCase();
+      const phone = (row.student.phone || row.kyc?.phone || "").toLowerCase();
+      const programTitle = (row.enrollment?.programTitle || "").toLowerCase();
+      const slug = (row.enrollment?.internshipSlug || "").toLowerCase();
+
+      const matchesSearch =
+        !term ||
+        name.includes(term) ||
+        email.includes(term) ||
+        college.includes(term) ||
+        phone.includes(term) ||
+        programTitle.includes(term) ||
+        slug.includes(term);
+
+      const matchesProgram =
+        programFilter === "all" ||
+        row.enrollment?.internshipSlug === programFilter ||
+        (row.enrollment?.programTitle || "").toLowerCase() === programFilter.toLowerCase();
+
+      const hasKyc = Boolean(row.kyc);
       const matchesKyc =
         kycFilter === "all" ||
-        (kycFilter === "submitted" && Boolean(row.kyc)) ||
-        (kycFilter === "pending" && !row.kyc);
+        (kycFilter === "submitted" && hasKyc) ||
+        (kycFilter === "pending" && !hasKyc);
+
       const status = approvalStatus(row);
       const matchesApproval =
         approvalFilter === "all" ||
-        (approvalFilter === "pending" && status === "pending") ||
-        (approvalFilter === "approved" && status === "approved");
+        (approvalFilter === "pending" && (status === "pending" || status === "none")) ||
+        (approvalFilter === "approved" && status === "approved") ||
+        (approvalFilter === "rejected" && status === "rejected");
+
+      const hasCompletion = hasInternshipCompletionCertificate(row);
       const matchesCert =
         certFilter === "all" ||
-        (certFilter === "issued" && hasIssuedCertificates(row)) ||
-        (certFilter === "pending" && !hasIssuedCertificates(row));
+        (certFilter === "issued" && hasCompletion) ||
+        (certFilter === "pending" && !hasCompletion);
+
       return matchesSearch && matchesProgram && matchesKyc && matchesApproval && matchesCert;
     });
   }, [interns, search, programFilter, kycFilter, approvalFilter, certFilter]);
+
+  const hasActiveFilters =
+    Boolean(search.trim()) ||
+    programFilter !== "all" ||
+    kycFilter !== "all" ||
+    approvalFilter !== "all" ||
+    certFilter !== "all";
+
+  const clearFilters = () => {
+    setSearch("");
+    setProgramFilter("all");
+    setKycFilter("all");
+    setApprovalFilter("all");
+    setCertFilter("all");
+  };
 
   const {
     page: listPage,
@@ -648,55 +703,90 @@ export default function CrmInternsPage() {
           All interns
         </span>
         <Link
-          href="/internship-approvals"
+          href="/business-internship-approvals"
           className="rounded-t-lg px-4 py-2 text-sm font-semibold text-gray-500 hover:bg-gray-50 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.04] dark:hover:text-gray-200"
         >
           Internship certificates
-          {awaitingInternshipCount > 0 ? (
+          {awaitingBusinessCertificateCount > 0 ? (
             <span className="ml-2 inline-flex min-w-[1.25rem] justify-center rounded-full bg-amber-500 px-1.5 text-[11px] font-bold text-white">
-              {awaitingInternshipCount}
+              {awaitingBusinessCertificateCount}
             </span>
           ) : null}
         </Link>
       </div>
 
       <p className="text-sm text-gray-600 dark:text-gray-400">
-        For trainer-completed students waiting on Non Tech certificates, open{" "}
+        Business careers (HR, sales, marketing) use{" "}
+        <Link
+          href="/business-internship-approvals"
+          className="font-semibold text-brand-500 hover:underline"
+        >
+          Internship certificates
+        </Link>
+        . Tech programs use{" "}
         <Link href="/internship-approvals" className="font-semibold text-brand-500 hover:underline">
           Tech Internship Approvals
         </Link>
         .
       </p>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <input
           type="search"
-          placeholder="Search name or email..."
+          placeholder="Search name, email, phone, program..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className={inputClass() + " max-w-xs"}
         />
-        <select value={programFilter} onChange={(e) => setProgramFilter(e.target.value)} className={selectClass() + " max-w-[200px]"}>
+        <select
+          value={programFilter}
+          onChange={(e) => setProgramFilter(e.target.value)}
+          className={selectClass() + " max-w-[220px]"}
+        >
           <option value="all">All programs</option>
           {programs.map((p) => (
-            <option key={p.slug} value={p.slug}>{p.title}</option>
+            <option key={p.slug} value={p.slug}>
+              {p.title}
+            </option>
           ))}
         </select>
-        <select value={approvalFilter} onChange={(e) => setApprovalFilter(e.target.value)} className={selectClass() + " max-w-[180px]"}>
+        <select
+          value={approvalFilter}
+          onChange={(e) => setApprovalFilter(e.target.value)}
+          className={selectClass() + " max-w-[180px]"}
+        >
           <option value="all">All approvals</option>
           <option value="pending">Pending approval</option>
           <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
         </select>
-        <select value={kycFilter} onChange={(e) => setKycFilter(e.target.value)} className={selectClass() + " max-w-[160px]"}>
+        <select
+          value={kycFilter}
+          onChange={(e) => setKycFilter(e.target.value)}
+          className={selectClass() + " max-w-[160px]"}
+        >
           <option value="all">All KYC</option>
           <option value="submitted">KYC submitted</option>
           <option value="pending">KYC pending</option>
         </select>
-        <select value={certFilter} onChange={(e) => setCertFilter(e.target.value)} className={selectClass() + " max-w-[160px]"}>
+        <select
+          value={certFilter}
+          onChange={(e) => setCertFilter(e.target.value)}
+          className={selectClass() + " max-w-[180px]"}
+        >
           <option value="all">All certs</option>
-          <option value="issued">Issued</option>
-          <option value="pending">Pending</option>
+          <option value="issued">Certificate issued</option>
+          <option value="pending">Certificate pending</option>
         </select>
+        {hasActiveFilters ? (
+          <button
+            type="button"
+            onClick={clearFilters}
+            className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+          >
+            Clear filters
+          </button>
+        ) : null}
         {isAdmin && (
           <label className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 px-1">
             <input
@@ -710,10 +800,32 @@ export default function CrmInternsPage() {
         )}
       </div>
 
+      {!loading && hasActiveFilters ? (
+        <p className="text-xs text-gray-500">
+          Showing {filtered.length} of {interns.length} intern
+          {interns.length === 1 ? "" : "s"}
+        </p>
+      ) : null}
+
       {loading ? (
         <p className="text-sm text-gray-500 py-8 text-center">Loading intern profiles...</p>
       ) : filtered.length === 0 ? (
-        <p className="text-sm text-gray-500 py-8 text-center">No intern profiles found</p>
+        <div className="space-y-3 py-8 text-center">
+          <p className="text-sm text-gray-500">
+            {hasActiveFilters
+              ? "No interns match these filters."
+              : "No intern profiles found."}
+          </p>
+          {hasActiveFilters ? (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="text-sm font-semibold text-brand-500 hover:underline"
+            >
+              Clear filters
+            </button>
+          ) : null}
+        </div>
       ) : (
         <div className="space-y-4">
           {pagedInterns.map((row) => {

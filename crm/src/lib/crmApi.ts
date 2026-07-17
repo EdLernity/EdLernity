@@ -268,6 +268,32 @@ export async function fetchOverview() {
   };
 }
 
+export async function fetchManagerDashboard() {
+  const { data } = await api.get("/api/v1/crm/manager-dashboard");
+  return data as {
+    stats: {
+      totalInterns: number;
+      kycPending: number;
+      kycApproved: number;
+      kycRejected: number;
+      techAwaitingCertificate: number;
+      businessAwaitingCertificate: number;
+      readyAfterTrainer: number;
+      pendingInvites: number;
+      offerLettersIssued: number;
+      certificatesThisMonth: number;
+    };
+    recentPendingApprovals: Array<{
+      id: string;
+      studentId: string;
+      name: string;
+      email: string;
+      program: string;
+      submittedAt: string;
+    }>;
+  };
+}
+
 export async function fetchUsers(params: {
   page?: number;
   limit?: number;
@@ -299,10 +325,13 @@ export async function fetchInterns(includeInactive = false) {
   return (data.interns || []) as InternProfileRow[];
 }
 
-/** Trainer-completed or KYC-approved students awaiting manager certificate issue. */
-export async function fetchInternshipApprovals(status: "pending" | "issued" | "all" = "pending") {
+/** Internship certificate queue. track: tech (default) | business | all */
+export async function fetchInternshipApprovals(
+  status: "pending" | "issued" | "all" = "pending",
+  track: "tech" | "business" | "all" = "tech"
+) {
   const { data } = await api.get("/api/v1/crm/internship-approvals", {
-    params: { status },
+    params: { status, track },
   });
   return data as {
     approvals: InternProfileRow[];
