@@ -223,6 +223,8 @@ const completeOnboarding = async (req, res) => {
       user.role = "intern";
       if (!user.isVerified) user.isVerified = true;
       user.password = hashedPassword;
+      // Password login must work in CRM even if they previously used Google on the learner site.
+      user.isGoogleAuth = false;
       await user.save();
     } else {
       user = await UserModel.create({
@@ -233,6 +235,7 @@ const completeOnboarding = async (req, res) => {
         phone: phoneRaw,
         password: hashedPassword,
         isVerified: true,
+        isGoogleAuth: false,
         role: "intern",
       });
     }

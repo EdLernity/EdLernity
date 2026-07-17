@@ -157,15 +157,32 @@ const loginUser = async (req, res) => {
         text: "to login again.",
       });
     }
-if(password&&user.isGoogleAuth)
-{
-  return res
-  .status(401)
-  .json({ success: false, message: "Please Login with Google", redirectTo: "/auth/login", text: "to login again." }); 
-}
+    // Google-only accounts with no password must use Google.
+    // If onboarding/password reset set a password, allow email+password even if they once used Google.
+    if (!googleSignUp && password && user.isGoogleAuth && !user.password) {
+      return res
+        .status(401)
+        .json({
+          success: false,
+          message: "Please Login with Google",
+          redirectTo: "/auth/login",
+          text: "to login again.",
+        });
+    }
     // Check if the password matches
     if (!googleSignUp) {
-      console.log(password, user.password)
+      if (!user.password) {
+        return res
+          .status(401)
+          .json({
+            success: false,
+            message: user.isGoogleAuth
+              ? "Please Login with Google"
+              : "Incorrect password",
+            redirectTo: "/auth/login",
+            text: "to login again.",
+          });
+      }
       const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (!isPasswordValid) {
