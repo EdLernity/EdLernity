@@ -982,17 +982,26 @@ const approveInternCertificate = async (req, res) => {
     if (isInternshipCompletionFlow) {
       const wantsOverride = Boolean(req.body?.manualOverride);
       const isNonTech = /non[\s-]*tech/i.test(String(certificateTemplate.label || ""));
+      const isAdminUser =
+        req.userRole === "admin" ||
+        req.user?.role === "admin" ||
+        req.user?.effectiveRole === "admin";
 
-      if (wantsOverride && !isNonTech) {
+      // Admins may always override trainer-completion gate for internship certs.
+      // Managers may override Non Tech only when manualOverride is sent.
+      const overrideAllowed =
+        isAdminUser || (wantsOverride && isNonTech);
+
+      if (wantsOverride && !isAdminUser && !isNonTech) {
         return res.status(400).json({
-          message: "Manual override is only allowed for Non Tech certificates",
+          message: "Manual override is only allowed for Non Tech certificates (managers)",
         });
       }
 
-      if (!trainerAssignment?.internshipCompleted && !(wantsOverride && isNonTech)) {
+      if (!trainerAssignment?.internshipCompleted && !overrideAllowed) {
         return res.status(400).json({
           message:
-            "Trainer must mark this internship completed before the manager can issue the internship completion certificate. Use Manual override for Non Tech only.",
+            "Trainer must mark this internship completed before issuing. Managers can use Manual override for Non Tech; admins can always override.",
         });
       }
       if (!fromDate || !toDate) {

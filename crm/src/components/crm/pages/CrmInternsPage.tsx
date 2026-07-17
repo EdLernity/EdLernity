@@ -85,6 +85,14 @@ function isNonTechTemplate(template: CertificateTemplateRow) {
   return /non[\s-]*tech/i.test(String(template.label || ""));
 }
 
+/** Internship completion PDFs print a from–to period (not a single issue date). */
+function needsInternshipPeriodDates(template: CertificateTemplateRow | null | undefined) {
+  if (!template) return false;
+  if (isNonTechTemplate(template)) return true;
+  if (template.type === "internship-completion" || template.type === "tech-internship") return true;
+  return isTechInternshipTemplate(template);
+}
+
 /** Interns Issue Certificate dropdown — only these templates. */
 function isAllowedInternIssueTemplate(template: CertificateTemplateRow) {
   if (template.type === "course-completion") return false;
@@ -99,7 +107,7 @@ function isAllowedInternIssueTemplate(template: CertificateTemplateRow) {
 }
 
 function isCompletionCertificateTemplate(template: CertificateTemplateRow) {
-  return isNonTechTemplate(template);
+  return needsInternshipPeriodDates(template) && isAllowedInternIssueTemplate(template);
 }
 
 function isSpecialCertificateTemplate(template: CertificateTemplateRow) {
@@ -110,32 +118,31 @@ function pickDefaultCertificateTemplateId(
   templates: CertificateTemplateRow[],
   issuedTemplateIds: string[],
   programTemplateId?: string | null,
-  completionUnlocked = true
+  _completionUnlocked = true
 ) {
   const available = templates.filter(
     (template) =>
-      isAllowedInternIssueTemplate(template) && !issuedTemplateIds.includes(template.id)
+      isAllowedInternIssueTemplate(template) &&
+      !issuedTemplateIds.includes(String(template.id))
   );
   if (!available.length) return "";
 
   const completionAvailable = available.filter(isCompletionCertificateTemplate);
   const specialAvailable = available.filter(isSpecialCertificateTemplate);
 
-  if (!completionUnlocked) {
-    return specialAvailable[0]?.id || "";
-  }
+  // Always prefer Non Tech when still available — admin/manager override handles trainer gate.
+  const nonTech = completionAvailable.find((template) => isNonTechTemplate(template));
+  if (nonTech) return String(nonTech.id);
 
   if (
     programTemplateId &&
-    available.some((template) => template.id === programTemplateId)
+    available.some((template) => String(template.id) === String(programTemplateId))
   ) {
-    return programTemplateId;
+    return String(programTemplateId);
   }
 
-  const nonTech = completionAvailable.find((template) => isNonTechTemplate(template));
-  if (nonTech) return nonTech.id;
-
-  return specialAvailable[0]?.id || "";
+  if (completionAvailable[0]) return String(completionAvailable[0].id);
+  return specialAvailable[0] ? String(specialAvailable[0].id) : "";
 }
 
 function isSelectedTemplateIssueBlocked(
@@ -144,17 +151,19 @@ function isSelectedTemplateIssueBlocked(
   options: {
     internshipCompleted: boolean;
     manualOverride?: boolean;
+    isAdmin?: boolean;
   }
 ) {
   if (!templateId) return true;
-  const selected = templates.find((template) => template.id === templateId);
+  const selected = templates.find((template) => String(template.id) === String(templateId));
   if (!selected) return true;
   if (selected.type === "course-completion") return true;
   if (
     (selected.type === "internship-completion" || isNonTechTemplate(selected)) &&
     !options.internshipCompleted
   ) {
-    // Manual override only for Non Tech
+    // Admins can always override; managers need Manual override for Non Tech
+    if (options.isAdmin) return false;
     if (isNonTechTemplate(selected) && options.manualOverride) return false;
     return true;
   }
@@ -326,20 +335,28 @@ export default function CrmInternsPage() {
 
   const handleIssue = async () => {
     if (!modal) return;
+    const selectedTemplate = certificateTemplates.find(
+      (t) => String(t.id) === String(modal.certificateTemplateId)
+    );
+    const adminOverride = Boolean(isAdmin);
+    const managerOverride =
+      Boolean(modal.manualOverride) && Boolean(selectedTemplate && isNonTechTemplate(selectedTemplate));
+    const useOverride = adminOverride || managerOverride;
+
     if (
       isSelectedTemplateIssueBlocked(modal.certificateTemplateId, certificateTemplates, {
         internshipCompleted: modal.internshipCompleted,
-        manualOverride: modal.manualOverride,
+        manualOverride: useOverride,
+        isAdmin,
       })
     ) {
-      const selected = certificateTemplates.find((t) => t.id === modal.certificateTemplateId);
       if (
-        selected &&
-        (selected.type === "internship-completion" || isNonTechTemplate(selected)) &&
+        selectedTemplate &&
+        (selectedTemplate.type === "internship-completion" || isNonTechTemplate(selectedTemplate)) &&
         !modal.internshipCompleted
       ) {
         setMessage(
-          isNonTechTemplate(selected)
+          isNonTechTemplate(selectedTemplate)
             ? "Non Tech is locked until trainer completion — enable Manual override to issue now."
             : "Internship completion waits until the trainer marks the internship completed."
         );
@@ -356,15 +373,10 @@ export default function CrmInternsPage() {
       setMessage("Enter the full name to print on the certificate");
       return;
     }
-    const selectedTemplate = certificateTemplates.find(
-      (t) => t.id === modal.certificateTemplateId
-    );
-    const isInternshipCompletion = Boolean(
-      selectedTemplate && isCompletionCertificateTemplate(selectedTemplate)
-    );
+    const isInternshipCompletion = needsInternshipPeriodDates(selectedTemplate);
     if (isInternshipCompletion) {
       if (!modal.fromDate || !modal.toDate) {
-        setMessage("Enter from date and to date");
+        setMessage("Enter internship from date and to date");
         return;
       }
       if (modal.fromDate > modal.toDate) {
@@ -378,9 +390,6 @@ export default function CrmInternsPage() {
 
     setIssuing(true);
     try {
-      const useOverride =
-        Boolean(modal.manualOverride) &&
-        Boolean(selectedTemplate && isNonTechTemplate(selectedTemplate));
       await approveInternCertificate(
         modal.studentId,
         modal.studentName.trim(),
@@ -396,8 +405,8 @@ export default function CrmInternsPage() {
           : undefined
       );
       setMessage(
-        useOverride
-          ? "Non Tech certificate issued with manual override"
+        useOverride && !modal.internshipCompleted
+          ? "Certificate issued with override (trainer completion bypassed)"
           : "Certificate issued and available in intern portal"
       );
       setModal(null);
@@ -543,18 +552,35 @@ export default function CrmInternsPage() {
     return availableTemplatesForModal.filter(isSpecialCertificateTemplate);
   }, [availableTemplatesForModal]);
 
-  const selectedTemplateForModal = modal
-    ? certificateTemplates.find((t) => t.id === modal.certificateTemplateId) || null
-    : null;
+  const selectedTemplateForModal = useMemo(() => {
+    if (!modal?.certificateTemplateId) return null;
+    const id = String(modal.certificateTemplateId);
+    return (
+      availableTemplatesForModal.find((t) => String(t.id) === id) ||
+      certificateTemplates.find((t) => String(t.id) === id) ||
+      null
+    );
+  }, [modal?.certificateTemplateId, availableTemplatesForModal, certificateTemplates]);
+
+  const showPeriodDates =
+    needsInternshipPeriodDates(selectedTemplateForModal) ||
+    Boolean(
+      modal &&
+        completionTemplatesForModal.some(
+          (t) => String(t.id) === String(modal.certificateTemplateId)
+        )
+    );
   const showNonTechOverride =
     Boolean(modal) &&
+    !isAdmin &&
     Boolean(selectedTemplateForModal && isNonTechTemplate(selectedTemplateForModal)) &&
     !modal!.internshipCompleted;
 
   const issueBlockedForSelection = modal
     ? isSelectedTemplateIssueBlocked(modal.certificateTemplateId, certificateTemplates, {
         internshipCompleted: modal.internshipCompleted,
-        manualOverride: modal.manualOverride,
+        manualOverride: modal.manualOverride || isAdmin,
+        isAdmin,
       })
     : true;
 
@@ -965,10 +991,16 @@ export default function CrmInternsPage() {
               </p>
             </label>
 
-            {!modal.internshipCompleted && !showNonTechOverride ? (
+            {!modal.internshipCompleted && !isAdmin && !showNonTechOverride ? (
               <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
                 Internship completion unlocks after the trainer marks the internship completed.
                 Recognition certificates can be issued anytime.
+              </div>
+            ) : null}
+            {isAdmin && !modal.internshipCompleted && showPeriodDates ? (
+              <div className="mb-4 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-800 dark:border-brand-500/30 dark:bg-brand-500/10 dark:text-brand-200">
+                Admin override: you can issue Non Tech now without trainer completion. Set the
+                internship <strong>from</strong> and <strong>to</strong> dates below.
               </div>
             ) : null}
 
@@ -1021,11 +1053,12 @@ export default function CrmInternsPage() {
                         {completionTemplatesForModal.map((template) => {
                           const locked =
                             !modal.internshipCompleted &&
+                            !isAdmin &&
                             !(isNonTechTemplate(template) && modal.manualOverride);
                           return (
                             <option key={template.id} value={template.id}>
                               {template.label}
-                              {locked && !modal.manualOverride ? " (needs trainer or override)" : ""}
+                              {locked ? " (needs trainer or override)" : ""}
                             </option>
                           );
                         })}
@@ -1066,32 +1099,33 @@ export default function CrmInternsPage() {
               </label>
             ) : null}
 
-            {selectedTemplateForModal && isCompletionCertificateTemplate(selectedTemplateForModal) ? (
-              <div className="mb-4 grid gap-3 sm:grid-cols-2">
-                <label className="block">
-                  <span className="mb-1 block text-xs font-medium text-gray-500">
-                    From date (printed)
-                  </span>
-                  <input
-                    type="date"
-                    value={modal.fromDate}
-                    onChange={(e) => setModal({ ...modal, fromDate: e.target.value })}
-                    className={inputClass()}
-                    required
-                  />
-                </label>
-                <label className="block">
-                  <span className="mb-1 block text-xs font-medium text-gray-500">
-                    To date (printed)
-                  </span>
-                  <input
-                    type="date"
-                    value={modal.toDate}
-                    onChange={(e) => setModal({ ...modal, toDate: e.target.value })}
-                    className={inputClass()}
-                    required
-                  />
-                </label>
+            {showPeriodDates ? (
+              <div className="mb-4 space-y-2">
+                <p className="text-xs font-medium text-gray-500">
+                  Internship period (printed on certificate)
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="block">
+                    <span className="mb-1 block text-xs font-medium text-gray-500">From date</span>
+                    <input
+                      type="date"
+                      value={modal.fromDate}
+                      onChange={(e) => setModal({ ...modal, fromDate: e.target.value })}
+                      className={inputClass()}
+                      required
+                    />
+                  </label>
+                  <label className="block">
+                    <span className="mb-1 block text-xs font-medium text-gray-500">To date</span>
+                    <input
+                      type="date"
+                      value={modal.toDate}
+                      onChange={(e) => setModal({ ...modal, toDate: e.target.value })}
+                      className={inputClass()}
+                      required
+                    />
+                  </label>
+                </div>
               </div>
             ) : (
               <label className="mb-4 block">
@@ -1120,10 +1154,7 @@ export default function CrmInternsPage() {
                   !modal.studentName.trim() ||
                   modal.studentName.trim() === "—" ||
                   !modal.certificateTemplateId ||
-                  (selectedTemplateForModal &&
-                  isCompletionCertificateTemplate(selectedTemplateForModal)
-                    ? !modal.fromDate || !modal.toDate
-                    : !modal.issuedAt) ||
+                  (showPeriodDates ? !modal.fromDate || !modal.toDate : !modal.issuedAt) ||
                   availableTemplatesForModal.length === 0 ||
                   issueBlockedForSelection
                 }
