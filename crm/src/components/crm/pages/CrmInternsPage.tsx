@@ -75,6 +75,20 @@ function hasIssuedCertificates(row: InternProfileRow) {
   return issuedCertificates(row).length > 0 || Boolean(row.certificate?.issued);
 }
 
+/** Non Tech / internship-completion already issued (including admin override). */
+function hasInternshipCompletionCertificate(row: InternProfileRow) {
+  return issuedCertificates(row).some((certificate) => {
+    const label = String(certificate.templateLabel || "");
+    const type = String(certificate.certificateType || "");
+    if (/non[\s-]*tech/i.test(label)) return true;
+    if (type === "internship-completion" || type === "tech-internship") return true;
+    if (/tech/i.test(label) && !/non[\s-]*tech/i.test(label) && /internship/i.test(label)) {
+      return true;
+    }
+    return Boolean(certificate.fromDate && certificate.toDate);
+  });
+}
+
 function isTechInternshipTemplate(template: CertificateTemplateRow) {
   if (template.type === "tech-internship") return true;
   const label = String(template.label || "");
@@ -788,6 +802,7 @@ export default function CrmInternsPage() {
                       ))}
                       {approvalStatus(row) === "approved" &&
                       !row.internshipCompleted &&
+                      !hasInternshipCompletionCertificate(row) &&
                       !row.courseCompletionUnlocked &&
                       !row.certificateUnlocked ? (
                         <span className="text-xs font-semibold text-amber-600 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded-full">
