@@ -98,13 +98,29 @@ const AppSidebar: React.FC = () => {
       <div
         className={`py-8 flex ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"}`}
       >
-        <Link href={isTrainer ? "/trainer" : isIntern ? "/my-offer-letters" : "/"}>
+        <Link href={isTrainer ? "/trainer" : isIntern ? "/my-offer-letters" : "/"} className="flex items-center">
           {isExpanded || isHovered || isMobileOpen ? (
-            <span className="text-xl font-bold text-brand-500">
-              {isIntern ? "Intern Portal" : "EdLernity CRM"}
-            </span>
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/images/logo/logo.svg"
+              alt="EdLernity"
+              className="h-9 w-auto dark:hidden"
+            />
+          ) : null}
+          {isExpanded || isHovered || isMobileOpen ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/images/logo/logo-dark.svg"
+              alt="EdLernity"
+              className="hidden h-9 w-auto dark:block"
+            />
           ) : (
-            <span className="text-lg font-bold text-brand-500">EL</span>
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/images/logo/edlernity-mark.svg"
+              alt="EdLernity"
+              className="h-8 w-8"
+            />
           )}
         </Link>
       </div>

@@ -3,7 +3,6 @@ import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
 import { useSidebar } from "@/context/SidebarContext";
 import { useIsModalOpen } from "@/context/ModalOverlayContext";
-import Image from "next/image";
 import Link from "next/link";
 import React, { useState ,useEffect,useRef} from "react";
 
@@ -87,19 +86,17 @@ const AppHeader: React.FC = () => {
           </button>
 
           <Link href="/" className="lg:hidden">
-            <Image
-              width={154}
-              height={32}
-              className="dark:hidden"
-              src="./images/logo/logo.svg"
-              alt="Logo"
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo/logo.svg"
+              alt="EdLernity"
+              className="h-8 w-auto dark:hidden"
             />
-            <Image
-              width={154}
-              height={32}
-              className="hidden dark:block"
-              src="./images/logo/logo-dark.svg"
-              alt="Logo"
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo/logo-dark.svg"
+              alt="EdLernity"
+              className="hidden h-8 w-auto dark:block"
             />
           </Link>
 

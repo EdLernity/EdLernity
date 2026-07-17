@@ -2,7 +2,6 @@ import GridShape from "@/components/common/GridShape";
 import ThemeTogglerTwo from "@/components/common/ThemeTogglerTwo";
 
 import { ThemeProvider } from "@/context/ThemeContext";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -22,15 +21,15 @@ export default function AuthLayout({
               <GridShape />
               <div className="flex flex-col items-center max-w-xs">
                 <Link href="/" className="block mb-4">
-                  <Image
-                    width={231}
-                    height={48}
-                    src="./images/logo/auth-logo.svg"
-                    alt="Logo"
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/images/logo/auth-logo.svg"
+                    alt="EdLernity"
+                    className="h-12 w-auto"
                   />
                 </Link>
                 <p className="text-center text-gray-400 dark:text-white/60">
-                  EdLernity Admin CRM — manage users, interns, and operations
+                  EdLernity CRM — manage users, interns, and operations
                 </p>
               </div>
             </div>
