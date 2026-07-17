@@ -38,10 +38,22 @@ async function findKycForProgram(userId, internshipSlug) {
     $or: [{ internshipSlug: null }, { internshipSlug: { $exists: false } }, { internshipSlug: "" }],
   });
 
-  if (!legacy) return null;
+  if (legacy) {
+    await backfillKycInternshipSlug(legacy);
+    if (!legacy.internshipSlug || legacy.internshipSlug === internshipSlug) {
+      if (!legacy.internshipSlug) {
+        legacy.internshipSlug = internshipSlug;
+        await legacy.save();
+      }
+      return legacy;
+    }
+  }
 
-  await backfillKycInternshipSlug(legacy);
-  if (legacy.internshipSlug === internshipSlug) return legacy;
+  // Legacy mismatched slug: single KYC for this user still belongs to them
+  const forUser = await InternKyc.find({ userId }).sort({ updatedAt: -1 });
+  if (forUser.length === 1) {
+    return forUser[0];
+  }
 
   return null;
 }
@@ -52,14 +64,28 @@ function pickKycFromList(kycRecords, userId, internshipSlug, inviteId) {
     if (inviteMatch) return inviteMatch;
   }
 
-  if (!userId || !internshipSlug) return null;
+  if (!userId) return null;
+  const uid = String(userId);
 
-  const slugMatch = kycRecords.find(
-    (row) => String(row.userId) === String(userId) && row.internshipSlug === internshipSlug
+  if (internshipSlug) {
+    const slugMatch = kycRecords.find(
+      (row) => String(row.userId) === uid && row.internshipSlug === internshipSlug
+    );
+    if (slugMatch) return slugMatch;
+  }
+
+  // Legacy / mismatched slug: any KYC for this user (prefer empty slug, then newest)
+  const forUser = kycRecords.filter((row) => String(row.userId) === uid);
+  if (!forUser.length) return null;
+
+  const legacy = forUser.find(
+    (row) => !row.internshipSlug || row.internshipSlug === ""
   );
-  if (slugMatch) return slugMatch;
+  if (legacy) return legacy;
 
-  return null;
+  return forUser.sort(
+    (a, b) => new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0)
+  )[0];
 }
 
 function pickCertificateFromList(certificates, userId, internshipSlug) {

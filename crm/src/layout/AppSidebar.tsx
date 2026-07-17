@@ -28,7 +28,7 @@ const allNavItems: NavItem[] = [
   { icon: <GridIcon />, name: "Overview", path: "/", adminOnly: true },
   { icon: <UserCircleIcon />, name: "Users", path: "/users", adminOnly: true },
   { icon: <TableIcon />, name: "Interns", path: "/interns" },
-  { icon: <TaskIcon />, name: "Internship Approvals", path: "/internship-approvals" },
+  { icon: <TaskIcon />, name: "Tech Internship Approvals", path: "/internship-approvals" },
   { icon: <TaskIcon />, name: "Certificates", path: "/certificates", adminOnly: true },
   { icon: <ListIcon />, name: "Careers Programs", path: "/careers-programs", adminOnly: true },
   { icon: <PlugInIcon />, name: "Trainer Assignments", path: "/trainer-assignments", adminOnly: true },

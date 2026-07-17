@@ -663,7 +663,7 @@ export default function CrmInternsPage() {
       <p className="text-sm text-gray-600 dark:text-gray-400">
         For trainer-completed students waiting on Non Tech certificates, open{" "}
         <Link href="/internship-approvals" className="font-semibold text-brand-500 hover:underline">
-          Internship Approvals
+          Tech Internship Approvals
         </Link>
         .
       </p>

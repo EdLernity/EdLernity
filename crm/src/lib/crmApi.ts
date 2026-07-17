@@ -299,7 +299,7 @@ export async function fetchInterns(includeInactive = false) {
   return (data.interns || []) as InternProfileRow[];
 }
 
-/** Trainer-completed students awaiting manager certificate issue (all roles). */
+/** Trainer-completed or KYC-approved students awaiting manager certificate issue. */
 export async function fetchInternshipApprovals(status: "pending" | "issued" | "all" = "pending") {
   const { data } = await api.get("/api/v1/crm/internship-approvals", {
     params: { status },

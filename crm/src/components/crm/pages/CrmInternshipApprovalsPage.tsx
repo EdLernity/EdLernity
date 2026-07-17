@@ -112,6 +112,7 @@ export default function CrmInternshipApprovalsPage() {
     fromDate: string;
     toDate: string;
     override: boolean;
+    internshipCompleted: boolean;
   } | null>(null);
 
   const hideTechForManager = isManager && !isAdmin;
@@ -197,6 +198,7 @@ export default function CrmInternshipApprovalsPage() {
       fromDate: enrolledAt,
       toDate: toDateInputValue(),
       override: Boolean(row.internshipCompletedOverride),
+      internshipCompleted: Boolean(row.internshipCompleted),
     });
   };
 
@@ -310,13 +312,27 @@ export default function CrmInternshipApprovalsPage() {
     setIssuing(true);
     setMessage("");
     try {
+      const selectedTemplate = internshipTemplates.find(
+        (t) => String(t.id) === String(modal.certificateTemplateId)
+      );
+      const isNonTech =
+        selectedTemplate &&
+        /non[\s-]*tech/i.test(String(selectedTemplate.label || ""));
+      // KYC-approved queue (no trainer completion yet): managers override Non Tech; admins always
+      const useOverride =
+        !modal.internshipCompleted && (Boolean(isAdmin) || Boolean(isNonTech));
+
       await approveInternCertificate(
         modal.studentId,
         modal.studentName.trim(),
         modal.internshipSlug,
         modal.certificateTemplateId,
         modal.toDate,
-        { fromDate: modal.fromDate, toDate: modal.toDate }
+        {
+          fromDate: modal.fromDate,
+          toDate: modal.toDate,
+          manualOverride: useOverride,
+        }
       );
       setMessage("Internship certificate issued");
       setModal(null);
@@ -348,12 +364,12 @@ export default function CrmInternshipApprovalsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          Internship Approvals
+          Tech Internship Approvals
         </h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Students whose trainer marked internship completed. Set internship from and to dates,
-          preview the PDF, then issue. Managers and admins can also unissue a certificate to put
-          the student back in the queue.
+          KYC-approved intern profiles and trainer-completed students awaiting an internship
+          certificate. Set from/to dates, preview the PDF, then issue. Managers and admins can
+          also unissue a certificate to put the student back in the queue.
         </p>
       </div>
 
@@ -486,11 +502,17 @@ export default function CrmInternshipApprovalsPage() {
                       {row.enrollment?.programTitle || row.enrollment?.internshipSlug}
                     </p>
                     <div className="mt-2 flex flex-wrap gap-2">
-                      <span className="rounded-full bg-violet-50 px-2.5 py-0.5 text-xs font-semibold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
-                        {row.internshipCompletedOverride
-                          ? "Trainer: Completed (override)"
-                          : "Trainer: Completed"}
-                      </span>
+                      {row.internshipCompleted ? (
+                        <span className="rounded-full bg-violet-50 px-2.5 py-0.5 text-xs font-semibold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
+                          {row.internshipCompletedOverride
+                            ? "Trainer: Completed (override)"
+                            : "Trainer: Completed"}
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-sky-50 px-2.5 py-0.5 text-xs font-semibold text-sky-700 dark:bg-sky-500/10 dark:text-sky-300">
+                          Profile approved
+                        </span>
+                      )}
                       {row.awaitingInternshipCertificate ? (
                         <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
                           Awaiting manager certificate

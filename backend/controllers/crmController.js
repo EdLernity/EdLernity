@@ -55,7 +55,7 @@ function mapKycSummary(kyc, viewerRole) {
     collegeName: kyc.collegeName,
     programName: kyc.programName,
     submittedAt: kyc.createdAt,
-    approvalStatus: kyc.approvalStatus || "approved",
+    approvalStatus: kyc.approvalStatus || "pending",
     approvedAt: kyc.approvedAt,
     rejectionReason: kyc.rejectionReason || "",
     rejectedAt: kyc.rejectedAt,
@@ -499,65 +499,124 @@ const getInterns = async (req, res) => {
 };
 
 /**
- * Manager queue: students trainers marked internship-complete (incl. override),
- * regardless of user role (student/intern/…).
+ * Manager queue for internship certificates:
+ * - Trainer marked internship-complete (any role)
+ * - Admin/manager KYC-approved profiles still awaiting a completion certificate
  * status=pending (default) | issued | all
  */
 const getInternshipApprovals = async (req, res) => {
   try {
     const status = String(req.query.status || "pending").toLowerCase();
-    const completedRows = await InternshipStudentAssignment.find({
-      internshipCompleted: true,
-      active: { $ne: false },
-    })
-      .populate("studentId", "firstName lastName email phone role IsBlocked isActive createdAt")
-      .sort({ internshipCompletedAt: -1 })
-      .lean();
+    const filter = ["pending", "issued", "all"].includes(status) ? status : "pending";
 
-    if (!completedRows.length) {
-      return res.status(200).json({ approvals: [], summary: { pending: 0, issued: 0 } });
-    }
-
-    const studentIds = completedRows
-      .map((row) => row.studentId?._id || row.studentId)
-      .filter(Boolean);
-
-    const [certificates, certificateTemplates, enrollments, kycRecords] = await Promise.all([
-      InternshipCertificate.find({ userId: { $in: studentIds } }).lean(),
-      // All templates so Tech / Non Tech labels resolve even if type slug differs
-      CertificateTemplate.find({}).select("_id label type active"),
-      UserInternship.find({
-        userId: { $in: studentIds },
+    const [completedRows, approvedKycRows] = await Promise.all([
+      InternshipStudentAssignment.find({
+        internshipCompleted: true,
         active: { $ne: false },
-      }).lean(),
-      InternKyc.find({ userId: { $in: studentIds } }).lean(),
+      })
+        .populate("studentId", "firstName lastName email phone role IsBlocked isActive createdAt")
+        .sort({ internshipCompletedAt: -1 })
+        .lean(),
+      InternKyc.find({ approvalStatus: "approved" })
+        .select("userId internshipSlug inviteId approvalStatus approvedAt phone fullName")
+        .lean(),
     ]);
 
-    const templateMap = new Map(certificateTemplates.map((row) => [String(row._id), row]));
-    const enrollmentByKey = new Map(
-      enrollments.map((row) => [`${String(row.userId)}:${row.internshipSlug}`, row])
-    );
+    const approvedUserIds = [
+      ...new Set(approvedKycRows.map((row) => String(row.userId)).filter(Boolean)),
+    ];
 
-    const filter = ["pending", "issued", "all"].includes(status) ? status : "pending";
-    const approvals = [];
-    let pendingCount = 0;
-    let issuedCount = 0;
+    const approvedEnrollments =
+      approvedUserIds.length > 0
+        ? await UserInternship.find({
+            userId: { $in: approvedUserIds },
+            active: { $ne: false },
+          }).lean()
+        : [];
+
+    /** @type {Map<string, { userId: string, slug: string, trainerRow: object|null, enrollment: object|null }>} */
+    const queueKeys = new Map();
 
     for (const row of completedRows) {
       const user = row.studentId;
       if (!user?._id) continue;
       const userId = String(user._id);
       const slug = row.internshipSlug;
+      const key = `${userId}:${slug}`;
+      queueKeys.set(key, { userId, slug, trainerRow: row, enrollment: null });
+    }
+
+    for (const enrollment of approvedEnrollments) {
+      const userId = String(enrollment.userId);
+      const slug = enrollment.internshipSlug;
+      const key = `${userId}:${slug}`;
+
+      // Prefer KYC that matches this program (or legacy empty slug)
+      const matchingKyc = approvedKycRows.find((row) => {
+        if (String(row.userId) !== userId) return false;
+        if (!row.internshipSlug) return true;
+        return row.internshipSlug === slug;
+      });
+      if (!matchingKyc) continue;
+
+      const existing = queueKeys.get(key);
+      if (existing) {
+        existing.enrollment = enrollment;
+      } else {
+        queueKeys.set(key, { userId, slug, trainerRow: null, enrollment });
+      }
+    }
+
+    if (!queueKeys.size) {
+      return res.status(200).json({ approvals: [], summary: { pending: 0, issued: 0 } });
+    }
+
+    const studentIds = [...new Set([...queueKeys.values()].map((row) => row.userId))];
+
+    const [certificates, certificateTemplates, enrollments, kycRecords, users] =
+      await Promise.all([
+        InternshipCertificate.find({ userId: { $in: studentIds } }).lean(),
+        CertificateTemplate.find({}).select("_id label type active"),
+        UserInternship.find({
+          userId: { $in: studentIds },
+          active: { $ne: false },
+        }).lean(),
+        InternKyc.find({ userId: { $in: studentIds } }).lean(),
+        UserModel.find({ _id: { $in: studentIds } })
+          .select("firstName lastName email phone role IsBlocked isActive createdAt")
+          .lean(),
+      ]);
+
+    const templateMap = new Map(certificateTemplates.map((row) => [String(row._id), row]));
+    const enrollmentByKey = new Map(
+      enrollments.map((row) => [`${String(row.userId)}:${row.internshipSlug}`, row])
+    );
+    const userById = new Map(users.map((row) => [String(row._id), row]));
+
+    const approvals = [];
+    let pendingCount = 0;
+    let issuedCount = 0;
+
+    for (const item of queueKeys.values()) {
+      const populated = item.trainerRow?.studentId;
+      const user =
+        populated && typeof populated === "object" && populated._id
+          ? populated
+          : userById.get(item.userId);
+      if (!user?._id) continue;
+      const userId = String(user._id);
+      const slug = item.slug;
       const enrollment =
+        item.enrollment ||
         enrollmentByKey.get(`${userId}:${slug}`) ||
-        enrollments.find(
-          (e) => String(e.userId) === userId && e.internshipSlug === slug
-        ) ||
+        enrollments.find((e) => String(e.userId) === userId && e.internshipSlug === slug) ||
         null;
 
+      // KYC-only rows must still have an active enrollment
+      if (!item.trainerRow && !enrollment) continue;
+
       const program = getInternshipBySlug(slug);
-      const programTitle =
-        program?.title || enrollment?.title || slug;
+      const programTitle = program?.title || enrollment?.title || slug;
       const programTemplateId = program?.certificateTemplateId
         ? String(program.certificateTemplateId)
         : null;
@@ -565,7 +624,7 @@ const getInternshipApprovals = async (req, res) => {
         ? templateMap.get(programTemplateId)
         : null;
 
-      const issuedRows = pickCertificatesFromList(certificates, user._id, slug);
+      const issuedRows = pickCertificatesFromList(certificates, userId, slug);
       const programCertificates = issuedRows.map((cert) =>
         mapIssuedCertificate(cert, templateMap)
       );
@@ -574,18 +633,26 @@ const getInternshipApprovals = async (req, res) => {
       );
       const awaitingInternshipCertificate = !hasInternshipCompletionCert;
 
-      if (awaitingInternshipCertificate) pendingCount += 1;
-      else issuedCount += 1;
+      const kyc = pickKycFromList(kycRecords, userId, slug);
+      const kycApproved = (kyc?.approvalStatus || "pending") === "approved";
+
+      // Pending queue: trainer-complete OR KYC-approved, still need completion cert
+      if (awaitingInternshipCertificate) {
+        if (!item.trainerRow && !kycApproved) continue;
+        pendingCount += 1;
+      } else {
+        issuedCount += 1;
+      }
 
       if (filter === "pending" && !awaitingInternshipCertificate) continue;
       if (filter === "issued" && awaitingInternshipCertificate) continue;
 
-      const kyc = pickKycFromList(kycRecords, user._id, slug);
+      const trainerProgress = item.trainerRow || null;
       const certificateMeta = buildCertificateMeta(
         programCertificates,
         kyc,
         enrollment,
-        row
+        trainerProgress
       );
       const completionCertificate =
         programCertificates.find((c) => {
@@ -615,19 +682,33 @@ const getInternshipApprovals = async (req, res) => {
           internshipSlug: slug,
           programTitle,
           enrolledAt: enrollment?.createdAt || null,
-          enrollmentSource: enrollment?.enrollmentSource || "trainer",
+          enrollmentSource: enrollment?.enrollmentSource || (trainerProgress ? "trainer" : "invite"),
           active: enrollment ? enrollment.active !== false : true,
           certificateTemplateId: programTemplateId,
           certificateTemplateLabel: programTemplate?.label || null,
         },
         ...certificateMeta,
         completionCertificate,
-        internshipCompleted: true,
-        internshipCompletedAt: row.internshipCompletedAt || null,
-        internshipCompletedOverride: Boolean(row.internshipCompletedOverride),
+        internshipCompleted: Boolean(trainerProgress?.internshipCompleted),
+        internshipCompletedAt: trainerProgress?.internshipCompletedAt || null,
+        internshipCompletedOverride: Boolean(trainerProgress?.internshipCompletedOverride),
         awaitingInternshipCertificate,
+        queueSource: trainerProgress?.internshipCompleted
+          ? "trainer-complete"
+          : "kyc-approved",
       });
     }
+
+    // Newest activity first: trainer completedAt, else KYC approvedAt, else enrollment
+    approvals.sort((a, b) => {
+      const aTime = new Date(
+        a.internshipCompletedAt || a.kyc?.approvedAt || a.enrollment?.enrolledAt || 0
+      ).getTime();
+      const bTime = new Date(
+        b.internshipCompletedAt || b.kyc?.approvedAt || b.enrollment?.enrolledAt || 0
+      ).getTime();
+      return bTime - aTime;
+    });
 
     res.status(200).json({
       approvals,
