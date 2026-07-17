@@ -42,6 +42,7 @@ const LAYOUT_BY_TEMPLATE_LABEL = {
   "new Tech Internship": "internshipTech",
   "Certificate of Appreciation": "appreciation",
   "Certificate of Participation": "participation",
+  "Certificate of campus influencer": "participation",
   "Best Performer Certificate": "bestPerformer",
 };
 
@@ -128,6 +129,12 @@ const CERTIFICATE_PDF_LAYOUTS = {
     },
   },
 
+  /**
+   * Landscape A4 (~842×595) — Campus Influencer / Participation.
+   * Name sits on the left underline under "THIS IS TO CERTIFY THAT,";
+   * date/UID values sit after the DATE: / UID: labels (do not centerX).
+   * Used by: "Certificate of Participation", "Certificate of campus influencer".
+   */
   participation: {
     key: "participation",
     font: "canva-sans",
@@ -135,13 +142,13 @@ const CERTIFICATE_PDF_LAYOUTS = {
     textColor: TEXT_COLOR_BLACK,
     fields: {
       studentName: {
-        centerX: 400,
-        yFromTop: 270,
-        size: 28,
+        x: 265,
+        yFromTop: 292,
+        size: 26,
         font: "libre-baskerville-italic",
       },
-      issuedDate: { x: 300, yFromTop: 400.1, size: 13, font: "canva-sans" },
-      certificateId: { x: 290, yFromTop: 418, size: 13, font: "canva-sans" },
+      issuedDate: { x: 318, yFromTop: 405, size: 13, font: "canva-sans" },
+      certificateId: { x: 305, yFromTop: 423, size: 13, font: "canva-sans" },
     },
   },
 
