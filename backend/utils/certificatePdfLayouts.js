@@ -142,13 +142,13 @@ const CERTIFICATE_PDF_LAYOUTS = {
     textColor: TEXT_COLOR_BLACK,
     fields: {
       studentName: {
-        x: 265,
-        yFromTop: 292,
+        x: 260,
+        yFromTop: 288,
         size: 26,
         font: "libre-baskerville-italic",
       },
-      issuedDate: { x: 318, yFromTop: 405, size: 13, font: "canva-sans" },
-      certificateId: { x: 305, yFromTop: 423, size: 13, font: "canva-sans" },
+      issuedDate: { x: 300, yFromTop: 399.5, size: 13, font: "canva-sans" },
+      certificateId: { x: 290, yFromTop: 417, size: 13, font: "canva-sans" },
     },
   },
 
