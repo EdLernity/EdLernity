@@ -55,7 +55,14 @@ function isInternshipIssueTemplate(template: CertificateTemplateRow) {
 function looksLikeTechProgram(programTitle?: string, internshipSlug?: string) {
   const haystack = `${programTitle || ""} ${internshipSlug || ""}`.toLowerCase();
   if (/non[\s-]*tech/.test(haystack)) return false;
-  return /tech|software|developer|coding|full[\s-]?stack|data|ai|ml|web|python|java/.test(
+  if (
+    /human-?resources|\bhr\b|business-?development|sales-?marketing|lead-?generation|marketing/.test(
+      haystack
+    )
+  ) {
+    return false;
+  }
+  return /tech|software|developer|coding|full[\s-]?stack|data|ai|ml|web|python|java|cloud|devops|salesforce/.test(
     haystack
   );
 }
@@ -146,8 +153,17 @@ export default function CrmInternshipApprovalsPage() {
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
-    if (!term) return approvals;
     return approvals.filter((row) => {
+      // Defense in depth: never show business careers on this page
+      if (
+        !looksLikeTechProgram(
+          row.enrollment?.programTitle,
+          row.enrollment?.internshipSlug
+        )
+      ) {
+        return false;
+      }
+      if (!term) return true;
       const name = displayName(row).toLowerCase();
       const email = row.student.email?.toLowerCase() || "";
       const program = row.enrollment?.programTitle?.toLowerCase() || "";
@@ -367,9 +383,8 @@ export default function CrmInternshipApprovalsPage() {
           Tech Internship Approvals
         </h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          KYC-approved intern profiles and trainer-completed students awaiting an internship
-          certificate. Set from/to dates, preview the PDF, then issue. Managers and admins can
-          also unissue a certificate to put the student back in the queue.
+          Tech internship students only (excludes HR, sales, marketing, and other business
+          careers). Set from/to dates, preview the PDF, then issue.
         </p>
       </div>
 

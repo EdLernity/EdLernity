@@ -633,7 +633,7 @@ export default function CrmInternsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Interns</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Intern Certificate</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
           Career intern profiles, KYC documents, offer letters, and certificates
         </p>

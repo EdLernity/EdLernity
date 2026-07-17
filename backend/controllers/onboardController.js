@@ -217,6 +217,13 @@ const completeOnboarding = async (req, res) => {
     const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
     if (user) {
+      const staffRoles = new Set(["admin", "manager", "trainer"]);
+      if (staffRoles.has(user.role)) {
+        return res.status(400).json({
+          message:
+            "This email belongs to a staff account. Invite the intern with a different Gmail address (not an admin/manager/trainer login).",
+        });
+      }
       user.firstName = firstName;
       user.lastName = lastName || invite.lastName || "";
       user.phone = phoneRaw;

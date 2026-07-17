@@ -123,6 +123,37 @@ function listCatalogPrograms() {
   });
 }
 
+const BUSINESS_PROGRAM_SLUGS = new Set([
+  "business-development",
+  "sales-marketing",
+  "lead-generation",
+  "human-resources",
+  "marketing-intern",
+]);
+
+/** Tech internship programs only (exclude HR / sales / BD / marketing careers). */
+function isTechInternshipProgram(slug, title = "") {
+  const resolved = resolveSlug(slug);
+  if (!resolved) return false;
+  if (BUSINESS_PROGRAM_SLUGS.has(resolved)) return false;
+
+  const program = getInternshipBySlug(resolved);
+  if (program?.track === "paid-tech") return true;
+  if (resolved === "technical") return true;
+
+  const haystack = `${title || ""} ${program?.title || ""} ${resolved} ${program?.category || ""}`.toLowerCase();
+  if (
+    /human\s*resource|\bhr\b|business\s*dev|sales|marketing|lead\s*gen/.test(haystack) &&
+    !/tech|software|developer|coding|full[\s-]?stack|data|ai|python|java|cloud|devops/.test(haystack)
+  ) {
+    return false;
+  }
+
+  return /tech|software|developer|coding|full[\s-]?stack|data|ai|ml|web|python|java|cloud|devops|salesforce/.test(
+    haystack
+  );
+}
+
 function resolveProgramTitle(slug, options = {}) {
   const enrollmentTitle = String(options.enrollmentTitle || "").trim();
   if (enrollmentTitle) return enrollmentTitle;
@@ -142,8 +173,10 @@ module.exports = {
   CAREERS_PROGRAMS,
   PAID_TECH_PROGRAMS,
   LEGACY_SLUG_ALIASES,
+  BUSINESS_PROGRAM_SLUGS,
   getInternshipBySlug,
   resolveProgramTitle,
+  isTechInternshipProgram,
   listCatalogPrograms,
   listCareersPrograms,
   listCareersProgramsAsync,

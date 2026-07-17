@@ -26,7 +26,7 @@ const { buildOfferLetterPdf, isOfferLetterTemplate } = require("../utils/offerLe
 const { resolveOfferLetterForProgram, resolveCertificateTemplateForProgram } = require("../utils/programTemplateService");
 const { v4: uuidv4 } = require("uuid");
 const { generateUniqueCertificateId } = require("../utils/certificateIdGenerator");
-const { getInternshipBySlug, resolveProgramTitle } = require("../utils/internshipCatalog");
+const { getInternshipBySlug, resolveProgramTitle, isTechInternshipProgram } = require("../utils/internshipCatalog");
 const { findKycForProgram, pickKycFromList, pickCertificatesFromList } = require("../utils/internKycService");
 const {
   CERTIFICATE_ISSUE_LOCK_DAYS,
@@ -363,7 +363,28 @@ const getInterns = async (req, res) => {
       internQuery.isActive = { $ne: false };
     }
 
-    const internUsers = await UserModel.find(internQuery)
+    // Also surface accounts that completed intern KYC / invite enrollment even if
+    // role is not "intern" (e.g. manager email reused for onboarding).
+    const [kycUserIds, inviteUserIds] = await Promise.all([
+      InternKyc.distinct("userId"),
+      UserInternship.distinct("userId", { enrollmentSource: "invite" }),
+    ]);
+    const extraUserIds = [
+      ...new Set(
+        [...kycUserIds, ...inviteUserIds].map((id) => String(id)).filter(Boolean)
+      ),
+    ];
+
+    const orFilters = [internQuery];
+    if (extraUserIds.length) {
+      const extraQuery = { _id: { $in: extraUserIds } };
+      if (!includeInactive) {
+        extraQuery.isActive = { $ne: false };
+      }
+      orFilters.push(extraQuery);
+    }
+
+    const internUsers = await UserModel.find({ $or: orFilters })
       .select("firstName lastName email phone role IsBlocked isActive createdAt")
       .sort({ createdAt: -1 });
 
@@ -618,6 +639,9 @@ const getInternshipApprovals = async (req, res) => {
 
       const program = getInternshipBySlug(slug);
       const programTitle = program?.title || enrollment?.title || slug;
+
+      // Tech Internship Approvals: exclude business careers (HR, sales, BD, marketing)
+      if (!isTechInternshipProgram(slug, programTitle)) continue;
       const programTemplateId = program?.certificateTemplateId
         ? String(program.certificateTemplateId)
         : null;
@@ -727,11 +751,20 @@ async function findInternUser(userId, res) {
     res.status(404).json({ message: "Intern not found" });
     return null;
   }
-  if (user.role !== "intern") {
-    res.status(400).json({ message: "This action is only available for career intern accounts" });
-    return null;
-  }
-  return user;
+  if (user.role === "intern") return user;
+
+  // Staff/student accounts that completed KYC still need approve / cert actions
+  const hasKyc = await InternKyc.exists({ userId: user._id });
+  if (hasKyc) return user;
+
+  const hasInviteEnrollment = await UserInternship.exists({
+    userId: user._id,
+    enrollmentSource: "invite",
+  });
+  if (hasInviteEnrollment) return user;
+
+  res.status(400).json({ message: "This action is only available for career intern accounts" });
+  return null;
 }
 
 /** Any enrolled student/intern account (trainer progress uses non-intern roles too). */
