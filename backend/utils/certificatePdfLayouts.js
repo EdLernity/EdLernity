@@ -143,7 +143,7 @@ const CERTIFICATE_PDF_LAYOUTS = {
     fields: {
       studentName: {
         x: 260,
-        yFromTop: 280,
+        yFromTop: 270,
         size: 26,
         font: "libre-baskerville-italic",
       },
