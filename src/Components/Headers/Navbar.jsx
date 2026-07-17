@@ -135,6 +135,14 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
               </li>
               <li>
                 <Link
+                  to="/workshops"
+                  class={location.pathname==="/workshops"?"block py-2 pr-4 pl-3 text-white rounded bg-blue-700 lg:bg-transparent lg:text-blue-700 lg:p-0 dark:text-white":"block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"}
+                >
+                  Workshops
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/verify-certificate"
                   class={location.pathname==="/verify-certificate"?"block py-2 pr-4 pl-3 text-white rounded bg-blue-700 lg:bg-transparent lg:text-blue-700 lg:p-0 dark:text-white":"block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"}
                 >
@@ -250,6 +258,19 @@ function Navbar({ isDarkMode, toggleDarkMode }) {
             }}
           >
             <NavLink to="/reviews">Reviews</NavLink>
+          </Typography>
+          <hr className="border border-gray-200" />
+          <Typography
+            color="gray"
+            className="font-bold"
+            style={{
+              fontFamily: "Tenor Sans, sans-serif",
+              textTransform: "uppercase",
+              color: "#000",
+              fontWeight: "400",
+            }}
+          >
+            <NavLink to="/workshops">Workshops</NavLink>
           </Typography>
           <hr className="border border-gray-200" />
           <Typography

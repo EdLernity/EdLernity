@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import SeoHead from "../SEO/SeoHead";
 import { PAGE_SEO } from "../../Utils/seoConfig";
 import { BsGlobe } from "react-icons/bs";
@@ -10,12 +11,13 @@ import { BACKEND_URL } from "../../URL_Config";
 import InputButton from "../Input/InputButton";
 
 function Contact() {
+  const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    subject: "",
+    subject: searchParams.get("subject") || "",
     phone: "",
     message: "",
   });

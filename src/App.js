@@ -38,6 +38,7 @@ import ScrollToTop from './Utils/ScrollToTop.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CertificateVerifyPage from './Components/CertificateVerify/CertificateVerifyPage.jsx';
+import WorkshopsPage from './Components/Workshops/WorkshopsPage.jsx';
 import TransactionData from './Components/Admin/TransactionData.jsx';
 import ReVerifyMail from './Components/Auth/SuccessPage/ReVerifyMail.jsx';
 import VerifyMail from './Components/Auth/SuccessPage/VerifyMail.jsx';
@@ -109,6 +110,7 @@ function App() {
             <Route path='/careers' element={<CareersPage />} />
             <Route path='/internship' element={<InternShip />} />
             <Route path='/verify-certificate' element={<CertificateVerifyPage />} />
+            <Route path='/workshops' element={<WorkshopsPage />} />
             <Route path='/get-transaction/:name/:secretKeys' element={<TransactionData />} />
           </Routes>
           <ToastContainer position="bottom-center" autoClose={5000} />

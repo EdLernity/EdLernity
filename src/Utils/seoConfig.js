@@ -91,10 +91,18 @@ export const PAGE_SEO = {
   verifyCertificate: {
     title: "Verify EdLernity Certificate – Authenticity Check",
     description:
-      "Verify the genuineness of an EdLernity course or internship certificate using the certificate ID.",
+      "Verify any EdLernity internship, workshop, or course certificate worldwide using the certificate ID or original PDF.",
     path: "/verify-certificate",
     keywords:
       "verify EdLernity certificate, certificate authenticity, certificate validation, EdLernity credential check",
+  },
+  workshops: {
+    title: "EdLernity Workshops – Build AI Agents with MCP",
+    description:
+      "Live EdLernity workshops including Build Your Own AI Agent with MCP — hands-on sessions for modern AI skills.",
+    path: "/workshops",
+    keywords:
+      "EdLernity workshops, AI agent MCP workshop, Model Context Protocol, build AI agent, live AI workshop",
   },
 };
 

@@ -2,6 +2,7 @@ const multer = require("multer");
 const InternshipCertificate = require("../models/internshipCertificateSchema");
 const UserInternship = require("../models/userInternshipSchema");
 const CourseCertificate = require("../models/model.certfication");
+const CertificateTemplate = require("../models/certificateTemplateSchema");
 const { resolveProgramTitle } = require("../utils/internshipCatalog");
 const { normalizeUuid, extractUuidFromPdfBuffer } = require("../utils/extractPdfUuid");
 
@@ -17,25 +18,55 @@ const uploadCertificatePdf = multer({
   },
 }).single("certificate");
 
+function friendlyRecordType(certificateType, templateLabel) {
+  const type = String(certificateType || "").trim();
+  const label = String(templateLabel || "").trim();
+  if (/non[\s-]*tech/i.test(label)) return "internship-completion";
+  if (/tech/i.test(label) && !/non[\s-]*tech/i.test(label)) return "tech-internship";
+  if (/appreciation/i.test(label)) return "certificate-of-appreciation";
+  if (/best\s*performer/i.test(label)) return "best-performer";
+  if (/participation|campus\s*influencer/i.test(label)) return "participation";
+  if (type) return type;
+  return "internship-completion";
+}
+
 async function lookupCertificate(uuid) {
   const internship = await InternshipCertificate.findOne({ uuid }).lean();
   if (internship) {
-    const enrollment = await UserInternship.findOne({
-      userId: internship.userId,
-      internshipSlug: internship.internshipSlug,
-    })
-      .select("title")
-      .lean();
+    const [enrollment, template] = await Promise.all([
+      UserInternship.findOne({
+        userId: internship.userId,
+        internshipSlug: internship.internshipSlug,
+      })
+        .select("title")
+        .lean(),
+      internship.certificateTemplateId
+        ? CertificateTemplate.findById(internship.certificateTemplateId)
+            .select("label type")
+            .lean()
+        : null,
+    ]);
+
+    const templateLabel = template?.label || null;
+    const certificateType =
+      internship.certificateType || template?.type || "internship-completion";
+    const issuedAt = internship.issuedAt || internship.toDate || internship.createdAt;
+
     return {
       valid: true,
-      recordType: "internship-completion",
+      recordType: friendlyRecordType(certificateType, templateLabel),
+      certificateType,
+      templateLabel,
       uuid: internship.uuid,
       studentName: internship.studentName,
       programTitle: resolveProgramTitle(internship.internshipSlug, {
         enrollmentTitle: enrollment?.title,
         storedTitle: internship.programTitle,
       }),
-      issuedAt: internship.createdAt,
+      internshipSlug: internship.internshipSlug || null,
+      fromDate: internship.fromDate || null,
+      toDate: internship.toDate || null,
+      issuedAt,
     };
   }
 
@@ -52,9 +83,14 @@ async function lookupCertificate(uuid) {
     return {
       valid: true,
       recordType: "course-completion",
+      certificateType: "course-completion",
+      templateLabel: "Course Completion Certificate",
       uuid: course.uuid,
       studentName,
       programTitle: course.courseId?.courseTitle || "Course",
+      internshipSlug: null,
+      fromDate: null,
+      toDate: null,
       issuedAt: course.createdAt,
     };
   }
