@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Outfit } from 'next/font/google';
 import './globals.css';
 import "flatpickr/dist/flatpickr.css";
@@ -8,6 +9,14 @@ import { AuthProvider } from '@/context/AuthContext';
 const outfit = Outfit({
   subsets: ["latin"],
 });
+
+export const metadata: Metadata = {
+  title: {
+    default: "EdLernity CRM",
+    template: "%s | EdLernity CRM",
+  },
+  description: "EdLernity CRM — manage users, interns, trainers, certificates, and operations.",
+};
 
 export default function RootLayout({
   children,
