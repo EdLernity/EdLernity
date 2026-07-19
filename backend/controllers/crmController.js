@@ -2510,13 +2510,23 @@ const listCourses = async (req, res) => {
   }
 };
 
-/** Full user list for the "Grant access" username dropdown (id + name + email). */
+/** Searchable user options for the "Grant access" username dropdown (type to search). */
 const listCourseAccessUsers = async (req, res) => {
   try {
-    const users = await UserModel.find({})
+    const search = String(req.query.search || "").trim();
+    const query = search
+      ? (() => {
+          const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+          return { $or: [{ firstName: regex }, { lastName: regex }, { email: regex }] };
+        })()
+      : {};
+
+    const users = await UserModel.find(query)
       .select("firstName lastName email")
       .sort({ firstName: 1 })
+      .limit(20)
       .lean();
+
     res.status(200).json({
       users: users.map((row) => ({
         id: String(row._id),

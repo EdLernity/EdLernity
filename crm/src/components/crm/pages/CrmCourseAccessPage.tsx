@@ -2,11 +2,11 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Select, { StylesConfig } from "react-select";
+import AsyncSelect from "react-select/async";
 import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
 import {
   CrmCourse,
-  CrmCourseAccessOption,
   CrmCourseAccessUser,
   fetchCourseAccess,
   fetchCourseAccessUsers,
@@ -292,9 +292,7 @@ function GrantAccessModal({
   courses: CrmCourse[];
   onGranted: (message: string) => void;
 }) {
-  const [users, setUsers] = useState<CrmCourseAccessOption[]>([]);
-  const [loadingUsers, setLoadingUsers] = useState(false);
-  const [userId, setUserId] = useState("");
+  const [selectedUser, setSelectedUser] = useState<SelectOption | null>(null);
   const [isAllCourse, setIsAllCourse] = useState("");
   const [courseId, setCourseId] = useState("");
   const [paymentId, setPaymentId] = useState("");
@@ -303,26 +301,21 @@ function GrantAccessModal({
 
   useEffect(() => {
     if (!isOpen) {
-      setUserId("");
+      setSelectedUser(null);
       setIsAllCourse("");
       setCourseId("");
       setPaymentId("");
       setError("");
-      return;
     }
-    setLoadingUsers(true);
-    fetchCourseAccessUsers()
-      .then(setUsers)
-      .catch(() => setError("Failed to load users"))
-      .finally(() => setLoadingUsers(false));
   }, [isOpen]);
 
   const allSelected = isAllCourse === "yes";
 
-  const userOptions = useMemo<SelectOption[]>(
-    () => users.map((u) => ({ value: u.id, label: `${u.name} | ${u.email}` })),
-    [users]
-  );
+  const loadUserOptions = useCallback(async (input: string): Promise<SelectOption[]> => {
+    const rows = await fetchCourseAccessUsers(input.trim() || undefined);
+    return rows.map((u) => ({ value: u.id, label: `${u.name} | ${u.email}` }));
+  }, []);
+
   const courseOptions = useMemo<SelectOption[]>(
     () => courses.map((c) => ({ value: c.id, label: c.title })),
     [courses]
@@ -330,7 +323,7 @@ function GrantAccessModal({
   const menuPortalTarget = typeof document !== "undefined" ? document.body : undefined;
 
   const handleSubmit = async () => {
-    if (!userId) {
+    if (!selectedUser) {
       setError("Select a username");
       return;
     }
@@ -341,9 +334,9 @@ function GrantAccessModal({
     setSubmitting(true);
     setError("");
     try {
-      const selectedName = users.find((u) => u.id === userId)?.name || "user";
+      const selectedName = selectedUser.label.split(" | ")[0] || "user";
       await grantCourseAccess({
-        userId,
+        userId: selectedUser.value,
         allCourses: allSelected,
         courseId: allSelected ? undefined : courseId,
         paymentId: paymentId.trim() || undefined,
@@ -381,14 +374,19 @@ function GrantAccessModal({
           <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
             User name
           </label>
-          <Select<SelectOption>
+          <AsyncSelect<SelectOption>
             instanceId="course-access-user"
-            options={userOptions}
-            value={userOptions.find((o) => o.value === userId) || null}
-            onChange={(opt) => setUserId(opt?.value || "")}
-            isLoading={loadingUsers}
+            cacheOptions
+            defaultOptions
+            loadOptions={loadUserOptions}
+            value={selectedUser}
+            onChange={(opt) => setSelectedUser(opt)}
             isClearable
-            placeholder={loadingUsers ? "Loading users..." : "Select username"}
+            placeholder="Type to search username..."
+            loadingMessage={() => "Searching..."}
+            noOptionsMessage={({ inputValue }) =>
+              inputValue ? "No matching users" : "Type to search"
+            }
             styles={rsStyles}
             menuPortalTarget={menuPortalTarget}
           />

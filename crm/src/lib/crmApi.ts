@@ -1343,8 +1343,10 @@ export async function fetchCrmCourses() {
   return (data.courses || []) as CrmCourse[];
 }
 
-export async function fetchCourseAccessUsers() {
-  const { data } = await api.get("/api/v1/crm/course-access/users");
+export async function fetchCourseAccessUsers(search?: string) {
+  const { data } = await api.get("/api/v1/crm/course-access/users", {
+    params: search ? { search } : undefined,
+  });
   return (data.users || []) as CrmCourseAccessOption[];
 }
 
