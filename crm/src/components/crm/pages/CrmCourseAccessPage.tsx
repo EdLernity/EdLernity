@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Select, { StylesConfig } from "react-select";
 import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
 import {
@@ -14,6 +15,32 @@ import {
   revokeCourseAccess,
 } from "@/lib/crmApi";
 import { inputClass, selectClass } from "@/lib/crmUtils";
+
+type SelectOption = { value: string; label: string };
+
+const rsStyles: StylesConfig<SelectOption, false> = {
+  control: (base, state) => ({
+    ...base,
+    minHeight: 44,
+    borderRadius: 8,
+    borderColor: state.isFocused ? "#7592ff" : "#d1d5db",
+    boxShadow: state.isFocused ? "0 0 0 3px rgba(70,95,255,0.1)" : "none",
+    backgroundColor: "transparent",
+    fontSize: 14,
+    "&:hover": { borderColor: "#7592ff" },
+  }),
+  menuPortal: (base) => ({ ...base, zIndex: 1000000 }),
+  option: (base, state) => ({
+    ...base,
+    fontSize: 14,
+    backgroundColor: state.isSelected
+      ? "#465fff"
+      : state.isFocused
+        ? "#eef2ff"
+        : "transparent",
+    color: state.isSelected ? "#fff" : "#111827",
+  }),
+};
 
 export default function CrmCourseAccessPage() {
   const [courses, setCourses] = useState<CrmCourse[]>([]);
@@ -292,6 +319,16 @@ function GrantAccessModal({
 
   const allSelected = isAllCourse === "yes";
 
+  const userOptions = useMemo<SelectOption[]>(
+    () => users.map((u) => ({ value: u.id, label: `${u.name} | ${u.email}` })),
+    [users]
+  );
+  const courseOptions = useMemo<SelectOption[]>(
+    () => courses.map((c) => ({ value: c.id, label: c.title })),
+    [courses]
+  );
+  const menuPortalTarget = typeof document !== "undefined" ? document.body : undefined;
+
   const handleSubmit = async () => {
     if (!userId) {
       setError("Select a username");
@@ -344,19 +381,17 @@ function GrantAccessModal({
           <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
             User name
           </label>
-          <select
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            className={selectClass()}
-            disabled={loadingUsers}
-          >
-            <option value="">{loadingUsers ? "Loading users..." : "Select username"}</option>
-            {users.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.name} | {user.email}
-              </option>
-            ))}
-          </select>
+          <Select<SelectOption>
+            instanceId="course-access-user"
+            options={userOptions}
+            value={userOptions.find((o) => o.value === userId) || null}
+            onChange={(opt) => setUserId(opt?.value || "")}
+            isLoading={loadingUsers}
+            isClearable
+            placeholder={loadingUsers ? "Loading users..." : "Select username"}
+            styles={rsStyles}
+            menuPortalTarget={menuPortalTarget}
+          />
         </div>
 
         <div>
@@ -379,18 +414,16 @@ function GrantAccessModal({
             <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
               Courses
             </label>
-            <select
-              value={courseId}
-              onChange={(e) => setCourseId(e.target.value)}
-              className={selectClass()}
-            >
-              <option value="">Select Courses</option>
-              {courses.map((course) => (
-                <option key={course.id} value={course.id}>
-                  {course.title}
-                </option>
-              ))}
-            </select>
+            <Select<SelectOption>
+              instanceId="course-access-course"
+              options={courseOptions}
+              value={courseOptions.find((o) => o.value === courseId) || null}
+              onChange={(opt) => setCourseId(opt?.value || "")}
+              isClearable
+              placeholder="Select Courses"
+              styles={rsStyles}
+              menuPortalTarget={menuPortalTarget}
+            />
           </div>
         )}
 
