@@ -5,6 +5,7 @@ const {
   getOverview,
   getManagerDashboard,
   listCourses,
+  listCourseAccessUsers,
   listCourseAccess,
   grantCourseAccess,
   revokeCourseAccess,
@@ -86,6 +87,7 @@ router.get("/overview", adminOnly, getOverview);
 router.get("/manager-dashboard", staff, getManagerDashboard);
 
 router.get("/courses", staff, listCourses);
+router.get("/course-access/users", staff, listCourseAccessUsers);
 router.get("/course-access", staff, listCourseAccess);
 router.post("/course-access/grant", staff, grantCourseAccess);
 router.post("/course-access/revoke", staff, revokeCourseAccess);

@@ -6,7 +6,6 @@ const Transaction = require("../models/transactionSchema");
 const UserCourse = require("../models/userCourseSchema");
 const CourseModel = require("../models/courseModel");
 const {
-  getMergedUserCourseState,
   grantSingleCourseAccess,
   grantAllCoursesAccess,
   revokeSingleCourseAccess,
@@ -2510,6 +2509,26 @@ const listCourses = async (req, res) => {
   }
 };
 
+/** Full user list for the "Grant access" username dropdown (id + name + email). */
+const listCourseAccessUsers = async (req, res) => {
+  try {
+    const users = await UserModel.find({})
+      .select("firstName lastName email")
+      .sort({ firstName: 1 })
+      .lean();
+    res.status(200).json({
+      users: users.map((row) => ({
+        id: String(row._id),
+        name: `${row.firstName || ""} ${row.lastName || ""}`.trim() || row.email || "—",
+        email: row.email || "",
+      })),
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to load users" });
+  }
+};
+
 function mapCourseAccessUser(user, mergedCourseIds, isAllCourse, courseTitleMap) {
   const courses = (mergedCourseIds || []).map((id) => ({
     id: String(id),
@@ -2529,43 +2548,65 @@ function mapCourseAccessUser(user, mergedCourseIds, isAllCourse, courseTitleMap)
 const listCourseAccess = async (req, res) => {
   try {
     const search = String(req.query.search || "").trim();
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 20));
+    const skip = (page - 1) * limit;
 
     const allCourses = await CourseModel.find({}).select("courseTitle").lean();
     const courseTitleMap = new Map(
       allCourses.map((row) => [String(row._id), row.courseTitle])
     );
 
-    let users;
+    let users = [];
+    let total = 0;
+
     if (search) {
       const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
-      users = await UserModel.find({
-        $or: [{ firstName: regex }, { lastName: regex }, { email: regex }],
-      })
+      const query = { $or: [{ firstName: regex }, { lastName: regex }, { email: regex }] };
+      total = await UserModel.countDocuments(query);
+      users = await UserModel.find(query)
         .select("firstName lastName email role")
-        .limit(30)
+        .sort({ firstName: 1 })
+        .skip(skip)
+        .limit(limit)
         .lean();
     } else {
       // Default view: only users who already have some course access
       const accessRows = await UserCourse.find({}).select("userId").lean();
       const userIds = [...new Set(accessRows.map((row) => String(row.userId)))];
-      users = await UserModel.find({ _id: { $in: userIds } })
+      total = userIds.length;
+      const pageIds = userIds.slice(skip, skip + limit);
+      users = await UserModel.find({ _id: { $in: pageIds } })
         .select("firstName lastName email role")
-        .limit(100)
         .lean();
     }
 
-    const rows = [];
-    for (const user of users) {
-      const state = await getMergedUserCourseState(user._id);
-      rows.push(
-        mapCourseAccessUser(
-          user,
-          state?.mergedCourseIds || [],
-          state?.isAllCourse || false,
-          courseTitleMap
-        )
-      );
+    // Merge every UserCourse doc for this page in a single query (avoids N+1).
+    const pageUserIds = users.map((user) => user._id);
+    const courseDocs = pageUserIds.length
+      ? await UserCourse.find({ userId: { $in: pageUserIds } })
+          .select("userId courseIds isAllCourse")
+          .lean()
+      : [];
+
+    const stateByUser = new Map();
+    for (const doc of courseDocs) {
+      const key = String(doc.userId);
+      const existing = stateByUser.get(key) || { courseIds: new Set(), isAllCourse: false };
+      for (const id of doc.courseIds || []) existing.courseIds.add(String(id));
+      if (doc.isAllCourse) existing.isAllCourse = true;
+      stateByUser.set(key, existing);
     }
+
+    const rows = users.map((user) => {
+      const state = stateByUser.get(String(user._id));
+      return mapCourseAccessUser(
+        user,
+        state ? [...state.courseIds] : [],
+        state ? state.isAllCourse : false,
+        courseTitleMap
+      );
+    });
 
     // Users with access first, then by name
     rows.sort((a, b) => {
@@ -2575,7 +2616,10 @@ const listCourseAccess = async (req, res) => {
       return a.name.localeCompare(b.name);
     });
 
-    res.status(200).json({ users: rows });
+    res.status(200).json({
+      users: rows,
+      pagination: { page, limit, total, pages: Math.max(1, Math.ceil(total / limit)) },
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to load course access" });
@@ -2584,7 +2628,7 @@ const listCourseAccess = async (req, res) => {
 
 const grantCourseAccess = async (req, res) => {
   try {
-    const { userId, courseId, allCourses } = req.body || {};
+    const { userId, courseId, allCourses, paymentId } = req.body || {};
     if (!userId) {
       return res.status(400).json({ message: "userId is required" });
     }
@@ -2602,7 +2646,7 @@ const grantCourseAccess = async (req, res) => {
       const transaction = await Transaction.create({
         userId,
         paymentMethod: "Manual",
-        paymentId: `crm-grant-all-${Date.now()}`,
+        paymentId: paymentId || `crm-grant-all-${Date.now()}`,
         subscribedAllCourse: true,
         amount: 0,
       });
@@ -2625,7 +2669,7 @@ const grantCourseAccess = async (req, res) => {
       userId,
       courseId,
       paymentMethod: "Manual",
-      paymentId: `crm-grant-${Date.now()}`,
+      paymentId: paymentId || `crm-grant-${Date.now()}`,
       amount: Number(course.offeredPrice) || 0,
     });
     await grantSingleCourseAccess(userId, courseId, transaction._id);
@@ -2663,6 +2707,7 @@ module.exports = {
   getOverview,
   getManagerDashboard,
   listCourses,
+  listCourseAccessUsers,
   listCourseAccess,
   grantCourseAccess,
   revokeCourseAccess,

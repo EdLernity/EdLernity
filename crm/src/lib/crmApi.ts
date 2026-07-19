@@ -1332,22 +1332,51 @@ export interface CrmCourseAccessUser {
   courses: { id: string; title: string }[];
 }
 
+export interface CrmCourseAccessOption {
+  id: string;
+  name: string;
+  email: string;
+}
+
 export async function fetchCrmCourses() {
   const { data } = await api.get("/api/v1/crm/courses");
   return (data.courses || []) as CrmCourse[];
 }
 
-export async function fetchCourseAccess(search?: string) {
+export async function fetchCourseAccessUsers() {
+  const { data } = await api.get("/api/v1/crm/course-access/users");
+  return (data.users || []) as CrmCourseAccessOption[];
+}
+
+export interface CrmCourseAccessResult {
+  users: CrmCourseAccessUser[];
+  pagination: { page: number; limit: number; total: number; pages: number };
+}
+
+export async function fetchCourseAccess(params?: {
+  search?: string;
+  page?: number;
+  limit?: number;
+}) {
+  const { search, page, limit } = params || {};
   const { data } = await api.get("/api/v1/crm/course-access", {
-    params: search ? { search } : undefined,
+    params: {
+      ...(search ? { search } : {}),
+      ...(page ? { page } : {}),
+      ...(limit ? { limit } : {}),
+    },
   });
-  return (data.users || []) as CrmCourseAccessUser[];
+  return {
+    users: (data.users || []) as CrmCourseAccessUser[],
+    pagination: data.pagination || { page: 1, limit: 20, total: 0, pages: 1 },
+  } as CrmCourseAccessResult;
 }
 
 export async function grantCourseAccess(payload: {
   userId: string;
   courseId?: string;
   allCourses?: boolean;
+  paymentId?: string;
 }) {
   const { data } = await api.post("/api/v1/crm/course-access/grant", payload);
   return data;
