@@ -1314,3 +1314,51 @@ export async function generateTrainerClassQuestions(
   };
 }
 
+// ---- Course access (admin + manager) ----
+
+export interface CrmCourse {
+  id: string;
+  title: string;
+  price?: number;
+}
+
+export interface CrmCourseAccessUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  isAllCourse: boolean;
+  courseCount: number;
+  courses: { id: string; title: string }[];
+}
+
+export async function fetchCrmCourses() {
+  const { data } = await api.get("/api/v1/crm/courses");
+  return (data.courses || []) as CrmCourse[];
+}
+
+export async function fetchCourseAccess(search?: string) {
+  const { data } = await api.get("/api/v1/crm/course-access", {
+    params: search ? { search } : undefined,
+  });
+  return (data.users || []) as CrmCourseAccessUser[];
+}
+
+export async function grantCourseAccess(payload: {
+  userId: string;
+  courseId?: string;
+  allCourses?: boolean;
+}) {
+  const { data } = await api.post("/api/v1/crm/course-access/grant", payload);
+  return data;
+}
+
+export async function revokeCourseAccess(payload: {
+  userId: string;
+  courseId?: string;
+  allCourses?: boolean;
+}) {
+  const { data } = await api.post("/api/v1/crm/course-access/revoke", payload);
+  return data;
+}
+

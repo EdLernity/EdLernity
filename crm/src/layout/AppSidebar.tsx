@@ -36,6 +36,7 @@ const allNavItems: NavItem[] = [
   { icon: <PlugInIcon />, name: "Operations", path: "/operations", adminOnly: true },
   { icon: <MailIcon />, name: "Offer Letters", path: "/offer-letters", adminOnly: true },
   { icon: <MailIcon />, name: "Invites", path: "/invites" },
+  { icon: <ListIcon />, name: "Course Access", path: "/course-access" },
 ];
 
 const internNavItems: NavItem[] = [

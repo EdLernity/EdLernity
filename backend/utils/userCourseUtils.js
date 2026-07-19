@@ -106,6 +106,40 @@ async function grantAllCoursesAccess(userId, courseIds, transactionId) {
   return primary;
 }
 
+async function revokeSingleCourseAccess(userId, courseId) {
+  const state = await getMergedUserCourseState(userId);
+  if (!state) return null;
+
+  const { primary, mergedCourseIds, duplicateDocIds } = state;
+  const target = String(courseId);
+  primary.courseIds = mergedCourseIds.filter((id) => String(id) !== target);
+  // Removing a specific course means the user no longer has blanket access.
+  primary.isAllCourse = false;
+  await primary.save();
+
+  if (duplicateDocIds.length) {
+    await UserCourseModel.deleteMany({ _id: { $in: duplicateDocIds } });
+  }
+
+  return primary;
+}
+
+async function revokeAllCourseAccess(userId) {
+  const state = await getMergedUserCourseState(userId);
+  if (!state) return null;
+
+  const { primary, duplicateDocIds } = state;
+  primary.courseIds = [];
+  primary.isAllCourse = false;
+  await primary.save();
+
+  if (duplicateDocIds.length) {
+    await UserCourseModel.deleteMany({ _id: { $in: duplicateDocIds } });
+  }
+
+  return primary;
+}
+
 const createUserCourse = async (userId, courseIds, isAllCourse) => {
   try {
     let userCourse = await UserCourseModel.findOne({ userId });
@@ -157,5 +191,7 @@ module.exports = {
   consolidateUserCourseRecords,
   grantSingleCourseAccess,
   grantAllCoursesAccess,
+  revokeSingleCourseAccess,
+  revokeAllCourseAccess,
   uniqueObjectIds,
 };

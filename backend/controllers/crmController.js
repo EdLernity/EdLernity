@@ -4,6 +4,14 @@ const InternshipCertificate = require("../models/internshipCertificateSchema");
 const InternshipStudentAssignment = require("../models/internshipStudentAssignmentSchema");
 const Transaction = require("../models/transactionSchema");
 const UserCourse = require("../models/userCourseSchema");
+const CourseModel = require("../models/courseModel");
+const {
+  getMergedUserCourseState,
+  grantSingleCourseAccess,
+  grantAllCoursesAccess,
+  revokeSingleCourseAccess,
+  revokeAllCourseAccess,
+} = require("../utils/userCourseUtils");
 const InternInvite = require("../models/internInviteSchema");
 const InternKyc = require("../models/internKycSchema");
 const IssuedOfferLetter = require("../models/issuedOfferLetterSchema");
@@ -2479,9 +2487,185 @@ const deleteUser = async (req, res) => {
   }
 };
 
+/**
+ * Course access management (admin + manager).
+ * Role-guarded grant/revoke of course access (moved out of the main app).
+ */
+const listCourses = async (req, res) => {
+  try {
+    const courses = await CourseModel.find({})
+      .select("courseTitle offeredPrice")
+      .sort({ courseTitle: 1 })
+      .lean();
+    res.status(200).json({
+      courses: courses.map((row) => ({
+        id: String(row._id),
+        title: row.courseTitle,
+        price: row.offeredPrice,
+      })),
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to load courses" });
+  }
+};
+
+function mapCourseAccessUser(user, mergedCourseIds, isAllCourse, courseTitleMap) {
+  const courses = (mergedCourseIds || []).map((id) => ({
+    id: String(id),
+    title: courseTitleMap.get(String(id)) || "Course",
+  }));
+  return {
+    id: String(user._id),
+    name: `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email || "—",
+    email: user.email || "",
+    role: user.role || "student",
+    isAllCourse: Boolean(isAllCourse),
+    courseCount: isAllCourse ? courseTitleMap.size : courses.length,
+    courses,
+  };
+}
+
+const listCourseAccess = async (req, res) => {
+  try {
+    const search = String(req.query.search || "").trim();
+
+    const allCourses = await CourseModel.find({}).select("courseTitle").lean();
+    const courseTitleMap = new Map(
+      allCourses.map((row) => [String(row._id), row.courseTitle])
+    );
+
+    let users;
+    if (search) {
+      const regex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      users = await UserModel.find({
+        $or: [{ firstName: regex }, { lastName: regex }, { email: regex }],
+      })
+        .select("firstName lastName email role")
+        .limit(30)
+        .lean();
+    } else {
+      // Default view: only users who already have some course access
+      const accessRows = await UserCourse.find({}).select("userId").lean();
+      const userIds = [...new Set(accessRows.map((row) => String(row.userId)))];
+      users = await UserModel.find({ _id: { $in: userIds } })
+        .select("firstName lastName email role")
+        .limit(100)
+        .lean();
+    }
+
+    const rows = [];
+    for (const user of users) {
+      const state = await getMergedUserCourseState(user._id);
+      rows.push(
+        mapCourseAccessUser(
+          user,
+          state?.mergedCourseIds || [],
+          state?.isAllCourse || false,
+          courseTitleMap
+        )
+      );
+    }
+
+    // Users with access first, then by name
+    rows.sort((a, b) => {
+      const aHas = a.isAllCourse || a.courses.length > 0 ? 1 : 0;
+      const bHas = b.isAllCourse || b.courses.length > 0 ? 1 : 0;
+      if (aHas !== bHas) return bHas - aHas;
+      return a.name.localeCompare(b.name);
+    });
+
+    res.status(200).json({ users: rows });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to load course access" });
+  }
+};
+
+const grantCourseAccess = async (req, res) => {
+  try {
+    const { userId, courseId, allCourses } = req.body || {};
+    if (!userId) {
+      return res.status(400).json({ message: "userId is required" });
+    }
+
+    const user = await UserModel.findById(userId).select("_id");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (allCourses) {
+      const courses = await CourseModel.find({}).select("_id");
+      if (!courses.length) {
+        return res.status(404).json({ message: "No courses found" });
+      }
+      const transaction = await Transaction.create({
+        userId,
+        paymentMethod: "Manual",
+        paymentId: `crm-grant-all-${Date.now()}`,
+        subscribedAllCourse: true,
+        amount: 0,
+      });
+      await grantAllCoursesAccess(
+        userId,
+        courses.map((row) => row._id),
+        transaction._id
+      );
+      return res.status(200).json({ message: "All-course access granted" });
+    }
+
+    if (!courseId) {
+      return res.status(400).json({ message: "courseId is required" });
+    }
+    const course = await CourseModel.findById(courseId).select("_id offeredPrice");
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+    const transaction = await Transaction.create({
+      userId,
+      courseId,
+      paymentMethod: "Manual",
+      paymentId: `crm-grant-${Date.now()}`,
+      amount: Number(course.offeredPrice) || 0,
+    });
+    await grantSingleCourseAccess(userId, courseId, transaction._id);
+    res.status(200).json({ message: "Course access granted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to grant course access" });
+  }
+};
+
+const revokeCourseAccess = async (req, res) => {
+  try {
+    const { userId, courseId, allCourses } = req.body || {};
+    if (!userId) {
+      return res.status(400).json({ message: "userId is required" });
+    }
+
+    if (allCourses) {
+      await revokeAllCourseAccess(userId);
+      return res.status(200).json({ message: "All course access revoked" });
+    }
+
+    if (!courseId) {
+      return res.status(400).json({ message: "courseId is required" });
+    }
+    await revokeSingleCourseAccess(userId, courseId);
+    res.status(200).json({ message: "Course access revoked" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to revoke course access" });
+  }
+};
+
 module.exports = {
   getOverview,
   getManagerDashboard,
+  listCourses,
+  listCourseAccess,
+  grantCourseAccess,
+  revokeCourseAccess,
   listUsers,
   updateUserRole,
   updateUserBlock,

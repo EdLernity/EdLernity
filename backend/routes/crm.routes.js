@@ -4,6 +4,10 @@ const roleMiddleware = require("../middleware/roleMiddleware");
 const {
   getOverview,
   getManagerDashboard,
+  listCourses,
+  listCourseAccess,
+  grantCourseAccess,
+  revokeCourseAccess,
   listUsers,
   updateUserRole,
   updateUserBlock,
@@ -80,6 +84,11 @@ router.use(authMiddleware);
 
 router.get("/overview", adminOnly, getOverview);
 router.get("/manager-dashboard", staff, getManagerDashboard);
+
+router.get("/courses", staff, listCourses);
+router.get("/course-access", staff, listCourseAccess);
+router.post("/course-access/grant", staff, grantCourseAccess);
+router.post("/course-access/revoke", staff, revokeCourseAccess);
 router.get("/interns", staff, getInterns);
 router.get("/internship-approvals", staff, getInternshipApprovals);
 router.post(
