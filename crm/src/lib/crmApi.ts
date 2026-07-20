@@ -792,12 +792,36 @@ export async function createInviteBulk(payload: {
   internshipSlug?: string;
   inviteMessage?: string;
 }) {
-  const { data } = await api.post("/api/v1/crm/invites/bulk", payload);
-  return data as {
-    message: string;
-    sent: Array<{ id: string; email: string; inviteUrl: string }>;
-    failed: Array<{ email: string; reason: string }>;
-  };
+  try {
+    const { data } = await api.post("/api/v1/crm/invites/bulk", payload);
+    return data as {
+      message: string;
+      sent: Array<{ id: string; email: string; inviteUrl: string }>;
+      failed: Array<{ email: string; reason: string }>;
+    };
+  } catch (err: unknown) {
+    // Backend returns 400 when every invite fails, but still includes sent/failed details.
+    const data =
+      err && typeof err === "object" && "response" in err
+        ? (err as {
+            response?: {
+              data?: {
+                message?: string;
+                sent?: Array<{ id: string; email: string; inviteUrl: string }>;
+                failed?: Array<{ email: string; reason: string }>;
+              };
+            };
+          }).response?.data
+        : null;
+    if (data && (data.sent || data.failed)) {
+      return {
+        message: data.message || "Invites failed",
+        sent: data.sent || [],
+        failed: data.failed || [],
+      };
+    }
+    throw err;
+  }
 }
 
 export async function deleteInvite(inviteId: string) {

@@ -17,8 +17,16 @@ import { useAuth } from "@/context/AuthContext";
 import CrmListPagination, { useClientPagination } from "@/components/crm/CrmListPagination";
 
 function isGmailAddress(email: string) {
-  return /^[^\s@]+@gmail\.com$/i.test(String(email || "").trim());
+  return /^[a-z0-9.+]+@gmail\.com$/i.test(String(email || "").trim());
 }
+
+const FALLBACK_PROGRAMS = [
+  { slug: "sales-marketing", title: "Sales and Marketing Internship" },
+  { slug: "business-development", title: "Business Development Internship" },
+  { slug: "lead-generation", title: "Lead Generation Internship" },
+  { slug: "human-resources", title: "Human Resources Internship" },
+  { slug: "technical", title: "Technical Internship" },
+];
 
 function isImageUrl(url: string) {
   return /\.(jpe?g|png|webp)(\?|$)/i.test(url);
@@ -89,12 +97,26 @@ export default function CrmInvitesPage() {
 
   const load = () => {
     setLoading(true);
-    Promise.all([fetchInvites(), fetchCareersPrograms()])
+    Promise.all([
+      fetchInvites(),
+      fetchCareersPrograms().catch(() => FALLBACK_PROGRAMS),
+    ])
       .then(([inviteRows, programRows]) => {
         setInvites(inviteRows);
-        setPrograms(programRows);
+        const rows = programRows?.length ? programRows : FALLBACK_PROGRAMS;
+        setPrograms(rows);
+        setForm((prev) => {
+          if (rows.some((p) => p.slug === prev.internshipSlug)) return prev;
+          return { ...prev, internshipSlug: rows[0]?.slug || "sales-marketing" };
+        });
       })
-      .catch(() => setMessage("Failed to load invites"))
+      .catch((err: unknown) => {
+        const apiMessage =
+          err && typeof err === "object" && "response" in err
+            ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
+            : null;
+        setMessage(apiMessage || "Failed to load invites");
+      })
       .finally(() => setLoading(false));
   };
 
@@ -191,7 +213,7 @@ export default function CrmInvitesPage() {
         err && typeof err === "object" && "response" in err
           ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
           : null;
-      setMessage(apiMessage || "Failed to send invites");
+      setMessage(apiMessage || "Failed to send invites. Check backend/email configuration.");
     } finally {
       setSubmitting(false);
     }

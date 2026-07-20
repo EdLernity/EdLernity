@@ -12,20 +12,12 @@ const AWS_SES=new SDK.SES(SES_CONFIGURATION);
 const sendEmail=async(subject,to,htmlTemplate,textFormat)=>{
     var params = {
         Destination: {
-          /* required */
-        //   CcAddresses: [
-        //     "EMAIL_ADDRESS",
-        //     /* more items */
-        //   ],
           ToAddresses: [
             to
-            /* more items */
           ],
         },
         Message: {
-          /* required */
           Body: {
-            /* required */
             Html: {
               Charset: "UTF-8",
               Data: `${htmlTemplate}`,
@@ -40,17 +32,19 @@ const sendEmail=async(subject,to,htmlTemplate,textFormat)=>{
             Data: subject
           },
         },
-        Source: "no-reply@edlernity.com", /* required */
+        Source: "no-reply@edlernity.com",
         ReplyToAddresses: [
-          /* more items */
         ],
       };
       try {
        await AWS_SES.sendEmail(params).promise();
-      
+       return { ok: true };
       } catch (error) {
-
-        //console.log("email error");
+        console.error("email error", error?.message || error);
+        return {
+          ok: false,
+          error: error?.message || "Email service failed",
+        };
       }
 }
 const sendOfferEmail = async (subject, to, htmlTemplate, textFormat, pdfData) => {
@@ -83,8 +77,10 @@ ${pdfData.buffer.toString('base64')}
 
   try {
       await AWS_SES.sendRawEmail(params).promise();
+      return { ok: true };
   } catch (error) {
       console.log("email error", error);
+      return { ok: false, error: error?.message || "Email service failed" };
   }
 }
 

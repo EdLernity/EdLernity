@@ -33,7 +33,7 @@ const { buildOfferLetterPdf, isOfferLetterTemplate } = require("../utils/offerLe
 const { resolveOfferLetterForProgram, resolveCertificateTemplateForProgram } = require("../utils/programTemplateService");
 const { v4: uuidv4 } = require("uuid");
 const { generateUniqueCertificateId } = require("../utils/certificateIdGenerator");
-const { getInternshipBySlug, resolveProgramTitle, isTechInternshipProgram } = require("../utils/internshipCatalog");
+const { getInternshipBySlug, resolveProgramTitle, isTechInternshipProgram, listCareersProgramsAsync } = require("../utils/internshipCatalog");
 const { findKycForProgram, pickKycFromList, pickCertificatesFromList } = require("../utils/internKycService");
 const {
   CERTIFICATE_ISSUE_LOCK_DAYS,
@@ -2190,6 +2190,12 @@ async function createAndSendInvite({
       reason: "Only Gmail addresses are allowed",
     };
   }
+  if (!invitedBy) {
+    return { ok: false, email: normalizedEmail, reason: "Inviter account missing" };
+  }
+  if (!program?.title) {
+    return { ok: false, email: normalizedEmail, reason: "Invalid internship program" };
+  }
 
   const existingPending = await InternInvite.findOne({
     email: normalizedEmail,
@@ -2226,12 +2232,22 @@ async function createAndSendInvite({
     programTitle: program.title,
   });
 
-  await sendEmail.sendEmail(
+  const emailResult = await sendEmail.sendEmail(
     `EdLernity Internship Invite — ${program.title}`,
     normalizedEmail,
     html,
     `Complete onboarding: ${inviteUrl}`
   );
+
+  if (emailResult && emailResult.ok === false) {
+    // Roll back so the manager can retry without "pending invite already exists"
+    await InternInvite.deleteOne({ _id: invite._id });
+    return {
+      ok: false,
+      email: normalizedEmail,
+      reason: emailResult.error || "Failed to send invite email",
+    };
+  }
 
   return {
     ok: true,
@@ -2246,6 +2262,19 @@ async function createAndSendInvite({
   };
 }
 
+async function resolveCareersInviteProgram(internshipSlug) {
+  await listCareersProgramsAsync();
+  const slug = internshipSlug || "sales-marketing";
+  const program = getInternshipBySlug(slug);
+  if (!program) {
+    return { ok: false, message: "Invalid internship program" };
+  }
+  if (program.track !== "careers") {
+    return { ok: false, message: "Invites are only for careers internships" };
+  }
+  return { ok: true, slug, program };
+}
+
 const createInvite = async (req, res) => {
   try {
     const { email, firstName, lastName, internshipSlug, inviteMessage } = req.body;
@@ -2253,23 +2282,19 @@ const createInvite = async (req, res) => {
       return res.status(400).json({ message: "Email is required" });
     }
 
-    const slug = internshipSlug || "sales-marketing";
-    const program = getInternshipBySlug(slug);
-    if (!program) {
-      return res.status(400).json({ message: "Invalid internship program" });
-    }
-    if (program.track !== "careers") {
-      return res.status(400).json({ message: "Invites are only for careers internships" });
+    const resolved = await resolveCareersInviteProgram(internshipSlug);
+    if (!resolved.ok) {
+      return res.status(400).json({ message: resolved.message });
     }
 
     const result = await createAndSendInvite({
       email,
       firstName,
       lastName,
-      internshipSlug: slug,
+      internshipSlug: resolved.slug,
       inviteMessage,
       invitedBy: req.user._id,
-      program,
+      program: resolved.program,
     });
 
     if (!result.ok) {
@@ -2282,7 +2307,7 @@ const createInvite = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: err?.message || "Something went wrong" });
   }
 };
 
@@ -2302,13 +2327,9 @@ const createInviteBulk = async (req, res) => {
       return res.status(400).json({ message: "Maximum 50 emails per bulk invite" });
     }
 
-    const slug = internshipSlug || "sales-marketing";
-    const program = getInternshipBySlug(slug);
-    if (!program) {
-      return res.status(400).json({ message: "Invalid internship program" });
-    }
-    if (program.track !== "careers") {
-      return res.status(400).json({ message: "Invites are only for careers internships" });
+    const resolved = await resolveCareersInviteProgram(internshipSlug);
+    if (!resolved.ok) {
+      return res.status(400).json({ message: resolved.message });
     }
 
     const sent = [];
@@ -2320,16 +2341,16 @@ const createInviteBulk = async (req, res) => {
           email,
           firstName,
           lastName,
-          internshipSlug: slug,
+          internshipSlug: resolved.slug,
           inviteMessage,
           invitedBy: req.user._id,
-          program,
+          program: resolved.program,
         });
         if (result.ok) sent.push(result.invite);
         else failed.push({ email: result.email || email, reason: result.reason });
       } catch (err) {
         console.error("Bulk invite error for", email, err);
-        failed.push({ email, reason: "Failed to send invite" });
+        failed.push({ email, reason: err?.message || "Failed to send invite" });
       }
     }
 
@@ -2342,7 +2363,7 @@ const createInviteBulk = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: err?.message || "Something went wrong" });
   }
 };
 
