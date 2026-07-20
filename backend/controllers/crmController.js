@@ -2656,10 +2656,10 @@ const grantCourseAccess = async (req, res) => {
       }
       const transaction = await Transaction.create({
         userId,
-        paymentMethod: "Manual",
+        paymentMethod: "Online",
         paymentId: paymentId || `crm-grant-all-${Date.now()}`,
         subscribedAllCourse: true,
-        amount: 0,
+        amount: String(0),
       });
       await grantAllCoursesAccess(
         userId,
@@ -2679,15 +2679,17 @@ const grantCourseAccess = async (req, res) => {
     const transaction = await Transaction.create({
       userId,
       courseId,
-      paymentMethod: "Manual",
+      paymentMethod: "Online",
       paymentId: paymentId || `crm-grant-${Date.now()}`,
-      amount: Number(course.offeredPrice) || 0,
+      amount: String(Number(course.offeredPrice) || 0),
     });
     await grantSingleCourseAccess(userId, courseId, transaction._id);
     res.status(200).json({ message: "Course access granted" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to grant course access" });
+    res.status(500).json({
+      message: err?.message || "Failed to grant course access",
+    });
   }
 };
 
