@@ -15,6 +15,7 @@ interface AuthContextValue {
   isTrainer: boolean;
   role: UserRole | string;
   login: (email: string, password: string) => Promise<{ ok: boolean; message?: string; role?: string; redirectTo?: string }>;
+  loginWithToken: (token: string) => Promise<{ ok: boolean; message?: string; role?: string; redirectTo?: string }>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -149,7 +150,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!result.success || !result.token) {
       return { ok: false, message: result.message || "Login failed" };
     }
-    setToken(result.token);
+    return completeLoginWithToken(result.token);
+  };
+
+  const completeLoginWithToken = async (token: string) => {
+    setToken(token);
     try {
       const profile = await fetchUserDetails();
       const effective =
@@ -189,6 +194,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const loginWithToken = async (token: string) => {
+    if (!token) return { ok: false, message: "Missing token" };
+    return completeLoginWithToken(token);
+  };
+
   const logout = () => {
     clearToken();
     setUser(null);
@@ -197,7 +207,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, isAdmin, isManager, isStaff, isIntern, isTrainer, role, login, logout, refreshUser }}
+      value={{ user, loading, isAdmin, isManager, isStaff, isIntern, isTrainer, role, login, loginWithToken, logout, refreshUser }}
     >
       {children}
     </AuthContext.Provider>

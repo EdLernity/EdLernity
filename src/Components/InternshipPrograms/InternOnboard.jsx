@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import BaseLayout from "../../Layout/BaseLayout";
-
-const CRM_URL = (process.env.REACT_APP_CRM_URL || "http://localhost:3001").replace(/\/$/, "");
+import { CRM_URL } from "../../URL_Config";
 
 function InternOnboard() {
   const { token } = useParams();
@@ -15,8 +14,8 @@ function InternOnboard() {
 
   return (
     <BaseLayout>
-      <div className="max-w-lg mx-auto py-20 px-6 text-center text-slate-600">
-        Redirecting to onboarding...
+      <div className="min-h-[50vh] flex items-center justify-center text-slate-500 font-semibold">
+        Redirecting to onboarding…
       </div>
     </BaseLayout>
   );

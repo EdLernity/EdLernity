@@ -6,7 +6,7 @@ import Button from "@/components/ui/button/Button";
 import { EyeCloseIcon, EyeIcon } from "@/icons";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,9 +14,59 @@ export default function SignInForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const { login } = useAuth();
+  const [tokenHandoff, setTokenHandoff] = useState(false);
+  const { login, loginWithToken } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const resolveRedirect = (result: { role?: string; redirectTo?: string }) => {
+    const defaultRedirect =
+      result.role === "intern"
+        ? "/my-profile"
+        : result.role === "trainer"
+          ? "/trainer"
+          : result.role === "manager"
+            ? "/"
+            : "/";
+    return result.redirectTo || searchParams.get("redirect") || defaultRedirect;
+  };
+
+  // SSO handoff from main site (www.edlernity.com/auth/login → portal with ?token=)
+  useEffect(() => {
+    const token = searchParams.get("token");
+    if (!token || tokenHandoff) return;
+
+    let cancelled = false;
+    setTokenHandoff(true);
+    setSubmitting(true);
+    setError("");
+
+    loginWithToken(token)
+      .then((result) => {
+        if (cancelled) return;
+        if (!result.ok) {
+          setError(result.message || "Session handoff failed. Please sign in.");
+          // Drop token from URL so refresh doesn't loop
+          router.replace("/signin");
+          return;
+        }
+        router.replace(resolveRedirect(result));
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setError("Session handoff failed. Please sign in.");
+          router.replace("/signin");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setSubmitting(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,22 +78,23 @@ export default function SignInForm() {
         setError(result.message || "Login failed");
         return;
       }
-      const defaultRedirect =
-        result.role === "intern"
-          ? "/my-profile"
-          : result.role === "trainer"
-            ? "/trainer"
-            : result.role === "manager"
-              ? "/interns"
-              : "/";
-      const redirect = result.redirectTo || searchParams.get("redirect") || defaultRedirect;
-      router.replace(redirect);
+      router.replace(resolveRedirect(result));
     } catch {
       setError("Login failed. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
+
+  if (tokenHandoff && submitting) {
+    return (
+      <div className="flex flex-col flex-1 lg:w-1/2 w-full">
+        <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto p-8 text-center">
+          <p className="text-sm text-gray-500">Signing you into the portal…</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">

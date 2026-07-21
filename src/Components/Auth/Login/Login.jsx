@@ -33,18 +33,16 @@ function Login() {;
   const { course, cart, message } = location?.state ?? {};
   const redirectUrl = location?.state?.redirectUrl || '/';
 
-  const crmUrl = (process.env.REACT_APP_CRM_URL || "http://localhost:3001").replace(/\/$/, "");
-
   const finishLogin = (token, role) => {
+    // Interns/trainers use the separate CRM portal — do not redirect from the main site.
     if (role === "intern" || role === "trainer") {
       showSnackbar(
         role === "trainer"
-          ? "Trainers sign in at the CRM portal"
-          : "Career interns sign in at the intern portal",
+          ? "Trainers sign in at portal.edlernity.com"
+          : "Career interns sign in at portal.edlernity.com",
         "info",
         "top"
       );
-      window.location.href = `${crmUrl}/signin`;
       return;
     }
     localStorage.setItem("_userAuth", token);

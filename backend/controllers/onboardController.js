@@ -33,7 +33,9 @@ function getCrmUrl() {
   return (
     process.env.CRM_URL ||
     process.env.REACT_APP_CRM_URL ||
-    "http://localhost:3001"
+    (process.env.NODE_ENV === "production"
+      ? "https://portal.edlernity.com"
+      : "http://localhost:3001")
   ).replace(/\/$/, "");
 }
 

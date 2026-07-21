@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Phone, Shield, User, GraduationCap } from "lucide-react";
+import { Mail, Phone, User } from "lucide-react";
 import { Store } from "../../Context.js";
 import BaseLayout from "../../Layout/BaseLayout.jsx";
 import SeoHead from "../SEO/SeoHead.jsx";
@@ -30,10 +30,6 @@ function MyCourses() {
     : "EL";
   const courseCount = myCourses?.length || 0;
   const internshipCount = myInternships.length;
-  const userRole = userProfile?.effectiveRole || userProfile?.role || "student";
-  const isAdmin = userRole === "admin";
-  const isTrainer = userRole === "trainer";
-  const crmUrl = process.env.REACT_APP_CRM_URL || "http://localhost:3001";
 
   useEffect(() => {
     const token = localStorage.getItem("_userAuth");
@@ -147,29 +143,6 @@ function MyCourses() {
               View Profile
             </Link>
           </div>
-
-          {(isAdmin || isTrainer) && (
-            <div className="flex flex-wrap gap-3 mt-6">
-              {isAdmin && (
-                <a
-                  href={crmUrl}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-bold hover:bg-slate-800"
-                >
-                  <Shield className="w-4 h-4" />
-                  Command Center
-                </a>
-              )}
-              {(isTrainer || isAdmin) && (
-                <a
-                  href={`${crmUrl.replace(/\/$/, "")}/trainer`}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#181FC5] text-white text-sm font-bold hover:bg-[#1418a0]"
-                >
-                  <GraduationCap className="w-4 h-4" />
-                  Trainer Dashboard
-                </a>
-              )}
-            </div>
-          )}
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6 pt-6 border-t border-slate-100">
             <div className="rounded-2xl bg-white border border-slate-100 px-4 py-3 text-center sm:text-left">

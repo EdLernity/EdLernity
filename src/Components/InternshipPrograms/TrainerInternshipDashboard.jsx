@@ -1,16 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-const CRM_URL = (process.env.REACT_APP_CRM_URL || "http://localhost:3001").replace(/\/$/, "");
-
-/** Trainers manage programs in CRM only. */
+/** Trainers manage programs in the separate CRM portal. */
 function TrainerInternshipDashboard() {
-  useEffect(() => {
-    window.location.replace(`${CRM_URL}/trainer`);
-  }, []);
-
   return (
-    <div className="min-h-[50vh] flex items-center justify-center text-slate-500 font-semibold">
-      Redirecting to trainer portal...
+    <div className="min-h-[50vh] flex flex-col items-center justify-center gap-3 text-center px-6">
+      <p className="text-slate-700 font-semibold text-lg">Trainer portal is separate</p>
+      <p className="text-slate-500 text-sm max-w-md">
+        Sign in at <span className="font-semibold text-slate-800">portal.edlernity.com</span> to
+        manage trainer programs.
+      </p>
     </div>
   );
 }
