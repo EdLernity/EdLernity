@@ -46,12 +46,6 @@ const userSchema = new mongoose.Schema({
         enum: ["student", "trainer", "admin", "manager", "intern"],
         default: "student",
     },
-    // When true, intern/trainer can still sign in on the learner site (courses).
-    // Set automatically when a student with courses is promoted to intern, or by admin.
-    learnerAccess: {
-        type: Boolean,
-        default: false,
-    },
 },{timestamps:true});
 
 const UserModel = mongoose.model('User', userSchema);

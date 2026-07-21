@@ -33,7 +33,18 @@ function Login() {;
   const { course, cart, message } = location?.state ?? {};
   const redirectUrl = location?.state?.redirectUrl || '/';
 
-  const finishLogin = (token) => {
+  const finishLogin = (token, role) => {
+    // Interns/trainers use the separate CRM portal — do not redirect from the main site.
+    if (role === "intern" || role === "trainer") {
+      showSnackbar(
+        role === "trainer"
+          ? "Trainers sign in at portal.edlernity.com"
+          : "Career interns sign in at portal.edlernity.com",
+        "info",
+        "top"
+      );
+      return;
+    }
     localStorage.setItem("_userAuth", token);
     showSnackbar("Login Successful", "success", "top");
     goAfterLogin();
@@ -76,7 +87,7 @@ function Login() {;
         let res = await axiosInstanceWithoutToken.post("/auth/login", googleSignInData);
         
         if (res?.data?.success) {
-          finishLogin(res?.data?.token);
+          finishLogin(res?.data?.token, res?.data?.role);
         }
       } catch (error) {
         console.error("Error during signup:", error.response.message);
@@ -117,7 +128,7 @@ function Login() {;
       try {
         let res = await axiosInstanceWithoutToken.post("/auth/login", data);
         if (res?.data?.success) {
-          finishLogin(res?.data?.token);
+          finishLogin(res?.data?.token, res?.data?.role);
         }
       } catch (error) {
         console.error("Error during signup:", error.message);

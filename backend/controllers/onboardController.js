@@ -226,24 +226,10 @@ const completeOnboarding = async (req, res) => {
             "This email belongs to a staff account. Invite the intern with a different Gmail address (not an admin/manager/trainer login).",
         });
       }
-      // Keep learner-site access if they were a student (had courses / student role).
-      const wasStudent = user.role === "student" || Boolean(user.learnerAccess);
-      let hasCourses = false;
-      if (wasStudent || user.role === "student") {
-        try {
-          const UserCourse = require("../models/userCourseSchema");
-          hasCourses = Boolean(await UserCourse.exists({ userId: user._id }));
-        } catch (_) {
-          hasCourses = false;
-        }
-      }
       user.firstName = firstName;
       user.lastName = lastName || invite.lastName || "";
       user.phone = phoneRaw;
       user.role = "intern";
-      if (wasStudent || hasCourses) {
-        user.learnerAccess = true;
-      }
       if (!user.isVerified) user.isVerified = true;
       user.password = hashedPassword;
       // Password login must work in CRM even if they previously used Google on the learner site.

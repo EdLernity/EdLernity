@@ -9,7 +9,6 @@ export interface CrmUser {
   email: string;
   phone?: string;
   role: UserRole;
-  learnerAccess?: boolean;
   isVerified: boolean;
   isBlocked: boolean;
   createdAt: string;
@@ -309,19 +308,8 @@ export async function fetchUsers(params: {
   };
 }
 
-export async function updateUserRole(
-  userId: string,
-  role: UserRole,
-  learnerAccess?: boolean
-) {
-  const payload: { role: UserRole; learnerAccess?: boolean } = { role };
-  if (typeof learnerAccess === "boolean") payload.learnerAccess = learnerAccess;
-  const { data } = await api.patch(`/api/v1/crm/users/${userId}/role`, payload);
-  return data;
-}
-
-export async function updateUserLearnerAccess(userId: string, learnerAccess: boolean) {
-  const { data } = await api.patch(`/api/v1/crm/users/${userId}/role`, { learnerAccess });
+export async function updateUserRole(userId: string, role: UserRole) {
+  const { data } = await api.patch(`/api/v1/crm/users/${userId}/role`, { role });
   return data;
 }
 

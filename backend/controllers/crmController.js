@@ -440,7 +440,7 @@ const listUsers = async (req, res) => {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .select("firstName lastName email phone role learnerAccess isVerified IsBlocked createdAt"),
+        .select("firstName lastName email phone role isVerified IsBlocked createdAt"),
       UserModel.countDocuments(filter),
     ]);
 
@@ -452,7 +452,6 @@ const listUsers = async (req, res) => {
         email: u.email,
         phone: u.phone,
         role: u.role,
-        learnerAccess: Boolean(u.learnerAccess),
         isVerified: u.isVerified,
         isBlocked: u.IsBlocked,
         createdAt: u.createdAt,
@@ -467,11 +466,8 @@ const listUsers = async (req, res) => {
 
 const updateUserRole = async (req, res) => {
   try {
-    const { role, learnerAccess } = req.body;
-    if (!role && typeof learnerAccess !== "boolean") {
-      return res.status(400).json({ message: "role or learnerAccess is required" });
-    }
-    if (role && !["student", "trainer", "admin", "manager", "intern"].includes(role)) {
+    const { role } = req.body;
+    if (!["student", "trainer", "admin", "manager", "intern"].includes(role)) {
       return res.status(400).json({ message: "Valid role is required" });
     }
 
@@ -480,32 +476,12 @@ const updateUserRole = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const previousRole = user.role;
-    if (role) {
-      // Student → intern: keep learner site access for purchased courses
-      if (previousRole === "student" && role === "intern") {
-        user.learnerAccess = true;
-      }
-      user.role = role;
-      if (role === "student") {
-        user.learnerAccess = true;
-      }
-    }
-    if (typeof learnerAccess === "boolean") {
-      user.learnerAccess = learnerAccess;
-    }
+    user.role = role;
     await user.save();
 
     res.status(200).json({
-      message: role
-        ? `User role updated to ${role}`
-        : "Learner access updated",
-      user: {
-        id: user._id,
-        email: user.email,
-        role: user.role,
-        learnerAccess: Boolean(user.learnerAccess),
-      },
+      message: `User role updated to ${role}`,
+      user: { id: user._id, email: user.email, role: user.role },
     });
   } catch (err) {
     console.error(err);
