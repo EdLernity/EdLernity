@@ -48,10 +48,14 @@ export default function PdfPreviewPane({
 
       setRendering(true);
       try {
+        // Client-only: never import pdfjs during SSR.
+        if (typeof window === "undefined") return;
+
         ensurePromiseWithResolvers();
 
-        const pdfjs = await import("pdfjs-dist/build/pdf");
-        // pdfjs 3.x ships a classic worker that runs on older Android WebViews.
+        // Package root resolves cleanly under Next/webpack (avoid /build/pdf subpath).
+        const pdfjs = await import("pdfjs-dist");
+        // pdfjs 3.x classic worker — works on older Android WebViews.
         pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
         const data = await blob.arrayBuffer();
@@ -66,8 +70,7 @@ export default function PdfPreviewPane({
 
         for (let pageNum = 1; pageNum <= maxPages; pageNum += 1) {
           const page = await doc.getPage(pageNum);
-          const scale =
-            typeof window !== "undefined" && window.innerWidth < 640 ? 1.1 : 1.35;
+          const scale = window.innerWidth < 640 ? 1.1 : 1.35;
           const viewport = page.getViewport({ scale });
           const canvas = document.createElement("canvas");
           const context = canvas.getContext("2d");
