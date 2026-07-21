@@ -197,7 +197,15 @@ const loginUser = async (req, res) => {
       );
 
       // Send the token in the response
-      return res.json({ success: true, token, role: user.role, redirectTo: "/", text: "", token });
+      return res.json({
+        success: true,
+        token,
+        role: user.role,
+        learnerAccess: Boolean(user.learnerAccess) || user.role === "student",
+        redirectTo: "/",
+        text: "",
+        token,
+      });
     } else if (googleSignUp) {
       // If email and password are valid, generate a JWT token
       const token = jwt.sign(
@@ -207,7 +215,15 @@ const loginUser = async (req, res) => {
       );
 
       // Send the token in the response
-      return res.json({ success: true, token, role: user.role, redirectTo: "/", text: "", token });
+      return res.json({
+        success: true,
+        token,
+        role: user.role,
+        learnerAccess: Boolean(user.learnerAccess) || user.role === "student",
+        redirectTo: "/",
+        text: "",
+        token,
+      });
     }
   } catch (error) {
     console.error("Error:", error);
