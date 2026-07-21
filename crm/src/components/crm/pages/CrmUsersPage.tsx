@@ -7,6 +7,7 @@ import {
   deleteUser,
   fetchUsers,
   updateUserBlock,
+  updateUserLearnerAccess,
   updateUserRole,
   UserRole,
 } from "@/lib/crmApi";
@@ -47,10 +48,24 @@ export default function CrmUsersPage() {
   const handleRoleChange = async (userId: string, newRole: UserRole) => {
     try {
       await updateUserRole(userId, newRole);
-      setMessage("Role updated");
+      setMessage(
+        newRole === "intern"
+          ? "Role updated to intern (learner access kept if they were a student)"
+          : "Role updated"
+      );
       load();
     } catch {
       setMessage("Failed to update role");
+    }
+  };
+
+  const handleLearnerAccessToggle = async (userId: string, enabled: boolean) => {
+    try {
+      await updateUserLearnerAccess(userId, enabled);
+      setMessage(enabled ? "Learner site access enabled" : "Learner site access disabled");
+      load();
+    } catch {
+      setMessage("Failed to update learner access");
     }
   };
 
@@ -86,7 +101,11 @@ export default function CrmUsersPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Users</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage all platform users</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          Manage roles. For interns who also bought courses, enable{" "}
+          <span className="font-medium text-gray-700 dark:text-gray-300">Learner access</span> so
+          they can use both portal.edlernity.com and www.edlernity.com.
+        </p>
       </div>
 
       {message && (
@@ -115,13 +134,14 @@ export default function CrmUsersPage() {
       </div>
 
       <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] overflow-x-auto">
-        <table className="w-full text-sm min-w-[800px]">
+        <table className="w-full text-sm min-w-[900px]">
           <thead className="bg-gray-50 dark:bg-gray-800/50">
             <tr>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Name</th>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Email</th>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Phone</th>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Role</th>
+              <th className="px-5 py-3 text-left font-medium text-gray-500">Learner access</th>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Status</th>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Joined</th>
               <th className="px-5 py-3 text-right font-medium text-gray-500">Actions</th>
@@ -129,9 +149,9 @@ export default function CrmUsersPage() {
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
             {loading ? (
-              <tr><td colSpan={7} className="px-5 py-8 text-center text-gray-500">Loading...</td></tr>
+              <tr><td colSpan={8} className="px-5 py-8 text-center text-gray-500">Loading...</td></tr>
             ) : users.length === 0 ? (
-              <tr><td colSpan={7} className="px-5 py-8 text-center text-gray-500">No users found</td></tr>
+              <tr><td colSpan={8} className="px-5 py-8 text-center text-gray-500">No users found</td></tr>
             ) : (
               users.map((u) => (
                 <tr key={u.id}>
@@ -152,6 +172,23 @@ export default function CrmUsersPage() {
                       <option value="manager">Manager</option>
                       <option value="admin">Admin</option>
                     </select>
+                  </td>
+                  <td className="px-5 py-3">
+                    <label className="inline-flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+                      <input
+                        type="checkbox"
+                        checked={u.role === "student" || Boolean(u.learnerAccess)}
+                        disabled={u.role === "student"}
+                        onChange={(e) => handleLearnerAccessToggle(u.id, e.target.checked)}
+                        className="h-4 w-4 rounded border-gray-300"
+                        title={
+                          u.role === "student"
+                            ? "Students always have learner access"
+                            : "Allow this user to sign in on www.edlernity.com for courses"
+                        }
+                      />
+                      {u.role === "student" || u.learnerAccess ? "On" : "Off"}
+                    </label>
                   </td>
                   <td className="px-5 py-3">
                     <RoleBadge role={u.isBlocked ? "blocked" : u.isVerified ? "verified" : "pending"} />
